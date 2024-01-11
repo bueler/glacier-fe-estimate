@@ -1,0 +1,145 @@
+\documentclass[hidelinks,onefignum,onetabnum,final]{siamart220329}  % for arxiv
+%\documentclass[review,hidelinks,onefignum,onetabnum,final]{siamart220329}  % for submission
+
+\usepackage{amsfonts}
+\usepackage{graphicx}
+\usepackage{epstopdf}
+\ifpdf
+  \DeclareGraphicsExtensions{.eps,.pdf,.png,.jpg}
+\else
+  \DeclareGraphicsExtensions{.eps}
+\fi
+
+% Used for creating new theorem and remark environments
+\newsiamremark{remark}{Remark}
+\newsiamremark{hypothesis}{Hypothesis}
+\crefname{hypothesis}{Hypothesis}{Hypotheses}
+\newsiamthm{claim}{Claim}
+\newsiamremark{example}{Example}
+
+\usepackage{amsopn}
+\DeclareMathOperator{\diag}{diag}
+
+\usepackage{bm,bbm,empheq,verbatim,fancyvrb,amssymb}
+\usepackage{booktabs,multirow,xspace}
+\usepackage{pifont}
+
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{graphs,quotes}
+
+\newcommand{\eps}{\epsilon}
+\newcommand{\RR}{\mathbb{R}}
+
+\newcommand{\grad}{\nabla}
+\newcommand{\Div}{\nabla\cdot}
+
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\bw}{\mathbf{w}}
+\newcommand{\bz}{\mathbf{z}}
+\newcommand{\bX}{\mathbf{X}}
+
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cV}{\mathcal{V}}
+
+\newcommand{\ip}[2]{\left<#1,#2\right>}
+
+\newcommand{\XX}{\ding{55}}
+
+\newcommand{\dx}{\, \mathrm{d}x}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+
+% Sets running headers as well as PDF title and authors
+\headers{Glacier geometry simulations make fewer errors}{E. Bueler}
+
+\title{Glacier geometry simulations make fewer \\ types of errors than you would expect}
+
+\author{Ed Bueler\thanks{Department of Mathematics and Statistics, University of Alaska Fairbanks, USA
+  (\email{elbueler@alaska.edu}).}}
+
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+The problem of determining glacier geometry from the major data, namely bedrock elevation (topography) and the balance of snow accumulation minus melt (i.e.~surface mass balance), is posed as a variational inequality.  This problem is posed over a Banach-Sobolev space, and the closed and convex set of admissible surface elevations is defined by the property that the ice surface elevation must be above the bed topography.  We show that finite element approximations of this problem satisfy an abstract estimate which has, in some senses, fewer terms than in the corresponding estimate for the canonical variational inequality, namely the Laplacian obstacle problem.  FIXME ETC
+\end{abstract}
+
+% REQUIRED
+\begin{keywords}
+finite element methods, variational inequalities
+\end{keywords}
+
+% REQUIRED
+\begin{MSCcodes}
+FIXME
+\end{MSCcodes}
+
+
+\section{Introduction} \label{sec:intro}
+
+FIXME
+
+
+\section{Variational inequalities} \label{sec:vi}
+
+We first consider an abstract variational inequality (VI) problem as follows.  Let $\cV$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cV'$.  Denote the dual pairing of $\phi \in \cV'$ and $v\in\cV$ by $\ip{\phi}{v} = \phi(v)$, and define the (Banach space) norm on $\cV'$ by $\|\phi\|' = \sup_{\|v\|=1} |\!\ip{\phi}{v}\!|$.  Let $\cK \subset \cV$ be a nonempty, closed, and convex subset, the constraint set; elements of $\cK$ are said to be admissible.  For a continuous, but generally nonlinear, operator $f:\cK \to \cV'$, and a linear source $\ell\in \cV'$, the problem is to find $u\in \cK$ such that
+\begin{equation}
+\ip{f(u)}{v-u} \ge \ip{\ell}{v-u} \quad \text{for all } v\in \cK. \label{eq:vi}
+\end{equation}
+
+The following definitions are standard \cite[for example]{KinderlehrerStampacchia1980}.
+
+\begin{definition}  An operator $f:\cK \to \cV'$ is \emph{monotone} if
+\begin{equation}
+\ip{f(v)-f(w)}{v-w} \ge 0 \qquad \text{for all } v,w \in \cK, \label{eq:monotone}
+\end{equation}
+\emph{strictly monotone} if equality in \eqref{eq:monotone} implies $u=v$, and \emph{coercive} if there exists $w \in \cK$ so that
+\begin{equation}
+\frac{\ip{f(v)-f(w)}{v-w}}{\|v-w\|} \to +\infty \qquad \text{as } \|v\|\to +\infty. \label{eq:coercive}
+\end{equation}
+\end{definition}
+
+It is well-known that if $f:\cK \to \cV'$ is continuous, monotone, and coercive then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}, and that the solution is unique when $f$ is strictly monotone.
+
+\begin{definition}  Let $p>1$.  The operator $f:\cK \to \cV'$ is \emph{$p$-coercive} if there exists $\kappa>0$ such that
+\begin{equation}
+\ip{f(v)-f(w)}{v-w} \ge \kappa \|v-w\|^p \qquad \text{for all } v,w \in \cK. \label{eq:pcoercive}
+\end{equation}
+\end{definition}
+
+It is easy to see that if $f$ is $p$-coercive then it is monotone, strictly monotone, and coercive.  Thus if $f:\cK \to \cV'$ is continuous and $p$-coercive ($p>1$) then there exists a unique $u^\star\in \cK$ solving VI \eqref{eq:vi}.
+
+FIXME finite element space $\cV_h$, constraint set $\cK_h\subset \cV_h$, note generally $\cK_h \nsubseteq \cK$, and problem
+\begin{equation}
+\ip{f(u_h)}{v_h-u_h} \ge \ip{\ell}{v_h-u_h} \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
+\end{equation}
+
+\begin{theorem}
+FIXME statement of theorem, including $\cV \hookrightarrow \mathcal{B}$ with $\overline{\cV} \subset \mathcal{B}$?
+\end{theorem}
+
+\begin{proof}  Rewrite VIs \eqref{eq:vi} and \eqref{eq:fe:vi} as follows:
+\begin{align*}
+\ip{f(u)}{u} &\le \ip{f(u)}{v} + \ell(v-u) \\
+\ip{f(u_h)}{u_h} &\le \ip{f(u_h)}{v_h} + \ell(v_h-u_h)
+\end{align*}
+It follows from $p$-coercivity \eqref{eq:coercive} that for arbitrary $v\in\cK$ and $v_h\in\cK_h$,
+\begin{align*}
+\alpha \|u-u_h\|^p &\le \ip{f(u)-f(u_h)}{u-u_h} \\
+  &= \ip{f(u)}{u} + \ip{f(u_h)}{u_h} - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} \\
+  &\le \ip{f(u)}{v} + \ell(v-u) + \ip{f(u_h)}{v_h} + \ell(v_h-u_h) \\
+  &\qquad - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} \\
+  &= \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
+  &\qquad + \ip{f(u)-f(u_h)}{u-v_h} \\
+  &\le \text{FIXME: \cite{Peral1997} uniform continuity over bounded sets Thm A.0.6}
+\end{align*}
+\end{proof}
+
+\bibliographystyle{siamplain}
+\bibliography{estimate}
+
+\end{document}
