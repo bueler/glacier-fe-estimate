@@ -39,6 +39,8 @@
 \newcommand{\bz}{\mathbf{z}}
 \newcommand{\bX}{\mathbf{X}}
 
+\newcommand{\cB}{\mathcal{B}}
+\newcommand{\cH}{\mathcal{H}}
 \newcommand{\cK}{\mathcal{K}}
 \newcommand{\cV}{\mathcal{V}}
 
@@ -86,7 +88,9 @@ FIXME
 
 \section{Variational inequalities} \label{sec:vi}
 
-We first consider an abstract variational inequality (VI) problem as follows.  Let $\cV$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cV'$.  Denote the dual pairing of $\phi \in \cV'$ and $v\in\cV$ by $\ip{\phi}{v} = \phi(v)$, and define the (Banach space) norm on $\cV'$ by $\|\phi\|' = \sup_{\|v\|=1} |\!\ip{\phi}{v}\!|$.  Let $\cK \subset \cV$ be a nonempty, closed, and convex subset, the constraint set; elements of $\cK$ are said to be admissible.  For a continuous, but generally nonlinear, operator $f:\cK \to \cV'$, and a linear source $\ell\in \cV'$, the problem is to find $u\in \cK$ such that
+We first consider an abstract variational inequality (VI) problem as follows.  Let $\cV$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cV'$.  Denote the dual pairing of $\phi \in \cV'$ and $v\in\cV$ by $\ip{\phi}{v} = \phi(v)$, and define the (Banach space) norm on $\cV'$ by $\|\phi\|' = \sup_{\|v\|=1} |\!\ip{\phi}{v}\!|$.
+
+Let $\cK \subset \cV$ be a nonempty, closed, and convex subset, the constraint set; elements of $\cK$ are said to be admissible.  For a continuous, but generally nonlinear, operator $f:\cK \to \cV'$, and a linear source $\ell\in \cV'$, the problem is to find $u\in \cK$ such that
 \begin{equation}
 \ip{f(u)}{v-u} \ge \ip{\ell}{v-u} \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
@@ -97,13 +101,8 @@ The following definitions are standard \cite[for example]{KinderlehrerStampacchi
 \begin{equation}
 \ip{f(v)-f(w)}{v-w} \ge 0 \qquad \text{for all } v,w \in \cK, \label{eq:monotone}
 \end{equation}
-\emph{strictly monotone} if equality in \eqref{eq:monotone} implies $u=v$, and \emph{coercive} if there exists $w \in \cK$ so that
-\begin{equation}
-\frac{\ip{f(v)-f(w)}{v-w}}{\|v-w\|} \to +\infty \qquad \text{as } \|v\|\to +\infty. \label{eq:coercive}
-\end{equation}
+\emph{strictly monotone} if equality in \eqref{eq:monotone} implies $u=v$.
 \end{definition}
-
-It is well-known that if $f:\cK \to \cV'$ is continuous, monotone, and coercive then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}, and that the solution is unique when $f$ is strictly monotone.
 
 \begin{definition}  Let $p>1$.  The operator $f:\cK \to \cV'$ is \emph{$p$-coercive} if there exists $\kappa>0$ such that
 \begin{equation}
@@ -111,15 +110,40 @@ It is well-known that if $f:\cK \to \cV'$ is continuous, monotone, and coercive 
 \end{equation}
 \end{definition}
 
-It is easy to see that if $f$ is $p$-coercive then it is monotone, strictly monotone, and coercive.  Thus if $f:\cK \to \cV'$ is continuous and $p$-coercive ($p>1$) then there exists a unique $u^\star\in \cK$ solving VI \eqref{eq:vi}.
+\begin{definition}  For $\gamma>0$ let $B_\gamma = \{v\in \cV\,:\,\|v\|\le \gamma\}$.  We say $f:\cK \to \cV'$ is \emph{uniformly continuous on bounded sets of $\cK$} if for every $\gamma>0$ there is $C=C(\gamma)>0$ so that if $v,w \in B_\gamma \cap \cK$ and $z\in\cV$ then $|\ip{f(v)-f(w)}{z}| \le C(\gamma) \|z\|$.  Equivalently there is $C(\gamma)>0$ so that
+\begin{equation}
+\|f(v)-f(w)\|_{\cV'} \le C(\gamma) \quad \text{ for all } v,w \in B_\gamma \cap \cK.  \label{eq:continuousonbounded}
+\end{equation}
+\end{definition}
 
-FIXME finite element space $\cV_h$, constraint set $\cK_h\subset \cV_h$, note generally $\cK_h \nsubseteq \cK$, and problem
+% \cite{Peral1997} uniform continuity over bounded sets for p-Laplacian: Thm A.0.6
+
+It is well-known that if $f:\cK \to \cV'$ is continuous, monotone, and $p$-coercive then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}; see also \cite{BuelerFarrell2024}.  It is easy to see that if $f$ is $p$-coercive then it is monotone and strictly monotone, thus the solution is unique.
+
+Note that in all of the above we only assumed $f$ is defined on $\cK$.  This will be an issue to return to.
+
+FIXME finite element space $\cV_h$, constraint set $\cK_h\subset \cV_h$, note generally $\cK_h \nsubseteq \cK$.  let $f_h:\cK_h\to\cV'$.  the FE VI problem is
 \begin{equation}
 \ip{f(u_h)}{v_h-u_h} \ge \ip{\ell}{v_h-u_h} \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
 \end{equation}
+we assume this problem is well-posed
 
-\begin{theorem}
-FIXME statement of theorem, including $\cV \hookrightarrow \mathcal{B}$ with $\overline{\cV} \subset \mathcal{B}$?
+Comparable to the Hilbert-space and bilinear version of the following theorem, i.e.~as in section 5.1 of Ciarlet \cite{Ciarlet2002}, and in \cite{Falk1974}, we assume that $\cV$ densely embeds in a larger Banach space $\cB$:
+\begin{equation}
+\cV \hookrightarrow \cB, \quad \overline{\cV} = \cB
+\end{equation}
+Observe that $\cB' \subset \cV'$.  The canonical example has $\cV=W^{1,p}(\Omega)$ and $\cB=L^p(\Omega)$.
+
+A key concept here is that neither $\|f(u)-\ell\|_{\cB'}$, nor $\|f(u)-\ell\|_{\cV'}$, is generally zero when $u$ solves \eqref{eq:vi}.  Instead a nonlinear complementarity problem will hold, in sufficiently regular cases, as in Exercise 5.1.1 of \cite{Ciarlet2002}.  Only on the inactive set does the equation ``$f(u)=\ell$'' apply.
+
+It is important to note that we assume $f$ is defined on all of $\cV$ in the following abstract error estimate.
+
+\begin{theorem} \label{thm:abstractestimate}
+Let $1<p<\infty$, and write $q$ for the conjugate exponent.  Suppose $f:\cV \to \cV'$ is $p$-coercive with coercivity constant $\alpha>0$.  Suppose $f$ is also uniformly continuous on bounded sets of $\cV$.  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c(R_h)>0$ so that
+\begin{align}
+\|u-u_h\|_{\cV} &\le \Big(\inf_{v_h\in\cK_h} \left\{c(R_h) \|u - v_h\|^q + \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \|u-v_h\|_{\cB}\right\} \label{eq:abstractestimate} \\
+   &\qquad + \inf_{v\in\cK} \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \|u_h-v\|_{\cB}\Big)^{1/p} \notag
+\end{align}
 \end{theorem}
 
 \begin{proof}  Rewrite VIs \eqref{eq:vi} and \eqref{eq:fe:vi} as follows:
@@ -127,17 +151,34 @@ FIXME statement of theorem, including $\cV \hookrightarrow \mathcal{B}$ with $\o
 \ip{f(u)}{u} &\le \ip{f(u)}{v} + \ell(v-u) \\
 \ip{f(u_h)}{u_h} &\le \ip{f(u_h)}{v_h} + \ell(v_h-u_h)
 \end{align*}
-It follows from $p$-coercivity \eqref{eq:coercive} that for arbitrary $v\in\cK$ and $v_h\in\cK_h$,
+It follows from $p$-coercivity \eqref{eq:pcoercive} that for arbitrary $v\in\cK$ and $v_h\in\cK_h$,
 \begin{align*}
 \alpha \|u-u_h\|^p &\le \ip{f(u)-f(u_h)}{u-u_h} \\
   &= \ip{f(u)}{u} + \ip{f(u_h)}{u_h} - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} \\
   &\le \ip{f(u)}{v} + \ell(v-u) + \ip{f(u_h)}{v_h} + \ell(v_h-u_h) \\
   &\qquad - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} \\
   &= \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
-  &\qquad + \ip{f(u)-f(u_h)}{u-v_h} \\
-  &\le \text{FIXME: \cite{Peral1997} uniform continuity over bounded sets Thm A.0.6}
+  &\qquad + \ip{f(u)-f(u_h)}{u-v_h}
 \end{align*}
+Since $u,u_h\in B_{R_h}$, by uniform continuity over bounded sets of $\cV$ there is $C(R_h)>0$ so that $\|f(u)-f(u_h)\|_{\cV'} \le C(R_h)$.  Observe that $\|f(u)-\ell\|_{\cB'} < \infty$ because $f:\cV\to\cV' \supset \cB'$.  It follows that
+\begin{align*}
+\alpha \|u-u_h\|^p &\le \|f(u)-\ell\|_{\cB'} \left(\|v-u_h\|_{\cB} + \|v_h-u\|_{\cB}\right) \\
+  &\qquad + C(R_h) \|u-u_h\| \|u-v_h\|
+\end{align*}
+Now using Young's inequality with $\eps>0$ \cite[Appendix B.2]{Evans2010},
+\begin{align*}
+\alpha \|u-u_h\|^p &\le \|f(u)-\ell\|_{\cB'} \left(\|v-u_h\|_{\cB} + \|v_h-u\|_{\cB}\right) \\
+  &\qquad + C(R_h) \left(\eps\|u-u_h\|^p + \tilde C(\eps) \|u-v_h\|^q\right)
+\end{align*}
+where $\tilde C(eps) = (\eps p)^{-q/p} q^{-1}$.  Choose $\eps$ so that $C(R_h) \eps \le \alpha/2$, and move terms to find
+\begin{align*}
+\frac{\alpha}{2} \|u-u_h\|^p &\le \|f(u)-\ell\|_{\cB'} \left(\|v-u_h\|_{\cB} + \|v_h-u\|_{\cB}\right) \\
+  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^q
+\end{align*}
+Finally, multiply by $2/\alpha$ and take infimums to show \eqref{eq:abstractestimate}.
 \end{proof}
+
+This theorem reduces to the abstract error estimate for variational inequalities in \cite{Ciarlet2002} and \cite{Falk1974}.  Specifically, suppose $\ip{f(v)}{w}=a(v,w)$ is actually bilinear, coercive, and continuous on a Hilbert space $\cV$.  Define $A:\cV\to\cV'$, a bounded linear operator, by $Av(w) = a(v,w)$.  Suppose that $\cV\hookrightarrow \cH$ and $\overline{\cV} = \cH$ for another Hilbert space $\cH$, and that $\|Au-\ell\|_{\cH'} < \infty$ so, up to isomorphism, $Au-\ell \in\cH$.  Then Theorem \ref{thm:abstractestimate} reduces to Theorem 5.1.1 of \cite{Ciarlet2002}.
 
 \bibliographystyle{siamplain}
 \bibliography{estimate}
