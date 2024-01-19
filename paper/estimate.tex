@@ -58,16 +58,14 @@
 
 \title{A framework for estimating geometry errors \\ in glacier simulations}
 
-\author{Ed Bueler\thanks{Department of Mathematics and Statistics, University of Alaska Fairbanks, USA
-  (\email{elbueler@alaska.edu}).}}
+\author{Ed Bueler\thanks{Department of Mathematics and Statistics, University of Alaska Fairbanks, USA (\email{elbueler@alaska.edu}).}}
 
 
 \begin{document}
-
 \maketitle
 
 \begin{abstract}
-The free-boundary problem of determining glacier geometry from the major data, namely bedrock elevation (topography) and the balance of snow accumulation minus melt (surface mass balance), can be posed as a variational inequality in terms of the surface elevation or thickness of the glacier.  This problem, over the closed and convex set of admissible surface elevations (thicknesses), is defined by the property that the ice surface elevation must be above the bed topography (thickness nonnegative).  We first an abstract estimate for finite element approximations of coercive variational inequalities over Banach spaces.  FIXME
+The free-boundary problem of determining glacier geometry from the major data, namely bedrock elevation (topography) and the balance of snow accumulation minus melt (surface mass balance), can be posed as a variational inequality in terms of the surface elevation or thickness of the glacier.  This problem, over the closed and convex set of admissible surface elevations, or equivalently the admissible thicknesses, is defined by the property that the ice surface elevation must be above the bed topography (thickness nonnegative).  We first an abstract estimate for finite element approximations of coercive variational inequalities over Banach spaces.  FIXME
 \end{abstract}
 
 % REQUIRED
@@ -88,55 +86,53 @@ FIXME
 
 \section{Abstract error estimate} \label{sec:abstractestimate}
 
-We first consider an abstract variational inequality (VI) problem as follows.  Let $\cV$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cV'$.  Denote the dual pairing of $\phi \in \cV'$ and $v\in\cV$ by $\ip{\phi}{v} = \phi(v)$, and define the (Banach space) norm on $\cV'$ by $\|\phi\|' = \sup_{\|v\|=1} |\!\ip{\phi}{v}\!|$.
+We first consider an abstract variational inequality (VI) \cite{KinderlehrerStampacchia1980} problem as follows.  Let $\cV$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cV'$.  Denote the dual pairing of $\phi \in \cV'$ and $v\in\cV$ by $\ip{\phi}{v} = \phi(v)$, and define the (Banach space) norm on $\cV'$ by $\|\phi\|_{\cV'} = \sup_{\|v\|=1} |\!\ip{\phi}{v}\!|$.
 
 Let $\cK \subset \cV$ be a nonempty, closed, and convex subset, the constraint set; elements of $\cK$ are said to be admissible.  For a continuous, but generally nonlinear, operator $f:\cK \to \cV'$, and a linear source $\ell\in \cV'$, the problem is to find $u\in \cK$ such that
 \begin{equation}
 \ip{f(u)}{v-u} \ge \ip{\ell}{v-u} \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
+The best know example of such a problem is the obstacle problem for the Laplacian operator; see e.g.~subsections 5.1 in \cite{Ciarlet2002} or 8.4.2 in \cite{Evans2010}.
 
 The following definitions are standard \cite[for example]{KinderlehrerStampacchia1980}.
 
 \begin{definition}  An operator $f:\cK \to \cV'$ is \emph{monotone} if
 \begin{equation}
-\ip{f(v)-f(w)}{v-w} \ge 0 \qquad \text{for all } v,w \in \cK, \label{eq:monotone}
+\ip{f(v)-f(w)}{v-w} \ge 0 \qquad \text{for all } v,w \in \cK \label{eq:monotone}
 \end{equation}
-\emph{strictly monotone} if equality in \eqref{eq:monotone} implies $u=v$.
-\end{definition}
-
-\begin{definition}  Let $p>1$.  The operator $f:\cK \to \cV'$ is \emph{$p$-coercive} if there exists $\kappa>0$ such that
+and \emph{strictly monotone} if equality in \eqref{eq:monotone} implies $u=v$.  Let $p>1$.  The operator is \emph{$p$-coercive} if there exists $\alpha>0$ such that
 \begin{equation}
-\ip{f(v)-f(w)}{v-w} \ge \kappa \|v-w\|^p \qquad \text{for all } v,w \in \cK. \label{eq:pcoercive}
+\ip{f(v)-f(w)}{v-w} \ge \alpha \|v-w\|^p \qquad \text{for all } v,w \in \cK. \label{eq:pcoercive}
 \end{equation}
 \end{definition}
 
-\begin{definition}  For $\gamma>0$ let $B_\gamma = \{v\in \cV\,:\,\|v\|\le \gamma\}$.  We say $f:\cK \to \cV'$ is \emph{uniformly continuous on bounded sets of $\cK$} if for every $\gamma>0$ there is $C=C(\gamma)>0$ so that if $v,w \in B_\gamma \cap \cK$ and $z\in\cV$ then $|\ip{f(v)-f(w)}{z}| \le C(\gamma) \|z\|$.  Equivalently there is $C(\gamma)>0$ so that
-\begin{equation}
-\|f(v)-f(w)\|_{\cV'} \le C(\gamma) \quad \text{ for all } v,w \in B_\gamma \cap \cK.  \label{eq:continuousonbounded}
-\end{equation}
-\end{definition}
+Clearly, if $f$ is $p$-coercive then it is monotone and strictly monotone, in which case any solution of \eqref{eq:vi} is unique.  Furthermore, it is well-known that if $f:\cK \to \cV'$ is continuous and $p$-coercive then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  Thus a proof of $p$-coercivity for $f$ is a proof of well-posedness for \eqref{eq:vi}.
 
 % \cite{Peral1997} uniform continuity over bounded sets for p-Laplacian: Thm A.0.6
 
-It is well-known that if $f:\cK \to \cV'$ is continuous, monotone, and $p$-coercive then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}; see also \cite{BuelerFarrell2024}.  It is easy to see that if $f$ is $p$-coercive then it is monotone and strictly monotone, thus the solution is unique.
+\begin{definition}  For $\gamma>0$ let $B_\gamma = \{v\in \cV\,:\,\|v\|\le \gamma\}$.  We say $f:\cK \to \cV'$ is \emph{Lipshitz on bounded sets of $\cK$} if for every $\gamma>0$ there is $C(\gamma)>0$ so that if $v,w \in B_\gamma \cap \cK$ and $z\in\cV$ then $|\ip{f(v)-f(w)}{z}| \le C(\gamma) \|v-w\| \|z\|$.  Equivalently:
+\begin{equation}
+\|f(v)-f(w)\|_{\cV'} \le C(\gamma) \|v-w\| \quad \text{ for all } v,w \in B_\gamma \cap \cK.  \label{eq:continuousonbounded}
+\end{equation}
+\end{definition}
 
-Note that in all of the above we only assumed $f$ is defined on $\cK$.  This will be an issue to return to.
+In the above we have only assumed $f$ is defined on $\cK$.  This will be an issue to return to.
 
 FIXME finite element space $\cV_h$, constraint set $\cK_h\subset \cV_h$, note generally $\cK_h \nsubseteq \cK$.  let $f_h:\cK_h\to\cV'$.  the FE VI problem is
 \begin{equation}
-\ip{f(u_h)}{v_h-u_h} \ge \ip{\ell}{v_h-u_h} \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
+\ip{f_h(u_h)}{v_h-u_h} \ge \ip{\ell}{v_h-u_h} \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
 \end{equation}
-we assume this problem is well-posed
+we assume this problem is also well-posed FIXME FLESH OUT AND NOTE $f_h\ne f$ POSSIBLE
 
-Comparable to the Hilbert-space and bilinear version of the following theorem, i.e.~as in section 5.1 of Ciarlet \cite{Ciarlet2002}, and in \cite{Falk1974}, we assume that $\cV$ densely embeds in a larger Banach space $\cB$:
+Now assume that $\cV$ continuously and densely embeds in a larger Banach space $\cB$:
 \begin{equation}
 \cV \hookrightarrow \cB, \quad \overline{\cV} = \cB
 \end{equation}
-Observe that $\cB' \subset \cV'$.  The canonical example has $\cV=W^{1,p}(\Omega)$ and $\cB=L^p(\Omega)$.
+Observe that $\cB' \subset \cV'$ is a Banach subspace.  Our main example will be where $\cV=W^{1,p}(\Omega)$ and $\cB=L^p(\Omega)$.  Compare the Hilbert-space case in \cite{Falk1974} and \cite[section 5.1]{Ciarlet2002}.
 
-A key concept here is that neither $\|f(u)-\ell\|_{\cB'}$, nor $\|f(u)-\ell\|_{\cV'}$, is generally zero when $u$ solves \eqref{eq:vi}.  Instead a nonlinear complementarity problem will hold, in sufficiently regular cases, as in Exercise 5.1.1 of \cite{Ciarlet2002}.  Only on the inactive set does the equation ``$f(u)=\ell$'' apply.
+A key concept here is that neither $\|f(u)-\ell\|_{\cB'}$, nor $\|f(u)-\ell\|_{\cV'}$, is generally zero when $u$ solves \eqref{eq:vi}.  Instead a nonlinear complementarity problem will hold, in sufficiently regular cases, as in \cite[Exercise 5.1.1]{Ciarlet2002}  and \cite[section 7]{BuelerFarrell2024}, for example.  Only for $u$ in the interior of $\cK$ should we expect the equation $f(u)=\ell$ to hold.
 
-It is important to note that we assume $f$ is defined on all of $\cV$ in the following abstract error estimate.
+In the following abstract error estimate it is important to note that we now assume $f$ is defined on all of $\cV$, and that $f_h=f$.  However, we are not assuming $f$ is linear.
 
 \begin{theorem} \label{thm:abstractestimate}
 Let $1<p<\infty$, and write $q$ for the conjugate exponent.  Suppose $f:\cV \to \cV'$ is $p$-coercive with coercivity constant $\alpha>0$.  Suppose $f$ is also uniformly continuous on bounded sets of $\cV$.  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c(R_h)>0$ so that
