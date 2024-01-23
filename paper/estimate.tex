@@ -79,7 +79,7 @@
 \maketitle
 
 \begin{abstract}
-The free-boundary problem of determining glacier geometry from the major data, namely bedrock elevation (topography) and the balance of snow accumulation minus melt (surface mass balance), can be posed as a variational inequality in terms of the surface elevation or thickness of the glacier.  This problem, which is posed over a closed and convex set of admissible surface elevations or thicknesses, is defined by the property that the ice surface elevation must be above the bed topography (or thickness nonnegative).  To study such problems we first show an abstract estimate for finite element approximations of variational inequalities over Banach spaces in which the operator is generally nonlinear, but must be coercive and Lipshitz.  FIXME
+The free-boundary problem of determining glacier geometry from the major data, namely bedrock elevation and the balance of snow accumulation minus melt (surface mass balance), can be posed as a variational inequality for the glacier geometry.  This problem seeks the solution in a closed and convex set of admissible surface elevations or thicknesses defined by the property that the ice surface elevation must be above the bed topography, or the thickness nonnegative.  For such problems we first show an abstract estimate for finite element approximations of variational inequalities over Banach spaces for nonlinear operators which are coercive and Lipshitz.  FIXME
 \end{abstract}
 
 % REQUIRED
@@ -146,12 +146,34 @@ defines the ice viscosity according to Glen's power law \cite{GreveBlatter2009},
 
 In summary at this point, we assert that a non-shallow, non-sliding, and isothermal glacier simulation determines the evolution of the primary state variables $s(t,x)$, $\bu(t,x,z)$, and $p(t,x,z)$, from initial values of $s(0,x)$.  Because the flow is very viscous \cite{Acheson1990}, the Stokes problem \eqref{eq:stokes} determines $\bu(t,x,z)$ and $p(t,x,z)$ at each time, given $\Lambda(t)$.\footnote{The Stokes model acts as an instantaneous ``algebraic'' constraint on the evolution.  The coupled system \eqref{eq:ncp}, \eqref{eq:stokes} is both an infinite-dimensional differential algebraic equation (DAE) system and an infinite-dimensional NCP.}  The surface elevation $s$ is defined on $[0,T]\times \Omega$, but it is subject to the inequality constraint $s\ge b$.
 
-In other words, a glacier simulation is an NCP \eqref{eq:ncp}, for a free-surface flow in a signed climate that can add or remove ice, coupled to a Stokes problem \eqref{eq:stokes} within the evolving, three-dimensional icy domain $\Lambda(t)$.  Such a simulation is generally formulated using a finite element (FE) method for the Stokes sub-problem.  To the author's knowledge all existing non-shallow models use a explicit time-stepping scheme to evolve the surface \cite[for example]{Jouvetetal2008}, with the one exception of the work by JAROSCH AND X.  
+In other words, a glacier simulation is an NCP \eqref{eq:ncp}, for a free-surface flow in a signed climate that can add or remove ice, coupled to a Stokes problem \eqref{eq:stokes} within the evolving, three-dimensional icy domain $\Lambda(t)$.  Such a simulation is generally formulated using a finite element (FE) method for the Stokes sub-problem.  To the author's knowledge all existing non-shallow models use a explicit time-stepping scheme to evolve the surface \cite[for example]{Jouvetetal2008}, with the one exception of the work \cite{WirbelJarosch2020}.  
 
 
-\section{Variational inequality formulations for glacier simulations} \label{sec:viformulations}
+\section{Variational inequality models of glacier geometry} \label{sec:models}
 
-FIXME state VI for SKE with $s$; state VI for mass continuity with $H$; conjecture well-posedness
+We now consider the particular variational equalities satisfied either by the glacier's surface elevation or thickness.  While essentially equivalent at the level of the continuum problem,\footnote{Equivalence holds for smooth bedrock elevation, but real bedrock topography is likely not $C^1$.} we will see that the problems for surface elevation and thickness, respectively, have different character when FE approximations are applied and the above abstract estimate is considered.  Before addressing the two approaches we consider the aspects of the problems which are in common.
+
+Let $\Omega \subset \RR^2$ be a fixed region of land, and suppose $b \in C^1(\Omega)$ is the bedrock elevation on $\Omega$.  (For simplicity we are assuming that $b=b(x)$ is time-independent.)  For $T>0$ let $a(t,x) \in C([0,T] \times \Omega)$ denote a given ``surface mass balance'' function \cite{GreveBlatter2009}, the annually-averaged rate of ice accumulation, as snow, minus melt and runoff.  Where $a(t,x)>0$ there is more snow in a year than can melt (accumulation), while if $a(t,x)<0$ the opposite is true (ablation).  Note that $a(t,x)$ is defined a.e.~$x\in \Omega$, regardless of whether a glacier is present or not.\footnote{Where there is no glacier, and thus necessarily $a(t,x) \le 0$, the value of $a(t,x)$ can be computed by a surface energy balance model \cite{GreveBlatter2009}, at that location, by hypothesizing a bare ice surface over an arbitrary depth of ice, and computing the total runoff from the available energy for melt.  This is balanced against snow accumulation, if any.  It is important that $a(t,x)$ represent the surface mass balance \emph{which a glacier would experience if present at that time and place}.}
+
+Here are the two approaches when posed for the steady geometry of a glacier in a hypothesized steady climate.  FIXME show strong forms here
+
+\begin{enumerate}
+\item FIXME surface kinematical equation \cite{GreveBlatter2009}, $\cK = \{s\ge b\}$, $\cK_h \nsubseteq \cK$ in general, perhaps $\cV = W^{1,2}(\Omega)$
+\item FIXME fluid layer thickness equation, also called mass continuity or Saint Venant equation \cite{JouvetBueler2012}, $\cK = \{H\ge 0\}$, $\cK_h \subset \cK$, apparently $\eta = H^{2p/(p-1)} \in W^{1,p}(\Omega)$, for e.g.~$p=4$, because of existence in SIA case \cite{JouvetBueler2012}
+\end{enumerate}
+
+FIXME show Greenland surface-vs-thickness figure
+
+FIXME however, regularity arising from analyzing SIA not to be trusted because actual dynamics is not diffusive for short wavelength surface/thickness perturbations \cite{Pattynetal2008}, so for simplicity we also consider ``advective'' models with hypothesized transport velocities (details below)
+
+FIXME time-dependent (implicit time step) case set up in \cite{Bueler2021conservation}
+
+FIXME write out operator $\ip{f_1(s)}{w}$ or $\ip{f_2(H)}{w}$  (on $W^{1,p}(\Omega)$?)
+
+FIXME state VI for SKE with $s$; state VI for mass continuity with $H$
+
+FIXME conjecture well-posedness of BE step for sufficiently short $\Delta t$
+
 
 
 \section{Abstract error estimate} \label{sec:abstractestimate}
@@ -284,31 +306,6 @@ Suppose $f(u)=\ell$.  Making all the other assumptions of Theorem \ref{thm:abstr
 \end{corollary}
 
 
-\section{Variational inequality models of glaciers} \label{sec:models}
-
-We now consider the particular variational equalities satisfied either by the glacier's surface elevation or thickness.  While essentially equivalent at the level of the continuum problem,\footnote{Equivalence holds for smooth bedrock elevation, but real bedrock topography is likely not $C^1$.} we will see that the problems for surface elevation and thickness, respectively, have different character when FE approximations are applied and the above abstract estimate is considered.  Before addressing the two approaches we consider the aspects of the problems which are in common.
-
-Let $\Omega \subset \RR^2$ be a fixed region of land, and suppose $b \in C^1(\Omega)$ is the bedrock elevation on $\Omega$.  (For simplicity we are assuming that $b=b(x)$ is time-independent.)  For $T>0$ let $a(t,x) \in C([0,T] \times \Omega)$ denote a given ``surface mass balance'' function \cite{GreveBlatter2009}, the annually-averaged rate of ice accumulation, as snow, minus melt and runoff.  Where $a(t,x)>0$ there is more snow in a year than can melt (accumulation), while if $a(t,x)<0$ the opposite is true (ablation).  Note that $a(t,x)$ is defined a.e.~$x\in \Omega$, regardless of whether a glacier is present or not.\footnote{Where there is no glacier, and thus necessarily $a(t,x) \le 0$, the value of $a(t,x)$ can be computed by a surface energy balance model \cite{GreveBlatter2009}, at that location, by hypothesizing a bare ice surface over an arbitrary depth of ice, and computing the total runoff from the available energy for melt.  This is balanced against snow accumulation, if any.  It is important that $a(t,x)$ represent the surface mass balance \emph{which a glacier would experience if present at that time and place}.}
-
-Here are the two approaches when posed for the steady geometry of a glacier in a hypothesized steady climate.  FIXME show strong forms here
-
-\begin{enumerate}
-\item FIXME fluid layer thickness equation, also called mass continuity or Saint Venant equation \cite{JouvetBueler2012}, $\cK = \{H\ge 0\}$, $\cK_h \subset \cK$, apparently $\eta = H^{2p/(p-1)} \in W^{1,p}(\Omega)$, for e.g.~$p=4$, because of existence in SIA case \cite{JouvetBueler2012}, so we write in terms of $\eta$ even for other dynamical models
-\item FIXME surface kinematical equation \cite{GreveBlatter2009}, $\cK = \{s\ge b\}$, $\cK_h \nsubseteq \cK$ in general, perhaps $\cV = W^{1,2}(\Omega)$
-\end{enumerate}
-
-FIXME show Greenland surface-vs-thickness figure
-
-FIXME however, regularity arising from analyzing SIA not to be trusted because actual dynamics is not diffusive for short wavelength surface/thickness perturbations \cite{Pattynetal2008}, so for simplicity we also consider ``advective'' models with hypothesized transport velocities (details below)
-
-FIXME time-dependent (implicit time step) case set up in \cite{Bueler2021conservation}
-
-FIXME however, above is just strong forms; need to actually give operators to apply theorems.  we split case 1 into 1A (SIA) and 1B (ice flux is hypothesized ice velocity times thickness).  in case 2, somewhat like 1B, we assume surface ice velocity is given
-
-\newcommand{\foneA}{f_{\,\text{1A}}}
-\newcommand{\foneB}{f_{\,\text{1B}}}
-
-FIXME write out operator $\ip{\foneA(\eta)}{w}$ (on $W^{1,p}(\Omega)$) or $\ip{\foneB(H)}{w}$ (on $W^{1,2}(\Omega)$) or $\ip{f_2(s)}{w}$  (on $W^{1,p}(\Omega)$)
 
 
 \section{Application of the estimate to glacier simulations} \label{sec:application}
