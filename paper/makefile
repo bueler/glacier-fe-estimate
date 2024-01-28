@@ -1,6 +1,33 @@
-all:
+all: estimate.pdf
+
+_figures := stokesdomain giscross
+figures := $(addprefix genfigs/, $(addsuffix .pdf, $(_figures)))
+
+cropfigures: $(figures)
+	for X in $(figures); do \
+	     (pdfcrop $$X $$X); \
+	done
+
+genfigs/stokesdomain.pdf: genfigs/stokesdomain.py
+	(cd genfigs/ && python3 stokesdomain.py)
+
+genfigs/giscross.pdf: genfigs/giscross.py
+	(cd genfigs/ && python3 giscross.py)
+
+estimate.pdf: estimate.tex estimate.aux estimate.bbl
+	pdflatex estimate
+	pdflatex estimate
+
+estimate.aux: estimate.tex cropfigures
+	pdflatex estimate
+	bibtex estimate
+
+estimate.bbl: estimate.aux estimate.bib
+	bibtex estimate
+
 
 .PHONY: clean
 
 clean:
 	@rm -f *~ *.out *.aux *.log *.blg *.snm *.toc *.nav *.vrb *.bbl *.synctex.gz *.thm *.dvi
+	@rm -rf genfigs/*.pdf genfigs/__pycache__/

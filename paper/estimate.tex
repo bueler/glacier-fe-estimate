@@ -103,7 +103,14 @@ Though additional complications are routine in glacier models \cite{GreveBlatter
 
 However, evidently, at a location and time where a glacier exists, the surface elevation exceeds the bedrock elevation, equivalently the ice thickness is positive.  In other words, when parameterized using surface elevation or thickness, the glacier's geometry must satisfy an inequality so as to be admissible.  Thus the mathematical models we consider are inequality-constrained flow equations.
 
-In fact, let $\Omega \subset \RR^2$ be a fixed portion of the earth's surface on which we are interested in glaciation.  Let $x\in\Omega$ denote the map-plane coordinate(s), i.e.~$x,y$ as scalars.  On this portion assume we are given, as data, a bed elevation function $b(x)$ and a surface mass balance (SMB) function $a(t,x)$ for $t\in [0,T]$ and $x\in \Omega$.  (The function spaces from which these data come will be considered below.)  Note that the SMB function $a$ is generally signed.  In areas where it is positive (accumulation) a glacier will exist, but if it is negative then either a glacier exists with an ablating surface, or no glacier exists.  Determining which situation applies requires solving the problem which we now describe.
+In fact, let $\Omega \subset \RR^2$ be a fixed portion of the earth's surface on which we are interested in glaciation (Figure \ref{fig:stokesdomain}).  Let $x\in\Omega$ denote the map-plane coordinate(s), i.e.~$x,y$ as scalars.  On this portion assume we are given, as data, a bed elevation function $b(x)$ and a surface mass balance (SMB) function $a(t,x)$ for $t\in [0,T]$ and $x\in \Omega$.  (The function spaces from which these data come will be considered below.)  Note that the SMB function $a$ is generally signed.  In areas where it is positive (accumulation) a glacier will exist, but if it is negative then either a glacier exists with an ablating surface, or no glacier exists.  Determining which situation applies requires solving the problem which we now describe.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.65\textwidth]{genfigs/stokesdomain.pdf}
+\caption{Notation for the glacier geometry problem used in this paper.}
+\label{fig:stokesdomain}
+\end{figure}
 
 Let $s(t,x)$ be the solution surface elevation.  This surface must be above the bed ($s\ge b$).  Where there is ice there is a solution ice velocity $\bu(t,x,z)$ defined on the three-dimensional domain
 \begin{equation}
@@ -164,9 +171,9 @@ Here are the two approaches when posed for the steady geometry of a glacier in a
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.75\textwidth]{genfigs/giscross.pdf}
-\caption{A cross-section of the Greenland ice sheet at $70^\circ$N latitude (inset).  While the ice surface $s$ is relatively smooth because of ice flow (top), the bedrock elevation $b$ is much rougher.  The corresponding ice thickness $H = s-b$ (bottom) inherits the low regularity of $b$.}
-\label{fig:cartoon}
+\includegraphics[width=0.85\textwidth]{genfigs/giscross.pdf}
+\caption{A cross-section of the Greenland ice sheet at $70^\circ$N latitude (\cite{Morlighemetal2017} and A.~Aschwanden, personal communication; inset).  While the ice surface $s$ is relatively smooth because of ice flow (top), the bedrock elevation $b$ is much rougher.  The corresponding ice thickness $H = s-b$ (bottom) inherits the low regularity of $b$.}
+\label{fig:giscross}
 \end{figure}
 
 FIXME however, regularity arising from analyzing SIA not to be trusted because actual dynamics is not diffusive for short wavelength surface/thickness perturbations \cite{Pattynetal2008}, so for simplicity we also consider ``advective'' models with hypothesized transport velocities (details below)
