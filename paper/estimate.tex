@@ -156,11 +156,20 @@ In summary at this point, we assert that a non-shallow, non-sliding, and isother
 In other words, a glacier simulation is an NCP \eqref{eq:ncp}, for a free-surface flow in a signed climate that can add or remove ice, coupled to a Stokes problem \eqref{eq:stokes} within the evolving, three-dimensional icy domain $\Lambda(t)$.  Such a simulation is generally formulated using a finite element (FE) method for the Stokes sub-problem.  To the author's knowledge all existing non-shallow models use a explicit time-stepping scheme to evolve the surface \cite[for example]{Jouvetetal2008}, with the one exception of the work \cite{WirbelJarosch2020}.  
 
 
-\section{Variational inequality models of glacier geometry} \label{sec:models}
+\section{Implicit time-stepping variational inequality models} \label{sec:models}
 
-We now consider the particular variational equalities satisfied either by the glacier's surface elevation or thickness.  While essentially equivalent at the level of the continuum problem,\footnote{Equivalence holds for smooth bedrock elevation, but real bedrock topography is likely not $C^1$.} we will see that the problems for surface elevation and thickness, respectively, have different character when FE approximations are applied and the above abstract estimate is considered.  Before addressing the two approaches we consider the aspects of the problems which are in common.
+Now we describe implicit time steps of the model in the Introduction.  Each step problem has a variational inequality (VI) weak formulation \cite{Evans2010,KinderlehrerStampacchia1980}.
 
-Let $\Omega \subset \RR^2$ be a fixed region of land, and suppose $b \in C^1(\Omega)$ is the bedrock elevation on $\Omega$.  (For simplicity we are assuming that $b=b(x)$ is time-independent.)  For $T>0$ let $a(t,x) \in C([0,T] \times \Omega)$ denote a given ``surface mass balance'' function \cite{GreveBlatter2009}, the annually-averaged rate of ice accumulation, as snow, minus melt and runoff.  Where $a(t,x)>0$ there is more snow in a year than can melt (accumulation), while if $a(t,x)<0$ the opposite is true (ablation).  Note that $a(t,x)$ is defined a.e.~$x\in \Omega$, regardless of whether a glacier is present or not.\footnote{Where there is no glacier, and thus necessarily $a(t,x) \le 0$, the value of $a(t,x)$ can be computed by a surface energy balance model \cite{GreveBlatter2009}, at that location, by hypothesizing a bare ice surface over an arbitrary depth of ice, and computing the total runoff from the available energy for melt.  This is balanced against snow accumulation, if any.  It is important that $a(t,x)$ represent the surface mass balance \emph{which a glacier would experience if present at that time and place}.}
+In this VI we must choose whether to parameterize geometry as the glacier's surface elevation or its thickness.  While essentially equivalent at the level of the continuum problem, the surface elevation and thickness formulations have different character when FE approximations are applied and the later abstract estimate of section \ref{sec:abstractestimate} is considered.  In fact we start by formulating using surface elevation, and then state the version for thickness after that.  Surface elevation is preferred because of the effect illustrated in Figure \ref{fig:giscross}, that in observations of real land-based glaciers the surface elevation $s(t,x)$ is almost always smoother as a function of $x$ than the thickness $H(t,x) = s(t,x)-b(x)$.  As the Figure shows, the thickness ``inherits'' the lower regularity of the eroded and faulted bedrock elevation, while on the other hand the surface elevation is smoothed by flow.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{genfigs/giscross.pdf}
+\caption{A cross-section of the Greenland ice sheet at $70^\circ$N latitude (\cite{Morlighemetal2017} and A.~Aschwanden, personal communication; inset).  While the ice surface $s$ is relatively smooth because of ice flow (top), the bedrock elevation $b$ is much rougher.  The corresponding ice thickness $H = s-b$ (bottom), though it is a valid description of glacier geometry, inherits the low regularity of $b$.}
+\label{fig:giscross}
+\end{figure}
+
+As in the Introduction, let $\Omega \subset \RR^2$ be a fixed region of land, suppose $b \in C^1(\Omega)$ is the time-independent bedrock elevation on $\Omega$, and, for $T>0$, let $a(t,x) \in C([0,T] \times \Omega)$ be the given surface mass balance (SMB) function.  Where $a(t,x)>0$ there is more snow in a year than can melt (accumulation), while if $a(t,x)<0$ the opposite is true (ablation).  Note that $a(t,x)$ is assumed to be defined everywhere in $\Omega$, regardless of whether a glacier is present or not, though necessarily $a(t,x) \le 0$ where there is no glacier.  At such an ablative location the value of $a(t,x)$ can be modeled using knowledge of precipitation plus an energy balance \cite{GreveBlatter2009}.  For example, one may hypothesize an ice or snow surface over an arbitrary depth of ice, then compute the total runoff from the available energy for melt, and then balance this against snow accumulation, if any.  In any case, $a(t,x)$ at an unglaciated location represents the SMB which a glacier would experience if it were present at that time and place.
 
 Here are the two approaches when posed for the steady geometry of a glacier in a hypothesized steady climate.  FIXME show strong forms here
 
@@ -169,22 +178,15 @@ Here are the two approaches when posed for the steady geometry of a glacier in a
 \item FIXME fluid layer thickness equation, also called mass continuity or Saint Venant equation \cite{JouvetBueler2012}, $\cK = \{H\ge 0\}$, $\cK_h \subset \cK$, apparently $\eta = H^{2p/(p-1)} \in W^{1,p}(\Omega)$, for e.g.~$p=4$, because of existence in SIA case \cite{JouvetBueler2012}
 \end{enumerate}
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.85\textwidth]{genfigs/giscross.pdf}
-\caption{A cross-section of the Greenland ice sheet at $70^\circ$N latitude (\cite{Morlighemetal2017} and A.~Aschwanden, personal communication; inset).  While the ice surface $s$ is relatively smooth because of ice flow (top), the bedrock elevation $b$ is much rougher.  The corresponding ice thickness $H = s-b$ (bottom) inherits the low regularity of $b$.}
-\label{fig:giscross}
-\end{figure}
+FIXME implicit BE time step VI for $s$; specific case of general fluid layer setup in \cite{Bueler2021conservation}
 
-FIXME however, regularity arising from analyzing SIA not to be trusted because actual dynamics is not diffusive for short wavelength surface/thickness perturbations \cite{Pattynetal2008}, so for simplicity we also consider ``advective'' models with hypothesized transport velocities (details below)
-
-FIXME time-dependent (implicit time step) case set up in \cite{Bueler2021conservation}
-
-FIXME write out operator $\ip{f_1(s)}{w}$ or $\ip{f_2(H)}{w}$  (on $W^{1,p}(\Omega)$?)
-
-FIXME state VI for SKE with $s$; state VI for mass continuity with $H$
+FIXME write out operator $\ip{f_1(s)}{w}$ or $\ip{f_2(H)}{w}$  (on $W^{1,p}(\Omega)$?); well-posedness of Stokes problem for fixed geometry \cite{JouvetRappaz2011} shows $\bu|_s$ meaningful
 
 FIXME conjecture well-posedness of BE step for sufficiently short $\Delta t$
+
+FIXME VI for mass continuity with $H$
+
+FIXME SIA model has better-known properties \cite{JouvetBueler2012,PiersantiTemam2023}. however, regularity arising from analyzing SIA is not to be trusted because non-shallow (Stokes) dynamics is not diffusive for short wavelength surface/thickness perturbations \cite{Pattynetal2008}
 
 
 \section{Abstract error estimate} \label{sec:abstractestimate}

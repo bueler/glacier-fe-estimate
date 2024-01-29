@@ -25,8 +25,7 @@ estimate.aux: estimate.tex cropfigures
 estimate.bbl: estimate.aux estimate.bib
 	bibtex estimate
 
-
-.PHONY: clean
+.PHONY: clean cropfigures _figures
 
 clean:
 	@rm -f *~ *.out *.aux *.log *.blg *.snm *.toc *.nav *.vrb *.bbl *.synctex.gz *.thm *.dvi
