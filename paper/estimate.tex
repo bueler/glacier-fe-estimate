@@ -159,9 +159,13 @@ Let $\rhoi$ be the density of ice and $\bg$ the acceleration of gravity.  The St
 \end{subequations}
 Equation \eqref{eq:stokes:incomp} states incompressibility and \eqref{eq:stokes:stressfreesurface} that the sub-aerial upper surface is essentially stress free.  Note \eqref{eq:stokes:stressfreesurface} should not be confused with SKE \eqref{eq:ske}.
 
-In summary at this point, we assert that a non-shallow, non-sliding, and isothermal glacier simulation determines the evolution of the primary state variables $s(t,x)$, $\bu(t,x,z)$, and $p(t,x,z)$, from initial values of $s(0,x)$.  Because the flow is very viscous \cite{Acheson1990}, the Stokes problem \eqref{eq:stokes} determines $\bu(t,x,z)$ and $p(t,x,z)$ at each time, given $\Lambda(t)$.\footnote{The Stokes model acts as an instantaneous ``algebraic'' constraint on the evolution.  The coupled system \eqref{eq:ncp}, \eqref{eq:stokes} is both an infinite-dimensional differential algebraic equation (DAE) system and an infinite-dimensional NCP.}  The surface elevation $s$ is defined on $[0,T]\times \Omega$, but it is subject to the inequality constraint $s\ge b$.
+In summary at this point, a glacier simulation is an evolving free-surface flow, in a signed climate that can add or remove ice, coupled to a Stokes problem within an evolving, three-dimensional icy domain.  The simulation attempts to determine the evolution of the solution variables $s(t,x)$, $\bu(t,x,z)$, and $p(t,x,z)$ from an initial surface elevation $s(0,x)$ and the data $b(x),a(t,x)$.  The surface elevation $s(t,x)$ is defined everywhere, i.e.~over $[0,T]\times \Omega$, but it is subject to the inequality constraint $s(t,x) \ge b(x)$.  The surface elevation $s(t,x)$ and surface velocity $\bu|_s(t,x)=\bu(t,x,s(t,x))$ are linked by the kinematical NCP \eqref{eq:ncp}.  A non-shallow, non-Newtonian, non-sliding, and isothermal simulation will solve the Stokes problem \eqref{eq:stokes} to determine $\bu(t,x,z)$ and $p(t,x,z)$ on $\Lambda(t)$, i.e.~from the instantaneous value of $s(t,x)$, at each time.
 
-In other words, a glacier simulation is an NCP \eqref{eq:ncp}, for a free-surface flow in a signed climate that can add or remove ice, coupled to a Stokes problem \eqref{eq:stokes} within the evolving, three-dimensional icy domain $\Lambda(t)$.  Such a simulation is generally formulated using a finite element (FE) method for the Stokes sub-problem.  To the author's knowledge all existing non-shallow models use a explicit time-stepping scheme to evolve the surface \cite[for example]{Jouvetetal2008}, with the one exception of the work \cite{WirbelJarosch2020}.  
+Note that, because the flow is very viscous \cite{Acheson1990}, the Stokes model acts as an instantaneous ``algebraic'' constraint on the evolution statement \eqref{eq:ncp}.  The coupled system \eqref{eq:icydomain}--\eqref{eq:stokes} is therefore both an infinite-dimensional differential algebraic equation (DAE) system \cite{AscherPetzold1998} and an infinite-dimensional NCP.
+
+Non-shallow glacier simulations are most-commonly formulated using a finite element (FE) method for the Stokes sub-problem \cite[for example]{IsaacStadlerGhattas2015,Jouvetetal2008,Pattynetal2008}.  However, to the author's knowledge all existing non-shallow models use a explicit time-stepping scheme to evolve the surface, for example as in \cite{Jouvetetal2008} or \cite{LofgrenAhlkronaHelanow2022}, with the one exception of the work \cite{WirbelJarosch2020}.
+
+This paper is organized as follows.  In Section \ref{sec:models} we reformulate the coupled problem \eqref{eq:icydomain}--\eqref{eq:stokes} as a VI weak form for implicit backward Euler time steps.  We conjecture well-posedness for this time-step problem, over a yet to be determined Banach space of surface elevation functions.  (The thickness function version is also stated.)  Then in Section \ref{sec:abstractestimate} we show an abstract FE error estimate (Theorem \ref{thm:abstractestimate}) for general VI problems involving fully-nonlinear, but coercive and Lipshitz, operators on Banach spaces.  This estimate extends the classical bilinear, elliptic case by Falk \cite{Falk1974}.  In Section \ref{sec:application} we apply this theorem to the (conjecturally well-posed) glacier time steps from Section \ref{sec:models}.  The distinctive character of how glaciers respond to climate, i.e.~to SMB, implies that certain terms are effectively small.  A set of computable geometry error estimates is proposed.  These estimates are demonstrated in Section \ref{sec:demo} on an idealized, but non-trivial, two-dimensional non-shallow glacier simulation implemented in Firedrake \cite{Hametal2023}.
 
 
 \section{Implicit time-stepping variational inequality models} \label{sec:models}
@@ -381,11 +385,21 @@ Suppose $f(u)=\ell$.  Keeping the other assumptions of Theorem \ref{thm:abstract
 \end{corollary}
 
 
-
-
-\section{Application of the estimate to glacier simulations} \label{sec:application}
+\section{Application of the estimate} \label{sec:application}
 
 FIXME apply Theorem \ref{thm:abstractestimate} and talk through what happens
+
+FIXME accomodate the barrier theory from \cite{Bueler2021conservation}
+
+
+\section{Demonstration of computable geometry error bounds} \label{sec:demo}
+
+FIXME use stuff from multilevel-stokes-geometry
+
+
+\section{Conclusion} \label{sec:conclusion}
+
+FIXME
 
 
 \bibliographystyle{siamplain}
