@@ -170,10 +170,17 @@ Now we describe implicit time steps of the model in the Introduction.  Each step
 
 In this VI we must choose whether to parameterize geometry as the glacier's surface elevation or its thickness.  While essentially equivalent at the level of the continuum problem, the surface elevation and thickness formulations have different character when FE approximations are applied and the later abstract estimate of section \ref{sec:abstractestimate} is considered.  In fact we start by formulating using surface elevation, and then state the version for thickness after that.  Surface elevation is preferred because of the effect illustrated in Figure \ref{fig:giscross}, that in observations of real land-based glaciers the surface elevation $s(t,x)$ is almost always smoother as a function of $x$ than the thickness $H(t,x) = s(t,x)-b(x)$.  As the Figure shows, the thickness ``inherits'' the lower regularity of the eroded and faulted bedrock elevation, while on the other hand the surface elevation is smoothed by flow.
 
-\begin{figure}[ht]
-\centering
-\includegraphics[width=0.85\textwidth]{genfigs/giscross.pdf}
-\caption{A cross-section of the Greenland ice sheet at $70^\circ$N latitude (\cite{Morlighemetal2017} and A.~Aschwanden, personal communication; inset).  While the ice surface $s$ is relatively smooth because of ice flow (top), the bedrock elevation $b$ is much rougher.  The corresponding ice thickness $H = s-b$ (bottom), though it is a valid description of glacier geometry, inherits the low regularity of $b$.}
+\begin{figure}
+\begin{minipage}[t]{0.85\textwidth}
+\vspace{0pt}
+\includegraphics[width=\textwidth]{genfigs/giscross.pdf}
+\end{minipage}
+\,
+\begin{minipage}[t]{0.13\textwidth}
+\vspace{10pt}
+\includegraphics[width=\textwidth]{genfigs/gis/gris-profile-gray.png}
+\end{minipage}
+\caption{A cross-section of the Greenland ice sheet at $70^\circ$N latitude (inset).  While the ice surface $s$ is relatively smooth because of ice flow (top), the bedrock elevation $b$ is much rougher.  The corresponding ice thickness $H = s-b$ (bottom), though it is a valid description of glacier geometry, inherits the low regularity of $b$.  (Data from \cite{Morlighemetal2017} and A.~Aschwanden, personal communication.)}
 \label{fig:giscross}
 \end{figure}
 

@@ -24,20 +24,21 @@ plt.grid(True)
 plt.xlabel('')
 plt.ylabel('elevation (m)',fontsize=14.0)
 plt.xticks(fontsize=14.0)
-plt.yticks(fontsize=14.0)
+plt.yticks([-1000,0,1000,2000,3000],fontsize=14.0)
 plt.minorticks_off()
-plt.axis([0.0,L,-1000.0,3500.0])
+plt.axis([0.0,L,-1100.0,3500.0])
 plt.legend(loc='upper left',fontsize=14.0)
 fig = plt.subplot(2,1,2)
-plt.plot(x,H,'k')
+plt.plot(x,H,'k',label='thickness $H=s-b$')
 plt.grid(True)
 plt.xlabel('$x$ (km)',fontsize=14.0)
-plt.ylabel('thickness $H$ (m)',fontsize=14.0)
+plt.ylabel('thickness (m)',fontsize=14.0)
 plt.gca().yaxis.set_label_coords(-0.1,0.5)  # fiddle with location
 plt.xticks(fontsize=14.0)
-plt.yticks(fontsize=14.0)
+plt.yticks([0,1000,2000,3000],fontsize=14.0)
 plt.minorticks_off()
 plt.axis([0.0,L,-100.0,3500.0])
-im = plt.imread('gis/gris-profile-gray.png')  # image is 200 pixels tall
-plt.figimage(im, 135.0, 100.0)  # offset in pixels
+plt.legend(loc='upper left',fontsize=14.0)
+#im = plt.imread('gis/gris-profile-gray.png')  # image is 200 pixels tall
+#plt.figimage(im, 135.0, 100.0)  # offset in pixels
 writeout('giscross.pdf')
