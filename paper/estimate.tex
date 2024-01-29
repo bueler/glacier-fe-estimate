@@ -171,20 +171,66 @@ In this VI we must choose whether to parameterize geometry as the glacier's surf
 
 As in the Introduction, let $\Omega \subset \RR^2$ be a fixed region of land, suppose $b \in C^1(\Omega)$ is the time-independent bedrock elevation on $\Omega$, and, for $T>0$, let $a(t,x) \in C([0,T] \times \Omega)$ be the given surface mass balance (SMB) function.  Where $a(t,x)>0$ there is more snow in a year than can melt (accumulation), while if $a(t,x)<0$ the opposite is true (ablation).  Note that $a(t,x)$ is assumed to be defined everywhere in $\Omega$, regardless of whether a glacier is present or not, though necessarily $a(t,x) \le 0$ where there is no glacier.  At such an ablative location the value of $a(t,x)$ can be modeled using knowledge of precipitation plus an energy balance \cite{GreveBlatter2009}.  For example, one may hypothesize an ice or snow surface over an arbitrary depth of ice, then compute the total runoff from the available energy for melt, and then balance this against snow accumulation, if any.  In any case, $a(t,x)$ at an unglaciated location represents the SMB which a glacier would experience if it were present at that time and place.
 
-Here are the two approaches when posed for the steady geometry of a glacier in a hypothesized steady climate.  FIXME show strong forms here
+Recall the surface kinematical equation (SKE) \eqref{eq:ske}, and the nonlinear complementarity problem (NCP) \eqref{eq:ncp} in which it appears.  Let $\{t_n\}$ be an increasing sequence of times, and, by abuse of notation, write $s(x) = s^n(x)\approx s(t_n,x)$ as the solution surface elevation at time $t_n$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, the SKE is approximated by
+\begin{equation}
+\frac{s - s^{n-1}}{\Delta t} - \bu|_s \cdot \bn_s - a^n = 0. \label{eq:be:ske}
+\end{equation}
+where $\Delta t = t_n-t_{n-1}$ and $s^{n-1}(x) \approx s(t_{n-1},x)$.  For the SMB term $a^n$, assume that a temporal average has been computed.  Equivalently, let
+\begin{equation}
+\ell^n(x) = s^{n-1}(x) + \int_{t_{n-1}}^{t_n} a(t,x)\,dt; \label{eq:be:source}
+\end{equation}
+note $\ell^n=s^{n-1}+\Delta t\,a^n$.  The computable function $\ell^n$, which would be the updated surface elevation in the absence of flow, is a source term in what follows.  The implicit step solution $s$ will not, however, solve SKE \eqref{eq:be:ske} in all of $\Omega$.  Instead, similar to \eqref{eq:ncp}, an NCP holds:
+\begin{subequations}
+\label{eq:be:ncp}
+\begin{align}
+s - b &\ge 0 \label{eq:be:ncp:constraint} \\
+s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n &\ge 0 \\
+(s - b) \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right) &= 0
+\end{align}
+\end{subequations}
 
-\begin{enumerate}
-\item FIXME surface kinematical equation \cite{GreveBlatter2009}, $\cK = \{s\ge b\}$, $\cK_h \nsubseteq \cK$ in general, perhaps $\cV = W^{1,2}(\Omega)$
-\item FIXME fluid layer thickness equation, also called mass continuity or Saint Venant equation \cite{JouvetBueler2012}, $\cK = \{H\ge 0\}$, $\cK_h \subset \cK$, apparently $\eta = H^{2p/(p-1)} \in W^{1,p}(\Omega)$, for e.g.~$p=4$, because of existence in SIA case \cite{JouvetBueler2012}
-\end{enumerate}
+The strong form NCP \eqref{eq:be:ncp} has a weak form VI which is suited to finite element (FE) approximation.  To state it we must hypothesize that surface elevations are in a Banach space $\cV$ of real-valued functions on $\Omega$.  (The precise space is unknown, but we will say more about it later in this Section.)  The admissible surface elevations are those which are above the bed, which defines a convex and closed subset:
+\begin{equation}
+\cK = \left\{r \in\cV\,:\,r \ge b\right\} \subset \cV.  \label{eq:be:admissible}
+\end{equation}
 
-FIXME implicit BE time step VI for $s$; specific case of general fluid layer setup in \cite{Bueler2021conservation}
+To derive the VI form suppose $s$ is continuous and otherwise sufficiently regular so as to solve NCP \eqref{eq:be:ncp}.  The following argument is from \cite{Bueler2021conservation}.  Let $I$ be a measurable subset of $\Omega$ on which constraint \eqref{eq:be:ncp:constraint} is inactive, so a glacier is present on $I$: $I \subset \{x\,:\,s(x)>b(x)\}$.    Then, because the SKE \eqref{eq:be:ske} holds on all of $I$, it follows by integration that
+\begin{equation}
+\int_I \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = 0.
+\end{equation}
+for all $r\in\cK$.  On the other hand, suppose $A \subset \Omega$ is measurable and a subset of the active region, i.e.~$A$ is in the ice-free region: $A \subset \{x\,:\,s(x)=b(x)\}$.  Note that $r-s=r-b\ge 0$ on $A$ for $r\in\cK$.  In this case we observe that $\ell^n - b = s^{n-1} - b + \Delta t\,a^n\le 0$ on all of $A$ because otherwise, using the continuity of $b$, $s^{n-1}$, and $a^n$, a glacier would still be present, or would have appeared, somewhere in $A$.  (Thus $s(x)>b(x)$ somewhere in $A$, a contradiction.)  Using $\bu|_s=0$ on $A$, i.e.~extension by zero, integration then shows an inequality because $b-\ell^n \ge 0$ and $r-s\ge 0$ on $A$:
+\begin{equation}
+\int_A \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = \int_A \left(b - \ell^n\right)\,(r-b) \ge 0.
+\end{equation}
 
-FIXME write out operator $\ip{f_1(s)}{w}$ or $\ip{f_2(H)}{w}$  (on $W^{1,p}(\Omega)$?); well-posedness of Stokes problem for fixed geometry \cite{JouvetRappaz2011} shows $\bu|_s$ meaningful
+Since all parts of $\Omega$ are either covered by glacier (in $I$) or ice free (in $A$), the argument above justifies the following VI model for the implicit time step solution surface elevation $s \in \cK$:
+\begin{equation}
+\int_\Omega \left(s - \Delta t\,\bu|_s \cdot \bn_s\right)\,(r-s) \ge \int_\Omega \ell^n \,(r-s) \quad \text{for all } r \in \cK. \label{eq:be:viearly}
+\end{equation}
+	
+FIXME however we need to solve Stokes equations on $\Lambda(t)$ to get $\bu|_s$; here is weak form for that
+\begin{equation}
+XX \text{(see \cite{JouvetRappaz2011}, \cite{IsaacStadlerGhattas2015})} \label{eq:be:stokes}
+\end{equation}
+this is well posed \cite{JouvetRappaz2011}
 
-FIXME conjecture well-posedness of BE step for sufficiently short $\Delta t$
+FIXME now let
+\begin{equation}
+F(s) = s - \Delta t\,\Phi(s) \cdot \bn_s  \label{eq:be:Fdefine}
+\end{equation}
+and
+\begin{equation}
+\Phi(s) = \left(\text{trace of the solution $\bu$ of \eqref{eq:be:stokes} along upper surface $\Gamma_s$}\right)  \label{eq:be:Phidefine}
+\end{equation}
 
-FIXME VI for mass continuity with $H$
+FIXME restate VI: seek $s = s^n \in \cK$ so that 
+\begin{equation}
+\int_\Omega F(s)\,(r-s) \ge \int_\Omega \ell^n \,(r-s) \quad \text{for all } r \in \cK. \label{eq:be:vi}
+\end{equation}
+
+FIXME conjecture well-posedness of \eqref{eq:be:vi} for sufficiently short $\Delta t$
+
+FIXME VI for mass continuity with $H$: fluid layer thickness equation, also called mass continuity or Saint Venant equation \cite{JouvetBueler2012}, $\cK = \{H\ge 0\}$, $\cK_h \subset \cK$, apparently $\eta = H^{2p/(p-1)} \in W^{1,p}(\Omega)$, for e.g.~$p=4$, because of existence in SIA case \cite{JouvetBueler2012}
 
 FIXME SIA model has better-known properties \cite{JouvetBueler2012,PiersantiTemam2023}. however, regularity arising from analyzing SIA is not to be trusted because non-shallow (Stokes) dynamics is not diffusive for short wavelength surface/thickness perturbations \cite{Pattynetal2008}
 
