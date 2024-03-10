@@ -68,10 +68,10 @@
 \DeclareMathOperator*{\Hull}{Hull}
 
 
-% Sets running headers as well as PDF title and authors
-\headers{Estimating geometry errors in glacier simulations}{E. Bueler}
+% running headers (as well as PDF metadata)
+\headers{Bounds on geometry errors in glacier simulations}{E. Bueler}
 
-\title{A framework for estimating geometry errors \\ in glacier simulations}
+\title{Bounds on geometry errors in glacier simulations}
 
 \author{Ed Bueler\thanks{Department of Mathematics and Statistics, University of Alaska Fairbanks, USA (\email{elbueler@alaska.edu}).}}
 
@@ -80,12 +80,12 @@
 \maketitle
 
 \begin{abstract}
-The two primary data which determine the evolution of glaciation are bedrock elevation and the balance of snow accumulation minus melt, the so-called surface mass balance.  The glacier geometry in a simulation solves a free-boundary problem over a set of admissible surface elevation or thickness functions.  This set is defined by the property that the ice surface elevation must be above the bedrock topography, or equivalently that the ice thickness is nonnegative.  For implicit time steps this problem is posed in weak form as a variational inequality (VI) over a fixed map-plane region.  We first show an abstract estimate for finite element (FE) approximations of such VIs over Banach spaces.  The generally-nonlinear operator in this abstract estimate is only assumed to be coercive and Lipshitz.  When applied in the glacier case, for which we must assume well-posedness of each (time) semi-discretized problem, certain terms in the spatial FE approximation can be estimated.  The resulting computable bounds on the geometry approximation error are demonstrated in an implicit time-stepping glacier simulation based on non-shallow Stokes dynamics.
+The primary data which determine the evolution of glaciation are bedrock elevation and the surface mass balance (snow accumulation minus melt).  From this data the glacier's geometry solves a free-boundary problem over a set of admissible surface elevation or thickness functions.  This constraint set requires that the ice surface elevation must be above the bedrock topography, equivalently that the ice thickness must be nonnegative.  For implicit time steps the free-boundary problem is posed in weak form as a variational inequality over a fixed map-plane region.  We first show an abstract estimate for finite element approximations of such problems over Banach spaces.  The nonlinear operator in this abstract estimate is only assumed to be coercive and Lipshitz.  When applied in the glacier case, for which we must assume well-posedness of each implicit time-step problem, certain terms in the finite element approximation can be estimated.  The resulting computable bounds on the geometry approximation error are demonstrated in an implicit time-stepping glacier simulation based on non-shallow Stokes dynamics.
 \end{abstract}
 
 % REQUIRED
 \begin{keywords}
-finite element methods, variational inequalities, ice flow, glaciers
+error bounds, finite element methods, glaciers, ice flow, variational inequalities
 \end{keywords}
 
 % REQUIRED
@@ -96,17 +96,13 @@ finite element methods, variational inequalities, ice flow, glaciers
 
 \section{Introduction} \label{sec:intro}
 
-Glacier and ice sheet simulations, which track the evolving geometry and flow velocity of a thick layer of water ice, typically model the glacier as a free-surface, very-viscous, incompressible, and non-Newtonian fluid \cite{GreveBlatter2009,SchoofHewitt2013}.  For simplicity we will restrict our considerations to glaciers on land, without floating portions, and we note that an ``ice sheet'' is a continent-scale glacier.
+Glacier and ice sheet simulations typically model the ice layer as a free-surface, very-viscous, incompressible, and non-Newtonian fluid \cite{GreveBlatter2009,SchoofHewitt2013}.  For simplicity we will restrict our considerations to simulations of glaciers on land, without floating portions, and we note that an ``ice sheet'' is simply a continent-scale glacier.  The two types of essential input data into such simulations are bedrock elevation (meters) and surface mass balance (SMB; ice-equivalent units of meters per second).  We will assume that bedrock elevation is constant in time.  By definition, the SMB is the annually-averaged difference of vertically-accumulating snow minus the loss of (liquid) water, through runoff, at the upper surface of the glacier \cite{Cogleyetal2011}.
 
-The two types of essential input data into such simulations are bedrock elevation and surface mass balance (SMB).  For simplicity we will assume that the former elevation function is constant in time and measured in meters.  By definition, the latter SMB is the annually-averaged difference of vertically accumulating snow minus the loss of (liquid) water, through runoff, at the upper surface of the glacier \cite{Cogleyetal2011}.  We assume it is measured in ice-equivalent units of thickness (meters) per time.
+Thus a glacier simulation takes the topography and the changing climate as inputs.  Then, from an initial glacier geometry, it produces the glacier's evolving geometry and flow velocity; these are the output fields of primary scientific value.  The geometry is parameterized by a surface elevation or thickness function, measured in meters and depending on map-plane (two-dimensional) location and time.  The computed flow velocity is, however, only defined at those three-dimensional locations and times where ice is present.
 
-A glacier simulation thus takes in the topography and the changing climate, and an initial glacier geometry, and it produces the glacier's evolving geometry and flow velocity; these are the output fields of primary scientific value.  Within such simulations the geometry is parameterized by a surface elevation or thickness function, measured vertically in meters and depending on map-plane (i.e.~two-dimensional) location and time.  The computed flow velocity is, however, only defined at (three-dimensional) locations and times where ice is present.
+Additional complications are common in models \cite{GreveBlatter2009}, including simulation of the internal energy of the ice \cite{Aschwandenetal2012}, and/or the presence of liquid water within the ice matrix or at the glacier surfaces.  However, here we consider only models which conserve mass and momentum, and which do not make shallowness assumptions.  Conservation of energy is not addressed.
 
-The elevation of the glacier's free surface, and the area of bedrock which is glacier-covered, are primary results for simulations of land-based ice.  Additional complications are common in models \cite{GreveBlatter2009}, including simulation of the internal energy  or temperature of the ice \cite{Aschwandenetal2012}, and/or the presence of liquid water within the ice matrix or at the glacier surfaces.  However, here we consider only essential models which conserve mass and momentum, but which do not make shallowness assumptions.  Conservation of energy is not addressed.
-
-At a map-plane location and time where a glacier exists the surface elevation exceeds the bedrock elevation, equivalently the ice thickness is positive.  In other words, whether parameterized using surface elevation or thickness, the glacier's geometry must satisfy an inequality so as to be admissible.  Thus the mathematical models we consider are inequality-constrained flow equations \cite{Bueler2021conservation}.
-
-In fact, let $\Omega \subset \RR^2$ be a fixed portion of the earth's surface on which we are interested in glaciation (Figure \ref{fig:stokesdomain}).  Let $x\in\Omega$ denote the map-plane coordinate(s).  Assume we are given, as data, a bed elevation function $b(x)$ and an SMB function $a(t,x)$ for $t\in [0,T]$ and $x\in \Omega$.  (The function spaces from which these data come will be considered below.)  Note that the function $a$ is generally signed.  In areas where $a>0$ (accumulation; draw downward in Figure \ref{fig:stokesdomain}) then a glacier will exist, but if $a<0$ then either a glacier exists with an ablating surface, or no glacier exists.  Determining which situation applies requires solving a free-boundary problem.
+At a map-plane location and time where a glacier exists the surface elevation exceeds the bedrock elevation, equivalently the ice thickness is positive.  In other words, whether parameterized using surface elevation or thickness, the glacier's geometry must satisfy an inequality so as to be admissible.  Thus the mathematical models we consider are inequality-constrained flow equations \cite{Bueler2021conservation}.  In fact, let $\Omega \subset \RR^2$ be a fixed portion of the earth's surface on which we are interested in glaciation (Figure \ref{fig:stokesdomain}).  Let $x\in\Omega$ denote the map-plane coordinate(s).  Assume we are given, as data, a bed elevation function $b(x)$ and an SMB function $a(t,x)$ for $t\in [0,T]$ and $x\in \Omega$.  (The function spaces from which these data come will be considered below.)  Note that the function $a$ is generally signed.  In areas where $a>0$ (accumulation; draw downward in Figure \ref{fig:stokesdomain}) then a glacier will exist, but if $a<0$ then either a glacier exists with an ablating surface, or no glacier exists.  Determining which situation applies requires solving a free-boundary problem.
 
 \medskip
 \begin{figure}[ht]
