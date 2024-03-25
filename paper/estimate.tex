@@ -308,17 +308,17 @@ f:\hcK \to \cV', \,\, f_h:\hcK \cap \cV_h \to \cV', \, \text{ and } f=f_h \text{
 \end{equation}
 Suppose $1<p<\infty$, denote the conjugate exponent by $q=p/(p-1)$.  Assume $f$ is $p$-coercive over $\hcK$ with constant $\alpha>0$, and that it is Lipshitz on bounded sets of $\hcK$.  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}, and let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c=c(\alpha,R_h)>0$ so that
 \begin{align}
-\|u-u_h\|^p &\le \inf_{v\in\cK} \frac{2}{\alpha} \left|\ip{f(u)-\ell}{u_h-v}\right| + \inf_{v_h\in\cK_h} \frac{2}{\alpha} \left|\ip{f(u)-\ell}{u-v_h}\right| \label{eq:abstractestimate} \\
+\|u-u_h\|^p &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \ip{f(u)-\ell}{u_h-v} + \inf_{v_h\in\cK_h} \ip{f(u)-\ell}{u-v_h}\right) \label{eq:abstractestimate} \\
    &\qquad + \inf_{v_h\in\cK_h} c \|u - v_h\|^q \notag
 \end{align}
 \end{theorem}
 
-\begin{proof}  FIXME Let $v\in\cK$ and $v_h\in\cK_h$ be arbitrary.  Using \eqref{eq:commonextension}, rewrite VIs \eqref{eq:vi} and \eqref{eq:fe:vi}, as follows, no longer using $f_h$:
+\begin{proof}  Consider arbitrary elements $v\in\cK$ and $v_h\in\cK_h$.  Using \eqref{eq:commonextension}, rewrite VIs \eqref{eq:vi} and \eqref{eq:fe:vi}, as follows, replacing $f_h$:
 \begin{align*}
 \ip{f(u)}{u}     &\le \ip{f(u)}{v} + \ell(u-v),  \\
 \ip{f(u_h)}{u_h} &\le \ip{f(u_h)}{v_h} + \ell(u_h-v_h).
 \end{align*}
-It follows from these inequalities, plus $p$-coercivity over $\hcK$, that
+It follows from $p$-coercivity over $\hcK$ and these inequalities that
 \begin{align*}
 \alpha \|u-u_h\|^p &\le \ip{f(u)-f(u_h)}{u-u_h} \\
   &= \ip{f(u)}{u} + \ip{f(u_h)}{u_h} - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} \\
@@ -329,19 +329,14 @@ It follows from these inequalities, plus $p$-coercivity over $\hcK$, that
   &= \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
   &\qquad + \ip{f(u)-f(u_h)}{u-v_h}
 \end{align*}
-Since $u,u_h\in B_{R_h}$, by the Lipshitz assumption over $\hcK$ there is $C(R_h)>0$ so that $\|f(u)-f(u_h)\|_{\cV'} \le C(R_h) \|u-u_h\|$.  Also using the definition of $\|\cdot\|_{\cB'}$, from \eqref{eq:fellboundedB} it follows that
+Since $u,u_h\in B_{R_h}$, by the Lipshitz assumption over $\hcK$ there is $C(R_h)>0$ so that $\|f(u)-f(u_h)\|_{\cV'} \le C(R_h) \|u-u_h\|$.  Also use Young's inequality with $\eps>0$ \cite[Appendix B.2]{Evans2010} on the final term:
 \begin{align*}
-\alpha \|u-u_h\|^p &\le \|f(u)-\ell\|_{\cB'} \left(\|u_h-v\|_{\cB} + \|u-v_h\|_{\cB}\right) \\
-  &\qquad + C(R_h) \|u-u_h\| \|u-v_h\|
-\end{align*}
-Now use Young's inequality with $\eps>0$ \cite[Appendix B.2]{Evans2010} on the final term:
-\begin{align*}
-\alpha \|u-u_h\|^p &\le \|f(u)-\ell\|_{\cB'} \left(\|u_h-v\|_{\cB} + \|u-v_h\|_{\cB}\right) \\
-  &\qquad + C(R_h) \left(\eps\|u-u_h\|^p + \tilde C(\eps) \|u-v_h\|^q\right).
+\alpha \|u-u_h\|^p &\le \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
+  &\qquad + C(R_h) \left(\eps\|u-u_h\|^p + \tilde C(\eps) \|u-v_h\|^q\right)
 \end{align*}
 (Here $\tilde C(\eps) = (\eps p)^{-q/p} q^{-1}$.)  Choose $\eps>0$ so that $C(R_h) \eps \le \alpha/2$, and subtract to find
 \begin{align*}
-\frac{\alpha}{2} \|u-u_h\|^p &\le \|f(u)-\ell\|_{\cB'} \left(\|u_h-v\|_{\cB} + \|u-v_h\|_{\cB}\right) \\
+\frac{\alpha}{2} \|u-u_h\|^p &\le \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
   &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^q
 \end{align*}
 Take infimums to show \eqref{eq:abstractestimate}.
