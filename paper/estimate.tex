@@ -68,7 +68,7 @@
 \DeclareMathOperator*{\Hull}{Hull}
 
 
-% running headers (as well as PDF metadata)
+% running headers and PDF metadata
 \headers{Bounds on geometry errors in glacier simulations}{E. Bueler}
 
 \title{Bounds on geometry errors in glacier simulations}
@@ -302,26 +302,23 @@ In the following abstract error estimate, which extends \cite{Falk1974} and Theo
 \begin{equation}
 \hcK = \overline{\Hull{(\cK \cup \cK_h)}}  \label{eq:convexhull}
 \end{equation}
-be the closure (in $\cV$) of the convex hull of the union of the constraint sets $\cK$ and $\cK_h$.  Suppose that $f$ and $f_h$ can be extended to $\hcK$, on which they are the same map:
-\begin{equation}
-f:\hcK \to \cV', \,\, f_h:\hcK \cap \cV_h \to \cV', \, \text{ and } f=f_h \text{ on } \hcK \cap \cV_h.  \label{eq:commonextension}
-\end{equation}
-Suppose $1<p<\infty$, denote the conjugate exponent by $q=p/(p-1)$.  Assume $f$ is $p$-coercive over $\hcK$ with constant $\alpha>0$, and that it is Lipshitz on bounded sets of $\hcK$.  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}, and let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c=c(\alpha,R_h)>0$ so that
+be the closure (in $\cV$) of the convex hull of the union of the constraint sets $\cK$ and $\cK_h$.  Suppose that $f$ can be extended to $\hcK$.  For $1<p<\infty$, with conjugate exponent $q=p/(p-1)$, assume $f$ is $p$-coercive over $\hcK$ with constant $\alpha>0$, and that it is Lipshitz on bounded sets of $\hcK$.  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}, and let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c=c(\alpha,R_h)>0$ so that
 \begin{align}
 \|u-u_h\|^p &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \ip{f(u)-\ell}{u_h-v} + \inf_{v_h\in\cK_h} \ip{f(u)-\ell}{u-v_h}\right) \label{eq:abstractestimate} \\
-   &\qquad + \inf_{v_h\in\cK_h} c \|u - v_h\|^q \notag
+   &\qquad + \inf_{v_h\in\cK_h} c \|u - v_h\|^q + \frac{2}{\alpha} \ip{f(u_h)-f_h(u_h)}{u_h} \notag
 \end{align}
 \end{theorem}
 
-\begin{proof}  Consider arbitrary elements $v\in\cK$ and $v_h\in\cK_h$.  Using \eqref{eq:commonextension}, rewrite VIs \eqref{eq:vi} and \eqref{eq:fe:vi}, as follows, replacing $f_h$:
+\begin{proof}  Consider arbitrary elements $v\in\cK$ and $v_h\in\cK_h$.  Rewrite VIs \eqref{eq:vi} and \eqref{eq:fe:vi}, as follows:
 \begin{align*}
 \ip{f(u)}{u}     &\le \ip{f(u)}{v} + \ell(u-v),  \\
-\ip{f(u_h)}{u_h} &\le \ip{f(u_h)}{v_h} + \ell(u_h-v_h).
+\ip{f_h(u_h)}{u_h} &\le \ip{f_h(u_h)}{v_h} + \ell(u_h-v_h).
 \end{align*}
 It follows from $p$-coercivity over $\hcK$ and these inequalities that
 \begin{align*}
 \alpha \|u-u_h\|^p &\le \ip{f(u)-f(u_h)}{u-u_h} \\
   &= \ip{f(u)}{u} + \ip{f(u_h)}{u_h} - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} \\
+  &\text{FIXME} \\
   &\le \ip{f(u)}{v} + \ell(u-v) + \ip{f(u_h)}{v_h} + \ell(u_h-v_h) \\
   &\qquad - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} \\
   &= \ip{f(u)}{v-u_h} - \ell(v-u_h) \\
