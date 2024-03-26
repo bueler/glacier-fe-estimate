@@ -280,32 +280,34 @@ For $\rho>0$ let $B_\rho = \{v\in \cV\,:\,\|v\|\le \rho\}$.  We say $f:\cK \to \
 \end{equation}
 \end{definition}
 
-Observe that in definitions \ref{def:monotonepcoercive} and \ref{def:lipshitz} we have only assumed $f$ is defined on $\cK$.
+Observe that in definitions \ref{def:monotonepcoercive} and \ref{def:lipshitz} we do not assume $f$ is defined on all of the vector space $\cV$, but rather only on $\cK$.
 
 FIXME finite element space $\cV_h \subset \cV$, constraint set $\cK_h\subset \cV_h$, note generally $\cK_h \nsubseteq \cK$.  let $f_h:\cK_h\to\cV'$.  the FE VI problem is
 \begin{equation}
 \ip{f_h(u_h)}{v_h-u_h} \ge \ip{\ell}{v_h-u_h} \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
 \end{equation}
-we assume this problem is also well-posed FIXME FLESH OUT AND NOTE $f_h\ne f$ WOULD BE POSSIBLE BUT NEEDS TO BE EXCLUDED IN THE BELOW
+we assume this problem is also well-posed FIXME FLESH OUT AND NOTE $f_h\ne f$ WOULD BE POSSIBLE
 
-Now assume that $\cV$ continuously and densely embeds in a larger Banach space $\cB$:
+FIXME MOVE TO COROLLARY Now assume that $\cV$ continuously and densely embeds in a larger Banach space $\cB$:
 \begin{equation}
 \cV \hookrightarrow \cB, \quad \overline{\cV} = \cB
 \end{equation}
 Observe that $\cB' \subset \cV'$ is a subspace.  Our main example will be where $\cV=W^{1,p}(\Omega)$ and $\cB=L^p(\Omega)$, but compare the Hilbert-space case in \cite{Falk1974} and \cite[section 5.1]{Ciarlet2002}.
 
-A key concept in what follows is that $f(u)-\ell$ is generally nonzero when $u$ solves \eqref{eq:vi}.  Instead, a nonlinear complementarity problem holds, at least in sufficiently regular cases, as in \cite[Exercise 5.1.1]{Ciarlet2002}  and \cite[section 7]{BuelerFarrell2024}, for example.  Only for $u$ in the interior of $\cK$ should we expect equality $f(u)=\ell$.
+A key concept in what follows is that $f(u)-\ell$ is generally nonzero when $u$ solves \eqref{eq:vi}.  Instead, a nonlinear complementarity problem holds, at least in sufficiently regular cases, as in \cite[Exercise 5.1.1]{Ciarlet2002}  and \cite[section 7]{BuelerFarrell2024}, for example.  Only for $u$ in the interior of $\cK$ should we expect equality (i.e.~$f(u)=\ell$).
 
-In the following abstract error estimate, which extends \cite{Falk1974} and Theorem 5.1.1 in \cite{Ciarlet2002}, we assume $f_h=f$ on a common extended domain of definition, namely $\hcK$ defined in \eqref{eq:convexhull}.  We also assume that $f(u)-\ell$ is a bounded linear functional on the larger space $\cB$.  However, we do not assume that $f$ is linear.
+The following abstract error estimate extends \cite{Falk1974} and Theorem 5.1.1 in \cite{Ciarlet2002}, as will be shown in corollaries.  We assume neither that $f$ is linear, nor that $f_h=f$, but we do extend the domain of $f$ to include the finite element solution.
 
-\begin{theorem} \label{thm:abstractestimate}  Let
+\begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}, and let $R_h=\max\{\|u\|,\|u_h\|\}$.  Define
 \begin{equation}
 \hcK = \overline{\Hull{(\cK \cup \cK_h)}}  \label{eq:convexhull}
 \end{equation}
-be the closure (in $\cV$) of the convex hull of the union of the constraint sets $\cK$ and $\cK_h$.  Suppose that $f$ can be extended to $\hcK$.  For $1<p<\infty$, with conjugate exponent $q=p/(p-1)$, assume $f$ is $p$-coercive over $\hcK$ with constant $\alpha>0$, and that it is Lipshitz on bounded sets of $\hcK$.  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}, and let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c=c(\alpha,R_h)>0$ so that
+as the closure (in $\cV$) of the given convex hull, and suppose that $f$ can be extended to $\hcK$.  For $1<p<\infty$, with conjugate exponent $q=p/(p-1)$, assume $f$ is $p$-coercive over $\hcK$ with constant $\alpha>0$, and that it is Lipshitz on bounded sets of $\hcK$.  Then there is a constant $c=c(\alpha,R_h)>0$ so that
 \begin{align}
-\|u-u_h\|^p &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \ip{f(u)-\ell}{u_h-v} + \inf_{v_h\in\cK_h} \ip{f(u)-\ell}{u-v_h}\right) \label{eq:abstractestimate} \\
-   &\qquad + \inf_{v_h\in\cK_h} c \|u - v_h\|^q + \frac{2}{\alpha} \ip{f(u_h)-f_h(u_h)}{u_h} \notag
+\|u-u_h\|^p &\le \quad \frac{2}{\alpha} \inf_{v\in\cK} \ip{f(u)-\ell}{v-u_h} \label{eq:abstractestimate} \\
+   &\quad + \frac{2}{\alpha} \inf_{v_h\in\cK_h} \ip{f(u)-\ell}{v_h-u} \notag \\
+   &\quad + \frac{2}{\alpha} \ip{f(u_h)-f_h(u_h)}{u_h} \notag \\
+   &\quad + \inf_{v_h\in\cK_h} c \|u - v_h\|^q \notag
 \end{align}
 \end{theorem}
 
@@ -318,28 +320,34 @@ It follows from $p$-coercivity over $\hcK$ and these inequalities that
 \begin{align*}
 \alpha \|u-u_h\|^p &\le \ip{f(u)-f(u_h)}{u-u_h} \\
   &= \ip{f(u)}{u} + \ip{f(u_h)}{u_h} - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} \\
-  &\text{FIXME} \\
+  &= \ip{f(u)}{u} + \ip{f_h(u_h)}{u_h} \\
+  &\qquad - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} + \ip{f(u_h)-f_h(u_h)}{u_h} \\
   &\le \ip{f(u)}{v} + \ell(u-v) + \ip{f(u_h)}{v_h} + \ell(u_h-v_h) \\
-  &\qquad - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} \\
-  &= \ip{f(u)}{v-u_h} - \ell(v-u_h) \\
-  &\qquad + \ip{f(u_h)}{v_h-u} - \ell(v_h-u) \\
+  &\qquad - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} + \ip{f(u_h)-f_h(u_h)}{u_h} \\
+  &= \ip{f(u)}{v-u_h} - \ell(v-u_h) + \ip{f(u_h)}{v_h-u} - \ell(v_h-u) \\
+  &\qquad + \ip{f(u_h)-f_h(u_h)}{u_h} \\
   &= \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
-  &\qquad + \ip{f(u)-f(u_h)}{u-v_h}
+  &\qquad + \ip{f(u)-f(u_h)}{u-v_h} + \ip{f(u_h)-f_h(u_h)}{u_h}
 \end{align*}
-Since $u,u_h\in B_{R_h}$, by the Lipshitz assumption over $\hcK$ there is $C(R_h)>0$ so that $\|f(u)-f(u_h)\|_{\cV'} \le C(R_h) \|u-u_h\|$.  Also use Young's inequality with $\eps>0$ \cite[Appendix B.2]{Evans2010} on the final term:
+Since $u,u_h\in B_{R_h}$, by the Lipshitz assumption over $\hcK$ there is $C(R_h)>0$ so that
 \begin{align*}
 \alpha \|u-u_h\|^p &\le \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
-  &\qquad + C(R_h) \left(\eps\|u-u_h\|^p + \tilde C(\eps) \|u-v_h\|^q\right)
+  &\qquad + C(R_h) \|u-u_h\|\|u-v_h\| + \ip{f(u_h)-f_h(u_h)}{u_h}
+\end{align*}
+Now use Young's inequality with $\eps>0$ \cite[Appendix B.2]{Evans2010} on the product of norms:
+\begin{align*}
+\alpha \|u-u_h\|^p &\le \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
+  &\qquad + C(R_h) \left(\eps\|u-u_h\|^p + \tilde C(\eps) \|u-v_h\|^q\right) + \ip{f(u_h)-f_h(u_h)}{u_h}
 \end{align*}
 (Here $\tilde C(\eps) = (\eps p)^{-q/p} q^{-1}$.)  Choose $\eps>0$ so that $C(R_h) \eps \le \alpha/2$, and subtract to find
 \begin{align*}
 \frac{\alpha}{2} \|u-u_h\|^p &\le \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
-  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^q
+  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^q + \ip{f(u_h)-f_h(u_h)}{u_h}
 \end{align*}
 Take infimums to show \eqref{eq:abstractestimate}.
 \end{proof}
 
-FIXME COROLLARY Assume that
+FIXME MAKE COROLLARY Assume that
 \begin{equation}
 \|f(u)-\ell\|_{\cB'} < \infty.  \label{eq:fellboundedB}
 \end{equation}
@@ -367,12 +375,12 @@ Suppose $\cK \supset \cK_h$.  Keeping the other assumptions of Theorem \ref{thm:
 \end{equation}
 \end{corollary}
 
-Finally, if $f(u)=\ell$, for example if $u$ is in the interior of $\cK$, then $f(u)-\ell \in \cB'$ and the conclusion simplifies to, essentially, Cea's lemma \cite{Ciarlet2002}.  Note that we do not assume $\cK \supset \cK_h$ here, as in Corollary \ref{cor:abstractestimate:equalsets}.  The glacier situation here is that the entire domain $\Omega$ is covered in ice, with a positive minimum on the thicknesses.
+Finally, if $f(u)=\ell$, for example if $u$ is in the interior of $\cK$, then the conclusion simplifies to, essentially, Cea's lemma \cite{Ciarlet2002}.  The glacier situation here is that the entire domain $\Omega$ is covered in ice, with a positive minimum on the thicknesses.
 
 \begin{corollary}  \label{cor:abstractestimate:interior}
 Suppose $f(u)=\ell$.  Keeping the other assumptions of Theorem \ref{thm:abstractestimate}, it follows that there is $\tilde c>0$ so that
 \begin{equation}
-\|u-u_h\| \le \inf_{v_h\in\cK_h} \tilde c \|u - v_h\|^{q/p}. \label{eq:abstractestimate:interior}
+\|u-u_h\| \le \inf_{v_h\in\cK_h} \tilde c \|u - v_h\|^{q/p} + FIXME. \label{eq:abstractestimate:interior}
 \end{equation}
 \end{corollary}
 
