@@ -185,47 +185,49 @@ This paper is organized as follows.  In Section \ref{sec:models} we reformulate 
 
 \section{Implicit time-stepping weak-form models} \label{sec:models}
 
-In the following time-stepping model, $a(t,x)$ is assumed to be defined everywhere in $\Omega$, regardless of whether a glacier is present or not.  At an ablative location the value $a(t,x)\le 0$ can be modeled using precipitation and an energy balance \cite{GreveBlatter2009}, for instance by hypothesizing an ice or snow surface and then computing the total runoff from the available energy for melt, balanced against snow accumulation, if any.  Thus $a(t,x)$ at an unglaciated location will be the SMB which a glacier would experience if it were present at that time and place.
+In the following time-stepping model, the SMB $a(t,x)$ is assumed to be defined everywhere in $\Omega$, regardless of whether a glacier is present or not.  At an ablative location the value $a(t,x)\le 0$ can be modeled using precipitation and an energy balance \cite{GreveBlatter2009}, for instance by hypothesizing an ice or snow surface and then computing the total runoff from the available energy for melt, balanced against snow accumulation, if any.  Thus $a(t,x)$ at an unglaciated location will be the SMB which a glacier would experience if it were present at that time and place.
 
-Let $\{t_n\}$ be an increasing sequence of times, and write $s(x) = s^n(x)\approx s(t_n,x)$ for the unknown surface elevation at time $t_n$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} is approximated by
+Let $\{t_n\}$ be an increasing sequence of times, and denote $\Delta t = t_n-t_{n-1}$ for a generic time step.  Write $s^n(x)\approx s(t_n,x)$ for the unknown surface elevation at time $t_n$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} is approximated by
 \begin{equation}
-\frac{s - s^{n-1}}{\Delta t} - \bu|_s \cdot \bn_s - a^n = 0 \label{eq:be:ske}
+\frac{s^n - s^{n-1}}{\Delta t} - \bu|_{s^n} \cdot \bn_{s^n} - a^n = 0. \label{eq:be:ske}
 \end{equation}
-where $\Delta t = t_n-t_{n-1}$.  Here $a^n$ is the temporal average of $a(t,x)$ over the time step.  In fact, define the source term
+Here $a^n$ is the temporal average of $a(t,x)$ over $[t_{n-1},t_n]$, so define the source term
 \begin{equation}
 \ell^n(x) = s^{n-1}(x) + \int_{t_{n-1}}^{t_n} a(t,x)\,dt, \label{eq:be:source}
 \end{equation}
-so that $\ell^n=s^{n-1}+\Delta t\,a^n$.
+such that $\ell^n=s^{n-1}+\Delta t\,a^n$.
 
-Now, the implicit step solution $s$ does solve \eqref{eq:be:ske} in all of $\Omega$.  Instead, similar to \eqref{eq:ncp}, the updated surface solves an NCP:
+The implicit step solution $s^n$, denoted from now on simply by $s$, does not solve \eqref{eq:be:ske} over all of $\Omega$.  Instead, similar to \eqref{eq:ncp}, the updated surface solves an NCP:
 \begin{subequations}
 \label{eq:be:ncp}
 \begin{align}
 s - b &\ge 0 \label{eq:be:ncp:constraint} \\
 s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n &\ge 0 \\
-(s - b) \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right) &= 0
+(s - b) \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right) &= 0 \label{eq:be:ncp:complementarity}
 \end{align}
 \end{subequations}
+Equation \eqref{eq:be:ncp:complementarity} says that either there is no ice ($s=b$) or the SKE \eqref{eq:be:ske} holds, almost everywhere.
 
-The strong form NCP \eqref{eq:be:ncp} has a weak form VI version which is suited to finite element (FE) approximation.  The precise Banach space $\cV$ of surface elevations in this VI is unknown---we will say more about it later in this Section---but admissible surface elevations are from a convex and closed subset:
+The strong form NCP \eqref{eq:be:ncp} has a weak form VI version which is suited to finite element (FE) approximation.  The precise Banach space $\cV$ of surface elevations in this VI is unknown; this is addressed later in the Section.  Admissible surface elevations are from a convex and closed subset of $\cV$:
 \begin{equation}
-\cK = \left\{r \in\cV\,:\,r \ge b\right\} \subset \cV.  \label{eq:be:admissible}
+\cK = \left\{r \in\cV\,:\,r \ge b\right\}.  \label{eq:be:admissible}
 \end{equation}
-
-To derive the VI form, the following argument is from \cite{Bueler2021conservation}.  Suppose $s$ is continuous and sufficiently-regular to solve NCP \eqref{eq:be:ncp}.  Let $I$ be a measurable subset of $\Omega$ on which constraint \eqref{eq:be:ncp:constraint} is inactive, so a glacier is present: $I \subset \{x\,:\,s(x)>b(x)\}$.  Because \eqref{eq:be:ske} holds on $I$ it follows by integration that
+Then the following argument derives the VI form \cite{Bueler2021conservation}.  Suppose $s$ is continuous and sufficiently-regular to solve NCP \eqref{eq:be:ncp}.  Let $\Omega_I$ be a measurable subset of $\Omega$ on which constraint \eqref{eq:be:ncp:constraint} is inactive, so a glacier is present: $\Omega_I \subset \{x\,:\,s(x)>b(x)\}$.  Because \eqref{eq:be:ske} holds on $\Omega_I$ it follows by integration that
 \begin{equation}
-\int_I \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = 0.  \label{eq:inactivetruth}
+\int_{\Omega_I} \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = 0.  \label{eq:inactivetruth}
 \end{equation}
-for all $r\in\cK$.  On the other hand, suppose $A \subset \Omega$ is measurable and a subset of the active (ice-free) region $A \subset \{x\,:\,s(x)=b(x)\}$.  Note that $r-s=r-b\ge 0$ on $A$ for $r\in\cK$.  In this case we observe that $\ell^n - b = s^{n-1} - b + \Delta t\,a^n\le 0$ on all of $A$ because otherwise, using the continuity of $b$, $s^{n-1}$, and $a^n$, a glacier would still be present, or would have appeared, somewhere in $A$, a contradiction.  Using $\bu|_s=0$ on $A$, extension by zero, integration yields an inequality because $b-\ell^n \ge 0$ and $r-s\ge 0$ on $A$:
+for all $r\in\cK$.  On the other hand, suppose $\Omega_A \subset \{x\,:\,s(x)=b(x)\} \subset \Omega$ is a measurable subset of the active (ice-free) region.  Note that $r-s=r-b\ge 0$ on $\Omega_A$ for $r\in\cK$, and observe that $\ell^n - b \le 0$ on all of $\Omega_A$ because otherwise, using the continuity of $b$, $s^{n-1}$, and $a^n$, a glacier would still be present or would have appeared somewhere in $\Omega_A$, a contradiction.  Using $\bu|_s=0$ on $\Omega_A$, i.e.~extension by zero, integration yields an inequality because $b-\ell^n \ge 0$ and $r-s\ge 0$ on $\Omega_A$:
 \begin{equation}
-\int_A \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = \int_A \left(b - \ell^n\right)\,(r-b) \ge 0.  \label{eq:activetruth}
+\int_{\Omega_A} \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = \int_A \left(b - \ell^n\right)\,(r-b) \ge 0.  \label{eq:activetruth}
 \end{equation}
-The parts of $\Omega$ are either covered by glacier (in $I$) or ice free (in $A$), almost everywhere, so addition of \eqref{eq:inactivetruth} and \eqref{eq:activetruth} justifies the following VI model for the implicit-step surface elevation $s \in \cK$:
+All parts of $\Omega$ are either covered by glacier (in some $\Omega_I$) or ice free (in $\Omega_A$), almost everywhere, so addition of \eqref{eq:inactivetruth} and \eqref{eq:activetruth} justifies the following VI model for $s \in \cK$:
 \begin{equation}
 \int_\Omega \left(s - \Delta t\,\bu|_s \cdot \bn_s\right)\,(r-s) \ge \int_\Omega \ell^n \,(r-s) \quad \text{for all } r \in \cK. \label{eq:be:viearly}
 \end{equation}
 	
-We also need the weak form of the Stokes equations on $\Lambda(t)$, in particular to compute $\bu|_s$ where it appears in the above VI.  Denote by $W^{k,r}(\Omega)$ the Sobolev space \cite{Evans2010} of functions with $k$ weak derivatives which are $r$th-power integrable.  Suppose for the moment that $\Lambda = \Lambda(t) \subset \RR^3$ is a fixed, bounded domain.  We will assume that the ice base $\Gamma_b$, on which we prescribe a Dirchlet condition $\bu=\bzero$, has positive measure, but otherwise suppose the boundary is stress-free.  Let $W_0^{1,\pp}(\Lambda)^{3}$ be the space of velocity functions, zero along $\Gamma_b$, and let
+We also need the weak form of the Stokes equations on $\Lambda(t)$; recall definition \eqref{eq:icydomain}.  The Stokes problem computes $\bu|_s$ where it appears in VI \eqref{eq:be:viearly}.
+
+Suppose temporarily that $\Lambda = \Lambda(t) \subset \RR^3$ is a fixed, bounded domain.  Denote by $W^{k,r}(\Lambda)$ the Sobolev space \cite{Evans2010} of functions with $k$ weak derivatives which are $r$th-power integrable.  We will assume that the ice base $\Gamma_b\subset\partial \Lambda$, on which we prescribe a Dirchlet condition $\bu=\bzero$, has positive measure, but otherwise we suppose that the boundary $\partial \Lambda$ is stress-free.  Recall from the Introduction that $\pp=(1/\nn)+1\approx 4/3$.  Let $W_0^{1,\pp}(\Lambda)^{3}$ be the space of velocity functions, zero along $\Gamma_b$, and let
 \begin{equation}
 \mathcal{M}_\Lambda = W_0^{1,\pp}(\Lambda)^3 \times L^\qq(\Lambda)  \label{eq:mixed}
 \end{equation}
@@ -235,21 +237,22 @@ F_\Lambda(\bu,p)[\bv,q] = \int_\Lambda 2 \nu(|D\bu|) D\bu : D\bv - p \Div\bv - (
 \end{equation}
 for all $(\bv,q) \in \mathcal{M}_\Lambda$.
 
-Jouvet and Rappaz \cite{JouvetRappaz2011} prove that the fixed-domain Glen-Stokes formulation \eqref{eq:glenstokesweak} is well-posed under the above assumptions if also the Neumann boundary of $\Lambda$ is $C^1$.  They show \eqref{eq:glenstokesweak} is equivalent to minimization of a convex and coercive functional over the divergence-free subspace, and that there is a unique pressure $p$.  If $\bu,p$ solving \eqref{eq:glenstokesweak} are sufficiently regular then they satisfy strong equations \eqref{eq:stokes}.
+Jouvet and Rappaz \cite{JouvetRappaz2011} prove that \eqref{eq:glenstokesweak} is well-posed under the above assumptions if also the Neumann boundary of $\Lambda$ is $C^1$; we return to this regularity concern below.  They show well-posedness via the equivalence of \eqref{eq:glenstokesweak} and minimization of a convex and coercive functional over the divergence-free subspace.  Observe that if the solution is sufficiently regular then it satisfies strong equations \eqref{eq:stokes}.
 
-FIXME now let
+The well-posedness of weak-form problem \eqref{eq:glenstokesweak} allows us to create a well-defined map from the surface $s=s^n$ to the surface value of the velocity solution $\bu=\bu^n$ .  The map is defined via definition \eqref{eq:icydomain} of $\Lambda(t_n)$, the solution of \eqref{eq:glenstokesweak} over that domain, and then evaluation of the trace of $\bu$ over $\Gamma_N\subset \partial\Lambda$.  Concretely we define
 \begin{equation}
-\Phi(s) = - \bu|_s\cdot \bn_s \label{eq:be:Phidefine}
+\Phi(s) = - \bu|_s\cdot \bn_s, \qquad \Phi:\cV \to \cV', \label{eq:be:Phidefine}
 \end{equation}
-and
+as the \emph{surface motion map}.  For any surface elevation $s$, this map evaluates the term in the SKE \eqref{eq:be:ske} which arises from solving the conservation of momentum problem \eqref{eq:glenstokesweak}.  Therefore, recalling NCP \eqref{eq:be:ncp}, we define the weak form operator
 \begin{equation}
-F_{\Delta t}(s) = s + \Delta t\,\Phi(s)  \label{eq:be:Fdefine}
+F_{\Omega,\Delta t}(s)[r] = \Delta t\,\Phi(s)[r] + \int_\Omega s r = \int_\Omega \left(s - \Delta t\, \bu|_s \cdot \bn_s\right) r.  \label{eq:be:Fdefine}
 \end{equation}
 
-FIXME restate VI: for $\Delta t>0$ seek $s = s^n \in \cK$ so that 
+VI problem \eqref{eq:be:viearly} can now be written using well-defined maps, as long as the solution surface elevations $s$ are sufficiently-regular so that the corresponding Stokes problems are well-posed.  Observing that the source term $\ell^n$, defined in \eqref{eq:be:source}, provides an element of the dual space $\cV'$, we seek $s = s^n \in \cK$ so that
 \begin{equation}
-\int_\Omega F(s)\,(r-s) \ge \int_\Omega \ell^n \,(r-s) \quad \text{for all } r \in \cK. \label{eq:be:vi}
+\ip{F_{\Omega,\Delta t}(s)}{r-s} \ge \ip{\ell^n}{r-s} \quad \text{for all } r \in \cK. \label{eq:be:vi}
 \end{equation}
+This is the abstract weak form associated to strong form \eqref{eq:be:ncp}.
 
 FIXME conjecture well-posedness of \eqref{eq:be:vi} for sufficiently short $\Delta t$
 
