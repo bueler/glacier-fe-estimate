@@ -56,9 +56,9 @@
 
 \newcommand{\hcK}{\widehat{\cK}}
 
-\newcommand{\nn}{{\text{n}}}
-\newcommand{\pp}{{\text{p}}}
-\newcommand{\qq}{{\text{q}}}
+\newcommand{\nn}{{\text{\textnormal{n}}}}
+\newcommand{\pp}{{\text{\textnormal{p}}}}
+\newcommand{\qq}{{\text{\textnormal{q}}}}
 
 \newcommand{\ip}[2]{\left<#1,#2\right>}
 
@@ -264,33 +264,33 @@ We now consider an abstract variational inequality (VI) \cite{KinderlehrerStampa
 \begin{equation}
 \ip{f(u)}{v-u} \ge \ip{\ell}{v-u} \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
-The best know example of \eqref{eq:vi} is the obstacle problem for the Laplacian operator; see e.g.~subsections 8.4.2 in \cite{Evans2010}, and subsection 5.1 in \cite{Ciarlet2002} for its FE analysis.
+The best known example of a problem in form \eqref{eq:vi} is the obstacle problem for the Laplacian operator; see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for the theory and FE analysis of that problem.
 
 \begin{definition} \label{def:monotonepcoercive}
 An operator $f:\cK \to \cV'$ is said to be \emph{monotone} if
 \begin{equation}
 \ip{f(v)-f(w)}{v-w} \ge 0 \qquad \text{for all } v,w \in \cK \label{eq:monotone}
 \end{equation}
-and \emph{strictly monotone} if equality in \eqref{eq:monotone} implies $v=w$.  Let $p>1$.  The operator is \emph{$p$-coercive} \cite{Bueler2021conservation} if there exists $\alpha>0$ such that
+and \emph{strictly monotone} if equality in \eqref{eq:monotone} implies $v=w$.  Let $\pp>1$.  The operator is \emph{$\pp$-coercive \cite{Bueler2021conservation}} if there exists $\alpha>0$ such that
 \begin{equation}
-\ip{f(v)-f(w)}{v-w} \ge \alpha \|v-w\|^p \qquad \text{for all } v,w \in \cK. \label{eq:pcoercive}
+\ip{f(v)-f(w)}{v-w} \ge \alpha \|v-w\|^\pp \qquad \text{for all } v,w \in \cK. \label{eq:pcoercive}
 \end{equation}
 \end{definition}
 
-Clearly, if $f$ is $p$-coercive then it is monotone and strictly monotone, in which case any solution of \eqref{eq:vi} is unique.  Furthermore, it is well-known that if $f:\cK \to \cV'$ is also continuous on finite-dimensional subspaces then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  Thus $p$-coercivity and appropriate continuity of $f$ show well-posedness for \eqref{eq:vi}.
-
+Clearly, if $f$ is $\pp$-coercive then it is monotone and strictly monotone, in which case any solution of \eqref{eq:vi} is unique.  Furthermore, it is well-known that if $f:\cK \to \cV'$ is also continuous on finite-dimensional subspaces then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  Thus $\pp$-coercivity and continuity of $f$ implies well-posedness for \eqref{eq:vi}.
 % \cite{Peral1997} uniform continuity over bounded sets for p-Laplacian: Thm A.0.6
 
 \begin{definition} \label{def:lipshitz}
-For $\rho>0$ let $B_\rho = \{v\in \cV\,:\,\|v\|\le \rho\}$.  We say $f:\cK \to \cV'$ is \emph{Lipshitz on bounded sets of $\cK$} if for every $\rho>0$ there is $C(\rho)>0$ so that if $v,w \in B_\rho \cap \cK$ and $z\in\cV$ then $|\ip{f(v)-f(w)}{z}| \le C(\rho) \|v-w\| \|z\|$.  Equivalently:
+For $\rho>0$ let $B_\rho = \{v\in \cV\,:\,\|v\|\le \rho\}$.  We say $f:\cK \to \cV'$ is \emph{Lipshitz on bounded subsets of $\cK$} if for every $\rho>0$ there is $C(\rho)>0$ so that if $v,w \in B_\rho \cap \cK$ and $z\in\cV$ then $|\ip{f(v)-f(w)}{z}| \le C(\rho) \|v-w\| \|z\|$.
+\end{definition}
+
+Equivalently to definition \ref{def:lipshitz}, $f$ is Lipschitz on bounded subsets of $\cK$ if
 \begin{equation}
 \|f(v)-f(w)\|_{\cV'} \le C(\rho) \|v-w\| \quad \text{ for all } v,w \in B_\rho \cap \cK.  \label{eq:liponbounded}
 \end{equation}
-\end{definition}
+Observe that definitions \ref{def:monotonepcoercive} and \ref{def:lipshitz} do not require $f$ to be defined on all of the vector space $\cV$, but rather only on $\cK$.
 
-Observe that in definitions \ref{def:monotonepcoercive} and \ref{def:lipshitz} we do not assume $f$ is defined on all of the vector space $\cV$, but rather only on $\cK$.
-
-FIXME finite element space $\cV_h \subset \cV$, constraint set $\cK_h\subset \cV_h$, note generally $\cK_h \nsubseteq \cK$.  let $f_h:\cK_h\to\cV'$.  the FE VI problem is
+FIXME finite element space $\cV_h \subset \cV$, constraint set $\cK_h\subset \cV_h$, note generally $\cK_h \nsubseteq \cK$.  let $f_h:\cK_h\to\cV'$.  the FE VI problem approximating \eqref{eq:vi} is
 \begin{equation}
 \ip{f_h(u_h)}{v_h-u_h} \ge \ip{\ell}{v_h-u_h} \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
 \end{equation}
@@ -304,18 +304,18 @@ Observe that $\cB' \subset \cV'$ is a subspace.  Our main example will be where 
 
 A key concept in what follows is that $f(u)-\ell$ is generally nonzero when $u$ solves \eqref{eq:vi}.  Instead, a nonlinear complementarity problem holds, at least in sufficiently regular cases, as in \cite[Exercise 5.1.1]{Ciarlet2002}  and \cite[section 7]{BuelerFarrell2024}, for example.  Only for $u$ in the interior of $\cK$ should we expect equality (i.e.~$f(u)=\ell$).
 
-The following abstract error estimate extends \cite{Falk1974} and Theorem 5.1.1 in \cite{Ciarlet2002}, as will be shown in corollaries.  We assume neither that $f$ is linear, nor that $f_h=f$, but we do extend the domain of $f$ to include the finite element solution.
+The following abstract error estimate extends \cite{Falk1974} and Theorem 5.1.1 in \cite{Ciarlet2002}, as will be shown in corollaries.  We assume neither that $f$ is linear, nor that $f_h=f$, but we must extend the domain of $f$ to include the finite element solution.
 
-\begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}, and let $R_h=\max\{\|u\|,\|u_h\|\}$.  Define
+\begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  Define
 \begin{equation}
 \hcK = \overline{\Hull{(\cK \cup \cK_h)}}  \label{eq:convexhull}
 \end{equation}
-as the closure (in $\cV$) of the given convex hull, and suppose that $f$ can be extended to $\hcK$.  For $1<p<\infty$, with conjugate exponent $q=p/(p-1)$, assume $f$ is $p$-coercive over $\hcK$ with constant $\alpha>0$, and that it is Lipshitz on bounded sets of $\hcK$.  Then there is a constant $c=c(\alpha,R_h)>0$ so that
+as the closure in $\cV$ of the convex hull of $\cK \cup \cK_h$, and suppose that $f$ can be extended to $\hcK$.  For $1<\pp<\infty$ assume $f$ is $\pp$-coercive over $\hcK$ with constant $\alpha>0$, and that it is Lipshitz on bounded sets of $\hcK$.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c=c(\alpha,R_h)>0$ so that
 \begin{align}
 \|u-u_h\|^p &\le \quad \frac{2}{\alpha} \inf_{v\in\cK} \ip{f(u)-\ell}{v-u_h} \label{eq:abstractestimate} \\
    &\quad + \frac{2}{\alpha} \inf_{v_h\in\cK_h} \ip{f(u)-\ell}{v_h-u} \notag \\
    &\quad + \frac{2}{\alpha} \ip{f(u_h)-f_h(u_h)}{u_h} \notag \\
-   &\quad + \inf_{v_h\in\cK_h} c \|u - v_h\|^q \notag
+   &\quad + \inf_{v_h\in\cK_h} c \|u - v_h\|^\qq \notag
 \end{align}
 \end{theorem}
 
@@ -324,9 +324,9 @@ as the closure (in $\cV$) of the given convex hull, and suppose that $f$ can be 
 \ip{f(u)}{u}     &\le \ip{f(u)}{v} + \ell(u-v),  \\
 \ip{f_h(u_h)}{u_h} &\le \ip{f_h(u_h)}{v_h} + \ell(u_h-v_h).
 \end{align*}
-It follows from $p$-coercivity over $\hcK$ and these inequalities that
+It follows from $\pp$-coercivity over $\hcK$ and these inequalities that
 \begin{align*}
-\alpha \|u-u_h\|^p &\le \ip{f(u)-f(u_h)}{u-u_h} \\
+\alpha \|u-u_h\|^\pp &\le \ip{f(u)-f(u_h)}{u-u_h} \\
   &= \ip{f(u)}{u} + \ip{f(u_h)}{u_h} - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} \\
   &= \ip{f(u)}{u} + \ip{f_h(u_h)}{u_h} \\
   &\qquad - \ip{f(u)}{u_h} - \ip{f(u_h)}{u} + \ip{f(u_h)-f_h(u_h)}{u_h} \\
@@ -339,18 +339,18 @@ It follows from $p$-coercivity over $\hcK$ and these inequalities that
 \end{align*}
 Since $u,u_h\in B_{R_h}$, by the Lipshitz assumption over $\hcK$ there is $C(R_h)>0$ so that
 \begin{align*}
-\alpha \|u-u_h\|^p &\le \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
+\alpha \|u-u_h\|^\pp &\le \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
   &\qquad + C(R_h) \|u-u_h\|\|u-v_h\| + \ip{f(u_h)-f_h(u_h)}{u_h}
 \end{align*}
 Now use Young's inequality with $\eps>0$ \cite[Appendix B.2]{Evans2010} on the product of norms:
 \begin{align*}
-\alpha \|u-u_h\|^p &\le \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
-  &\qquad + C(R_h) \left(\eps\|u-u_h\|^p + \tilde C(\eps) \|u-v_h\|^q\right) + \ip{f(u_h)-f_h(u_h)}{u_h}
+\alpha \|u-u_h\|^\pp &\le \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
+  &\qquad + C(R_h) \left(\eps\|u-u_h\|^\pp + \tilde C(\eps) \|u-v_h\|^\qq\right) + \ip{f(u_h)-f_h(u_h)}{u_h}
 \end{align*}
-(Here $\tilde C(\eps) = (\eps p)^{-q/p} q^{-1}$.)  Choose $\eps>0$ so that $C(R_h) \eps \le \alpha/2$, and subtract to find
+(Here $\tilde C(\eps) = (\eps \pp)^{-\qq/\pp} \qq^{-1}$.)  Choose $\eps>0$ so that $C(R_h) \eps \le \alpha/2$, and subtract to find
 \begin{align*}
-\frac{\alpha}{2} \|u-u_h\|^p &\le \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
-  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^q + \ip{f(u_h)-f_h(u_h)}{u_h}
+\frac{\alpha}{2} \|u-u_h\|^\pp &\le \ip{f(u)-\ell}{v-u_h} + \ip{f(u)-\ell}{v_h-u} \\
+  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^\qq + \ip{f(u_h)-f_h(u_h)}{u_h}
 \end{align*}
 Take infimums to show \eqref{eq:abstractestimate}.
 \end{proof}
@@ -361,34 +361,31 @@ FIXME MAKE COROLLARY Assume that
 \end{equation}
 Then
 \begin{align}
-\|u-u_h\|^p &\le \inf_{v_h\in\cK_h} c \|u - v_h\|^q  \label{eq:NORMabstractestimate} \\
+\|u-u_h\|^\pp &\le \inf_{v_h\in\cK_h} c \|u - v_h\|^\qq  \label{eq:NORMabstractestimate} \\
    &\qquad + \inf_{v_h\in\cK_h} \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \|u-v_h\|_{\cB} \notag \\
    &\qquad + \inf_{v\in\cK} \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \|u_h-v\|_{\cB} \notag
 \end{align}
 
-As observed in \cite{Ciarlet2002}, the last quantity in \eqref{eq:abstractestimate}, involving $\|u_h-v\|$ for $v\in\cK$, is generally nonzero in obstacle problems where $\cK_h \nsubseteq \cK$.  This is relevant to glacier models tracking the surface elevation (as opposed to thickness).  In fact, consider obstacle problems where $\cK=\{v(x)\ge \psi(x)\}$, $\psi_h$ is an interpolant of $\psi$, and $\cK_h=\{v_h(x)\ge \psi_h(x)\}$.  Observe that, while $\psi_h(x_j)=\psi(x_j)$ for all interpolation nodes, generally $\psi_h(x) \ge \psi(x)$ does not hold for all $x\in\Omega$ even if $\psi$ is smooth.  That is, nodal admissiblity does not imply admissibility for surface elevations.
+As observed in \cite{Ciarlet2002}, the last quantity in \eqref{eq:abstractestimate}, involving $\|u_h-v\|$ for $v\in\cK$, is generally nonzero in obstacle problems where $\cK_h \nsubseteq \cK$.  This is relevant to glacier models tracking the surface elevation (as opposed to thickness).  In fact, consider obstacle problems where $\cK=\{v(x)\ge \psi(x)\}$, $\psi_h$ is an interpolant of $\psi$, and $\cK_h=\{v_h(x)\ge \psi_h(x)\}$.  Observe that, while $\psi_h(x_j)=\psi(x_j)$ for interpolation nodes $x_j$, generally $\psi_h(x) \ge \psi(x)$ does not hold for all $x\in\Omega$ even if $\psi$ is smooth.  In other words, nodal admissiblity does not imply admissibility.
 
 FIXME draw figure like Ciarlet Figure 5.1.3
 
-On the other hand, it is worthwhile to consider situations with better data.  First, the complications related to the convex hull operation \eqref{eq:convexhull} disappear if the nonlinear operator $f=f_h$ is defined on all of $\cV$.  That is, if one replaces $\hcK$ with $\cV$ itself in Theorem \ref{thm:abstractestimate}, still assuming $f=f_h$ is $p$-coercive and Lipshitz on bounded sets of $\cV$, then \eqref{eq:abstractestimate} follows.
+On the other hand, the convex hull \eqref{eq:convexhull} is not needed if the nonlinear operator $f=f_h$ is defined on all of $\cV$.  That is, \eqref{eq:abstractestimate} holds if one replaces $\hcK$ with $\cV$ itself.  Furthermore, for \emph{linear} operators defined on the entire vector space, Theorem \ref{thm:abstractestimate} reduces to the abstract error estimate for variational inequalities given in \cite{Falk1974}.  Specifically, suppose $\ip{f(v)}{w}=a(v,w)$ is actually bilinear, $\cV$-elliptic, and continuous on a Hilbert space $\cV$.  Define $A:\cV\to\cV'$, a bounded linear operator, by $Av(w) = a(v,w)$. (Observe that continuity for $a(v,w)$ implies Lipshitz on bounded sets \eqref{eq:liponbounded} for $A$.)  Suppose that $\cV\hookrightarrow \cH$ and $\overline{\cV} = \cH$ for some larger Hilbert space $\cH$, and that $\|Au-\ell\|_{\cH'} < \infty$ so that, up to isomorphism, $Au-\ell \in\cH$.  Then Theorem \ref{thm:abstractestimate} reduces to Theorem 5.1.1 of Ciarlet \cite{Ciarlet2002}, and the result in Falk \cite{Falk1974}.
 
-In fact, for linear operators defined on the entire vector space, Theorem \eqref{thm:abstractestimate} reduces to the abstract error estimate for variational inequalities given in \cite{Ciarlet2002} and \cite{Falk1974}.  Specifically, suppose $\ip{f(v)}{w}=a(v,w)$ is actually bilinear,\footnote{There is no need to assume $a(v,w)$ is symmetric.} $\cV$-elliptic, and continuous on a Hilbert space $\cV$.  Define $A:\cV\to\cV'$, a bounded linear operator, by $Av(w) = a(v,w)$. (Observe that continuity for $a(v,w)$ implies Lipshitz on bounded sets \eqref{eq:liponbounded} for $A$.  This is used in proving the Lax-Milgram lemma in \cite{Ciarlet2002}, for example.)  Suppose that $\cV\hookrightarrow \cH$ and $\overline{\cV} = \cH$ for some Hilbert space $\cH$, and that $\|Au-\ell\|_{\cH'} < \infty$ so that, up to isomorphism, $Au-\ell \in\cH$.  Then Theorem \ref{thm:abstractestimate} reduces to Theorem 5.1.1 of Ciarlet \cite{Ciarlet2002}, and to the result in Falk \cite{Falk1974}.
+The following corollary is relevant to glacier models solving for ice thickness (as opposed to surface elevation).  In this case $\cK = \{v\ge 0\}$ consists of all nonnegative functions and $\cK_h=\cK\cap\cV_h$, thus the last term in \eqref{eq:abstractestimate} is zero.
 
-Next, the following corollary is relevant to glacier models solving for ice thickness (as opposed to surface elevation).  In this case $\cK = \{v\ge 0\}$ consists of all nonnegative functions and $\cK_h=\cK\cap\cV_h$, thus the last term in \eqref{eq:abstractestimate} is zero.
-
-\begin{corollary}  \label{cor:abstractestimate:equalsets}
-Suppose $\cK \supset \cK_h$.  Keeping the other assumptions of Theorem \ref{thm:abstractestimate}, it follows that
+\begin{corollary}  \label{cor:abstractestimate:equalsets}  Suppose $\cK_h \subset \cK$.  Keeping the other assumptions of Theorem \ref{thm:abstractestimate} the same, it follows that
 \begin{equation}
-\|u-u_h\| \le \left(\inf_{v_h\in\cK_h} \left\{c \|u - v_h\|^q + \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \|u-v_h\|_{\cB}\right\}\right)^{1/p}. \label{eq:abstractestimate:equalsets}
+\|u-u_h\| \le \left(\inf_{v_h\in\cK_h} \left\{c \|u - v_h\|^\qq + \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \|u-v_h\|_{\cB}\right\}\right)^{1/\pp}. \label{eq:abstractestimate:equalsets}
 \end{equation}
 \end{corollary}
 
-Finally, if $f(u)=\ell$, for example if $u$ is in the interior of $\cK$, then the conclusion simplifies to, essentially, Cea's lemma \cite{Ciarlet2002}.  The glacier situation here is that the entire domain $\Omega$ is covered in ice, with a positive minimum on the thicknesses.
+Finally, if $f(u)=\ell$, for example if $u$ is in the interior of $\cK$, then Theorem \ref{thm:abstractestimate} simplifies to, essentially, Cea's lemma \cite{Ciarlet2002}.  The glacier situation here is that the entire domain $\Omega$ is covered in ice, with a positive minimum on the thicknesses.
 
 \begin{corollary}  \label{cor:abstractestimate:interior}
-Suppose $f(u)=\ell$.  Keeping the other assumptions of Theorem \ref{thm:abstractestimate}, it follows that there is $\tilde c>0$ so that
+Suppose $f(u)=\ell$.  Keeping the other assumptions of Theorem \ref{thm:abstractestimate} the same, it follows that there is $\tilde c>0$ so that
 \begin{equation}
-\|u-u_h\| \le \inf_{v_h\in\cK_h} \tilde c \|u - v_h\|^{q/p} + FIXME. \label{eq:abstractestimate:interior}
+\|u-u_h\| \le \inf_{v_h\in\cK_h} \tilde c \|u - v_h\|^{\qq/\pp} + FIXME. \label{eq:abstractestimate:interior}
 \end{equation}
 \end{corollary}
 
