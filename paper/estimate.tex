@@ -15,6 +15,7 @@
 \newsiamremark{hypothesis}{Hypothesis}
 \crefname{hypothesis}{Hypothesis}{Hypotheses}
 \newsiamthm{claim}{Claim}
+\newsiamthm{conjecture}{Conjecture}
 \newsiamremark{example}{Example}
 
 \usepackage{amsopn}
@@ -59,6 +60,7 @@
 \newcommand{\nn}{{\text{\textnormal{n}}}}
 \newcommand{\pp}{{\text{\textnormal{p}}}}
 \newcommand{\qq}{{\text{\textnormal{q}}}}
+\newcommand{\rr}{{\text{\textnormal{r}}}}
 
 \newcommand{\ip}[2]{\left<#1,#2\right>}
 
@@ -248,15 +250,32 @@ For any surface elevation $s$ so that \eqref{eq:glenstokesweak} is well-posed, t
 \ip{F_{\Delta t}(s)}{r} = \Delta t\,\ip{\Phi(s)}{r} + \int_\Omega s r = \int_\Omega \left(s - \Delta t\, \bu|_s \cdot \bn_s\right) r.  \label{eq:be:Fdefine}
 \end{equation}
 
-Now VI problem \eqref{eq:be:viearly} can be re-written using well-defined operators, as long as $\cV$ has been chosen in an appropriate manner.  Specifically, the solution surface elevation $s$ needs to be regular enough so that the corresponding Stokes problem is well-posed.  Also, reasonably assuming that the source term $\ell^n$ defined in \eqref{eq:be:source} provides an element of the dual space $\cV'$, we seek $s = s^n \in \cK$ so that
+Now VI problem \eqref{eq:be:viearly} can be re-written using well-defined operators, as long as $\cV$ has been chosen in an appropriate manner.  Specifically, the solution surface elevation $s$ needs to be regular enough so that the corresponding Stokes problem is well-posed.  Also we assume, reasonably, that the source term $\ell^n$ defined in \eqref{eq:be:source} provides an element of the dual space $\cV'$.  Then we seek $s = s^n \in \cK$ so that
 \begin{equation}
 \ip{F_{\Delta t}(s)}{r-s} \ge \ip{\ell^n}{r-s} \quad \text{for all } r \in \cK. \label{eq:be:vi}
 \end{equation}
 This VI form is our preferred weak form associated to the strong-form NCP statement \eqref{eq:be:ncp} of the implicit time step.
 
-FIXME conjecture well-posedness of \eqref{eq:be:vi} for sufficiently short $\Delta t$
+VI problem \eqref{eq:be:vi} is the weak form corresponding to NCP \eqref{eq:be:ncp}, and there is general agreement among glaciologists that a backward Euler step for a non-sliding and isothermal glacier would satisfy the conditions of that NCP.  For instance, numerical ice sheet models \cite{IsaacStadlerGhattas2015,WirbelJarosch2020} are based upon this Stokes model, and furthermore the SKE is the standard model for surface geometry evolution \cite{GreveBlatter2009,SchoofHewitt2013}.  However, the bounds on numerical geometry errors proven in Sections \ref{sec:abstractestimate} and \ref{sec:application} below depend on a well-posed problem for the continuum surface elevation.  Because no results known to this author prove well-posedness for \eqref{eq:be:vi} or similar, we conjecture it to be true so as to consider the errors made in the FE approximation.
 
-FIXME compare VI for mass continuity with $H$: fluid layer thickness equation, also called mass continuity or Saint Venant equation \cite{JouvetBueler2012}, $\cK = \{H\ge 0\}$, $\cK_h \subset \cK$, apparently $\eta = H^{2\qq/(\qq-1)} \in W^{1,\qq}(\Omega)$, for e.g.~$\qq=4$, because of existence in SIA case \cite{JouvetBueler2012}; SIA model has better-known properties \cite{JouvetBueler2012,PiersantiTemam2023}. however, regularity arising from analyzing SIA is not to be trusted because non-shallow (Stokes) dynamics is not diffusive for short wavelength surface/thickness perturbations \cite{Pattynetal2008}.  cliffs are a problem.
+\begin{conjecture} \label{conj:wellposed:be}
+There exists an exponent $\rr$ so that if $\cV = W^{1,\rr}(\Omega)$ then, for all sufficiently-small values $\Delta t>0$, there exists a unique solution to VI problem \eqref{eq:be:vi}.
+\end{conjecture}
+
+Certain well-posedness results are known to hold for shallow approximations of problem \eqref{eq:be:vi}.  For the shallow ice approximation (SIA) the ice geometry is often parameterized using the ice thickness, in which case, by incompressibility, the SKE is replaced by a mass continuity or Saint Venant equation \cite{JouvetBueler2012}.  In this case the constraint set is $\tilde{\cK} = \{H\ge 0\}$ where $H=s-b$ is the ice thickness.   For the steady SIA model, with arbitrary smooth bed elevations, existence is known, with a power of $H$ in an identified Sobolev space.\footnote{However, the space of functions whose powers are in a $W^{1,\qq}$ space is not generally even a vector space.  For example, relevant to typical powers used for ice sheets, if $f(x)=(x-1/2)^{3/8} \chi_{[1/2,1]}(x)$ and $g(x)=1$ then $f,g \in \cV = W^{1,4}([0,1])$ but $f+g\notin \cV$.}  That is, there exists $\eta = H^{2\qq/(\qq-1)} \in \subset W^{1,\qq}(\Omega)$ solving the power-transformed VI problem \cite{JouvetBueler2012}; see also \cite{Calvoetal2003,PiersantiTemam2023} regarding the flat-bed and time-dependent case.  On the other hand, the solution regularity from solving the SIA problem likely does not correspond to the regularity of a surface elevation solution of \eqref{eq:be:vi} using non-shallow (Stokes) dynamics.  In fact, it is well-known that the wavelength-dependent surface response of the Stokes model has a quite different small wavelength limit relative to the diffusive SIA model \cite[for example]{Pattynetal2008}.
+
+More generally, it is not very clear what theoretical claims should be made about the shapes of glacier and ice sheet margins, speaking here of the grounded case.  The SIA theory suggests root-type (fractional-power) shapes \cite{Bueleretal2005} with unbounded gradients (Figure \ref{fig:margins}.  On the other hand, earlier glacier modeling often hypothesized a ``wedge'' shape with a finite gradient, and in reality fracture, crevasse, and cliffs features are common at glacier margins.
+% CITE FOR wedge?
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{figs/margins.jpg}
+\end{center}
+\caption{In which Sobolev space should we seek the surface elevation function?  This question relates to the shape of the ice margin.  The shallow ice theory yields a fractional power shape (left).  Glaciological tradition often hypothesizes a ``wedge'' shape (center).  On the other hand, real glacier margins often have fractures and cliffs.} %FIXME replace with better figure
+\label{fig:margins}
+\end{figure}
+
+As a mathematical matter, Conjecture \ref{conj:wellposed:be} only addresses the well-posedness of each implicit time-step problem, and this does not suffice to show well-posedness of our original time-dependent problem.  Without making a further formal conjecture, we also suppose that the parabolic VI problem corresponding to time-dependent NCP \eqref{eq:ncp} would also be well-posed.  On the other hand, the results in the next two Sections are only based on Conjecture \ref{conj:wellposed:be}.
 
 
 \section{Abstract error estimate} \label{sec:abstractestimate}
