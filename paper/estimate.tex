@@ -189,17 +189,17 @@ FIXME: WHAT WE ACCOMPLISH
 This paper is organized as follows.  In Section \ref{sec:models} we reformulate the coupled problem \eqref{eq:icydomain}--\eqref{eq:stokes} as a VI weak form for backward Euler time steps.  Well-posedness for this time-step problem is conjectured over a Banach space of surface elevation functions.  In Section \ref{sec:abstractestimate} we prove an abstract FE error estimate, Theorem \ref{thm:abstractestimate} and its corollaries, for general VI problems involving fully-nonlinear, but coercive and Lipshitz, operators on Banach spaces.  (This estimate extends the classical linear  case by Falk \cite{Falk1974}.)  In Section \ref{sec:application} we apply this theorem to the glacier model time steps.  The distinctive character of non-sliding land-based glaciers, namely how they respond to climate and that they stagnate as they approach zero thickness, implies that certain terms are effectively small, and thus a computable geometry error upper bound follows.  The estimate is demonstrated in Section \ref{sec:demo} on an idealized, but non-trivial, glacier simulation implemented in Firedrake \cite{Hametal2023}.
 
 
-\section{An implicit time-step model} \label{sec:models}
+\section{An implicit time-step model, in weak form} \label{sec:models}
 
-Let $\{t_n\}$ be an increasing sequence of times, and write $\Delta t = t_n-t_{n-1}$ for any time step.  Suppose $s^n(x)\approx s(t_n,x)$ approximates the unknown surface elevation at time $t_n$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
+Let $\{t_n\}$ be an increasing sequence of times, and write $\Delta t = t_n-t_{n-1}$ for the step length.  Suppose $s(x)\approx s(t_n,x)$ approximates the unknown surface elevation at time $t_n$.  Let $a^n(x)$ be the (temporal) average of $a(t,x)$ over $[t_{n-1},t_n]$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
 \begin{equation}
-\frac{s^n - s^{n-1}}{\Delta t} - \bu|_{s^n} \cdot \bn_{s^n} - a^n = 0. \label{eq:be:ske}
+\frac{s - s^{n-1}}{\Delta t} - \bu|_{s} \cdot \bn_{s} - a^n = 0. \label{eq:be:ske}
 \end{equation}
-Since $a^n$ is the temporal average of $a(t,x)$ over $[t_{n-1},t_n]$, we define the source term
+For cleaner appearance we define the source term
 \begin{equation}
-\ell^n(x) = s^{n-1}(x) + \int_{t_{n-1}}^{t_n} a(t,x)\,dt, \label{eq:be:source}
+\ell^n(x) = s^{n-1}(x)+\Delta t\,a^n(x) = s^{n-1}(x) + \int_{t_{n-1}}^{t_n} a(t,x)\,dt. \label{eq:be:source}
 \end{equation}
-to simply write $\ell^n=s^{n-1}+\Delta t\,a^n$.  Similar to \eqref{eq:ncp}, the implicit step solution $s^n$, now denoted $s$, does not solve \eqref{eq:be:ske} over all of $\Omega$, but rather it solves an NCP:
+Similar to \eqref{eq:ncp}, the problem is of free-boundary type, and generally $s$ does not solve \eqref{eq:be:ske} over all of $\Omega$.  Instead it solves an NCP:
 \begin{subequations}
 \label{eq:be:ncp}
 \begin{align}
@@ -208,44 +208,44 @@ s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n &\ge 0 \\
 (s - b) \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right) &= 0 \label{eq:be:ncp:complementarity}
 \end{align}
 \end{subequations}
-Equation \eqref{eq:be:ncp:complementarity} says that either there is no ice ($s=b$) or that \eqref{eq:be:ske} holds.
+Equation \eqref{eq:be:ncp:complementarity} says that, at the end of the time step $t=t_n$, either there is no ice ($s=b$), or that \eqref{eq:be:ske} holds, almost everywhere over $\Omega$.
 
-The strong form NCP \eqref{eq:be:ncp} has a weak-form variational inequality (VI) version which is suited to both well-posedness theory and finite element (FE) analysis.  However, the precise Banach space $\cV$ of surface elevations in this VI is unknown.  We return to this issue below, but for now the space $\cV$ is abstract.  Admissible surface elevations are from a convex and closed subset of $\cV$:
+The strong form NCP \eqref{eq:be:ncp} has a weak-form variational inequality (VI; \cite{KinderlehrerStampacchia1980}) version which is suited to both well-posedness theory and finite element (FE) analysis.  However, the precise Banach space $\cV$ of surface elevations in this VI is unknown, so for now the space $\cV$ is abstract.  (See Conjecture \ref{conj:wellposed:be} below.)  Admissible surface elevations are from a convex and closed subset of $\cV$:
 \begin{equation}
 \cK = \left\{r \in\cV\,:\,r \ge b\right\}.  \label{eq:be:admissible}
 \end{equation}
 
-We derive the VI form \cite{Bueler2021conservation} as follows, temporarily supposing $s$ is sufficiently-regular to solve NCP \eqref{eq:be:ncp}.  Let $\Omega_I$ be a (measurable) subset of $\Omega$ on which constraint \eqref{eq:be:ncp:constraint} is inactive, so a glacier is present: $\Omega_I \subset \{x\,:\,s(x)>b(x)\}$.  Because \eqref{eq:be:ske} holds on $\Omega_I$ it follows by integration that
+We derive the VI form \cite{Bueler2021conservation} as follows, temporarily supposing that $s$ is sufficiently-regular to solve NCP \eqref{eq:be:ncp}.  Let $\Omega_I$ be a (measurable) subset of $\Omega$ on which constraint \eqref{eq:be:ncp:constraint} is inactive, which is to say that glacier ice is present: $\Omega_I \subset \{x\,:\,s(x)>b(x)\}$.  From \eqref{eq:be:ncp:complementarity} it follows by integration that
 \begin{equation}
 \int_{\Omega_I} \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = 0.  \label{eq:inactivetruth}
 \end{equation}
-for all $r\in\cK$.  On the other hand, suppose $\Omega_A \subset \{x\,:\,s(x)=b(x)\} \subset \Omega$ is a subset of the active (ice-free) region.  Note that $r-s=r-b\ge 0$ on $\Omega_A$ for $r\in\cK$, and observe that $\ell^n - b \le 0$ on $\Omega_A$ because otherwise, assuming continuity of $b$, $s^{n-1}$, and $a^n$, a glacier would still be present (or would have appeared) somewhere in $\Omega_A$, a contradiction.  Using $\bu|_s=0$ on $\Omega_A$, i.e.~velocity extension by zero, and because $b-\ell^n \ge 0$ and $r-s\ge 0$ on $\Omega_A$, integration now yields an inequality:
+for all $r\in\cK$.  On the other hand, suppose $\Omega_A \subset \{x\,:\,s(x)=b(x)\} \subset \Omega$ is a subset of the active (ice-free) region.  Note that $r-s=r-b\ge 0$ on $\Omega_A$ for $r\in\cK$, and observe that $\ell^n - b \le 0$ on $\Omega_A$ because otherwise, assuming continuity of $b$, $s^{n-1}$, and $a^n$, a glacier would still be present (or would have appeared) somewhere in $\Omega_A$, a contradiction.  Using $\bu|_s=0$ on $\Omega_A$, i.e.~velocity extension by zero to all of $\Omega$, and because $b-\ell^n \ge 0$ and $r-s\ge 0$ on $\Omega_A$, integration now yields an inequality:
 \begin{equation}
 \int_{\Omega_A} \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = \int_A \left(b - \ell^n\right)\,(r-b) \ge 0.  \label{eq:activetruth}
 \end{equation}
-Almost everywhere $\Omega$ is either covered by glacier (in some $\Omega_I$) or ice free (in $\Omega_A$), thus application of \eqref{eq:inactivetruth} or \eqref{eq:activetruth} justifies the following VI model for $s \in \cK$:
+Almost everywhere on $\Omega$, either land is glacier covered ($\Omega_I$) or ice-free ($\Omega_A$), and so the application of \eqref{eq:inactivetruth} or \eqref{eq:activetruth} justifies the following VI model for $s \in \cK$:
 \begin{equation}
 \int_\Omega \left(s - \Delta t\,\bu|_s \cdot \bn_s\right)\,(r-s) \ge \int_\Omega \ell^n \,(r-s) \quad \text{for all } r \in \cK. \label{eq:be:viearly}
 \end{equation}
-This inequality is meaningful in advance of knowing its solution; it does not require knowledge of the ice-covered part of the domain.
+This integral inequality is meaningful in advance of knowing its solution; it does not require knowledge of the ice-covered part of the domain.
 	
-Next, for $s\in \cV$ we state the weak form of the Stokes equations \eqref{eq:stokes} on the domain $\Lambda(t)$ defined by \eqref{eq:icydomain}, now denoted simply by $\Lambda$.  Note that this Stokes problem computes the field $\bu|_s$ which appears in VI \eqref{eq:be:viearly}.  Here the relevant function spaces are well-known.  Denote by $W^{k,r}(\Lambda)$ the Sobolev space of functions with $k$ weak derivatives which are $r$th-power integrable \cite{Evans2010}.  We will assume that the ice base $\Gamma_b\subset\partial \Lambda$, on which a Dirichlet condition $\bu=\bzero$ holds, has positive measure.  Otherwise we suppose that the boundary $\partial \Lambda$ is stress-free.  Recall that $\pp=(1/\nn)+1\approx 4/3$.  Let $W_b^{1,\pp}(\Lambda)^{3}$ be the space of velocity functions which are zero along $\Gamma_b$.  Define
+Next, for $s\in \cV$ we state the weak form of the Stokes equations \eqref{eq:stokes} on the domain $\Lambda(t_n)$ defined by \eqref{eq:icydomain}, now denoted simply by $\Lambda$.  Note that this Stokes problem computes the field $\bu|_s$ which appears in VI \eqref{eq:be:viearly}.  Here the relevant function spaces are well-known.  Denote by $W^{k,r}(\Lambda)$ the Sobolev space of functions with $k$ weak derivatives which are $r$th-power integrable \cite{Evans2010}.  We will assume that the ice base $\Gamma_b\subset\partial \Lambda$, on which a Dirichlet condition $\bu=\bzero$ holds, has positive measure, and otherwise we suppose that the boundary $\partial \Lambda$ is stress-free.  Recall that $\pp=(1/\nn)+1\approx 4/3$.  Let $W_b^{1,\pp}(\Lambda)^{3}$ be the space of velocity functions which are zero along $\Gamma_b$.  Define
 \begin{equation}
 \mathcal{M}_\Lambda = W_b^{1,\pp}(\Lambda)^3 \times L^\qq(\Lambda)  \label{eq:mixed}
 \end{equation}
-as the (mixed) space of admissible velocity and pressure pairs, where $\qq=\pp/(\pp-1)\approx 4$ is the conjugate exponent.  The Glen-Stokes mixed solution $(\bu,p) \in \mathcal{M}_\Lambda$ satisfies the weak form
+as the (mixed) space of admissible velocity and pressure pairs, where $\qq=\pp/(\pp-1)\approx 4$ is the conjugate exponent.  The Glen-Stokes solution $(\bu,p) \in \mathcal{M}_\Lambda$ satisfies the mixed weak form
 \begin{equation}
 F_\Lambda(\bu,p)[\bv,q] = \int_\Lambda 2 \nu(|D\bu|) D\bu : D\bv - p \Div\bv - (\Div\bu) q - \rhoi \bg \cdot \bv = 0 \label{eq:glenstokesweak}
 \end{equation}
-for all $(\bv,q) \in \mathcal{M}_\Lambda$, where the viscosity $\nu(|D\bu|)$ is defined by \eqref{eq:glen}.
+for all $(\bv,q) \in \mathcal{M}_\Lambda$.  Recall that the the viscosity $\nu(|D\bu|)$ is defined by \eqref{eq:glen}.
 
 Jouvet and Rappaz \cite{JouvetRappaz2011} prove that \eqref{eq:glenstokesweak} is well-posed under the above assumptions if also the Neumann portion of $\partial\Lambda$ is $C^1$; we return to this regularity concern below.  They show well-posedness via the equivalence of \eqref{eq:glenstokesweak} and minimization of a convex and coercive functional over the divergence-free subspace.  Observe that if the solution to \eqref{eq:glenstokesweak} is sufficiently regular then it satisfies strong equations \eqref{eq:stokes}.
 
-The well-posedness of problem \eqref{eq:glenstokesweak} allows us to create a well-defined map from the surface $s=s^n$ to the surface value of the velocity solution $\bu=\bu^n$ .  The map is defined via definition \eqref{eq:icydomain} of $\Lambda=\Lambda(t_n)$, then the solution of \eqref{eq:glenstokesweak} over that domain, and then evaluation of the trace of $\bu$ over $\Gamma_N\subset \partial\Lambda$.  Concretely we define the \emph{surface motion map} $\Phi:\cV \to \cV'$ from the trace of $\bu$ and using the weak derivatives of $s$:
+The well-posedness of problem \eqref{eq:glenstokesweak} allows us to create a well-defined map from admissible surface elevations $s$ to the corresponding surface value of the Stokes velocity solution $\bu$.  The map is defined via \eqref{eq:icydomain}, next the solution of \eqref{eq:glenstokesweak} over domain $\Lambda=\Lambda(t)$, and then evaluation of the trace of $\bu$.  This creates the \emph{surface motion map} $\Phi:\cV \to \cV'$, based also on weak derivatives of $s$ to compute $\bn_s$:
 \begin{equation}
 \Phi(s) = - \bu|_s\cdot \bn_s \label{eq:be:Phidefine}
 \end{equation}
-For any surface elevation $s$ so that \eqref{eq:glenstokesweak} is well-posed, this map evaluates the dynamical term in SKE \eqref{eq:be:ske}, and so we can define a final weak form operator $F_{\Delta t}:\cV\to\cV'$:
+For any surface elevation $s$ so that \eqref{eq:glenstokesweak} is well-posed, this map evaluates the dynamical term in SKE \eqref{eq:be:ske}.  Now we can define a final weak form operator $F_{\Delta t}:\cV\to\cV'$:
 \begin{equation}
 \ip{F_{\Delta t}(s)}{r} = \Delta t\,\ip{\Phi(s)}{r} + \int_\Omega s r = \int_\Omega \left(s - \Delta t\, \bu|_s \cdot \bn_s\right) r.  \label{eq:be:Fdefine}
 \end{equation}
@@ -256,16 +256,15 @@ Now VI problem \eqref{eq:be:viearly} can be re-written using well-defined operat
 \end{equation}
 This VI form is our preferred weak form associated to the strong-form NCP statement \eqref{eq:be:ncp} of the implicit time step.
 
-VI problem \eqref{eq:be:vi} is the weak form corresponding to NCP \eqref{eq:be:ncp}, and there is general agreement among glaciologists that a backward Euler step for a non-sliding and isothermal glacier would satisfy the conditions of that NCP.  For instance, numerical ice sheet models \cite{IsaacStadlerGhattas2015,WirbelJarosch2020} are based upon this Stokes model, and furthermore the SKE is the standard model for surface geometry evolution \cite{GreveBlatter2009,SchoofHewitt2013}.  However, the bounds on numerical geometry errors proven in Sections \ref{sec:abstractestimate} and \ref{sec:application} below depend on a well-posed problem for the continuum surface elevation.  Because no results known to this author prove well-posedness for \eqref{eq:be:vi} or similar, we conjecture it to be true so as to consider the errors made in the FE approximation.
+VI problem \eqref{eq:be:vi} is the weak form corresponding to NCP \eqref{eq:be:ncp}.  There is general agreement among glaciologists that an implicit step for a non-sliding and isothermal glacier would satisfy the conditions of such an NCP.  For instance, numerical ice sheet models \cite{IsaacStadlerGhattas2015,WirbelJarosch2020} are based upon this Stokes model, and furthermore the SKE is the standard model for surface geometry evolution \cite{GreveBlatter2009,SchoofHewitt2013}.  In any case, the numerical error bounds proven in Sections \ref{sec:abstractestimate} and \ref{sec:application} below depend on a well-posed problem for the continuum surface elevation.  Because no results known to this author prove well-posedness for \eqref{eq:be:vi}, or any similar glacier geometry problem based on Stokes dynamics, we conjecture well-posedness so that we may consider the errors made in the FE approximation.
 
 \begin{conjecture} \label{conj:wellposed:be}
-There exists an exponent $\rr$ so that if $\cV = W^{1,\rr}(\Omega)$ then, for all sufficiently-small values $\Delta t>0$, there exists a unique solution to VI problem \eqref{eq:be:vi}.
+There exists an exponent $\rr$ so that if $\cV = W^{1,\rr}(\Omega)$ then, for all sufficiently-small values $\Delta t>0$, there exists a unique solution $s \in \cK = \{r\ge b\} \subset \cV$ to VI problem \eqref{eq:be:vi}.
 \end{conjecture}
 
-Certain well-posedness results are known to hold for shallow approximations of problem \eqref{eq:be:vi}.  For the shallow ice approximation (SIA) the ice geometry is often parameterized using the ice thickness, in which case, by incompressibility, the SKE is replaced by a mass continuity or Saint Venant equation \cite{JouvetBueler2012}.  In this case the constraint set is $\tilde{\cK} = \{H\ge 0\}$ where $H=s-b$ is the ice thickness.   For the steady SIA model, with arbitrary smooth bed elevations, existence is known, with a power of $H$ in an identified Sobolev space.\footnote{However, the space of functions whose powers are in a $W^{1,\qq}$ space is not generally even a vector space.  For example, relevant to typical powers used for ice sheets, if $f(x)=(x-1/2)^{3/8} \chi_{[1/2,1]}(x)$ and $g(x)=1$ then $f,g \in \cV = W^{1,4}([0,1])$ but $f+g\notin \cV$.}  That is, there exists $\eta = H^{2\qq/(\qq-1)} \in \subset W^{1,\qq}(\Omega)$ solving the power-transformed VI problem \cite{JouvetBueler2012}; see also \cite{Calvoetal2003,PiersantiTemam2023} regarding the flat-bed and time-dependent case.  On the other hand, the solution regularity from solving the SIA problem likely does not correspond to the regularity of a surface elevation solution of \eqref{eq:be:vi} using non-shallow (Stokes) dynamics.  In fact, it is well-known that the wavelength-dependent surface response of the Stokes model has a quite different small wavelength limit relative to the diffusive SIA model \cite[for example]{Pattynetal2008}.
+Related well-posedness results are known to hold for shallow approximations of problem \eqref{eq:be:vi}.  For the shallow ice approximation (SIA) the ice geometry is often parameterized using the ice thickness, in which case, by incompressibility, the SKE is replaced by a mass continuity or Saint Venant equation \cite{JouvetBueler2012}.  The corresponding constraint set is $\tilde{\cK} = \{H\ge 0\}$ where $H=s-b$ is the ice thickness.   For the steady SIA model, with arbitrary smooth bed elevations, existence is known, with a power of $H$ in an identified Sobolev space:\footnote{However, the set of functions whose $\rr$th power is in a $W^{1,\qq}$ space is not generally even a vector space.  For example, relevant to the typical powers $\qq=4$ and $\rr=2\qq/(\qq-1)=8/3$ arising from the SIA model for glaciers, and in 1D, if $f(x)=(x-1/2)^{3/8} \chi_{[1/2,1]}(x)$ and $g(x)=1$ then $f^\rr,g^\rr \in W^{1,4}([0,1])$ but $(f+g)^\rr\notin W^{1,4}([0,1])$.} there exists $\eta = H^{2\qq/(\qq-1)} \in \subset W^{1,\qq}(\Omega)$ solving the power-transformed VI problem \cite{JouvetBueler2012}.  (See also \cite{Calvoetal2003,PiersantiTemam2023} regarding flat-bed and time-dependent cases.)  On the other hand, the solution regularity which occurs in the SIA model likely does not correspond to the regularity of a surface elevation solution of \eqref{eq:be:vi} using non-shallow (Stokes) dynamics.  In fact, it is well-known that the wavelength-dependent surface response of the Stokes model has a quite different small wavelength limit from the diffusive SIA model \cite[for example]{Pattynetal2008}.
 
-More generally, it is not very clear what theoretical claims should be made about the shapes of glacier and ice sheet margins, speaking here of the grounded case.  The SIA theory suggests root-type (fractional-power) shapes \cite{Bueleretal2005} with unbounded gradients (Figure \ref{fig:margins}.  On the other hand, earlier glacier modeling often hypothesized a ``wedge'' shape with a finite gradient, and in reality fracture, crevasse, and cliffs features are common at glacier margins.
-% CITE FOR wedge?
+Also, the theoretical shapes of glacier and ice sheet \emph{margins} (Figure \ref{fig:margins}) are not so clear, speaking here of the grounded case.  Margin shape relates to which Sobolev spaces might be credible for claims of well-posedness.  The SIA theory suggests root-type (fractional-power) shapes \cite{Bueleretal2005} with unbounded gradients.  By contrast, earlier glacier modeling often hypothesized a ``wedge'' shape with a finite gradient \cite[for example]{EchelmeyerKamb1986}, which might allow $s\in W^{1,\rr}(\Omega)$.  Reality is of course much more complicated, with fracture, crevasse, and cliffs as common features of glacier margins, while here we assume ice is only modeled as a viscous fluid.
 
 \begin{figure}
 \begin{center}
@@ -275,7 +274,13 @@ More generally, it is not very clear what theoretical claims should be made abou
 \label{fig:margins}
 \end{figure}
 
-As a mathematical matter, Conjecture \ref{conj:wellposed:be} only addresses the well-posedness of each implicit time-step problem, and this does not suffice to show well-posedness of our original time-dependent problem.  Without making a further formal conjecture, we also suppose that the parabolic VI problem corresponding to time-dependent NCP \eqref{eq:ncp} would also be well-posed.  On the other hand, the results in the next two Sections are only based on Conjecture \ref{conj:wellposed:be}.
+Conjecture \ref{conj:wellposed:be} addresses the well-posedness of a single implicit time-step problem, and this is not sufficient to show well-posedness of the time-dependent problem.  Without making a further formal conjecture, some versions of the following two propositions must be true:
+\renewcommand{\labelenumi}{\emph{\roman{enumi})}}
+\begin{enumerate}
+\item The solution $s$ of \eqref{eq:be:vi} is sufficiently regular so that $\ell^{n+1} \in \cV'$ is well-defined for the next step.
+\item The parabolic VI problem \cite[and references therein]{Glowinski1984} corresponding to time-dependent NCP \eqref{eq:ncp} is well-posed.
+\end{enumerate}
+While the practice of numerical ice sheet and glacier modeling using Stokes dynamics evidently expects facts like these to hold, especially \emph{ii)} is distant despite progress in the SIA case \cite{Calvoetal2003,PiersantiTemam2023}.  On the other hand, the results in the next two Sections only require Conjecture \ref{conj:wellposed:be} to hold.
 
 
 \section{Abstract error estimate} \label{sec:abstractestimate}
