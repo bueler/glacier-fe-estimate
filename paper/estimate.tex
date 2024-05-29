@@ -270,17 +270,19 @@ Also, the theoretical shapes of glacier and ice sheet \emph{margins} (Figure \re
 \begin{center}
 \includegraphics[width=0.8\textwidth]{figs/margins.jpg}
 \end{center}
-\caption{In which Sobolev space should we seek the surface elevation function?  This question relates to the theoretically-expected shape of the ice margin.  The shallow ice theory yields a fractional power shape (left).  Other glacier models hypothesize a ``wedge'' shape (center).  On the other hand, actual glacier margins often have fractures and cliffs (right).} %FIXME replace with better figure
+\caption{In which Sobolev space should we seek the surface elevation function?  This question relates to the theoretically-expected shape of the ice margin.  The shallow ice theory yields a fractional power shape (left).  Other glacier models hypothesize a ``wedge'' shape (center).  On the other hand, actual glacier margins often have overhangs, crevasses, and cliffs (right).} %FIXME replace with better figure
 \label{fig:margins}
 \end{figure}
 
-Conjecture \ref{conj:wellposed:be} addresses the well-posedness of a single implicit time-step problem, and this is not sufficient to show well-posedness of the time-dependent problem.  Without making a further formal conjecture, some versions of the following two propositions must be true:
+In the vicinity of a steep ice margin, especially on steep bedrock features, glacier ice can actually generate overhangs which violate the assumption that a surface elevation function is even meaningful.  Overhangs can also occur in the bedrock.  Because such overhangs are small features compared to the overall scale of glaciers and ice sheets, almost all modeling literature ignores their formation and assumes instead that surface and bed elevation functions are well-defined; see \cite{IsaacStadlerGhattas2015,Jouvetetal2008,LofgrenAhlkronaHelanow2022,WirbelJarosch2020} among many examples.  Reference \cite{PralongFunk2005} provides an alternative model in which overhangs are allowed and ice-cliff calving occurs via a damage variable and a stress-fracture failure criterion.  Such a mechanism might explain how (nearly) well-defined surface elevation and thickness functions could arise as solutions in a more-complete, and potentially well-posed, model.  However, such a viscous-brittle model is a highly nontrivial extension of the viscous-only model herein.
+
+Conjecture \ref{conj:wellposed:be} addresses the well-posedness of a single implicit time-step problem, and this is not sufficient to show well-posedness of the time-dependent problem.  Without making a further formal conjecture, some versions of the following propositions must be true:
 \renewcommand{\labelenumi}{\emph{\roman{enumi})}}
 \begin{enumerate}
 \item The solution $s$ of \eqref{eq:be:vi} is sufficiently regular so that $\ell^{n+1} \in \cV'$ is well-defined for the next step.
-\item The parabolic VI problem \cite[and references therein]{Glowinski1984} corresponding to time-dependent NCP \eqref{eq:ncp} is well-posed.
+\item The parabolic VI problem \cite{Glowinski1984} corresponding to time-dependent NCP \eqref{eq:ncp} is well-posed.
 \end{enumerate}
-While the practice of numerical ice sheet and glacier modeling using Stokes dynamics evidently expects facts like these to hold, especially \emph{ii)} is distant despite progress in the SIA case \cite{Calvoetal2003,PiersantiTemam2023}.  On the other hand, the results in the next two Sections only require Conjecture \ref{conj:wellposed:be} to hold.
+While practitioners of numerical ice sheet and glacier modeling using Stokes dynamics expects facts like these to hold, they may be distant mathematically despite progress in the SIA case, especially on \emph{ii)} \cite{Calvoetal2003,PiersantiTemam2023}.  On the other hand, the results in the next two Sections only require Conjecture \ref{conj:wellposed:be}.
 
 
 \section{Abstract error estimate} \label{sec:abstractestimate}
@@ -413,7 +415,7 @@ Finally, if additionally $f(u)=\ell$ then
 \end{equation}
 \end{corollary}
 
-Regarding \eqref{eq:abstractestimate:subset:Cea}, which is Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002} translated to Banach spaces, $f(u)=\ell$ holds when $u$ is in the interior of $\cK$, so there is no free boundary or active set.  Said another way, \eqref{eq:abstractestimate:subset:Cea} is the PDE case.  In the glacier context, which we return to now, it is the case where the entire domain $\Omega$ is covered in ice
+Regarding \eqref{eq:abstractestimate:subset:Cea}, which is Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002} translated to Banach spaces, $f(u)=\ell$ would be true if $u$ were in the interior of $\cK$, with no free boundary or active set.  Said another way, in \eqref{eq:abstractestimate:subset:Cea} we have reduced to the PDE case.  In the glacier context, to which we return now, \eqref{eq:abstractestimate:subset:Cea} corresponds to the case where the entire domain $\Omega$ is covered in ice.
 
 
 \section{Application of the estimate} \label{sec:application}
