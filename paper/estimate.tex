@@ -136,7 +136,7 @@ s - b &\ge 0 \\
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0
 \end{align}
 \end{subequations}
-This strong form NCP statement, which will be reformulated as a variational inequality (VI; \cite{KinderlehrerStampacchia1980}) in Section \ref{sec:models} below, assumes that we have extended the surface velocity by zero ($\bu|_s=0$) to the ice-free areas where $s(t,x)=b(x)$.  This NCP says that either a location is ice free ($s-b=0$) and that the climate is locally ablating ($a<0$), or that the surface kinematical equation (SKE) holds:
+This strong form NCP statement, which will be reformulated as a variational inequality (VI; \cite{KinderlehrerStampacchia1980}) in Section \ref{sec:model} below, assumes that we have extended the surface velocity by zero ($\bu|_s=0$) to the ice-free areas where $s(t,x)=b(x)$.  This NCP says that either a location is ice free ($s-b=0$) and that the climate is locally ablating ($a<0$), or that the surface kinematical equation (SKE) holds:
 \begin{equation}
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0.  \label{eq:ske}
 \end{equation}
@@ -186,10 +186,10 @@ Each time step of an implicit time-stepping model based on \eqref{eq:icydomain}-
 
 FIXME: WHAT WE ACCOMPLISH
 
-This paper is organized as follows.  In Section \ref{sec:models} we reformulate the coupled problem \eqref{eq:icydomain}--\eqref{eq:stokes} as a VI weak form for backward Euler time steps.  Well-posedness for this time-step problem is conjectured over a Banach space of surface elevation functions.  In Section \ref{sec:abstractestimate} we prove an abstract FE error estimate, Theorem \ref{thm:abstractestimate} and its corollaries, for general VI problems involving fully-nonlinear, but coercive and Lipshitz, operators on Banach spaces.  (This estimate extends the classical linear  case by Falk \cite{Falk1974}.)  In Section \ref{sec:application} we apply this theorem to the glacier model time steps.  The distinctive character of non-sliding land-based glaciers, namely how they respond to climate and that they stagnate as they approach zero thickness, implies that certain terms are effectively small, and thus a computable geometry error upper bound follows.  The estimate is demonstrated in Section \ref{sec:demo} on an idealized, but non-trivial, glacier simulation implemented in Firedrake \cite{Hametal2023}.
+This paper is organized as follows.  In Section \ref{sec:model} we reformulate the coupled problem \eqref{eq:icydomain}--\eqref{eq:stokes} as a VI weak form for an implicit (backward Euler) time step.  Well-posedness for this time-step problem is conjectured in Section \ref{sec:theory}, over a Sobolev space of surface elevation functions, and context is provided for this conjecture.  In Section \ref{sec:abstractestimate} we prove an abstract FE error estimate, namely Theorem \ref{thm:abstractestimate} and its corollaries, for general VI problems involving fully-nonlinear, but coercive and Lipshitz, operators on Banach spaces.  This estimate extends the classical case by Falk \cite{Falk1974}, for bilinear forms.  In Section \ref{sec:application} we apply this theorem to the glacier model.  The distinctive character of non-sliding land-based glaciers, regarding how they respond to climate (mass balance) perturbations, and that they stagnate as they approach zero thickness, implies that certain terms are effectively small, and computable geometry error upper bounds follow.  The estimates are demonstrated in Section \ref{sec:demo} on an idealized, but non-trivial, glacier simulation implemented in Firedrake \cite{Hametal2023}.
 
 
-\section{An implicit time-step model, in weak form} \label{sec:models}
+\section{An implicit time-step model, in weak form} \label{sec:model}
 
 Let $\{t_n\}$ be an increasing sequence of times, and write $\Delta t = t_n-t_{n-1}$ for the step length.  Suppose $s(x)\approx s(t_n,x)$ approximates the unknown surface elevation at time $t_n$.  Let $a^n(x)$ be the (temporal) average of $a(t,x)$ over $[t_{n-1},t_n]$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
 \begin{equation}
@@ -250,21 +250,53 @@ For any surface elevation $s$ so that \eqref{eq:glenstokesweak} is well-posed, t
 \ip{F_{\Delta t}(s)}{r} = \Delta t\,\ip{\Phi(s)}{r} + \int_\Omega s r = \int_\Omega \left(s - \Delta t\, \bu|_s \cdot \bn_s\right) r.  \label{eq:be:Fdefine}
 \end{equation}
 
-Now VI problem \eqref{eq:be:viearly} can be re-written using well-defined operators, as long as $\cV$ has been chosen in an appropriate manner.  Specifically, the solution surface elevation $s$ needs to be regular enough so that the corresponding Stokes problem is well-posed.  Also we assume, reasonably, that the source term $\ell^n$ defined in \eqref{eq:be:source} provides an element of the dual space $\cV'$.  Then we seek $s = s^n \in \cK$ so that
+At this point, VI problem \eqref{eq:be:viearly} can be re-written using well-defined operators, as follows.  This assumes that $\cV$ has been chosen in an appropriate manner, which requires that the solution surface elevation $s$ is regular enough so that the corresponding Stokes problem is well-posed.  Also we assume, reasonably, that the source term $\ell^n$ defined in \eqref{eq:be:source} is the dual space $\cV'$.  Then we seek $s = s^n \in \cK$ so that
 \begin{equation}
 \ip{F_{\Delta t}(s)}{r-s} \ge \ip{\ell^n}{r-s} \quad \text{for all } r \in \cK. \label{eq:be:vi}
 \end{equation}
 This VI form is our preferred weak form associated to the strong-form NCP statement \eqref{eq:be:ncp} of the implicit time step.
 
-VI problem \eqref{eq:be:vi} is the weak form corresponding to NCP \eqref{eq:be:ncp}.  There is general agreement among glaciologists that an implicit step for a non-sliding and isothermal glacier would satisfy the conditions of such an NCP.  For instance, numerical ice sheet models \cite{IsaacStadlerGhattas2015,WirbelJarosch2020} are based upon this Stokes model, and furthermore the SKE is the standard model for surface geometry evolution \cite{GreveBlatter2009,SchoofHewitt2013}.  In any case, the numerical error bounds proven in Sections \ref{sec:abstractestimate} and \ref{sec:application} below depend on a well-posed problem for the continuum surface elevation.  Because no results known to this author prove well-posedness for \eqref{eq:be:vi}, or any similar glacier geometry problem based on Stokes dynamics, we conjecture well-posedness so that we may consider the errors made in the FE approximation.
 
-\begin{conjecture} \label{conj:wellposed:be}
-There exists an exponent $\rr$ so that if $\cV = W^{1,\rr}(\Omega)$ then, for all sufficiently-small values $\Delta t>0$, there exists a unique solution $s \in \cK = \{r\ge b\} \subset \cV$ to VI problem \eqref{eq:be:vi}.
-\end{conjecture}
+\section{Theoretical considerations on the VI problem} \label{sec:theory}
 
-Related well-posedness results are known to hold for shallow approximations of problem \eqref{eq:be:vi}.  For the shallow ice approximation (SIA) the ice geometry is often parameterized using the ice thickness, in which case, by incompressibility, the SKE is replaced by a mass continuity or Saint Venant equation \cite{JouvetBueler2012}.  The corresponding constraint set is $\tilde{\cK} = \{H\ge 0\}$ where $H=s-b$ is the ice thickness.   For the steady SIA model, with arbitrary smooth bed elevations, existence is known, with a power of $H$ in an identified Sobolev space:\footnote{However, the set of functions whose $\rr$th power is in a $W^{1,\qq}$ space is not generally even a vector space.  For example, relevant to the typical powers $\qq=4$ and $\rr=2\qq/(\qq-1)=8/3$ arising from the SIA model for glaciers, and in 1D, if $f(x)=(x-1/2)^{3/8} \chi_{[1/2,1]}(x)$ and $g(x)=1$ then $f^\rr,g^\rr \in W^{1,4}([0,1])$ but $(f+g)^\rr\notin W^{1,4}([0,1])$.} there exists $\eta = H^{2\qq/(\qq-1)} \in \subset W^{1,\qq}(\Omega)$ solving the power-transformed VI problem \cite{JouvetBueler2012}.  (See also \cite{Calvoetal2003,PiersantiTemam2023} regarding flat-bed and time-dependent cases.)  On the other hand, the solution regularity which occurs in the SIA model likely does not correspond to the regularity of a surface elevation solution of \eqref{eq:be:vi} using non-shallow (Stokes) dynamics.  In fact, it is well-known that the wavelength-dependent surface response of the Stokes model has a quite different small wavelength limit from the diffusive SIA model \cite[for example]{Pattynetal2008}.
+VI problem \eqref{eq:be:vi} is the weak form corresponding to NCP \eqref{eq:be:ncp}, and there is general agreement among glaciologists that an implicit step for a non-sliding and isothermal glacier, modeled as a very viscous and incompressible fluid, would satisfy the conditions of the NCP.  For instance, numerical ice sheet models \cite{IsaacStadlerGhattas2015,WirbelJarosch2020} are based upon the Stokes model \eqref{eq:stokes}, and the SKE \eqref{eq:ske} is the standard model for surface geometry evolution \cite{GreveBlatter2009,SchoofHewitt2013}.
 
-Also, the theoretical shapes of glacier and ice sheet \emph{margins} (Figure \ref{fig:margins}) are not so clear, speaking here of the grounded case.  Margin shape relates to which Sobolev spaces might be credible for claims of well-posedness.  The SIA theory suggests root-type (fractional-power) shapes \cite{Bueleretal2005} with unbounded gradients.  By contrast, earlier glacier modeling often hypothesized a ``wedge'' shape with a finite gradient \cite[for example]{EchelmeyerKamb1986}, which might allow $s\in W^{1,\rr}(\Omega)$.  Reality is of course much more complicated, with fracture, crevasse, and cliffs as common features of glacier margins, while here we assume ice is only modeled as a viscous fluid.
+However, the numerical error bounds proven in Sections \ref{sec:abstractestimate} and \ref{sec:application} depend on a well-posed VI problem for the continuum surface elevation.  Because no results known to this author prove well-posedness for \eqref{eq:be:vi}, or any similar glacier geometry problem based on Stokes dynamics, we necessarily conjecture well-posedness (subsection \ref{subsec:conjecture}).  We build up to this conjecture using restricted cases and physical reasoning.
+
+\subsection{The explicit step problem is well-posed, but fails regularity} \label{subsec:explicit}   Consider for a moment a glacier that does not flow at all.  The glacier geometry time-step problem then reduces to determining the shape of a ``snow field'', parameterized by ice-equivalent surface elevation, according only to the SMB and the prior geometry.  The weak form of this problem is well-posed over $L^2(\Omega)$.  In fact, let $\ip{F^{\bzero}_{\Delta t}(s)}{r} = \int_\Omega sr$, which sets $\bu|_s=\bzero$ in definition \eqref{eq:be:Fdefine} of operator $F_{\Delta t}$.  Assuming reasonably that $\ell^n \in (L^2(\Omega))' \cong L^2(\Omega)$---compare definition \eqref{eq:be:source}---there exists a unique solution $s^{\bzero} \in \cK_{L^2} = \left\{r\in L^2(\Omega)\,:\,r \ge b\right\}$ of the simplified no-flow VI problem, namely
+\begin{equation}
+\ip{F^{\bzero}_{\Delta t}(s^{\bzero})}{r-s^{\bzero}} \ge \ip{\ell^n}{r-s^{\bzero}} \quad \text{for all } r \in \cK_{L^2}.
+\end{equation}
+It is well-known \cite[section II.3]{KinderlehrerStampacchia1980} that the solution is by truncation:
+\begin{equation}
+s^{\bzero} = \max\{b, \ell^n\} = \max\{b, s^{n-1} + \Delta t\,a^n\} \in \cK_{L^2}.
+\end{equation}
+For this problem, a simulation computes $\ell^n$ and then assesses whether it is admissible, applying pointwise (e.g.~mesh nodal) truncation to the bed elevation if not.
+
+The explicit time-step problem, corresponding to the implicit problem in Section \ref{sec:model}, has the same character.  Suppose $s^{n-1}$ is admissible and sufficiently regular so that $\bn_{s^{n-1}}$ is well-defined, and so that the weak-form Stokes problem \eqref{eq:glenstokesweak} is well-posed over the domain $\Lambda^{n-1}$ defined by $s^{n-1}$.  Then define, corresponding to \eqref{eq:be:Fdefine}, the following explicit weak-form operator:
+\begin{equation}
+\ip{F^{\text{e}}_{\Delta t}(s)}{r} = \int_\Omega \left(s - \Delta t\, \bu|_{s^{n-1}} \cdot \bn_{s^{n-1}}\right) r.  \label{eq:explicitFdefine}
+\end{equation}
+This operator arises by replacing the backward Euler SKE equation \eqref{eq:be:ske} with its forward Euler version.  The corresponding VI problem
+\begin{equation}
+\ip{F^{\text{e}}_{\Delta t}(s^{\text{e}})}{r-s^{\text{e}}} \ge \ip{\ell^n}{r-s^{\text{e}}} \quad \text{for all } r \in \cK_{L^2}
+\end{equation}
+is again well-posed and is solved by truncation \cite[section II.3]{KinderlehrerStampacchia1980}:
+\begin{equation}
+s^{\text{e}} = \max\{b, s^{n-1} - \Delta t\, \bu|_{s^{n-1}} \cdot \bn_{s^{n-1}} + \Delta t\,a^n\} \in \cK_{L^2}. \label{eq:explicits}
+\end{equation}
+
+However, this leaves no regularity for the next step.  The derivatives in $\bn_{s^{n-1}}$, and also the possibility that the velocity trace $\bu|_{s^{n-1}}$ and/or the SMB $a^n$ lack differentiability, imply that $s^{\text{e}}$ defined by \eqref{eq:explicits} is generally not regular enough to serve as the prior surface elevation for the next time step.  In particular, it is not clear if $s^{\text{e}}$ defines a domain $\Lambda^{\text{e}}$ over which the (weak) Stokes problem \eqref{eq:glenstokesweak} can be again well-posed.
+
+We must state the situation more generously because explicit time-stepping simulations for glaciers and ice sheets governed by Stokes dynamics are common in the applied literature.  There is no \emph{a priori} mathematical reason why these schemes should not stumble, and possibly fail to converge under refinement under space-time mesh refinement, because the continuum limit is not even conjecturally clear.  In practice this relates closely to a lack of clarity about which refinement paths for such explicit simulations are conditionally stable.
+
+\subsection{The problem is not of advection type} \label{subsec:notadv}    FIXME physical reasoning regarding surface perturbations
+
+FIXME For the shallow ice approximation (SIA) the ice geometry is often parameterized using the ice thickness, in which case, by incompressibility, the SKE is replaced by a mass continuity or Saint Venant equation \cite{JouvetBueler2012}.  The corresponding constraint set is $\tilde{\cK} = \{H\ge 0\}$ where $H=s-b$ is the ice thickness.   For the steady SIA model, with arbitrary smooth bed elevations, existence is known, with a power of $H$ in an identified Sobolev space:\footnote{However, the set of functions whose $\rr$th power is in a $W^{1,\qq}$ space is not generally even a vector space.  For example, relevant to the typical powers $\qq=4$ and $\rr=2\qq/(\qq-1)=8/3$ arising from the SIA model for glaciers, and in 1D, if $f(x)=(x-1/2)^{3/8} \chi_{[1/2,1]}(x)$ and $g(x)=1$ then $f^\rr,g^\rr \in W^{1,4}([0,1])$ but $(f+g)^\rr\notin W^{1,4}([0,1])$.} there exists $\eta = H^{2\qq/(\qq-1)} \in \subset W^{1,\qq}(\Omega)$ solving the power-transformed VI problem \cite{JouvetBueler2012}.  (See also \cite{Calvoetal2003,PiersantiTemam2023} regarding flat-bed and time-dependent cases.)  On the other hand, the solution regularity which occurs in the SIA model likely does not correspond to the regularity of a surface elevation solution of \eqref{eq:be:vi} using non-shallow (Stokes) dynamics.  In fact, it is well-known that the wavelength-dependent surface response of the Stokes model has a quite different small wavelength limit from the diffusive SIA model \cite[for example]{Pattynetal2008}.
+
+\subsection{The problem is not of optimization type} \label{subsec:notopt}  FIXME porous medium character, i.e.~coercivity blocked by thickness (power) scaling of operator; thin ice does not flow much regardless of surface slope
+
+\subsection{Physical reasoning related to margin/terminus shape} \label{subsec:margin}  FIXME Also, the theoretical shapes of glacier and ice sheet \emph{margins} (Figure \ref{fig:margins}) are not so clear, speaking here of the grounded case.  Margin shape relates to which Sobolev spaces might be credible for claims of well-posedness.  The SIA theory suggests root-type (fractional-power) shapes \cite{Bueleretal2005} with unbounded gradients.  By contrast, earlier glacier modeling often hypothesized a ``wedge'' shape with a finite gradient \cite[for example]{EchelmeyerKamb1986}, which might allow $s\in W^{1,\rr}(\Omega)$.  Reality is of course much more complicated, with fracture, crevasse, and cliffs as common features of glacier margins, while here we assume ice is only modeled as a viscous fluid.
 
 \begin{figure}
 \begin{center}
@@ -275,6 +307,12 @@ Also, the theoretical shapes of glacier and ice sheet \emph{margins} (Figure \re
 \end{figure}
 
 In the vicinity of a steep ice margin, especially on steep bedrock features, glacier ice can actually generate overhangs which violate the assumption that a surface elevation function is even meaningful.  Overhangs can also occur in the bedrock.  Because such overhangs are small features compared to the overall scale of glaciers and ice sheets, almost all modeling literature ignores their formation and assumes instead that surface and bed elevation functions are well-defined; see \cite{IsaacStadlerGhattas2015,Jouvetetal2008,LofgrenAhlkronaHelanow2022,WirbelJarosch2020} among many examples.  Reference \cite{PralongFunk2005} provides an alternative model in which overhangs are allowed and ice-cliff calving occurs via a damage variable and a stress-fracture failure criterion.  Such a mechanism might explain how (nearly) well-defined surface elevation and thickness functions could arise as solutions in a more-complete, and potentially well-posed, model.  However, such a viscous-brittle model is a highly nontrivial extension of the viscous-only model herein.
+
+\subsection{Conjectural well-posedness for the continuum problem} \label{subsec:conjecture} FIXME transition
+
+\begin{conjecture} \label{conj:wellposed:be}
+There exists an exponent $\rr$ so that if $\cV = W^{1,\rr}(\Omega)$ then, for all sufficiently-small values $\Delta t>0$, there exists a unique solution $s \in \cK = \{r\ge b\} \subset \cV$ to VI problem \eqref{eq:be:vi}.
+\end{conjecture}
 
 Conjecture \ref{conj:wellposed:be} addresses the well-posedness of a single implicit time-step problem, and this is not sufficient to show well-posedness of the time-dependent problem.  Without making a further formal conjecture, some versions of the following propositions must be true:
 \renewcommand{\labelenumi}{\emph{\roman{enumi})}}
@@ -295,18 +333,24 @@ Let $\cV$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological
 \end{equation}
 The best known example of such a problem is the obstacle problem for the Laplacian operator; see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for its theory and FE analysis.
 
+The following definitions are standard \cite[Chapter III]{KinderlehrerStampacchia1980}.
+
 \begin{definition} \label{def:monotonepcoercive}
-An operator $f:\cK \to \cV'$ is said to be \emph{monotone \cite{KinderlehrerStampacchia1980}} if
+An operator $f:\cK \to \cV'$ is said to be \emph{monotone} if
 \begin{equation}
 \ip{f(v)-f(w)}{v-w} \ge 0 \qquad \text{for all } v,w \in \cK \label{eq:monotone}
 \end{equation}
-and \emph{strictly monotone} if equality in \eqref{eq:monotone} implies $v=w$.  Let $\pp>1$.  The operator is \emph{$\pp$-coercive \cite{Bueler2021conservation}} if there exists $\alpha>0$ such that
+and \emph{strictly monotone} if equality in \eqref{eq:monotone} implies $v=w$.  It is \emph{coercive} if there is $w\in \cK$ so that for $v \in \cK$,
+\begin{equation}
+\frac{\ip{f(v)-f(w)}{v-w}}{\|v-w\|} \to +\infty \qquad \text{as } \|v\| \to +\infty. \label{eq:coercive}
+\end{equation}
+Let $\pp>1$.  The operator is \emph{$\pp$-coercive \cite{Bueler2021conservation}} if there exists $\alpha>0$ such that
 \begin{equation}
 \ip{f(v)-f(w)}{v-w} \ge \alpha \|v-w\|^\pp \qquad \text{for all } v,w \in \cK. \label{eq:pcoercive}
 \end{equation}
 \end{definition}
 
-It is well-known that if $f:\cK \to \cV'$ is monotone and coercive, and also continuous on finite-dimensional subspaces, then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then a solution is unique.  If $f$ is $\pp$-coercive then it is also strictly monotone, thus $\pp$-coercivity and continuity implies well-posedness for \eqref{eq:vi}.
+It is well-known that if $f:\cK \to \cV'$ is monotone and coercive, and also continuous on finite-dimensional subspaces, then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then a solution is unique.  If $f$ is $\pp$-coercive then it coercive and strictly monotone; $\pp$-coercivity and continuity yield well-posedness for \eqref{eq:vi}.
 % \cite{Peral1997} uniform continuity over bounded sets for p-Laplacian: Thm A.0.6
 
 \begin{definition} \label{def:lipshitz}
@@ -316,7 +360,7 @@ For $\rho>0$ let $B_\rho = \{v\in \cV\,:\,\|v\|\le \rho\}$.  We say $f:\cK \to \
 \end{equation}
 \end{definition}
 
-Observe that definitions \ref{def:monotonepcoercive} and \ref{def:lipshitz} do not require $f$ to be defined on all of the vector space $\cV$, but only on $\cK$.
+Clearly, if $f$ is Lipshitz on bounded subsets then $f$ is continuous.  Definitions \ref{def:monotonepcoercive} and \ref{def:lipshitz} do not require $f$ to be defined on all of the vector space $\cV$, but only on $\cK$.
 
 A key concept in the following theorem is that $f(u)-\ell$ is generally nonzero when $u$ solves \eqref{eq:vi}.  Instead, a nonlinear complementarity problem holds, at least in sufficiently regular cases, as in \cite[Exercise 5.1.1]{Ciarlet2002}  and \cite[section 7]{BuelerFarrell2024}, for example.  Only for $u$ in the interior of $\cK$ should we expect equality (i.e.~$f(u)=\ell$).
 
@@ -374,13 +418,13 @@ Noting $1<\pp,\qq<\infty$, now use Young's inequality with $\eps>0$ \cite[Append
 Take infimums to show \eqref{eq:abstractestimate}.
 \end{proof}
 
-Although $f(u)-\ell\in \cV'$ is abstract in Theorem \ref{thm:abstractestimate}, in practical applications it might be a signed measure or even a measurable function.  In such cases, the first two terms in estimate \eqref{eq:abstractestimate} retain information about the sign of $f(u)-\ell$.  By contrast, the original Hilbert space result in \cite{Falk1974} (and \cite[section 5.1]{Ciarlet2002}) compute a norm and lose this information.  Also, these results assume $f_h=f$.  To give the analogous Banach space estimate, suppose that $\cV$ continuously and densely embeds in a larger Banach space $\cB$:
+Although $f(u)-\ell\in \cV'$ is abstract in Theorem \ref{thm:abstractestimate}, in practical applications it might be a signed measure or even a measurable function.  In such cases, the first two terms in estimate \eqref{eq:abstractestimate} retain information about the sign of $f(u)-\ell$.  By contrast, the original Hilbert space result in \cite{Falk1974} (and \cite[section 5.1]{Ciarlet2002}) compute a norm and lose this information.  Also, these results assume $f_h=f$.  To give the analogous Banach space estimate, as a corollary to Theorem \ref{thm:abstractestimate}, suppose that $\cV$ continuously and densely embeds in a larger Banach space $\cB$:
 \begin{equation}
 \cV \hookrightarrow \cB, \quad \overline{\cV} = \cB \label{eq:VembedsinB}
 \end{equation}
-Observe that $\cB' \subset \cV'$.  A standard example is where $\cV=W^{1,\qq}(\Omega)$ and $\cB=L^\qq(\Omega)$.  The proof of the following corollary of Theorem \ref{thm:abstractestimate}, is immediate.
+Observe that $\cB' \subset \cV'$.  A standard example is where $\cV=W^{1,\qq}(\Omega)$ and $\cB=L^\qq(\Omega)$.  The proof of the following is immediate.
 
-\begin{corollary}  \label{cor:abstractestimate:Bnorm}  Suppose also that $f_h=f$ (on $\cK_h$), or simply that $f(u_h)=f_h(u_h)$, that \eqref{eq:VembedsinB} holds, and that $\|f(u)-\ell\|_{\cB'} < \infty$.  Then
+\begin{corollary}  \label{cor:abstractestimate:Bnorm}  In addition to the assumptions of Theorem \ref{thm:abstractestimate}, suppose that \eqref{eq:VembedsinB} holds, that $f(u_h)=f_h(u_h)$, and that $\|f(u)-\ell\|_{\cB'} < \infty$.  Then
 \begin{align}
 \|u-u_h\|^\pp &\le \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \left( \inf_{v\in\cK} \|v-u_h\|_{\cB} +   \inf_{v_h\in\cK_h} \|v_h-u\|_{\cB} \right) \label{eq:abstractestimate:Bnorm} \\
    &\qquad + \inf_{v_h\in\cK_h} c \|v_h - u\|^\qq \notag
