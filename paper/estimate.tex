@@ -157,11 +157,15 @@ Well-known equation \eqref{eq:ske} states that the (non-material) surface of the
 
 In the current paper the SMB $a(t,x)$ is necessarily assumed to be defined everywhere in $\Omega$, regardless of whether a glacier is present or not.  At an ice-free location the value $a(t,x)$ can be modeled using precipitation and an energy balance \cite{GreveBlatter2009}, for instance by hypothesizing an ice or snow surface and then computing the balance of snow accumulation versus the total ablation from the available energy for melt.  In other words, the provided SMB at an unglaciated location needs to give the value which a glacier surface would experience at that time and (3D) location.
 
-The simulations considered in this paper aim to conserve mass and momentum.   The (standard) non-shallow ice dynamics model used here is a non-sliding (e.g.~frozen) base, isothermal, non-Newtonian, and incompressible Stokes problem \cite{GreveBlatter2009,JouvetRappaz2011,SchoofHewitt2013}.  To state this model recall definition \eqref{eq:icydomain} and let $\Gamma_s(t) \subset \partial \Lambda(t)$ be the upper surface $z=s$ and $\Gamma_b(t) \subset \partial \Lambda(t)$ be the base $z=b$.  The possibility of cliffs at the ice margin is neglected, so $\partial \Lambda(t) = \overline{\Gamma_s(t)} \cup \overline{\Gamma_b(t)}$ at any time.  Let $D\bu=(\grad \bu + \grad \bu^{\top})/2$ denote the strain rate tensor, with Frobenius norm $|D\bu| = (D\bu:D\bu)^{1/2} = \left((D\bu)_{ij} (D\bu)_{ij}\right)^{1/2}$.  The shear-thinning ice viscosity, from Glen's power law \cite{GreveBlatter2009}, is given by a regularized formula
+The simulations considered in this paper aim to conserve mass and momentum.   The (standard) non-shallow ice dynamics model used here is a non-sliding (e.g.~frozen) base, isothermal, non-Newtonian, and incompressible Stokes problem \cite{GreveBlatter2009,JouvetRappaz2011,SchoofHewitt2013}.
+
+Regarding the Stokes model domain, recall definition \eqref{eq:icydomain} and let $\Gamma_s(t) \subset \partial \Lambda(t)$ be the upper surface $z=s$ and $\Gamma_b(t) \subset \partial \Lambda(t)$ be the base $z=b$.  The possibility of cliffs at the ice margin is neglected, so $\partial \Lambda(t) = \overline{\Gamma_s(t)} \cup \overline{\Gamma_b(t)}$ at any time.
+
+To state the shear-thinning Glen's flow law, let $D\bu=(\grad \bu + \grad \bu^{\top})/2$ denote the strain rate tensor, with Frobenius norm $|D\bu| = (D\bu:D\bu)^{1/2} = \left((D\bu)_{ij} (D\bu)_{ij}\right)^{1/2}$.  The effective ice (dynamic) viscosity \cite{GreveBlatter2009} is given by a regularized formula
 \begin{equation}
-\nu(D\bu) = \nu_2 \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} \label{eq:glen}
+\nu(D\bu) = \nu_\pp \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} \label{eq:glen}
 \end{equation}
-The exponent $1 < \pp \le 2$, often written $\pp=(1/\nn)+1$ in glaciology \cite{GoldsbyKohlstedt2001}, is approximately 4/3.  The coefficient $\nu_2>0$, which can be determined from measured properties of ice \cite{GreveBlatter2009}, generally including temperature, is assumed to be constant (isothermal).  Note $\pp=2$ yields a Newtonian fluid with constant viscosity $\nu_2$.  For $\pp < 2$ the regularization with $\eps>0$ implies that $\nu(D\bu)$ is bounded above.
+The exponent $1 < \pp \le 2$, often written $\pp=(1/\nn)+1$ in glaciology \cite{GoldsbyKohlstedt2001}, is approximately 4/3.  The coefficient $\nu_\pp>0$ has $\pp$-dependent units such that $\nu(D\bu)$ has SI units $\text{kg}\,\text{m}^{-1}\,\text{s}^{-1}$.  The value of $\nu_\pp$ can be determined from measured properties of ice \cite{GreveBlatter2009}, including temperature, but it is assumed to be constant (isothermal) here.  Note that $\pp=2$ yields a Newtonian fluid with constant viscosity, while for $\pp < 2$ the $\eps>0$ regularization implies that $\nu(D\bu)$ is at least bounded above.
 
 The glacier has velocity and pressure solving the following 3D fluid equations if $\rhoi$ is the (constant) density of ice and $\bg$ is the acceleration of gravity:
 \begin{subequations}
@@ -202,56 +206,56 @@ This paper is organized as follows.  Section \ref{sec:stokes} recalls the existi
 
 \section{On the fixed-geometry Stokes problem} \label{sec:stokes}
 
-In this Section we consider the non-sliding, isothermal, and Glen-law Stokes sub-model \eqref{eq:glen}--\eqref{eq:stokes} on a 3D domain $\Lambda = \Lambda(t)$ defined by \eqref{eq:icydomain}.  This sub-model computes the surface velocity field $\bu|_s$ which appears in NCP \eqref{eq:ncp}, the weak form of which appears in Section \ref{sec:model} below.  Here we consider the weak form of the Stokes sub-model itself for a fixed domain $\Lambda$.
+In this Section we consider the weak form of the non-sliding, isothermal, and Glen-law Stokes sub-model \eqref{eq:glen}--\eqref{eq:stokes} on a fixed 3D domain $\Lambda = \Lambda(t)$ defined by \eqref{eq:icydomain} at a fixed time $t$.  Suitable function spaces for this problem are well-known so long as the domain $\Lambda$ is sufficiently regular.  We assume that the ice base $\Gamma_b\subset\partial \Lambda$, on which a Dirichlet condition $\bu=\bzero$ holds, has positive measure.  The remaining Neumann boundary $\Gamma_s = \partial \Lambda \setminus \overline{\Gamma_b}$ is assumed to be sufficiently-smooth so that a zero normal stress condition can be applied.  Note that \eqref{eq:glen}--\eqref{eq:stokes} computes the surface velocity field $\bu|_s$ which appears in NCP \eqref{eq:ncp}, the weak form of which is in Section \ref{sec:model} below.
 
-Function spaces suitable for sub-model \eqref{eq:glen}--\eqref{eq:stokes} are well-known so long as the domain $\Lambda$ is sufficiently regular.  We assume that the ice base $\Gamma_b\subset\partial \Lambda$, on which a Dirichlet condition $\bu=\bzero$ holds, has positive measure.  The remaining Neumann boundary $\Gamma_s = \partial \Lambda \setminus \Gamma_b$ is assumed to be sufficiently-smooth so that a zero normal stress condition can be applied.
-
-Let $1 < \pp \le 2$.  The Sobolev space \cite{Evans2010} of scalar functions with $\pp$th-power integrable first derivatives will be denoted $W^{1,\pp}(\Lambda)$.  Let $\cV = W_b^{1,\pp}(\Lambda; \RR^3)$ be the corresponding space of vector-valued functions with value zero along $\Gamma_b$.  For $[L]>0$ a representative \emph{horizontal} length of the glacier, we choose this space to have norm
+Let $1 < \pp \le 2$.  (Recall that $\pp=(1/\nn)+1\approx 4/3$ in Glen's law \eqref{eq:glen}.)  The Sobolev space \cite{Evans2010} of real-valued functions with $\pp$th-power integrable first derivatives is denoted $W^{1,\pp}(\Lambda)$.  Let
 \begin{equation}
-\|\bv\|_{W^{1,\pp}} = \left(\int_\Lambda |\bv|^\pp + [L]^\pp \int_\Lambda |\grad\bv|^\pp\right)^{1/\pp}.
+\cV = W_b^{1,\pp}(\Lambda; \RR^3) \label{eq:defineV}
 \end{equation}
-Here $|\bv|$ denotes the Euclidean norm of $\bv\in\RR^3$ and $|\grad\bv|=\left((\grad\bv)_{ij} (\grad\bv)_{ij}\right)^{1/2}$ denotes the Frobenius norm of $\grad\bv\in\RR^{3\times 3}$.  See Remark 1.2.1 in \cite{BoffiBrezziFortin2013} regarding the length scaling, and note that $\|\bv\|_{W^{1,\pp}}$ here has units of velocity.
-
-Recall that $\pp=(1/\nn)+1\approx 4/3$ in Glen's law \eqref{eq:glen}, which defines the viscosity $\nu(|D\bu|)$.  Let $\cQ=L^{\pp'}(\Lambda)$ where $\pp'=\pp/(\pp-1)\approx 4$ is the conjugate exponent.  Define
+be the corresponding space of vector-valued functions with value (trace) zero along $\Gamma_b$.  For some representative \emph{horizontal} length $[L]>0$ of the glacier, define the norm on $\cV$ by
 \begin{equation}
-\mathcal{M}_\Lambda = \cV \times \cQ \label{eq:glenstokes:mixedspace}
+\|\bv\|_{\cV} = \left(\int_\Lambda |\bv|^\pp + [L]^\pp \int_\Lambda |\grad\bv|^\pp\right)^{1/\pp}.
 \end{equation}
-as the space of admissible velocity and pressure pairs.  For $(\bu,p) \in \mathcal{M}_\Lambda$ define
+Here $|\bv|$ denotes the Euclidean norm of $\bv\in\RR^3$ and $|\grad\bv|=\left((\grad\bv)_{ij} (\grad\bv)_{ij}\right)^{1/2}$ is the Frobenius norm of $\grad\bv\in\RR^{3\times 3}$.  Remark 1.2.1 in \cite{BoffiBrezziFortin2013} explains the length scaling, and $\|\bv\|_{\cV}$ has consistent SI units of $\text{m}^{(\pp+3)/\pp}\,\text{s}^{-1}$.
+
+Let $\cQ=L^{\pp'}(\Lambda)$ where $\pp'=\pp/(\pp-1)\approx 4$ is the conjugate exponent.  Define
+\begin{equation}
+\mathcal{M} = \cV \times \cQ \label{eq:glenstokes:mixedspace}
+\end{equation}
+as the space of admissible velocity and pressure pairs.  For $(\bu,p) \in \mathcal{M}$ define
 \begin{equation}
 F_\Lambda(\bu,p)[\bv,q] = \int_\Lambda 2 \nu(|D\bu|) D\bu : D\bv - p \Div\bv - (\Div\bu) q - \rhoi \bg \cdot \bv \label{eq:glenstokes:fcnl}
 \end{equation}
 The (mixed) weak form seeks the solution $(\bu,p)$ which satisfies
 \begin{equation}
-F_\Lambda(\bu,p)[\bv,q] = 0 \qquad \text{for all } (\bv,q) \in \mathcal{M}_\Lambda. \label{eq:glenstokes:weak}
+F_\Lambda(\bu,p)[\bv,q] = 0 \qquad \text{for all } (\bv,q) \in \mathcal{M}. \label{eq:glenstokes:weak}
 \end{equation}
 
 Jouvet and Rappaz \cite{JouvetRappaz2011} have proven that problem \eqref{eq:glenstokes:weak} is well-posed if the Neumann portion of $\partial\Lambda$ is $C^1$.  Their proof of the following theorem uses the equivalence of \eqref{eq:glenstokes:weak} and the minimization of a convex and coercive functional over the divergence-free subspace $\Vdiv = \{\bv\in\cV\,:\,\Div\bv=0\}$.  Our regularization in Glen law \eqref{eq:glen} differs from that in \cite{JouvetRappaz2011}, but the necessary modifications are addressed in \cite{IsaacStadlerGhattas2015}.  Note that if the weak solution is sufficiently regular then the strong form \eqref{eq:stokes} is also satisfied.
 
-\begin{theorem} \label{thm:stokeswellposed} \cite[Theorem 3.10]{JouvetRappaz2011} and \cite[Appendix A]{IsaacStadlerGhattas2015}.  Suppose $\Lambda$ is bounded, $\partial\Lambda$ is Lipschitz, $\Gamma_s$ is $C^1$, and $\Gamma_b$ has positive measure.  Let $\pp\le 2$ and $\eps>0$ in \eqref{eq:glen}.  There exists a unique pair $(\bu,p) \in \mathcal{M}_\Lambda$ solving \eqref{eq:glenstokes:weak}, and furthermore $\bu\in \Vdiv$.
+\begin{theorem} \label{thm:stokeswellposed} \cite[Theorem 3.10]{JouvetRappaz2011} and \cite[Appendix A]{IsaacStadlerGhattas2015}.  Suppose $\Lambda$ is bounded, $\partial\Lambda$ is Lipschitz, $\Gamma_s$ is $C^1$, and $\Gamma_b$ has positive measure.  Let $1<\pp\le 2$ and $\eps>0$ in \eqref{eq:glen}.  There exists a unique pair $(\bu,p) \in \mathcal{M}$ solving \eqref{eq:glenstokes:weak}, and furthermore $\bu\in \Vdiv$.
 \end{theorem}
 
-Our primary purpose, resumed in the next Section, is to study the glacier geometry problem in NCP \eqref{eq:ncp}.  For that analysis we need to bound the surface trace $\bu|_s$ in terms of geometric properties of $\Lambda$.  This uses several lemmata, as follows, but then we conjecture a bound which is ultimately needed in Sections \ref{sec:model} and \ref{sec:application}.
+Our primary purpose, resumed in the next Section, is to study the glacier geometry problem in NCP \eqref{eq:ncp}.  For that analysis we will need to bound the surface trace $\bu|_s$ in terms of geometric properties of $\Lambda$.  This uses several inequalities, after which we add a bound conjecture which is needed to prove results in Sections \ref{sec:model} and \ref{sec:application}.
 
 \begin{lemma}[Poincar\'e's inequality] \label{lem:poincare}
-Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists a constant $C_{b,\pp}(\Lambda)>0$ so that $\int_\Lambda |\bv|^\pp \le C_{\pp}(\Lambda) \int_\Lambda |\grad\bv|^\pp$ for all $\bv \in W_b^{1,\pp}(\Lambda; \RR^3)$.
+Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists a dimensionless constant $c_{\pp}(\Lambda)>0$ so that $\int_\Lambda |\bv|^\pp \le c_{\pp}(\Lambda) [L]^\pp \int_\Lambda |\grad\bv|^\pp$ for all $\bv \in \cV$.
 \end{lemma}
-
-It follows that $\|\bu\|_{W^{1,\pp}}^\pp \le \left(C_{\pp}(\Lambda) + [L]^\pp\right) \int_\Lambda |\grad\bv|^\pp$; this is used below.
 
 \begin{lemma}[Korn's inequality] \label{lem:korns}
-Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists a constant $K_{\pp}(\Lambda)>0$ so that $\int_\Lambda |\grad\bv|^\pp \le K_{\pp}(\Lambda) \int_\Lambda |D\bv|^\pp$ for all $\bv \in W_b^{1,\pp}(\Lambda; \RR^3)$.
+Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists a dimensionless constant $k_{\pp}(\Lambda)>0$ so that $\int_\Lambda |\grad\bv|^\pp \le k_{\pp}(\Lambda) \int_\Lambda |D\bv|^\pp$ for all $\bv \in \cV$.
 \end{lemma}
 
-To prove Lemma \ref{lem:korns}, use $F(x)$ equal to the identity in Corollary 4.1 of \cite{Pompe2003}.  A similar $\pp$-norm Korn's inequality was earlier proven by Ting \cite{Ting1972}---see Theorem 5.12 in \cite{KikuchiOden1988}---but for zero Dirichlet conditions over all of $\partial \Lambda$.
+From Lemma \ref{lem:poincare} it follows that $\|\bu\|_{\cV}^\pp \le (c_{\pp}(\Lambda) + 1) [L]^\pp \int_\Lambda |\grad\bv|^\pp$; this is used below.  To prove Lemma \ref{lem:korns}, set $F(x)$ to the identity in Corollary 4.1 of \cite{Pompe2003}.  A similar $\pp$-norm Korn's inequality was earlier proven by Ting \cite{Ting1972}---see Theorem 5.12 in \cite{KikuchiOden1988}---but only for zero Dirichlet conditions over all of $\partial \Lambda$.
 
-The following \emph{a priori} bound on the velocity solution expands on Remark 4.2 in \cite{JouvetRappaz2011}.  The main idea is that velocity is controlled by potentially-knowable geometric properties of the domain $\Lambda$, and physical constants.  The unpleasant form of the constant can be overlooked on first reading.
+The main idea of the following bound is that velocity is controlled by geometric properties of the domain $\Lambda$, including constants in the above inequalities, and physical constants.  It is an exercise for the reader to check unit consistency in this result.
 
-\begin{lemma}[\emph{A priori} bound over $\Lambda$] \label{lem:stokesapriori}
+\begin{lemma}[3D \emph{a priori} bound] \label{lem:stokesapriori}
 Under the assumptions of Theorem \ref{thm:stokeswellposed},
 \begin{equation}
-\|\bu\|_{W^{1,\pp}} \le \left(\frac{\rhoi |\bg| \left(C_{\pp}(\Lambda) + [L]^\pp\right) K_{\pp}(\Lambda)}{2 \nu_2}\right)^{1/(\pp-1)} |\Lambda|^{1/\pp}
+\|\bu\|_{\cV} \le \left(\frac{\rhoi |\bg| [L]^\pp (c_{\pp}(\Lambda) + 1) k_{\pp}(\Lambda)}{2 \nu_\pp}\right)^{1/(\pp-1)} |\Lambda|^{1/\pp} \label{eq:stokesapriori}
 \end{equation}
-where $|\Lambda|$ denotes the volume of $\Lambda$.
+where $|\Lambda|$ denotes the ice volume.
 \end{lemma}
 
 \begin{proof}
@@ -261,17 +265,17 @@ From \eqref{eq:glenstokes:weak} and $\bu \in\Vdiv$ it follows that
 \end{equation}
 Apply Lemma \ref{lem:korns}, equation \eqref{eq:glen}, equation \eqref{eq:stokes:substituteu}, and H\"older's inequality:
 \begin{align}
-\int_\Lambda |\grad\bu|^\pp &\le K_{\pp}(\Lambda) \int_\Lambda |D\bu|^{\pp-2} D\bu:D\bu \label{eq:stokes:workapriori} \\
-	&\le \frac{K_{\pp}(\Lambda)}{2 \nu_2} \int_\Lambda 2 \nu_2 \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} D\bu:D\bu \notag \\
-	&= \frac{K_{\pp}(\Lambda)}{2 \nu_2} \int_\Lambda \rhoi \bg \cdot \bu \notag \\
-	&\le \frac{K_{\pp}(\Lambda)}{2 \nu_2} \|\rhoi \bg\|_{L^{\pp'}} \|\bu\|_{L^\pp} \notag \\
-	&\le \frac{\rhoi |\bg| K_{\pp}(\Lambda)}{2 \nu_2} |\Lambda|^{1/\pp'} \|\bu\|_{L^\pp}. \notag
+\int_\Lambda |\grad\bu|^\pp &\le k_{\pp}(\Lambda) \int_\Lambda |D\bu|^{\pp-2} D\bu:D\bu \label{eq:stokes:workapriori} \\
+	&\le \frac{k_{\pp}(\Lambda)}{2 \nu_\pp} \int_\Lambda 2 \nu_\pp \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} D\bu:D\bu \notag \\
+	&= \frac{k_{\pp}(\Lambda)}{2 \nu_\pp} \int_\Lambda \rhoi \bg \cdot \bu \notag \\
+	&\le \frac{k_{\pp}(\Lambda)}{2 \nu_\pp} \|\rhoi \bg\|_{L^{\pp'}} \|\bu\|_{L^\pp} \notag \\
+	&\le \frac{\rhoi |\bg| k_{\pp}(\Lambda)}{2 \nu_\pp} |\Lambda|^{1/\pp'} \|\bu\|_{L^\pp}. \notag
 \end{align}
-(This assumes that ice density and gravity are constant.)  By the comment after Lemma \ref{lem:poincare}, and the simple fact $\|\bu\|_{L^\pp} \le \|\bu\|_{W^{1,\pp}}$,
+(This assumes that ice density and gravity are constant.)  By the comment after Lemma \ref{lem:poincare}, and the simple fact $\|\bu\|_{L^\pp} \le \|\bu\|_{\cV}$, we have
 \begin{align*}
-\|\bu\|_{W^{1,\pp}}^\pp \le \left(C_{\pp}(\Lambda) + [L]^\pp\right) \frac{\rhoi |\bg| K_{\pp}(\Lambda)}{2 \nu_2} |\Lambda|^{1/\pp'} \|\bu\|_{W^{1,\pp}}.
+\|\bu\|_{\cV}^\pp \le (C_{\pp}(\Lambda) + 1) [L]^\pp \frac{\rhoi |\bg| k_{\pp}(\Lambda)}{2 \nu_\pp} |\Lambda|^{1/\pp'} \|\bu\|_{\cV}.
 \end{align*}
-Now divide by the norm of $\bu$ and, noting $\pp>1$, take the $\pp-1$ root.
+Divide by the norm and, noting $\pp>1$, take the $\pp-1$ root.
 \end{proof}
 
 \begin{lemma}[Surface trace bound] \label{lem:stokestrace}
