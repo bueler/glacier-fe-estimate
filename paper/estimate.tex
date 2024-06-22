@@ -53,7 +53,9 @@
 \newcommand{\cB}{\mathcal{B}}
 \newcommand{\cH}{\mathcal{H}}
 \newcommand{\cK}{\mathcal{K}}
+\newcommand{\cQ}{\mathcal{Q}}
 \newcommand{\cV}{\mathcal{V}}
+\newcommand{\cX}{\mathcal{X}}
 
 \newcommand{\hcK}{\widehat{\cK}}
 
@@ -72,6 +74,8 @@
 
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\Hull}{Hull}
+
+\newcommand{\Vdiv}{\cV_{\text{\textnormal{div}}}}
 
 
 % running headers and PDF metadata
@@ -102,15 +106,15 @@ error bounds, finite element methods, glaciers, ice flow, variational inequaliti
 
 \section{Introduction} \label{sec:intro}
 
-Glacier and ice sheet simulations typically model the ice as a layer of free-surface, very-viscous, incompressible, and non-Newtonian fluid \cite{GreveBlatter2009,SchoofHewitt2013}.  For simplicity we will restrict our considerations to simulations of glaciers on land, without floating portions, and we note that an ``ice sheet'' is simply a continent-scale glacier.
+Glacier and ice sheet simulations typically model the ice as a layer of free-surface, very-viscous, incompressible, and non-Newtonian fluid \cite{GreveBlatter2009,SchoofHewitt2013}.  For simplicity we will restrict our considerations to simulations of glaciers on land, without floating portions.  Note that an ``ice sheet'' is simply a continent-scale glacier.
 
-The two types of essential input data into such simulations are the bedrock elevation and the surface mass balance (SMB; $=$ climatic mass balance \cite{Cogleyetal2011}).  We will assume that the bedrock elevation map is constant in time.  By definition, the SMB is the annually-averaged difference of vertically-accumulating snow minus the loss of (liquid) water, through runoff, at the upper surface of the glacier \cite{Cogleyetal2011}.  We will assume that the SMB depends on time.  Note that elevations are measured here in meters, and SMB is measured in ice-equivalent units of meters per second.
+The two types of essential input data into such simulations are the bedrock elevation, which is assumed to be constant in time, and the time-dependent surface mass balance (SMB; $=$ climatic mass balance \cite{Cogleyetal2011}) rate.  By definition, the SMB is the annually-averaged difference of vertically-accumulating snow minus the loss of (liquid) water, through runoff, at the upper surface of the glacier \cite{Cogleyetal2011}.  Note that elevations are measured here in meters, and SMB is measured in ice-equivalent units of meters per second.
 
-Thus a glacier simulation at least takes an initial glacier geometry, the bedrock topography, and a time-dependent climate, i.e.~SMB, as inputs.  It produces the glacier's evolving geometry and flow velocity; both output fields are of primary scientific value.  The geometry is parameterized by either the (upper) surface elevation or the ice thickness.  The computed flow velocity is, however, obviously only defined at those locations and times where ice is present, that is, on the evolving 3D domain between the bedrock and ice surface elevations.
+Thus a glacier simulation at least takes the bedrock topography, a time-dependent climate, and an initial glacier geometry as inputs.  It produces the glacier's evolving geometry and flow velocity; these output fields are of primary scientific value.  The geometry is parameterized by either the (upper) surface elevation or the ice thickness.  The computed flow velocity is, however, only defined at those locations and times where ice is present, on the evolving 3D domain between the bedrock and surface elevations.
 
-Additional complications are common in comprehensive ice sheet models \cite{SchoofHewitt2013}, for example the internal energy of the ice \cite{Aschwandenetal2012} is simulated, and/or liquid water within the ice matrix or at the glacier surfaces is tracked.  However, here we only consider conservation of mass and momentum, not energy, and we do not consider liquid water, but furthermore we do not make the shallowness assumptions which are common in comprehensive models.
+Additional complications are common in comprehensive ice sheet models \cite{SchoofHewitt2013}.  For example, the internal energy of the ice \cite{Aschwandenetal2012}, and/or liquid water within the ice matrix, or at ice surfaces, may be tracked.  However, we only consider conservation of mass and momentum, but not energy conservation nor liquid/solid (two phase) models.  On the other hand, we will not make the shallowness assumptions which are common in comprehensive models.
 
-At a time and map-plane location where a glacier exists the surface elevation exceeds the bedrock elevation, equivalently the ice thickness is positive.  That is, the glacier's geometry must satisfy an inequality to be admissible.  Let $\Omega \subset \RR^2$ be a fixed portion of the earth's surface on which glaciation is studied (Figure \ref{fig:stokesdomain}), and let $x\in\Omega$ denote the map-plane coordinate(s).  Assume that we are given, as data, a bed elevation function $b(x)$ for $x\in\Omega$ and an SMB function $a(t,x)$ for $t\in [0,T]$ and $x\in \Omega$.  (Function spaces for these data will be considered below.)  Note that $a$ is generally signed.  In areas where $a>0$ (accumulation; downward arrows in Figure \ref{fig:stokesdomain}) then a glacier will exist, but if $a<0$ (upward arrows) then either a glacier exists with an ablating surface, or no glacier exists.  Determining which situation applies at a given point $t,x$ requires solving a free-boundary problem.
+At a time and map-plane location where a glacier exists the surface elevation exceeds the bedrock elevation, equivalently the ice thickness is positive.  That is, the glacier's geometry must satisfy an inequality to be admissible.  Let $\Omega \subset \RR^2$ be a fixed portion of the earth's surface on which glaciation is studied (Figure \ref{fig:stokesdomain}), and let $x\in\Omega$ denote the map-plane coordinate(s).  Assume that we are given, as data, a bed elevation function $b(x)$ for $x\in\Omega$ and an SMB function $a(t,x)$ for $t\in [0,T]$ and $x\in \Omega$.  (Function spaces for these data will be considered below.)  Note that $a$ is generally signed.  In areas where $a>0$ (accumulation; downward arrows in Figure \ref{fig:stokesdomain}) then a glacier will exist, but if $a<0$ (upward arrows) then either a glacier exists with an ablating surface, or no glacier exists.  Determining which situation applies at a given point $t,x$ requires solving the free-boundary problems considered in this paper.
 
 \medskip
 \begin{figure}[ht]
@@ -121,7 +125,7 @@ At a time and map-plane location where a glacier exists the surface elevation ex
 \end{figure}
 
 \medskip
-Let $s(t,x)$ be the (solution) ice surface elevation.  We will regard this as defined everywhere, subject to the constraint that the surface $z=s(t,x)$ must be at or above the bedrock: $s(t,x) \ge b(x)$.  Note that in regions with no ice we have $s(t,x)=b(x)$.  The solution ice velocity $\bu(t,x,z)$ and pressure $p(t,x,z)$ are then defined only on the 3D domain
+Let $s(t,x)$ be the (solution) ice surface elevation.  We will regard this as defined everywhere, subject to the constraint that the surface $z=s(t,x)$ must be at or above the bedrock: $s(t,x) \ge b(x)$.  In regions with no ice we set $s(t,x)=b(x)$.  The solution ice velocity $\bu(t,x,z)$ and pressure $p(t,x,z)$ are then defined only on the 3D domain
 \begin{equation}
 \Lambda(t) = \left\{(x,z)\,:\,b(x) < z < s(t,x)\right\} \subset \Omega \times \RR. \label{eq:icydomain}
 \end{equation}
@@ -136,23 +140,21 @@ s - b &\ge 0 \\
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0
 \end{align}
 \end{subequations}
-This strong form NCP statement, which will be reformulated as a variational inequality (VI; \cite{KinderlehrerStampacchia1980}) in Section \ref{sec:model} below, assumes that we have extended the surface velocity by zero ($\bu|_s=0$) to the ice-free areas where $s(t,x)=b(x)$.  This NCP says that either a location is ice free ($s-b=0$) and simultaneously that the climate is locally ablating ($a\le 0$), or that the surface kinematical equation (SKE) holds:
+This strong form NCP statement, which will be reformulated as a variational inequality (VI; \cite{KinderlehrerStampacchia1980}) in Section \ref{sec:model} below, assumes that we have extended the surface velocity by zero ($\bu|_s=0$) to ice-free areas.  This NCP says that either a location is ice free ($s-b=0$), where the climate is locally ablating ($a\le 0$), or that the surface kinematical equation (SKE) holds:
 \begin{equation}
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0.  \label{eq:ske}
 \end{equation}
-Well-known equation \eqref{eq:ske} states that the (non-material) surface of the ice moves vertically according to the sum of a component of the ice velocity at the surface and the SMB \cite{SchoofHewitt2013}.  This is a statement of mass conservation at a non-material surface \cite{Aschwandenetal2012}, sometimes wrongly\footnote{Equation \eqref{eq:ske} is not the boundary condition for any identifiable problem.} called a ``kinematical boundary condition'' \cite{GreveBlatter2009}.
+Well-known equation \eqref{eq:ske} states that the (non-material) surface of the ice moves vertically according to the sum of a component of the ice velocity at the surface and the SMB \cite{SchoofHewitt2013}.  Equation \eqref{eq:ske} is a statement of mass conservation at a non-material surface \cite{Aschwandenetal2012}, sometimes wrongly\footnote{Equation \eqref{eq:ske} is not the boundary condition for any identifiable problem.} called a ``kinematical boundary condition'' \cite{GreveBlatter2009}.
 
-Here the SMB $a(t,x)$ is assumed to be defined everywhere in $\Omega$, regardless of whether a glacier is present or not.  At an ice-free location the value $a(t,x)$ can be modeled using precipitation and an energy balance \cite{GreveBlatter2009}, for instance by hypothesizing an ice or snow surface and then computing the balance of snow accumulation versus the total ablation from the available energy for melt.  In other words, the provided SMB at an unglaciated location needs to give the value which a glacier surface would experience at that time and (3D) location.
+In the current paper the SMB $a(t,x)$ is necessarily assumed to be defined everywhere in $\Omega$, regardless of whether a glacier is present or not.  At an ice-free location the value $a(t,x)$ can be modeled using precipitation and an energy balance \cite{GreveBlatter2009}, for instance by hypothesizing an ice or snow surface and then computing the balance of snow accumulation versus the total ablation from the available energy for melt.  In other words, the provided SMB at an unglaciated location needs to give the value which a glacier surface would experience at that time and (3D) location.
 
-The simulations considered in this paper aim to conserve mass and momentum using a (standard) non-shallow ice dynamics model.  The model, as follows, is a non-sliding (e.g.~frozen) base, isothermal, non-Newtonian, and incompressible Stokes problem \cite{GreveBlatter2009,JouvetRappaz2011,SchoofHewitt2013}.
-
-Recalling definition \eqref{eq:icydomain}, let $\Gamma_s(t) \subset \partial \Lambda(t)$ be the upper surface $z=s$ and $\Gamma_b(t) \subset \partial \Lambda(t)$ be the base $z=b$.  The possibility of cliffs at the ice margin is neglected, so $\partial \Lambda(t) = \overline{\Gamma_s(t)} \cup \overline{\Gamma_b(t)}$ at any time.  Let $D\bu=(\grad \bu + \grad \bu^{\top})/2$ denote the strain rate tensor.  The shear-thinning ice viscosity, from Glen's power law \cite{GreveBlatter2009}, is given by a regularized formula
+The simulations considered in this paper aim to conserve mass and momentum.   The (standard) non-shallow ice dynamics model used here is a non-sliding (e.g.~frozen) base, isothermal, non-Newtonian, and incompressible Stokes problem \cite{GreveBlatter2009,JouvetRappaz2011,SchoofHewitt2013}.  To state this model recall definition \eqref{eq:icydomain} and let $\Gamma_s(t) \subset \partial \Lambda(t)$ be the upper surface $z=s$ and $\Gamma_b(t) \subset \partial \Lambda(t)$ be the base $z=b$.  The possibility of cliffs at the ice margin is neglected, so $\partial \Lambda(t) = \overline{\Gamma_s(t)} \cup \overline{\Gamma_b(t)}$ at any time.  Let $D\bu=(\grad \bu + \grad \bu^{\top})/2$ denote the strain rate tensor, with Frobenius norm $|D\bu| = (D\bu:D\bu)^{1/2} = (D\bu)_{ij} (D\bu)_{ij}$.  The shear-thinning ice viscosity, from Glen's power law \cite{GreveBlatter2009}, is given by a regularized formula
 \begin{equation}
 \nu(D\bu) = \nu_2 \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} \label{eq:glen}
 \end{equation}
-The exponent $\pp \le 2$, often written $\pp=(1/\nn)+1$ in glaciology \cite{GoldsbyKohlstedt2001}, is approximately 4/3.  The coefficient $\nu_2>0$ is determined by the measured properties of ice \cite{GoldsbyKohlstedt2001,GreveBlatter2009}, generally including ice temperature, but we assume it to be constant (isothermal).  Note $\pp=2$ yields a Newtonian fluid with constant viscosity $\nu_2$.  For $\pp < 2$ the regularization with $\eps>0$ implies that $\nu(D\bu)$ is bounded above.  Also let $\rhoi$ be the density of ice and $\bg$ the acceleration of gravity
+The exponent $\pp \le 2$, often written $\pp=(1/\nn)+1$ in glaciology \cite{GoldsbyKohlstedt2001}, is approximately 4/3.  The coefficient $\nu_2>0$, which can be determined from measured properties of ice \cite{GreveBlatter2009}, generally including temperature, is assumed to be constant (isothermal).  Note $\pp=2$ yields a Newtonian fluid with constant viscosity $\nu_2$.  For $\pp < 2$ the regularization with $\eps>0$ implies that $\nu(D\bu)$ is bounded above.
 
-The glacier has velocity and pressure solving the following equations:
+The glacier has velocity and pressure solving the following 3D fluid equations if $\rhoi$ is the (constant) density of ice and $\bg$ is the acceleration of gravity:
 \begin{subequations}
 \label{eq:stokes}
 \begin{align}
@@ -164,13 +166,11 @@ The glacier has velocity and pressure solving the following equations:
 \end{subequations}
 Note that boundary condition \eqref{eq:stokes:stressfreesurface} says that the sub-aerial upper surface is stress free; this should not be confused with \eqref{eq:ske}.
 
-In summary at this point, a glacier simulation is an evolving free-surface flow, subject to a signed climate that can add or remove ice, coupled to a nonlinear Stokes problem within an evolving, 3D icy domain.  A well-posed initial/boundary value problem here will require an initial surface elevation $s(0,x)$ and the data $b(x),a(t,x)$.  The solution variables are $s(t,x)$, $\bu(t,x,z)$, and $p(t,x,z)$, with $s$ defined everywhere over $[0,T]\times \Omega$, but subject to $s \ge b$, and with $\bu,p$ defined on $\Lambda(t)$ for each $t$.
+In summary at this point, a glacier simulation is an evolving free-surface flow, subject to a signed climate that can add or remove ice, coupled to a nonlinear Stokes problem which must be solved within an evolving, 3D icy domain.  A well-posed initial/boundary value problem for \eqref{eq:icydomain}--\eqref{eq:stokes} will require an initial surface elevation $s(0,x)$ and data $b(x),a(t,x)$.  The solution variables are $s(t,x)$, $\bu(t,x,z)$, and $p(t,x,z)$, with $s$ defined everywhere over $[0,T]\times \Omega$, but subject to $s \ge b$, and with $\bu,p$ defined on $\Lambda(t)$ for each $t$.  The surface elevation $s$ and surface velocity $\bu|_s(t,x)=\bu(t,x,s(t,x))$ are linked by the kinematical NCP \eqref{eq:ncp}, in which the time derivative appears.  The Stokes sub-model \eqref{eq:glen}--\eqref{eq:stokes} acts as an instantaneous\footnote{It acts instantaneously because the flow is very viscous \cite{Acheson1990}.} ``algebraic'' constraint on the evolution statement in \eqref{eq:ncp}.  The coupled, infinite-dimensional problem \eqref{eq:icydomain}--\eqref{eq:stokes} is therefore both a differential algebraic equation (DAE) system \cite{AscherPetzold1998} and an NCP.  Glacier modeling is thus mathematically nontrivial.
 
-The surface elevation $s$ and surface velocity $\bu|_s(t,x)=\bu(t,x,s(t,x))$ are linked by the kinematical NCP \eqref{eq:ncp} which has the time derivative.  The Stokes sub-model \eqref{eq:glen}--\eqref{eq:stokes} acts as an instantaneous ``algebraic'' constraint on the evolution statement in \eqref{eq:ncp}; it acts instantaneously because the flow is very viscous \cite{Acheson1990}.  The coupled, infinite-dimensional problem \eqref{eq:icydomain}--\eqref{eq:stokes} is therefore both a differential algebraic equation (DAE) system \cite{AscherPetzold1998} and an NCP, and thus glacier modeling is nontrivial.
+Glacier simulations are commonly formulated using a finite element (FE) method for the Stokes sub-problem \cite{IsaacStadlerGhattas2015,Jouvetetal2008,Pattynetal2008}, or for a shallow approximation thereof.  However, to the author's knowledge all existing non-shallow (Stokes) evolution models use a explicit time-stepping scheme for the geometry, for example as in \cite{Jouvetetal2008} or \cite{LofgrenAhlkronaHelanow2022}, with the one exception of the exploratory model in reference \cite{WirbelJarosch2020}.
 
-Glacier simulations are commonly formulated using a finite element (FE) method for the Stokes sub-problem \cite{IsaacStadlerGhattas2015,Jouvetetal2008,Pattynetal2008}, or for a shallow approximation thereof.  However, to the author's knowledge all existing non-shallow (Stokes) evolution models use a explicit time-stepping scheme for the geometry, for example as in \cite{Jouvetetal2008} or \cite{LofgrenAhlkronaHelanow2022}, with the one exception of reference \cite{WirbelJarosch2020}.
-
-Each time step of an implicit time-stepping model based on \eqref{eq:icydomain}--\eqref{eq:stokes} will solve a variational inequality (VI) weak formulation \cite{Evans2010,KinderlehrerStampacchia1980}, but here one must choose whether the glacier geometry is parameterized by surface elevation or thickness.  While essentially equivalent in the (continuum) problem, formulations using these different functions have different character when the bedrock is rough.  Specifically when applying the abstract estimate of Section \ref{sec:abstractestimate}, surface elevation $s$ is preferred because of the flow-caused smoothing effect illustrated in Figure \ref{fig:giscross}.  That is, we observe that for land-based glaciers $s(t,x)$ is smoother in $x$ than the thickness $H(t,x) = s(t,x)-b(x)$ because the latter ``inherits'' the lower regularity of the (typically) eroded and/or faulted bedrock topography.
+One must choose whether the glacier geometry is parameterized by surface elevation or thickness.  While essentially equivalent in the (continuum) problem, formulations using these different functions have different character when the bedrock is realistically rough.  Specifically, when applying the abstract estimate of Section \ref{sec:abstractestimate}, surface elevation $s$ is preferred because of the flow-caused smoothing effect illustrated in Figure \ref{fig:giscross}.  We observe that for land-based glaciers $s(t,x)$ is smoother in $x$ than the thickness $H(t,x) = s(t,x)-b(x)$ because the latter ``inherits'' the lower regularity of the (typically) eroded and/or faulted bedrock topography $b(x)$.
 
 \begin{figure}
 \begin{minipage}[t]{0.85\textwidth}
@@ -188,35 +188,84 @@ Each time step of an implicit time-stepping model based on \eqref{eq:icydomain}-
 
 FIXME: WHAT WE ACCOMPLISH
 
-This paper is organized as follows.  Section \ref{sec:stokes} recalls the existing theory of Glen-law Stokes problems on fixed domains, in preparation for later time-dependent material, but we include an apparently-new bound on the surface trace of the velocity field.  In Section \ref{sec:model} we reformulate the coupled problem \eqref{eq:icydomain}--\eqref{eq:stokes} as a VI weak form for an implicit (backward Euler) time step.  Well-posedness for this time-step problem is conjectured in Section \ref{sec:theory}, over a Sobolev space of surface elevation functions, and context is provided for this conjecture.  In Section \ref{sec:abstractestimate} we prove an abstract FE error estimate, namely Theorem \ref{thm:abstractestimate} and its corollaries, for general VI problems involving fully-nonlinear, but coercive and Lipshitz, operators on Banach spaces.  This estimate extends the classical case by Falk \cite{Falk1974}, for bilinear forms.  In Section \ref{sec:application} we apply this theorem to the glacier model.  The distinctive character of non-sliding land-based glaciers, regarding how they respond to climate (mass balance) perturbations, and that they stagnate as they approach zero thickness, implies that certain terms are effectively small, and computable geometry error upper bounds follow.  The estimates are demonstrated in Section \ref{sec:demo} on an idealized, but non-trivial, glacier simulation implemented in Firedrake \cite{Hametal2023}.
+This paper is organized as follows.  Section \ref{sec:stokes} recalls the existing theory of Glen-law Stokes problems on fixed domains, in preparation for later time-dependent theory.  We include an apparently-new bound on the surface trace of the velocity field.  In Section \ref{sec:model} we reformulate the coupled problem \eqref{eq:icydomain}--\eqref{eq:stokes} as a VI weak form for an implicit (backward Euler) time step.  Well-posedness for this time-step problem is conjectured in Section \ref{sec:theory}, over a Sobolev space of surface elevation functions.  This Section includes the non-trivial context needed to understand this conjecture.  In Section \ref{sec:abstractestimate} we prove an abstract FE error estimate, namely Theorem \ref{thm:abstractestimate} and its corollaries, for general VI problems involving fully-nonlinear operators on Banach spaces.  This estimate, which makes a coercive and a Lipshitz assumption on the operator, extends the classical case by Falk \cite{Falk1974} for bilinear forms.  In Section \ref{sec:application} we apply this theorem to the glacier model.  The distinctive character of non-sliding land-based glaciers, in terms of how they respond to climate (mass balance) perturbations, and observing that they stagnate as they approach zero thickness, implies that certain terms are effectively small.  Computable geometry error upper bounds follow.  These estimates are demonstrated in Section \ref{sec:demo} on an idealized, but non-trivial, glacier simulation implemented in Firedrake \cite{Hametal2023}.
 
 
 \section{The fixed-geometry Stokes problem} \label{sec:stokes}
 
-Consider the non-sliding and isothermal Glen-law Stokes equations \eqref{eq:stokes} on a 3D domain $\Lambda = \Lambda(t_n)$ defined by \eqref{eq:icydomain}.  This problem will computes the surface velocity field ($\bu|_s$) which appears in the SKE \eqref{eq:ske} (and its weak form stated later).  The function spaces relevant to this problem are well-known as long as the boundary of the domain $\Lambda$ are sufficiently regular.  Here we state the weak form, recall well-posedness, and give an apparently new lemma bounding the surface velocity in terms of the geometry of $\Lambda$.
+Consider the non-sliding and isothermal Glen-law Stokes sub-model \eqref{eq:glen}--\eqref{eq:stokes} on a 3D domain $\Lambda = \Lambda(t)$ defined by \eqref{eq:icydomain}.  This sub-model computes the surface velocity field $\bu|_s$ which appears in NCP \eqref{eq:ncp}, and SKE \eqref{eq:ske}, a weak form of which appears in Section \ref{sec:model}.  In this section we consider the weak form of the Stokes sub-model itself for a fixed domain $\Lambda$.
 
-Denote by $W^{k,r}(\Lambda)$ the Sobolev space of functions with $k$ weak derivatives which are $r$th-power integrable \cite{Evans2010}.  We will assume that the ice base $\Gamma_b\subset\partial \Lambda$, on which a Dirichlet condition $\bu=\bzero$ holds, has positive measure, and that the remaining boundary $\Gamma_s = \partial \Lambda \setminus \Gamma_b$ is stress-free.  Recall that $\pp=(1/\nn)+1\approx 4/3$.  Let $W_b^{1,\pp}(\Lambda)^{3}$ be the space of velocity functions which are zero along $\Gamma_b$.  Define
+Function spaces suitable for the Stokes sub-model \eqref{eq:glen}--\eqref{eq:stokes} are well-known so long as the domain $\Lambda$ is sufficiently regular.  We assume that the ice base $\Gamma_b\subset\partial \Lambda$, on which a Dirichlet condition $\bu=\bzero$ holds, has positive measure.  The remaining Neumann boundary $\Gamma_s = \partial \Lambda \setminus \Gamma_b$ is assumed to be sufficiently-smooth so that a zero normal stress condition can be applied.  Recall that $\pp=(1/\nn)+1\approx 4/3$ and that the viscosity $\nu(|D\bu|)$ is defined by \eqref{eq:glen}.  The velocity $\bu$ will come from a Sobolev space \cite{Evans2010} of vector-valued functions $\cV = W_b^{1,\pp}(\Lambda; \RR^3)$, with $\pp$th-power integrable first derivatives and value zero along $\Gamma_b$.  Let $\cQ=L^{\pp'}(\Lambda)$.  Define
 \begin{equation}
-\mathcal{M}_\Lambda = W_b^{1,\pp}(\Lambda)^3 \times L^\qq(\Lambda)  \label{eq:glenstokes:mixedspace}
+\mathcal{M}_\Lambda = \cV \times \cQ = W_b^{1,\pp}(\Lambda; \RR^3) \times L^{\pp'}(\Lambda) \label{eq:glenstokes:mixedspace}
 \end{equation}
-as the (mixed) space of admissible velocity and pressure pairs, where $\qq=\pp/(\pp-1)\approx 4$ is the conjugate exponent.  For $(\bu,p) \in \mathcal{M}_\Lambda$ define the functional
+as the space of admissible velocity and pressure pairs, where $\pp'=\pp/(\pp-1)\approx 4$ is the conjugate exponent.  For $(\bu,p) \in \mathcal{M}_\Lambda$ define the functional
 \begin{equation}
-F_\Lambda(\bu,p)[\bv,q] = \int_\Lambda 2 \nu(|D\bu|) D\bu : D\bv - p \Div\bv - (\Div\bu) q - \rhoi \bg \cdot \bv. \label{eq:glenstokes:fcnl}
+F_\Lambda(\bu,p)[\bv,q] = \int_\Lambda 2 \nu(|D\bu|) D\bu : D\bv - p \Div\bv - (\Div\bu) q - \rhoi \bg \cdot \bv \label{eq:glenstokes:fcnl}
 \end{equation}
-The mixed weak form seeks the solution $(\bu,p)$ which satisfies
+The (mixed) weak form seeks the solution $(\bu,p)$ which satisfies
 \begin{equation}
-F_\Lambda(\bu,p)[\bv,q] = \int_\Lambda 2 \nu(|D\bu|) D\bu : D\bv - p \Div\bv - (\Div\bu) q - \rhoi \bg \cdot \bv. \label{eq:glenstokes:weak}
+F_\Lambda(\bu,p)[\bv,q] = 0 \label{eq:glenstokes:weak}
 \end{equation}
-for all $(\bv,q) \in \mathcal{M}_\Lambda$.  Recall that the the viscosity $\nu(|D\bu|)$ is defined by \eqref{eq:glen}.
+for all $(\bv,q) \in \mathcal{M}_\Lambda$.
 
-Jouvet and Rappaz \cite{JouvetRappaz2011} prove that \eqref{eq:glenstokes:weak} is well-posed under the above assumptions if also the Neumann portion of $\partial\Lambda$ is $C^1$.  A detail here is the regularization in the Glen law which differs between \eqref{eq:glen} and the form in \cite{JouvetRappaz2011}, but the necessary modifications are addressed in the Appendix of \cite{IsaacStadlerGhattas2015}.  Well-posedness is shown via the equivalence of \eqref{eq:glenstokes:weak} and minimization of a convex and coercive functional over the divergence-free subspace.  Observe that if the solution to \eqref{eq:glenstokes:weak} is sufficiently regular then it satisfies strong equations \eqref{eq:stokes}.
+Jouvet and Rappaz \cite{JouvetRappaz2011} have proven that problem \eqref{eq:glenstokes:weak} is well-posed if the Neumann portion of $\partial\Lambda$ is $C^1$.  Their proof of the following theorem uses the equivalence of \eqref{eq:glenstokes:weak} and the minimization of a convex and coercive functional over the divergence-free subspace.  The regularization in our Glen law \eqref{eq:glen} differs from that in \cite{JouvetRappaz2011}, but the necessary modifications are addressed in \cite{IsaacStadlerGhattas2015}.  Note that if the weak solution is sufficiently regular then the strong form \eqref{eq:stokes} is also satisfied.
 
-FIXME using Korn's \cite{Pompe2003} show $\bu|_s$ is bounded by geometry of $\Lambda$
+\begin{theorem} \label{thm:stokeswellposed} \cite[Theorem 3.10]{JouvetRappaz2011} and \cite[Appendix A]{IsaacStadlerGhattas2015}.  Suppose $\Lambda$ is bounded, $\partial\Lambda$ is Lipschitz, $\Gamma_s$ is $C^1$, and $\Gamma_b$ has positive measure.  Let $\pp\le 2$ and $\eps>0$ in \eqref{eq:glen}.  There exists a unique pair $(\bu,p) \in \mathcal{M}_\Lambda$ solving weak form \eqref{eq:glenstokes:weak}, and furthermore $\bu\in \Vdiv = \{\bv\in\cV\,:\,\Div\bv=0\}$.
+\end{theorem}
 
+Our primary purpose will be resumed in the next Section, namely to study the glacier geometry problem stated in NCP \eqref{eq:ncp}.  For that analysis we need to bound the surface trace $\bu|_s$ of the velocity in terms of geometric properties of $\Lambda$.  This uses several lemmata, but ultimately we add a conjecture giving the precise bound needed in Sections \ref{sec:model} and \ref{sec:application}.
+
+\begin{lemma}[Korn's inequality for $L^\pp$] \label{lem:korns}
+Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists a constant $C_{\pp}(\Lambda)>0$ so that
+\begin{equation}
+\|\bv\|_{W^{1,\pp}} \le C_{\pp}(\Lambda) \big\||D\bv|\big\|_{L^\pp}
+\end{equation}
+for all $\bv \in W_b^{1,\pp}(\Lambda; \RR^3)$.
+\end{lemma}
+
+\begin{proof}
+Use $F(x)$ equal to the identity in Corollary 4.1 of \cite{Pompe2003}.
+\end{proof}
+
+\begin{lemma}[\emph{A priori} bound over $\Lambda$] \label{lem:stokesapriori}
+Under the assumptions of Theorem \ref{thm:stokeswellposed}, the velocity solution $\bu$ of \eqref{eq:glenstokes:weak} has an \emph{a priori} bound in terms of the domain volume $|\Lambda|$, the Korn's constant, and physical constants:
+\begin{equation}
+\|\bu\|_{W^{1,\pp}} \le \left(\frac{\rhoi |\bg|}{2\nu_2}\right)^{1/(\pp-1)} |\Lambda|^{1/\pp} C_{\pp}(\Lambda)^{\pp'}.
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+From \eqref{eq:glenstokes:weak} and $\bu \in\Vdiv$ it follows that
+   $$0= F_\Lambda(\bu,p)[\bu,p] = \int_\Lambda 2 \nu(|D\bu|) D\bu : D\bu - \rhoi \bg \cdot \bu.$$
+Apply Korn's inequality, formula \eqref{eq:glen}, the above fact, and H\"older's inequality:
+\begin{align*}
+(\|\bu\|_{W^{1,\pp}})^\pp &\le C_{\pp}(\Lambda)^\pp \int_\Lambda |D\bu|^{\pp-2} D\bu:D\bu \\
+	&\le \frac{C_{\pp}(\Lambda)^\pp}{2 \nu_2} \int_\Lambda 2 \nu_2 \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} D\bu:D\bu \\
+	&= \frac{C_{\pp}(\Lambda)^\pp}{2 \nu_2} \int_\Lambda \rhoi \bg \cdot \bu \\
+	&\le \frac{C_{\pp}(\Lambda)^\pp}{2 \nu_2} \|\rhoi \bg\|_{L^{\pp'}} \|\bu\|_{L^\pp} \\
+	&\le \frac{\rhoi |\bg| C_{\pp}(\Lambda)^\pp}{2 \nu_2} |\Lambda|^{1/\pp'} \|\bu\|_{W^{1,\pp}}
+\end{align*}
+(Observe that ice density and gravity are assumed here to be constant.)  Now divide by the norm of $\bu$ and take the $\pp-1$ root.
+\end{proof}
+
+\begin{lemma}[Surface trace bound] \label{lem:stokestrace}
+FIXME show $\bu|_s$ is bounded by geometry of $\Lambda$
+\end{lemma}
+
+FIXME unfortunately the bounds above include the Korn's constant, which may not be parameterized directly by a norms of $s$ and $b$
+
+\begin{conjecture} \label{conj:a}
+FIXME $\bu|_s - \bu|r$ is bounded by $s-r$
+\end{conjecture}
+
+\begin{lemma} \label{lem:philipschitz}
+FIXME Lipschitz for $\Phi(s) = -\bu|_s\cdot \bn_s$
+\end{lemma}
 
 \section{An implicit time-step model, in weak form} \label{sec:model}
 
-Let $\{t_n\}$ be an increasing sequence of times, and write $\Delta t = t_n-t_{n-1}$ for the step length.  Suppose $s(x)\approx s(t_n,x)$ approximates the unknown surface elevation at time $t_n$.  Let $a^n(x)$ be the (temporal) average of $a(t,x)$ over $[t_{n-1},t_n]$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
+Let us consider implicit time-stepping models based on \eqref{eq:icydomain}--\eqref{eq:stokes}.  Let $\{t_n\}$ be an increasing sequence of times, and write $\Delta t = t_n-t_{n-1}$ for the step length.  Suppose $s(x)\approx s(t_n,x)$ approximates the unknown surface elevation at time $t_n$.  Let $a^n(x)$ be the (temporal) average of $a(t,x)$ over $[t_{n-1},t_n]$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
 \begin{equation}
 \frac{s - s^{n-1}}{\Delta t} - \bu|_{s} \cdot \bn_{s} - a^n = 0. \label{eq:be:ske}
 \end{equation}
