@@ -123,7 +123,7 @@ Thus a glacier simulation at least takes the bedrock topography, a time-dependen
 
 Additional complications are common in comprehensive ice sheet models \cite{SchoofHewitt2013}.  For example, the internal energy of the ice \cite{Aschwandenetal2012}, and/or liquid water within the ice matrix, or at ice surfaces, may be tracked.  However, we only consider conservation of mass and momentum, but not energy conservation nor liquid/solid (two phase) models.  On the other hand, we will not make the shallowness assumptions which are common in comprehensive models.
 
-At a time and map-plane location where a glacier exists the surface elevation exceeds the bedrock elevation, equivalently the ice thickness is positive.  That is, the glacier's geometry must satisfy an inequality to be admissible.  Let $\Omega \subset \RR^2$ be a fixed portion of the earth's surface on which glaciation is studied (Figure \ref{fig:stokesdomain}), and let $x\in\Omega$ denote the map-plane coordinate(s).  Assume that we are given, as data, a bed elevation function $b(x)$ for $x\in\Omega$ and an SMB function $a(t,x)$ for $t\in [0,T]$ and $x\in \Omega$.  (Function spaces for these data will be considered below.)  Note that $a$ is generally signed.  In areas where $a>0$ (accumulation; downward arrows in Figure \ref{fig:stokesdomain}) then a glacier will exist, but if $a<0$ (upward arrows) then either a glacier exists with an ablating surface, or no glacier exists.  Determining which situation applies at a given point $t,x$ requires solving the free-boundary problems considered in this paper.
+At a time and map-plane location where a glacier exists the surface elevation exceeds the bedrock elevation, equivalently the ice thickness is positive.  That is, the glacier's geometry must satisfy an inequality to be admissible.  Let $\Omega \subset \RR^2$ be a fixed portion of the earth's surface on which glaciation is studied (Figure \ref{fig:stokesdomain}), and let $x=(x_1,x_2)\in\Omega$ denote the map-plane coordinate(s).  Assume that we are given, as data, a bed elevation function $b(x)$ for $x\in\Omega$ and an SMB function $a(t,x)$ for $t\in [0,T]$ and $x\in \Omega$.  (Function spaces for these data will be considered below.)  Note that $a$ is generally signed.  In areas where $a>0$ (accumulation; downward arrows in Figure \ref{fig:stokesdomain}) then a glacier will exist, but if $a<0$ (upward arrows) then either a glacier exists with an ablating surface, or no glacier exists.  Determining which situation applies at a given point $t,x$ requires solving the free-boundary problems considered in this paper.
 
 \medskip
 \begin{figure}[ht]
@@ -214,9 +214,9 @@ Let $1 < \pp \le 2$.  (Recall that $\pp=(1/\nn)+1\approx 4/3$ in Glen's law \eqr
 \end{equation}
 be the corresponding space of vector-valued functions with value (trace) zero along $\Gamma_b$.  For some representative \emph{horizontal} length $[L]>0$ of the glacier, define the norm on $\cV$ by
 \begin{equation}
-\|\bv\|_{\cV} = \left(\int_\Lambda |\bv|^\pp + [L]^\pp \int_\Lambda |\grad\bv|^\pp\right)^{1/\pp}.
+\|\bv\|_{\cV} = \left(\int_\Lambda |\bv|^\pp\,dx\,dz + [L]^\pp \int_\Lambda |\grad\bv|^\pp\,dx\,dz\right)^{1/\pp}.
 \end{equation}
-Here $|\bv|$ denotes the Euclidean norm of $\bv\in\RR^3$ and $|\grad\bv|=\left((\grad\bv)_{ij} (\grad\bv)_{ij}\right)^{1/2}$ is the Frobenius norm of $\grad\bv\in\RR^{3\times 3}$.  Remark 1.2.1 in \cite{BoffiBrezziFortin2013} explains the length scaling, and $\|\bv\|_{\cV}$ has consistent SI units of $\text{m}^{(\pp+3)/\pp}\,\text{s}^{-1}$.
+Here $dx\,dz = dx_1\,dx_2\,dz$ is the 3D volume element, but from now on this will be suppressed in integrals over $\Lambda$.  Note that $|\bv|$ denotes the Euclidean norm of $\bv\in\RR^3$ and $|\grad\bv|=\left((\grad\bv)_{ij} (\grad\bv)_{ij}\right)^{1/2}$ is the Frobenius norm of $\grad\bv\in\RR^{3\times 3}$.  Remark 1.2.1 in \cite{BoffiBrezziFortin2013} explains the length scaling, and $\|\bv\|_{\cV}$ has consistent SI units of $\text{m}^{(\pp+3)/\pp}\,\text{s}^{-1}$.
 
 Let $\cQ=L^{\pp'}(\Lambda)$ where $\pp'=\pp/(\pp-1)\approx 4$ is the conjugate exponent.  Define
 \begin{equation}
@@ -224,7 +224,7 @@ Let $\cQ=L^{\pp'}(\Lambda)$ where $\pp'=\pp/(\pp-1)\approx 4$ is the conjugate e
 \end{equation}
 as the space of admissible velocity and pressure pairs.  For $(\bu,p) \in \mathcal{M}$ define
 \begin{equation}
-F_\Lambda(\bu,p)[\bv,q] = \int_\Lambda 2 \nu(|D\bu|) D\bu : D\bv - p \Div\bv - (\Div\bu) q - \rhoi \bg \cdot \bv \label{eq:glenstokes:fcnl}
+F_\Lambda(\bu,p)[\bv,q] = \int_\Lambda 2 \nu(|D\bu|) D\bu : D\bv - p \Div\bv - (\Div\bu) q - \rhoi \bg \cdot \bv. \label{eq:glenstokes:fcnl}
 \end{equation}
 The (mixed) weak form seeks the solution $(\bu,p)$ which satisfies
 \begin{equation}
@@ -236,14 +236,20 @@ Jouvet and Rappaz \cite{JouvetRappaz2011} have proven that problem \eqref{eq:gle
 \begin{theorem} \label{thm:stokeswellposed} \cite[Theorem 3.10]{JouvetRappaz2011} and \cite[Appendix A]{IsaacStadlerGhattas2015}.  Suppose $\Lambda$ is bounded, $\partial\Lambda$ is Lipschitz, $\Gamma_s$ is $C^1$, and $\Gamma_b$ has positive measure.  Let $1<\pp\le 2$ and $\eps>0$ in \eqref{eq:glen}.  There exists a unique pair $(\bu,p) \in \mathcal{M}$ solving \eqref{eq:glenstokes:weak}, and furthermore $\bu\in \Vdiv$.
 \end{theorem}
 
-Our primary purpose, resumed in the next Section, is to study the glacier geometry problem in NCP \eqref{eq:ncp}.  For that analysis we will need to bound the surface trace $\bu|_s$ in terms of geometric properties of $\Lambda$.  This uses several inequalities, after which we add a bound conjecture which is needed to prove results in Sections \ref{sec:model} and \ref{sec:application}.
+Our primary purpose, resumed in the next Section, is to study the glacier geometry problem in NCP \eqref{eq:ncp}.  For that analysis, in Corollary \ref{cor:tracecorollary} we bound the surface trace $\bu|_s$ in terms of geometric properties of $\Lambda$.  This uses several inequalities.
 
 \begin{lemma}[Poincar\'e's inequality] \label{lem:poincare}
-Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists a dimensionless constant $c_{\pp}(\Lambda)>0$ so that $\int_\Lambda |\bv|^\pp \le c_{\pp}(\Lambda) [L]^\pp \int_\Lambda |\grad\bv|^\pp$ for all $\bv \in \cV$.
+Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists a dimensionless constant $c_{\pp}(\Lambda)>0$ so that for all $\bv \in \cV$,
+\begin{equation}
+\int_\Lambda |\bv|^\pp \le c_{\pp}(\Lambda) [L]^\pp \int_\Lambda |\grad\bv|^\pp. \label{eq:poincare}
+\end{equation}
 \end{lemma}
 
 \begin{lemma}[Korn's inequality] \label{lem:korns}
-Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists a dimensionless constant $k_{\pp}(\Lambda)>0$ so that $\int_\Lambda |\grad\bv|^\pp \le k_{\pp}(\Lambda) \int_\Lambda |D\bv|^\pp$ for all $\bv \in \cV$.
+Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists a dimensionless constant $k_{\pp}(\Lambda)>0$ so that for all $\bv \in \cV$,
+\begin{equation}
+\int_\Lambda |\grad\bv|^\pp \le k_{\pp}(\Lambda) \int_\Lambda |D\bv|^\pp. \label{eq:korns}
+\end{equation}
 \end{lemma}
 
 From Lemma \ref{lem:poincare} it follows that $\|\bu\|_{\cV}^\pp \le (c_{\pp}(\Lambda) + 1) [L]^\pp \int_\Lambda |\grad\bv|^\pp$; this is used below.  To prove Lemma \ref{lem:korns}, set $F(x)$ to the identity in Corollary 4.1 of \cite{Pompe2003}.  A similar $\pp$-norm Korn's inequality was earlier proven by Ting \cite{Ting1972}---see Theorem 5.12 in \cite{KikuchiOden1988}---but only for zero Dirichlet conditions over all of $\partial \Lambda$.
@@ -253,7 +259,7 @@ The main idea of the following bound is that velocity is controlled by geometric
 \begin{lemma}[3D \emph{a priori} bound] \label{lem:stokesapriori}
 Under the assumptions of Theorem \ref{thm:stokeswellposed},
 \begin{equation}
-\|\bu\|_{\cV} \le \left(\frac{\rhoi |\bg| [L]^\pp (c_{\pp}(\Lambda) + 1) k_{\pp}(\Lambda)}{2 \nu_\pp}\right)^{1/(\pp-1)} |\Lambda|^{1/\pp} \label{eq:stokesapriori}
+\|\bu\|_{\cV}^\pp \le \left(\frac{\rhoi |\bg| [L]^\pp (c_{\pp}(\Lambda) + 1) k_{\pp}(\Lambda)}{2 \nu_\pp}\right)^{\pp'} |\Lambda| \label{eq:stokesapriori}
 \end{equation}
 where $|\Lambda|$ denotes the ice volume.
 \end{lemma}
@@ -275,26 +281,35 @@ Apply Lemma \ref{lem:korns}, equation \eqref{eq:glen}, equation \eqref{eq:stokes
 \begin{align*}
 \|\bu\|_{\cV}^\pp \le (C_{\pp}(\Lambda) + 1) [L]^\pp \frac{\rhoi |\bg| k_{\pp}(\Lambda)}{2 \nu_\pp} |\Lambda|^{1/\pp'} \|\bu\|_{\cV}.
 \end{align*}
-Divide by the norm and, noting $\pp>1$, take the $\pp-1$ root.
+Divide by the norm and raise both sides to the $\pp' = \pp/(\pp-1)$ power to yield \eqref{eq:stokesapriori}.
 \end{proof}
 
-\begin{lemma}[Surface trace bound] \label{lem:stokestrace}
-FIXME $\bu|_s$ is bounded by geometry of $\Lambda$
+\begin{lemma}[Trace inequality] \label{lem:trace}
+Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists a dimensionless constant $\gamma_{\pp}(\Lambda)>0$ so that for all $\bv \in \cV$,
+\begin{equation}
+\int_{\Gamma_s} |\bv|^\pp \,dS \le \frac{\gamma_{\pp}(\Lambda)}{[L]} \|\bv\|_{\cV}^\pp \label{eq:trace}
+\end{equation}
+where $\bv$ on the left is the trace on $\Gamma_s$.
 \end{lemma}
 
-FIXME unfortunately the bounds above include constants from Poincar\'e's and Korn's inequalities, which may not be parameterizable directly by a norms of $s$ and $b$
+\begin{proof}
+Theorem 5.5.1 in \cite{Evans2010} defines a trace operator $T:\cV\to L^\pp(\partial\Lambda)$, and a constant $C>0$, dependent only on $\pp$ and $\Lambda$, so that
+\begin{equation}
+\int_{\partial\Lambda} |T\bv|^p\,dS \le C^\pp \int_{\Lambda} |\bv|^\pp + |\grad\bv|^\pp \label{eq:tracework}
+\end{equation}
+for $\bv\in\cV$.  Here $dS$ is the area element over $\partial\Lambda$.  Assuming that $[L] \ge 1$ then, because $\bv=\bzero$ along $\Gamma_b$,
+\begin{equation}
+\int_{\Gamma_s} |T\bv|^p\,dS = \int_{\partial\Lambda} |T\bv|^p\,dS \le C^\pp \int_{\Lambda} |\bv|^\pp + [L]^p |\grad\bv|^\pp = C^\pp \|\bv\|_{\cV}^\pp. \label{eq:traceworktwo}
+\end{equation}
+Define $\gamma_{\pp}(\Lambda)=[L] C^\pp$, which can be shown to be dimensionless.
+\end{proof}
 
-\begin{conjecture} \label{conj:a}
-FIXME $\bu|_s - \bu|_r$ is bounded by $s-r$
-\end{conjecture}
-
-FIXME define $\Phi(s) = -\bu|_s\cdot \bn_s$
-
-FIXME define Lipschitz on bounded subsets
-
-\begin{lemma} \label{lem:philipschitz}
-FIXME Lipschitz for $\Phi(s)$
-\end{lemma}
+\begin{corollary}[Surface trace bound] \label{cor:tracecorollary}
+Suppose $\bu\in\cV$ is the Stokes velocity solution from Theorem \ref{thm:stokeswellposed}.  The norm of its trace over $\Gamma_s$ is controlled by geometric properties of the domain $\Lambda$, and physical constants:
+\begin{equation}
+\int_{\Gamma_s} |\bu|^\pp \,dS \le \frac{\gamma_{\pp}(\Lambda)}{[L]} \left(\frac{\rhoi |\bg| [L]^\pp (c_{\pp}(\Lambda) + 1) k_{\pp}(\Lambda)}{2 \nu_\pp}\right)^{\pp'} |\Lambda|. \label{eq:tracecorollary}
+\end{equation}
+\end{corollary}
 
 
 \section{An implicit time-step model, in weak form} \label{sec:model}
@@ -354,6 +369,17 @@ At this point, VI problem \eqref{eq:be:viearly} can be re-written using well-def
 \end{equation}
 This VI form is our preferred weak form associated to the strong-form NCP statement \eqref{eq:be:ncp} of the implicit time step.
 
+\begin{conjecture} \label{conj:a}
+FIXME $\bu|_s - \bu|_r$ is bounded by $s-r$
+\end{conjecture}
+
+FIXME define $\Phi(s) = -\bu|_s\cdot \bn_s$
+
+FIXME define Lipschitz on bounded subsets
+
+\begin{lemma} \label{lem:philipschitz}
+FIXME Lipschitz for $\Phi(s)$
+\end{lemma}
 
 \section{Theoretical considerations on the VI problem} \label{sec:theory}
 
