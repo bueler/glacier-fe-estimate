@@ -422,11 +422,9 @@ This VI form is our preferred weak form of the implicit time-step problem, at le
 
 There is general agreement among glaciologists that, for a non-sliding and isothermal glacier modeled as a very viscous and incompressible fluid, a glacier satisfies the conditions of NCP \eqref{eq:ncp}, or, for a backward Euler time step, NCP \eqref{eq:be:ncp}.  For instance, numerical ice sheet models \cite{IsaacStadlerGhattas2015,WirbelJarosch2020} are based upon the Stokes model \eqref{eq:stokes}, and the SKE \eqref{eq:ske} is a standard model for surface geometry evolution \cite{GreveBlatter2009,SchoofHewitt2013}.  The idea that positive SMB implies the existence or glacier ice at a given location is not controversial.  Likewise, glaciologists agree that ice-free areas correspond to negative SMB, at least supposing that SMB is both continuous and annualized, and that any initial accumulation (positive SMB) immediately becomes glacier ice by definition.
 
-However, the numerical error bounds proven in Sections \ref{sec:abstractestimate} and \ref{sec:application} depend on a well-posed VI problem for the continuum surface elevation.  Despite the theoretical progress made in Sections \ref{sec:stokes} and \ref{sec:model}, culminating in Conjecture A, no results known to this author prove well-posedness for \eqref{eq:be:vi}, nor for any similar glacier geometry problem based on Stokes dynamics.  Thus we conjecture well-posedness of VI problem \eqref{eq:be:vi} in subsection \ref{subsec:conjecture} below.  We build up to this conjecture using comparative and/or restricted cases, and physical reasoning.
+However, the numerical error bounds proven in Sections \ref{sec:abstractestimate} and \ref{sec:application} depend on a well-posed VI problem for the continuum surface elevation.  Despite the theoretical progress made in Sections \ref{sec:stokes} and \ref{sec:model}, culminating in Conjecture A, no results known to this author prove well-posedness for \eqref{eq:be:vi}, nor for any similar glacier geometry problem based on Stokes dynamics.  Thus we conjecture well-posedness of VI problem \eqref{eq:be:vi} in subsection \ref{subsec:conjecture} below.  We build up to this conjecture using comparative cases and physical reasoning.
 
-\subsection{Explicit time-stepping} \label{subsec:explicit}   First consider a glacier that does not flow.  The time-step problem then reduces to determining the geometry according only to the SMB and the prior geometry.  The weak form of this problem is well-posed over $L^2(\Omega)$.
-
-To see this precisely, let $\ip{F^{\bzero}_{\Delta t}(s)}{r} = \int_\Omega sr$, which sets $\bu|_s=\bzero$ in definition \eqref{eq:be:Fdefine}.  Assuming reasonably that definition \eqref{eq:be:source} yields $\ell^n \in L^2(\Omega)$, there exists a unique solution $s \in \cK_{L^2} = \left\{r\in L^2(\Omega)\,:\,r \ge b\right\}$ of the simplified no-flow VI problem
+\subsection{Comparison to explicit time-stepping} \label{subsec:explicit}   First consider a glacier that does not flow.  The time-step problem then reduces to determining the geometry according only to the SMB and the prior geometry.  The weak form of this problem is well-posed over $L^2(\Omega)$.  To see this precisely, let $\ip{F^{\bzero}_{\Delta t}(s)}{r} = \int_\Omega sr$, which sets $\bu|_s=\bzero$ in definition \eqref{eq:be:Fdefine}.  Assuming reasonably that definition \eqref{eq:be:source} yields $\ell^n \in L^2(\Omega)$, there exists a unique solution $s \in \cK_{L^2} = \left\{r\in L^2(\Omega)\,:\,r \ge b\right\}$ of the simplified no-flow VI problem
 \begin{equation}
 \ip{F^{\bzero}_{\Delta t}(s)}{r-s} \ge \ip{\ell^n}{r-s} \quad \text{for all } r \in \cK_{L^2}.
 \end{equation}
@@ -472,7 +470,7 @@ The regularity exhibited by solutions to diffusion \eqref{eq:ske:sia} likely wil
 
 FIXME physically, thin ice does not flow much regardless of surface slope, which is reflected in $(s-b)^4$ coefficient in surface velocity formula
 
-\subsection{Physical reasoning related to margin/terminus shape} \label{subsec:margin}  FIXME Also, the theoretical shapes of glacier and ice sheet \emph{margins} (Figure \ref{fig:margins}) are not so clear, speaking here of the grounded case.  Margin shape relates to which Sobolev spaces might be credible for claims of well-posedness.  The SIA theory suggests root-type (fractional-power) shapes \cite{Bueleretal2005} with unbounded gradients.  By contrast, earlier glacier modeling often hypothesized a ``wedge'' shape with a finite gradient \cite[for example]{EchelmeyerKamb1986}, which might allow $s\in W^{1,\rr}(\Omega)$.  Reality is of course much more complicated, with fracture, crevasse, and cliffs as common features of glacier margins, while here we assume ice is only modeled as a viscous fluid.
+\subsection{Physical reasoning regarding margin/terminus shape} \label{subsec:margin}  The theoretically predicted shape of the grounded margin of a glacier (Figure \ref{fig:margins}) is not so clear, but the question relates to which Sobolev spaces are credible for claims of well-posedness.  The SIA theory suggests root-type (fractional-power) shapes \cite{Bueleretal2005} for the marginal surface elevation, with unbounded gradients.  By contrast, a ``wedge'' margin shape with a bounded gradient has been hypothesized \cite[for example]{EchelmeyerKamb1986}, which would allow $s\in W^{1,\rr}(\Omega)$.  Actually, in the vicinity of any steep ice margin, especially on steep bedrock features, real glacier ice can generate overhangs which violate the assumption that a surface elevation function is even meaningful, and similarly the bedrock can overhang.  Reality itself is even more complicated, with fractures, crevasses, and cliffs commonly found in glacier margins, but modeling such features escapes from our viscous fluid paradigm.
 
 \begin{figure}
 \begin{center}
@@ -482,28 +480,26 @@ FIXME physically, thin ice does not flow much regardless of surface slope, which
 \label{fig:margins}
 \end{figure}
 
-In the vicinity of a steep ice margin, especially on steep bedrock features, glacier ice can actually generate overhangs which violate the assumption that a surface elevation function is even meaningful.  Overhangs can also occur in the bedrock.  Because such overhangs are small features compared to the overall scale of glaciers and ice sheets, almost all modeling literature ignores their formation and assumes instead that surface and bed elevation functions are well-defined; see \cite{IsaacStadlerGhattas2015,Jouvetetal2008,LofgrenAhlkronaHelanow2022,WirbelJarosch2020} among many examples.  Reference \cite{PralongFunk2005} provides an alternative model in which overhangs are allowed and ice-cliff calving occurs via a damage variable and a stress-fracture failure criterion.  Such a mechanism might explain how (nearly) well-defined surface elevation and thickness functions could arise as solutions in a more-complete, and potentially well-posed, model.  However, such a viscous-brittle model is a highly nontrivial extension of the viscous-only model herein.
+Because margins are small features compared to the overall scale of glaciers and ice sheets, almost all modeling literature ignores overhangs and assumes instead that surface and bed elevation functions are well-defined; see \cite{IsaacStadlerGhattas2015,Jouvetetal2008,LofgrenAhlkronaHelanow2022,WirbelJarosch2020} among many examples.  Extending our Stokes-based viscous models by allowing overhangs, and furthermore supplementing the momentum conservation model with an additional advected damage variable \cite{PralongFunk2005}, so that ice-cliff calving can occur via a stress-based failure criterion, might provide a mechanism to explain how (nearly) well-defined surface elevation and thickness functions arise as solutions to the kind of models considered in this paper.  Allowing our glacier models to form cliffs might finesse the question of which is the right Sobolev space for surface elevation functions.
 
-\subsection{Conjectural well-posedness for the continuum problem} \label{subsec:conjecture} FIXME transition: subsections \ref{subsec:explicit}--\ref{subsec:margin} deploy imperfect arguments to explain why problem \eqref{eq:be:vi} is the one we should concentrate on, with the understanding that it is non-trivial (i.e.~not just optimization or simple advection either); now we give our best guess
+\subsection{Conjectural well-posedness for the continuum problem} \label{subsec:conjecture} Subsections \ref{subsec:explicit}--\ref{subsec:margin} above deploy imperfect arguments to explain why VI problem \eqref{eq:be:vi} is the one we will concentrate on.  With the understanding that this problem is non-trivial---e.g.~it is neither a simple advection or an optimization problem---we now give our best guess regarding the final form of the continuum model.
 
 \begin{conjecture} \label{conj:wellposed:be}
 There exists an exponent $\rr$ so that if $\cV = W^{1,\rr}(\Omega)$ then, for all sufficiently-small values $\Delta t>0$, there exists a unique solution $s \in \cK = \{r\ge b\} \subset \cV$ to VI problem \eqref{eq:be:vi}.
 \end{conjecture}
 
-Conjecture \ref{conj:wellposed:be} addresses the well-posedness of a single implicit time-step problem, and this is not sufficient to show well-posedness of the time-dependent problem.  Without making a further formal conjecture, some versions of the following propositions must be true:
+Conjecture \ref{conj:wellposed:be} addresses the well-posedness of a single implicit time-step problem, and this is not sufficient to show well-posedness of the time-dependent problem.  Without making a further formal conjecture, versions of the following propositions may also true:
 \renewcommand{\labelenumi}{\emph{\roman{enumi})}}
 \begin{enumerate}
-\item The solution $s$ of \eqref{eq:be:vi} is sufficiently regular so that $\ell^{n+1} \in \cV'$ is well-defined for the next step.
-\item The parabolic VI problem \cite{Glowinski1984} corresponding to time-dependent NCP \eqref{eq:ncp} is well-posed.
+\item The solution $s$ of \eqref{eq:be:vi} is sufficiently regular so that $\ell^{n+1} \in \cV'$ is well-defined for the next step, and
+\item the parabolic VI problem \cite{Glowinski1984} corresponding to time-dependent NCP \eqref{eq:ncp} is well-posed.
 \end{enumerate}
-While practitioners of numerical ice sheet and glacier modeling using Stokes dynamics expects facts like these to hold, they may be distant mathematically despite progress in the SIA case, especially on \emph{ii)} \cite{Calvoetal2003,PiersantiTemam2023}.  On the other hand, the results in the next two Sections only require Conjecture \ref{conj:wellposed:be}.
+While practitioners of numerical ice sheet and glacier modeling using Stokes dynamics expects facts like these to hold, they are likely to be difficult to prove despite progress in the SIA case, especially on \emph{ii)} \cite{Calvoetal2003,PiersantiTemam2023}, and despite the results in Sections \ref{sec:stokes} and \ref{sec:model}.  On the other hand, the results in the next two Sections only require Conjecture \ref{conj:wellposed:be}.
 
 
 \section{Abstract error estimate} \label{sec:abstractestimate}
 
-We now consider the FE approximation of an abstract variational inequality (VI) problem.  We will return to \eqref{eq:be:vi} in Section \ref{sec:application}.
-
-Let $\cV$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cV'$.  Denote the dual pairing of $\phi \in \cV'$ and $v\in\cV$ by $\ip{\phi}{v} = \phi(v)$, and define the (Banach space) norm on $\cV'$ by $\|\phi\|_{\cV'} = \sup_{\|v\|=1} |\!\ip{\phi}{v}\!|$.  Let $\cK \subset \cV$ be a nonempty, closed, and convex subset, the constraint set; elements are said to be admissible.  For a continuous, but generally nonlinear, operator $f:\cK \to \cV'$, and a linear source $\ell\in \cV'$, the VI problem is to find $u\in \cK$ such that
+We now consider the FE approximation of an abstract variational inequality (VI) problem.  We will return to \eqref{eq:be:vi} in Section \ref{sec:application}.  Let $\cV$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cV'$.  Denote the dual pairing of $\phi \in \cV'$ and $v\in\cV$ by $\ip{\phi}{v} = \phi(v)$, and define the (Banach space) norm on $\cV'$ by $\|\phi\|_{\cV'} = \sup_{\|v\|=1} |\!\ip{\phi}{v}\!|$.  Let $\cK \subset \cV$ be a nonempty, closed, and convex subset, the constraint set; elements are said to be admissible.  For a continuous, but generally nonlinear, operator $f:\cK \to \cV'$, and a linear source $\ell\in \cV'$, the VI problem is to find $u\in \cK$ such that
 \begin{equation}
 \ip{f(u)}{v-u} \ge \ip{\ell}{v-u} \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
@@ -526,7 +522,7 @@ Let $\pp>1$.  The operator is \emph{$\pp$-coercive \cite{Bueler2021conservation}
 \end{equation}
 \end{definition}
 
-It is well-known that if $f:\cK \to \cV'$ is monotone and coercive, and also continuous on finite-dimensional subspaces, then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then a solution is unique.  If $f$ is $\pp$-coercive then it coercive and strictly monotone; $\pp$-coercivity and continuity yield well-posedness for \eqref{eq:vi}.
+It is well-known that if $f:\cK \to \cV'$ is monotone and coercive, and also continuous on finite-dimensional subspaces, then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then a solution is unique.  If $f$ is $\pp$-coercive then it coercive and strictly monotone.  It follows that $\pp$-coercivity and continuity yield well-posedness for \eqref{eq:vi}.
 % \cite{Peral1997} uniform continuity over bounded sets for p-Laplacian: Thm A.0.6
 
 \begin{definition} \label{def:lipshitz}
@@ -536,17 +532,17 @@ For $\rho>0$ let $B_\rho = \{v\in \cV\,:\,\|v\|\le \rho\}$.  We say $f:\cK \to \
 \end{equation}
 \end{definition}
 
-Clearly, if $f$ is Lipshitz on bounded subsets then $f$ is continuous.  Definitions \ref{def:monotonepcoercive} and \ref{def:lipshitz} do not require $f$ to be defined on all of the vector space $\cV$, but only on $\cK$.
+Clearly, if $f$ is Lipshitz on bounded subsets then $f$ is continuous.  Note that definitions \ref{def:monotonepcoercive} and \ref{def:lipshitz} do not require $f$ to be defined on all of the vector space $\cV$, but only on $\cK$.
 
-A key concept in the following theorem is that $f(u)-\ell$ is generally nonzero when $u$ solves \eqref{eq:vi}.  Instead, a nonlinear complementarity problem holds, at least in sufficiently regular cases, as in \cite[Exercise 5.1.1]{Ciarlet2002}  and \cite[section 7]{BuelerFarrell2024}, for example.  Only for $u$ in the interior of $\cK$ should we expect equality (i.e.~$f(u)=\ell$).
+A key concept in the following theorem is that $f(u)-\ell$ is generally nonzero when $u$ solves \eqref{eq:vi}.  Instead, an NCP like \eqref{eq:ncp} or \eqref{eq:be:ncp} holds, at least in sufficiently regular cases.  (See \cite[Exercise 5.1.1]{Ciarlet2002} or \cite[section 7]{BuelerFarrell2024}, for example.)  Only for $u$ in the interior of $\cK$ should we expect equality (i.e.~$f(u)=\ell$).
 
-The FE method solves a finite-dimensional VI problem, otherwise comparable to \eqref{eq:vi}.  Suppose $\cV_h \subset \cV$ is a finite-dimensional subspace; typically $\cV_h$ consists of piecewise-polynomial and continuous functions defined on a mesh.  Define the FE constraint set $\cK_h\subset \cV_h$.  In general $\cK_h \nsubseteq \cK$, and no such assumption is made in Theorem \ref{thm:abstractestimate} below.  Let $f_h:\cK_h\to\cV'$.  Generally $f_h\ne f$, because of quadrature and other approximations, and again the general case is considered below.  The FE VI problem is
+An FE method for \eqref{eq:vi} solves a similar but finite-dimensional VI problem.  Suppose $\cV_h \subset \cV$ is a finite-dimensional subspace; typically $\cV_h$ consists of piecewise-polynomial and continuous functions defined on a mesh.  Define the FE constraint set $\cK_h\subset \cV_h$.  In general $\cK_h \nsubseteq \cK$.  Let $f_h:\cK_h\to\cV'$.  Generally $f_h\ne f$, because of quadrature and other approximations.  (The general case is considered below.)  The FE VI problem is
 \begin{equation}
 \ip{f_h(u_h)}{v_h-u_h} \ge \ip{\ell}{v_h-u_h} \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
 \end{equation}
-We assume that $f_h$ is $\pp$-coercive, and thus this problem is also well-posed.
+We assume that $f_h$ is $\pp$-coercive and continuous, and thus that this problem is also well-posed.
 
-The following abstract error estimate extends \cite{Falk1974} and Theorem 5.1.1 in \cite{Ciarlet2002}.  Here we do not assume that $f$ is linear, nor that $f_h=f$, and $f_h$ need only be defined on $\cK_h$.  However, we must extend the domain of $f$ to include the finite element solution.
+The following abstract error estimate extends \cite{Falk1974} and Theorem 5.1.1 in \cite{Ciarlet2002}.  Here we do not assume that $f$ is linear, nor that $\cK_h \subset \cK$ or $f_h=f$, and $f_h$ needs only be defined on $\cK_h$.  However, we must extend the domain of $f$ in \eqref{eq:vi} to include the finite element solution.
 
 \begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  Define
 \begin{equation}
