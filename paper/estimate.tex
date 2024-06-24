@@ -590,7 +590,7 @@ Noting $1<\pp,\qq<\infty$, now use Young's inequality with $\eps>0$ \cite[Append
 Take infimums to show \eqref{eq:abstractestimate}.
 \end{proof}
 
-Although $f(u)-\ell\in \cV'$ is abstract in Theorem \ref{thm:abstractestimate}, in practical applications it might be a signed measure or even a measurable function.  In such cases, the first two terms in estimate \eqref{eq:abstractestimate} retain information about the sign of $f(u)-\ell$.  By contrast, the original Hilbert space result in \cite{Falk1974} (and \cite[section 5.1]{Ciarlet2002}) compute a norm and lose this information.  Also, these results assume $f_h=f$.  To give the analogous Banach space estimate, as a corollary to Theorem \ref{thm:abstractestimate}, suppose that $\cV$ continuously and densely embeds in a larger Banach space $\cB$:
+Consider $f(u)-\ell\in \cV'$ in Theorem \ref{thm:abstractestimate}.  In practical applications it might be a signed measure or a real-valued measurable function.  In such cases, the first two terms in estimate \eqref{eq:abstractestimate} include information about the sign of $f(u)-\ell$.  By contrast, the original Hilbert space result (\cite{Falk1974} and \cite[section 5.1]{Ciarlet2002}) compute norms and lose this information.  The following corollary to Theorem \ref{thm:abstractestimate} illustrates that norm-based approach.  We suppose that $\cV$ continuously and densely embeds in a larger Banach space $\cB$:
 \begin{equation}
 \cV \hookrightarrow \cB, \quad \overline{\cV} = \cB \label{eq:VembedsinB}
 \end{equation}
@@ -603,9 +603,9 @@ Observe that $\cB' \subset \cV'$.  A standard example is where $\cV=W^{1,\qq}(\O
 \end{align}
 \end{corollary}
 
-On the other hand, the convex hull operation \eqref{eq:convexhull} is not needed if the nonlinear operator $f=f_h$ is defined on all of $\cV$.  That is, \eqref{eq:abstractestimate} obviously holds if one replaces $\hcK$ with $\cV$ itself for the domain of $f$.  Furthermore, for \emph{linear} operators defined in this way, Theorem \ref{thm:abstractestimate} reduces to the FE error estimate for VIs by Falk \cite{Falk1974}.  Specifically, suppose $\ip{f(v)}{w}=a(v,w)$ is actually bilinear, $\cV$-elliptic, and continuous on a Hilbert space $\cV$.  Define $A:\cV\to\cV'$, a bounded linear operator, by $Av(w) = a(v,w)$.  Observe that continuity for $a(v,w)$ implies Lipshitz on bounded sets \eqref{eq:liponbounded} for $A$.  Suppose that $\cV\hookrightarrow \cH$ and $\overline{\cV} = \cH$ for some larger Hilbert space $\cH$, and that $\|Au-\ell\|_{\cH'} < \infty$ so that, up to isomorphism, $Au-\ell \in \cH$.  Then Corollary \ref{cor:abstractestimate:Bnorm} reduces to Theorem 1 in \cite{Falk1974} and Theorem 5.1.1 in \cite{Ciarlet2002}.
+The convex hull operation \eqref{eq:convexhull} is not needed if the nonlinear operator $f$ is defined on all of $\cV$ and if $f_h=f$.  That is, \eqref{eq:abstractestimate} holds if one replaces $\hcK$ with $\cV$ itself for the domain of $f$.  Furthermore, for \emph{linear} operators defined in this way, Theorem \ref{thm:abstractestimate} reduces to the FE error estimate for VIs by Falk \cite{Falk1974}.  Specifically, suppose $\ip{f(v)}{w}=a(v,w)$ is actually bilinear, $\cV$-elliptic, and continuous on a Hilbert space $\cV$.  Define $A:\cV\to\cV'$, a bounded linear operator, by $Av(w) = a(v,w)$.  Observe that continuity for $a(v,w)$ implies Lipshitz on bounded sets \eqref{eq:liponbounded} for $A$.  Suppose that $\cV\hookrightarrow \cH$ and $\overline{\cV} = \cH$ for some larger Hilbert space $\cH$, and that $\|Au-\ell\|_{\cH'} < \infty$ so that, up to isomorphism, $Au-\ell \in \cH$.  Then Corollary \ref{cor:abstractestimate:Bnorm} reduces to Theorem 1 in \cite{Falk1974} and Theorem 5.1.1 in \cite{Ciarlet2002}.
 
-As observed in \cite{Ciarlet2002}, the quantity in estimates \eqref{eq:abstractestimate} and \eqref{eq:abstractestimate:Bnorm} which involves $v-u_h$, for $v\in\cK$, is generally nonzero in obstacle problems where $\cK_h \nsubseteq \cK$.  (This is relevant to glacier models tracking the surface elevation, as opposed to thickness.)  In fact, suppose $\cK=\{v \in \cV\,:\,v\ge \psi\}$, $\psi_h$ is an interpolant of $\psi$, and $\cK_h=\{v_h \in \cV_h\,:\,v_h\ge \psi_h\}$.  Observe that, while $\psi_h(x_j)=\psi(x_j)$ for interpolation nodes $x_j$, generally $\psi_h(x) \ge \psi(x)$ does not hold for all $x\in\Omega$, even if $\psi$ is arbitrarily smooth.  In other words, nodal admissiblity does not imply admissibility (Figure \ref{fig:nonadmissible}).
+As observed in \cite{Ciarlet2002}, the quantity in estimates \eqref{eq:abstractestimate} and \eqref{eq:abstractestimate:Bnorm} which involves $v-u_h$, for $v\in\cK$, is generally nonzero in obstacle problems where $\cK_h \nsubseteq \cK$.  (This is relevant to glacier models tracking the surface elevation, as opposed to thickness.)  In fact, suppose that $\cK=\{v \in \cV\,:\,v\ge \psi\}$, $\psi_h$ is an interpolant of $\psi$, and $\cK_h=\{v_h \in \cV_h\,:\,v_h\ge \psi_h\}$.  Observe that, while $\psi_h(x_j)=\psi(x_j)$ for interpolation nodes $x_j$, generally $\psi_h(x) \ge \psi(x)$ does not hold for all $x\in\Omega$, even if $\psi$ is arbitrarily smooth.  In other words, nodal admissiblity does not imply admissibility (Figure \ref{fig:nonadmissible}).
 
 \begin{figure}
 \begin{center}
@@ -625,13 +625,13 @@ If also the assumptions of Corollary \ref{cor:abstractestimate:Bnorm} hold then
 \begin{equation}
 \|u-u_h\|^\pp \le \inf_{v_h\in\cK_h} \left\{\frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \|v_h-u\|_{\cB} + c \|v_h-u\|^\qq\right\} \label{eq:abstractestimate:subset:Bnorm}
 \end{equation}
-Finally, if additionally $f(u)=\ell$ then
+Finally, if additionally $f(u)=\ell$, for example if $u$ is in the interior of $\cK$, then
 \begin{equation}
 \|u-u_h\| \le \tilde c \inf_{v_h\in\cK_h} \|v_h-u\|^{\qq/\pp} \label{eq:abstractestimate:subset:Cea}
 \end{equation}
 \end{corollary}
 
-Regarding \eqref{eq:abstractestimate:subset:Cea}, which is Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002} translated to Banach spaces, $f(u)=\ell$ would be true if $u$ were in the interior of $\cK$, with no free boundary or active set.  Said another way, in \eqref{eq:abstractestimate:subset:Cea} we have reduced to the PDE case.  In the glacier context, to which we return now, \eqref{eq:abstractestimate:subset:Cea} corresponds to the case where the entire domain $\Omega$ is covered in ice.
+Note that \eqref{eq:abstractestimate:subset:Cea} is Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002} translated to Banach spaces.  Also, in \eqref{eq:abstractestimate:subset:Cea} we have reduced to the PDE case where there is no active set or free boundary.  In the glacier context, \eqref{eq:abstractestimate:subset:Cea} corresponds to the case where the entire domain $\Omega$ is covered in ice.
 
 
 \section{Application of the estimate} \label{sec:application}
