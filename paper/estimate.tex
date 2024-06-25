@@ -363,13 +363,13 @@ In fact, we will define the \emph{surface motion map} $\Phi(s) = - \bu|_s\cdot \
 
 Recall from Section \ref{sec:stokes} that $\pp=1+1/\nn \approx 4/3$ and $\pp'=\pp/(\pp-1) \approx 4$ is the conjugate exponent.  Let $[L]>0$ be a representative horizontal scale.  For $\rr>1$, similar to the Sobolev norm given in Section \ref{sec:stokes}, for $q\in W^{1,\rr}(\Omega)$ we define
 \begin{equation}
-\|q\|_{W^{1,\rr}} = \left(\int_\Omega |q|^\rr\,dx + [L]^\rr \int_\Omega |\grad q|^\rr\,dx\right)^{1/\rr}.
+\|q\|_{W^{1,\rr}} = \left(\int_\Omega |q|^\rr\,dx + [L]^\rr \int_\Omega |\grad q|^\rr\,dx\right)^{1/\rr}. \label{eq:norm:Omega}
 \end{equation}
 
-\begin{lemma}[Bound on $\Phi(s)$] \label{lem:phibound}
-Suppose $s$ is regular enough so that its weak gradient $\grad s$ is a measurable function.  Assume that the bound in inequality \eqref{eq:surfacetracebound} is finite.  Then $\Phi(s)=- \bu|_s\cdot \bn_s$ is a well-defined measurable function.  Furthermore if $\rr > 2$ and $q\in W^{1,\rr}(\Omega)$ then there is a constant $C(\Lambda,\|s\|_{W^{1,\rr}})$, depending on $\Lambda$ and $s$ but independent of $q$, so that
+\begin{lemma}[Bound on $\Phi(s)=- \bu|_s\cdot \bn_s$] \label{lem:phibound:early}
+Suppose $s$ is regular enough so that its weak gradient $\grad s$ is a measurable function.  Assume that the bound in inequality \eqref{eq:surfacetracebound} is finite.  Then $\Phi(s)$ is a well-defined measurable function.  Furthermore if $\rr > 2$ and $q\in W^{1,\rr}(\Omega)$ then there is a constant $C(\Lambda,\|s\|_{W^{1,\rr}})$, depending on $\Lambda$ and $s$ but independent of $q$, so that
 \begin{equation}
-\left|\int_\Omega \Phi(s) q\,dx\right| \le C(\Lambda,\|s\|_{W^{1,\rr}})\, \|q\|_{W^{1,\rr}}.  \label{eq:phibound}
+\left|\int_\Omega \Phi(s) q\,dx\right| \le C(\Lambda,\|s\|_{W^{1,\rr}})\, \|q\|_{W^{1,\rr}}.  \label{eq:phibound:early}
 \end{equation}
 \end{lemma}
 
@@ -388,41 +388,85 @@ Since $\rr$ exceeds the dimension of $\Omega$, by the Sobolev inequality \cite[T
 \begin{equation}
 \|q\|_{L^{\pp'\rr'}} \le c_\rr |\Omega|^{1/(\pp'\rr')} \|q\|_{W^{1,\rr}}. \label{eq:phibound:two}
 \end{equation}
-Inequality \eqref{eq:phibound} follows by combining \eqref{eq:phibound:one} and \eqref{eq:phibound:two}.
+Inequality \eqref{eq:phibound:early} follows by combining \eqref{eq:phibound:one} and \eqref{eq:phibound:two}.
 \end{proof}
 
 Greater care with Sobolev inequalities would likely weaken the assumption $\rr>2$.  However, since $\pp'\rr'>4$ using Glen exponent $\nn=3$, the above argument requires $q$ to be nearly bounded anyway.
 
-FIXME officially assume $\rr>2$, define $\cX=W^{1,\rr}(\Omega)$, define $\Phi$ on $\cX$
+Based on the above calculations, we assume $\rr>2$ and define
+\begin{equation}
+\cX = W^{1,\rr}(\Omega). \label{eq:defineX}
+\end{equation}
 
-\begin{conjecture} \label{conj:a}
-FIXME $\Phi(s)\in\cX'$, and $\bu|_s - \bu|_r$ is bounded by $s-r$
+For admissible $s,b\in \cX$, such that $s\ge b$, we assume from now on that the weak form Stokes problem \eqref{eq:glenstokes:weak} over the domain $\Lambda$, defined using $b$ and $s$ (definition \eqref{eq:icydomain}), has a unique solution.  That is, we assume that Theorem \ref{thm:stokeswellposed} applies on the 3D domain $\Lambda$ built from $b$ and $s$.
+
+Note that the conjugate exponent $\rr'=\rr/(\rr-1)$ satisfies $1<\rr'<2$.  We conjecture next that the $L^{\rr'}$-norm of the surface trace $\bu|_s$ is Lipschitz as a function of $s \in \cX$.  Observer that notation $\bu|_s$ refers to the zero-extended surface trace of this Stokes solution, as a function of $x\in\Omega$.  In this usage, $\bu|_s$ depends on the ice geometry including the bed elevation $b$.  Note that, by Corollary \ref{cor:surfacetracebound}, $\bu|_s$ a measurable function over $\Omega$, but we do not assume it is continuous.
+
+\begin{conjecture} \label{conj:a}  There exists $\rr>2$ and a constant $C>0$ so that if $\cX = W^{1,\rr}(\Omega)$, $b\in \cX$ is any bed elevation, and $s,r\in\cX$ are (generally) different surface elevations, admissible relative to $b$, defining (generally) different ice geometries, then
+\begin{equation}
+\big\|\bu|_s - \bu|_r\big\|_{L^{\rr'}} \le C \|s-r\|_{\cX} \label{eq:ulipschitz}
+\end{equation}
+where $L^{\rr'}=L^{\rr'}(\Omega;\RR^2)$.
 \end{conjecture}
 
-FIXME define Lipschitz on bounded subsets
+Recall definition \eqref{eq:be:admissible} of the admissible subset $\cK \subset \cX$.  The essential consequences of Conjecture \ref{conj:a}, proven next, are that the surface motion map $\Phi(s)=-\bu|_s\cdot \bn_s$ has known domain and range, and that this map is Lipschitz continuous.
 
 \begin{lemma} \label{lem:philipschitz}
-FIXME Lipschitz for $\Phi(s)$
+Fix $b \in \cX$ and let $s\in\cK$.  If Conjecture \ref{conj:a} applies then there exists $C>0$ so that for all $q\in\cX$,
+\begin{equation}
+\left|\int_\Omega \Phi(s) q\,dx\right| \le C\, \|s-b\|_{\cX} \|q\|_{\cX} \label{eq:phibound}
+\end{equation}
+so $\Phi(s)\in\cX'$.  Furthermore, the map $\Phi:\cK\to\cX'$ is Lipschitz on bounded subsets of $\cK$.  That is, for each radius $\rho>0$ there is $C(\rho)>0$ so that if $s,r\in B_\rho \cap \cK = \{t\in \cK\,:\,\|t\|_{\cX} \le \rho\}$ and $q\in\cX$ then
+\begin{equation}
+\left|\int_\Omega \left(\Phi(s) - \Phi(r)\right) q\,dx\right| \le C(\rho)\, \|s-r\|_{\cX} \|q\|_{\cX}  \label{eq:philipschitz}
+\end{equation}
 \end{lemma}
 
-Now we can define a final weak form operator $F_{\Delta t}:\cX\to\cX'$:
+\begin{proof}
+We start by proving \eqref{eq:philipschitz}.  Suppose $s,r\in\cK$.  Add and subtract $\bu|_r \cdot \bn_s$ and apply triangle inequalities including $|\bn_s|=\left(1+|\grad s|^2\right)^{1/2} \le 1 + |\grad s|$:
+\begin{align}
+\bigg|\int_\Omega \big(\Phi(s) - &\Phi(r)\big) q\,dx\bigg| \le \int_\Omega \Big|\bu|_s\cdot \bn_s - \bu|_r \cdot \bn_r\Big| |q|\,dx \\
+    &\le \int_\Omega \big|\bu|_s - \bu|_r\big| |\bn_s| |q|\,dx + \int_\Omega \big|\bu|_r\big| |\bn_s-\bn_r| |q|\,dx \notag \\
+    &\le \int_\Omega \big|\bu|_s - \bu|_r\big| |q|\,dx + \int_\Omega \big|\bu|_s - \bu|_r\big| |\grad s| |q|\,dx \notag \\
+    &\qquad\qquad + \int_\Omega \big|\bu|_r\big| |\grad s-\grad r| |q|\,dx \notag
+\end{align}
+Apply H\"older's inequality to each of the three integrals; use definition \eqref{eq:norm:Omega}:
+\begin{align}
+\int_\Omega \big|\bu|_s - \bu|_r\big| |q|\,dx &\le \big\|\bu|_s - \bu|_r\big\|_{L^{\rr'}} \|q\|_{L^{\rr}}, \\
+\int_\Omega \big|\bu|_s - \bu|_r\big| |\grad s| |q|\,dx &\le [L]^{-\rr} \left(\int_\Omega \big|\bu|_s - \bu|_r\big|^{\rr'} |q|^{\rr'}\, dx\right)^{1/\rr'} \|s\|_{\cX} \\
+    &\le [L]^{-\rr} \big\|\bu|_s - \bu|_r\big\|_{L^{\rr'}} \|s\|_{\cX} \|q\|_{L^\infty}, \notag \\
+\int_\Omega \big|\bu|_r\big| |\grad s-\grad r| |q|\,dx &\le [L]^{-\rr} \left(\int_\Omega \big|\bu|_r\big|^{\rr'} |q|^{\rr'}\, dx\right)^{1/\rr'} \|s-r\|_{\cX} \\
+    &\le [L]^{-\rr} \big\|\bu|_r - \bzero\big\|_{L^{\rr'}} \|s-r\|_{\cX} \|q\|_{L^\infty}. \notag
+\end{align}
+Sobolev's inequality gives $\|q\|_{L^{\rr}} \le c \|q\|_{W^{1,\rr}}$ and $\|q\|_{L^\infty} \le c \|q\|_{W^{1,\rr}}$ because $\rr>2$.  Note that $\bu|_b=\bzero$ is the case of no ice.  Use these facts and Conjecture \ref{conj:a} on the three bounds:
+\begin{align}
+\bigg|\int_\Omega \big(\Phi(s) - \Phi(r)\big) q\,dx\bigg| &\le C \|s-r\|_{\cX} \|q\|_{\cX} + C [L]^{-\rr} \|s-r\|_{\cX} \|s\|_{\cX} \|q\|_{\cX} \\
+    &\hspace{10mm} + C [L]^{-\rr} \|r - b\|_{\cX} \|s-r\|_{\cX} \|q\|_{\cX}. \notag
+\end{align}
+Now assume $s,r,b\in B_\rho\cap \cK$.  Then \eqref{eq:philipschitz} follows with $C(\rho) = C (1 + 3 [L]^{-\rr} \rho)$ since $\|r - b\|_{\cX}\le 2\rho$.
+
+To show \eqref{eq:phibound} let $r=b$ in \eqref{eq:philipschitz}.
+\end{proof}
+
+Bound \eqref{eq:phibound} includes the norm of the ice thickness $s-b$.  By contrast, the constant in Lemma \ref{lem:phibound:early} depends on other geometric properties of the domain $\Lambda$, properties presumably including the thickness, and presumably other geometric features.  In this sense Conjecture \ref{conj:a} is stronger than the hypotheses in Lemma \ref{lem:phibound:early}.
+
+Using the last Lemma we can define a weak form operator which puts our backward Euler time step VI \eqref{eq:be:viearly} in clean, and mathematically precise, form.  If $s\in\cK$ and $q\in\cX$ then we define $F_{\Delta t}:\cK\to\cX'$:
 \begin{align}
 \ip{F_{\Delta t}(s)}{q} &= \Delta t\,\ip{\Phi(s)}{q} + \int_\Omega s q \label{eq:be:Fdefine}\\
     &= \int_\Omega \left(s - \Delta t\, \bu|_s \cdot \bn_s\right) q. \notag
 \end{align}
-
-Finally, VI problem \eqref{eq:be:viearly} can be re-written using well-defined operators, as follows.  This assumes that $\cV$ has been chosen in an appropriate manner, which requires that the solution surface elevation $s$ is regular enough so that the corresponding Stokes problem is well-posed.  Also we assume, reasonably, that the source term $\ell^n$ defined in \eqref{eq:be:source} is the dual space $\cX'$.  Then we seek $s = s^n \in \cK$ so that
+Lemma \ref{lem:philipschitz} says that if Conjecture \ref{conj:a} holds then this operator is well-defined and Lipschitz on bounded subsets.  We also assume\footnote{This restriction is not restrictive.  For example, the SMB function $a^n(x)$ could be concentrated in a delta function.} that the source term $\ell^n$, defined in \eqref{eq:be:source}, is in the dual space $\cX'$.  Then we seek $s = s^n \in \cK$ so that
 \begin{equation}
 \ip{F_{\Delta t}(s)}{r-s} \ge \ip{\ell^n}{r-s} \quad \text{for all } r \in \cK. \label{eq:be:vi}
 \end{equation}
-This VI form is our preferred weak form of the implicit time-step problem, at least for theoretical and FE considerations.  The reader should keep in mind its association to the strong-form NCP statement \eqref{eq:be:ncp} of the implicit time step.
+This VI is the preferred weak form of our implicit time-step problem for theoretical and FE considerations.  The reader should keep in mind its corresponding strong-form NCP statement \eqref{eq:be:ncp}.
 
 
 \section{Theoretical considerations for VI problem~(\ref{eq:be:vi})} \label{sec:theory}
 
-There is general agreement among glaciologists that, for a non-sliding and isothermal glacier modeled as a very viscous and incompressible fluid, a glacier satisfies the conditions of NCP \eqref{eq:ncp}, or, for a backward Euler time step, NCP \eqref{eq:be:ncp}.  For instance, numerical ice sheet models \cite{IsaacStadlerGhattas2015,WirbelJarosch2020} are based upon the Stokes model \eqref{eq:stokes}, and the SKE \eqref{eq:ske} is a standard model for surface geometry evolution \cite{GreveBlatter2009,SchoofHewitt2013}.  The idea that positive SMB implies the existence or glacier ice at a given location is not controversial.  Likewise, glaciologists agree that ice-free areas correspond to negative SMB, at least supposing that SMB is both continuous and annualized, and that any initial accumulation (positive SMB) immediately becomes glacier ice by definition.
+There is general agreement among glaciologists that, for a non-sliding and isothermal glacier modeled as a very viscous and incompressible fluid, a glacier satisfies the conditions of NCP \eqref{eq:ncp}, or, specifically for a backward Euler time step, NCP \eqref{eq:be:ncp}.  For some of many examples, numerical ice sheet models \cite{IsaacStadlerGhattas2015,WirbelJarosch2020} are based upon the Stokes model \eqref{eq:stokes}, and the SKE \eqref{eq:ske} is a standard model for surface geometry evolution \cite{GreveBlatter2009,SchoofHewitt2013}.  The idea that positive SMB implies the existence of glacier ice at a given location is not controversial.  Likewise, glaciologists agree that ice-free areas correspond to negative SMB, at least supposing that SMB is both continuous in time and space, and perhaps annualized, and that any initial accumulation (positive SMB) immediately becomes glacier ice by definition.
 
-However, the numerical error bounds proven in Sections \ref{sec:abstractestimate} and \ref{sec:application} depend on a well-posed VI problem for the continuum surface elevation.  Despite the theoretical progress made in Sections \ref{sec:stokes} and \ref{sec:model}, culminating in Conjecture A, no results known to this author prove well-posedness for \eqref{eq:be:vi}, nor for any similar glacier geometry problem based on Stokes dynamics.  Thus we conjecture well-posedness of VI problem \eqref{eq:be:vi} in subsection \ref{subsec:conjecture} below.  We build up to this conjecture using comparative cases and physical reasoning.
+However, the numerical error bounds proven later in Sections \ref{sec:abstractestimate} and \ref{sec:application} depend on a well-posed VI problem for the continuum surface elevation.  Despite the theoretical progress made in Sections \ref{sec:stokes} and \ref{sec:model}, culminating in Conjecture \ref{conj:a} and Lemma \ref{lem:philipschitz}, no results known to the author prove well-posedness for \eqref{eq:be:vi}, nor for any similar glacier geometry problem based on Stokes dynamics.  Thus we make another Conjecture, related to well-posedness of VI problem \eqref{eq:be:vi}, in subsection \ref{subsec:conjecture} below.  We build up to Conjecture \ref{conj:b} using comparative cases and physical reasoning, as follows.
 
 \subsection{Comparison to explicit time-stepping} \label{subsec:explicit}   First consider a glacier that does not flow.  The time-step problem then reduces to determining the geometry according only to the SMB and the prior geometry.  The weak form of this problem is well-posed over $L^2(\Omega)$.  To see this precisely, let $\ip{F^{\bzero}_{\Delta t}(s)}{r} = \int_\Omega sr$, which sets $\bu|_s=\bzero$ in definition \eqref{eq:be:Fdefine}.  Assuming reasonably that definition \eqref{eq:be:source} yields $\ell^n \in L^2(\Omega)$, there exists a unique solution $s \in \cK_{L^2} = \left\{r\in L^2(\Omega)\,:\,r \ge b\right\}$ of the simplified no-flow VI problem
 \begin{equation}
@@ -484,17 +528,17 @@ Because margins are small features compared to the overall scale of glaciers and
 
 \subsection{Conjectural well-posedness for the continuum problem} \label{subsec:conjecture} Subsections \ref{subsec:explicit}--\ref{subsec:margin} above deploy imperfect arguments to explain why VI problem \eqref{eq:be:vi} is the one we will concentrate on.  With the understanding that this problem is non-trivial---e.g.~it is neither a simple advection or an optimization problem---we now give our best guess regarding the final form of the continuum model.
 
-\begin{conjecture} \label{conj:wellposed:be}
+\begin{conjecture} \label{conj:b}
 There exists an exponent $\rr$ so that if $\cV = W^{1,\rr}(\Omega)$ then, for all sufficiently-small values $\Delta t>0$, there exists a unique solution $s \in \cK = \{r\ge b\} \subset \cV$ to VI problem \eqref{eq:be:vi}.
 \end{conjecture}
 
-Conjecture \ref{conj:wellposed:be} addresses the well-posedness of a single implicit time-step problem, and this is not sufficient to show well-posedness of the time-dependent problem.  Without making a further formal conjecture, versions of the following propositions may also true:
+Conjecture \ref{conj:b} addresses the well-posedness of a single implicit time-step problem, and this is not sufficient to show well-posedness of the time-dependent problem.  Without making a further formal conjecture, versions of the following propositions may also true:
 \renewcommand{\labelenumi}{\emph{\roman{enumi})}}
 \begin{enumerate}
 \item The solution $s$ of \eqref{eq:be:vi} is sufficiently regular so that $\ell^{n+1} \in \cV'$ is well-defined for the next step, and
 \item the parabolic VI problem \cite{Glowinski1984} corresponding to time-dependent NCP \eqref{eq:ncp} is well-posed.
 \end{enumerate}
-While practitioners of numerical ice sheet and glacier modeling using Stokes dynamics expects facts like these to hold, they are likely to be difficult to prove despite progress in the SIA case, especially on \emph{ii)} \cite{Calvoetal2003,PiersantiTemam2023}, and despite the results in Sections \ref{sec:stokes} and \ref{sec:model}.  On the other hand, the results in the next two Sections only require Conjecture \ref{conj:wellposed:be}.
+While practitioners of numerical ice sheet and glacier modeling using Stokes dynamics expects facts like these to hold, they are likely to be difficult to prove despite progress in the SIA case, especially on \emph{ii)} \cite{Calvoetal2003,PiersantiTemam2023}, and despite the results in Sections \ref{sec:stokes} and \ref{sec:model}.  On the other hand, the results in the next two Sections only require Conjecture \ref{conj:b}.
 
 
 \section{Abstract error estimate} \label{sec:abstractestimate}
