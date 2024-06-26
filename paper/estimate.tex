@@ -325,11 +325,11 @@ Suppose $\bu\in\cV$ is the Stokes velocity solution from Theorem \ref{thm:stokes
 \end{corollary}
 
 
-\section{An implicit time-step model, in weak form} \label{sec:model}
+\section{The implicit time-step model, in weak form} \label{sec:model}
 
-Now we consider implicit time-stepping models based on model \eqref{eq:icydomain}--\eqref{eq:stokes}, including NCP \eqref{eq:ncp}.  Let $\{t_n\}$ be an increasing sequence of times.  Let $\Delta t = t_n-t_{n-1}$ denote the step length.  Suppose $s(x)\approx s(t_n,x)$ approximates the surface elevation at time $t_n$.  Let $a^n(x)$ be the (temporal) average of $a(t,x)$ over $[t_{n-1},t_n]$.
+Now we consider implicit time-stepping models based on model \eqref{eq:icydomain}--\eqref{eq:stokes}, including NCP \eqref{eq:ncp}.  Let $\{t_n\}$ be an increasing sequence of times.  Let $\Delta t = t_n-t_{n-1}$ denote the step length.  Let $a^n(x)$ be the (temporal) average of the data $a(t,x)$ over $[t_{n-1},t_n]$.
 
-Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
+Suppose that $s(x)\approx s(t_n,x)$ approximates the surface elevation at time $t_n$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
 \begin{equation}
 \frac{s - s^{n-1}}{\Delta t} - \bu|_{s} \cdot \bn_{s} - a^n = 0. \label{eq:be:ske}
 \end{equation}
@@ -338,7 +338,7 @@ For cleaner appearance we define the source term
 \ell^n(x) = s^{n-1}(x)+\Delta t\,a^n(x) = s^{n-1}(x) + \int_{t_{n-1}}^{t_n} a(t,x)\,dt. \label{eq:be:source}
 \end{equation}
 
-The problem is again of free-boundary type, and generally $s$ does not solve \eqref{eq:be:ske} over all of $\Omega\subset \RR^2$.  Instead it solves an NCP derived from \eqref{eq:ncp}:
+As with \eqref{eq:ncp}, the problem is actually of free-boundary type and we state it as an NCP:
 \begin{subequations}
 \label{eq:be:ncp}
 \begin{align}
@@ -347,30 +347,29 @@ s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n &\ge 0 \\
 (s - b) \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right) &= 0 \label{eq:be:ncp:complementarity}
 \end{align}
 \end{subequations}
-Equation \eqref{eq:be:ncp:complementarity} says that, at the time step end $t=t_n$ and almost everywhere over $\Omega$, either there is no ice ($s=b$) or equation \eqref{eq:be:ske} holds.
+Equation \eqref{eq:be:ncp:complementarity} says that, at the time step end $t=t_n$ and almost everywhere over $\Omega$, either there is no ice ($s=b$) or equation \eqref{eq:be:ske} holds.  Note that generally $s$ does not solve \eqref{eq:be:ske} over all of $\Omega \subset \RR^2$.
 
-The strong form NCP \eqref{eq:be:ncp} has a weak-form variational inequality (VI; \cite{Evans2010,KinderlehrerStampacchia1980}) version which is suited to both well-posedness theory and finite element (FE) analysis.  The precise Banach space $\cX$ of surface elevations in this VI is unknown, so for now thus space is abstract.  Admissible surface elevations are from a convex and closed subset of $\cX$:
+The strong form NCP \eqref{eq:be:ncp} has a weak-form variational inequality (VI; \cite{Evans2010,KinderlehrerStampacchia1980}) version which is suited to both well-posedness theory and finite element (FE) analysis.  The precise Banach space $\cX$ of surface elevations in this VI is unknown, so for now thus space is abstract.  Admissible surface elevations come from a convex and closed subset of $\cX$:
 \begin{equation}
 \cK = \left\{r \in\cX\,:\,r \ge b\right\}.  \label{eq:be:admissible}
 \end{equation}
-
-We derive the VI form as follows, supposing that $s$ is sufficiently-regular to solve NCP \eqref{eq:be:ncp}.  Let $\Omega_I$ be a (measurable) subset of $\Omega$ on which constraint \eqref{eq:be:ncp:constraint} is inactive, which is to say that glacier ice is present: $\Omega_I \subset \{x\,:\,s(x)>b(x)\}$.  From \eqref{eq:be:ncp:complementarity} it follows by integration that
+The VI form is derived as follows \cite{Bueler2021conservation}, supposing that $s$ is sufficiently-regular to solve NCP \eqref{eq:be:ncp}.  Let $\Omega_I$ be a (measurable) subset of $\Omega$ on which constraint \eqref{eq:be:ncp:constraint} is inactive, i.e.~where glacier ice is present: $\Omega_I \subset \{x\,:\,s(x)>b(x)\}$.  From \eqref{eq:be:ncp:complementarity} it follows by integration that
 \begin{equation}
 \int_{\Omega_I} \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = 0.  \label{eq:inactivetruth}
 \end{equation}
-for all $r\in\cK$.  On the other hand, suppose $\Omega_A \subset \{x\,:\,s(x)=b(x)\} \subset \Omega$ is a subset of the active (ice-free) region.  Note that $r-s=r-b\ge 0$ on $\Omega_A$ for $r\in\cK$, and observe that $\ell^n - b \le 0$ on $\Omega_A$ because otherwise, assuming continuity of $b$, $s^{n-1}$, and $a^n$, a glacier would still be present (or would have appeared) somewhere in $\Omega_A$, a contradiction.  Using $\bu|_s=0$ on $\Omega_A$, i.e.~velocity extension by zero to all of $\Omega$, and because $b-\ell^n \ge 0$ and $r-s\ge 0$ on $\Omega_A$, integration now yields an inequality:
+for all $r\in\cK$.  On the other hand, suppose $\Omega_A \subset \{x\,:\,s(x)=b(x)\} \subset \Omega$ is an active (ice-free) region.  Note that $r-s=r-b\ge 0$ on $\Omega_A$ if $r\in\cK$.  Observe that $\ell^n - b \le 0$ on $\Omega_A$ because otherwise, assuming continuity of $b$, $s^{n-1}$, and $a^n$, a glacier would still be present (or would have appeared) somewhere in $\Omega_A$, a contradiction.  Using $\bu|_s=0$ on $\Omega_A$, extension by zero, and because $b-\ell^n \ge 0$ and $r-s\ge 0$ on $\Omega_A$, integration yields an inequality:
 \begin{equation}
 \int_{\Omega_A} \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = \int_A \left(b - \ell^n\right)\,(r-b) \ge 0.  \label{eq:activetruth}
 \end{equation}
-Almost everywhere on $\Omega$, either land is glacier covered ($\Omega_I$) or ice-free ($\Omega_A$), and so the application of \eqref{eq:inactivetruth} or \eqref{eq:activetruth} justifies the following VI model for $s \in \cK$:
+Almost everywhere on $\Omega$, either land is glacier covered ($\Omega_I$) or it is ice-free ($\Omega_A$).  Thus the application of \eqref{eq:inactivetruth} or \eqref{eq:activetruth} justifies the following VI for $s \in \cK$:
 \begin{equation}
 \int_\Omega \left(s - \Delta t\,\bu|_s \cdot \bn_s\right)\,(r-s) \ge \int_\Omega \ell^n \,(r-s) \quad \text{for all } r \in \cK. \label{eq:be:viearly}
 \end{equation}
-This integral inequality is meaningful in advance of knowing its solution; it does not require knowledge of the ice-covered part of the domain.
+This integral inequality is true in advance of any knowledge of the ice-covered part of the domain.
 	
-Now, the well-posedness of the weak-form Stokes problem \eqref{eq:glenstokes:weak} over 3D domains, and the surface trace bound in Corollary \ref{cor:surfacetracebound}, allows us to create a well-defined map from admissible surface elevations $s$ to the corresponding surface velocity solution $\bu|_s$, as long as $s\in\cK$ is sufficiently regular.  The map is defined via the definition of domain $\Lambda$ from \eqref{eq:icydomain}, using $s$, then the solution of \eqref{eq:glenstokes:weak} over $\Lambda$, and then evaluation of the trace of $\bu$ along $\Gamma_s \subset \partial\Lambda$.  However, note that ``$\bu|_s$'' in the current context is a function of $x$, that is, $\bu|_s(x) = \bu(t_n,x,s(x))$.
+The well-posedness of the weak-form Stokes problem \eqref{eq:glenstokes:weak} over 3D domains $\Lambda$, and the surface trace bound in Corollary \ref{cor:surfacetracebound}, allows us to create a well-defined map from admissible surface elevations $s$ to the corresponding surface velocity solution $\bu|_s$, as long as $s\in\cK$ is sufficiently regular.  The map is defined via \eqref{eq:icydomain}, followed by the solution of \eqref{eq:glenstokes:weak} over $\Lambda$, and then evaluation of the trace of $\bu$ along $\Gamma_s$.  Note that ``$\bu|_s$'' in the current context is a function of $x$: $\bu|_s(x) = \bu(t_n,x,s(x))$.
 
-In fact, we will define the \emph{surface motion map} $\Phi(s) = - \bu|_s\cdot \bn_s$ corresponding to the term in the SKE \eqref{eq:be:ske}.  Constructing a bound for $\Phi$ will help to identify a space $\cX$ in which to seek surface elevation solutions $s$.  With this identification we will also have $\Phi:\cX \to \cX'$ where $\cX'$ is the dual space.
+In fact, we will define the \emph{surface motion map} $\Phi(s) = - \bu|_s\cdot \bn_s$ for this term in the SKE \eqref{eq:be:ske}.  Constructing a bound for $\Phi$ will help to identify a Banach space $\cX$ in which to seek surface elevation solutions $s$.  With this identification we will also have $\Phi:\cX \to \cX'$ where $\cX'$ is the dual space.
 
 Recall from Section \ref{sec:stokes} that $\pp=1+1/\nn \approx 4/3$ and $\pp'=\pp/(\pp-1) \approx 4$ is the conjugate exponent.  Let $[L]>0$ be a representative horizontal scale.  For $\rr>1$, similar to the Sobolev norm given in Section \ref{sec:stokes}, for $q\in W^{1,\rr}(\Omega)$ we define
 \begin{equation}
