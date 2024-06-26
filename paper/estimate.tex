@@ -367,80 +367,74 @@ Almost everywhere on $\Omega$, either land is glacier covered ($\Omega_I$) or it
 \end{equation}
 This integral inequality is true in advance of any knowledge of the ice-covered part of the domain.
 	
-The well-posedness of the weak-form Stokes problem \eqref{eq:glenstokes:weak} over 3D domains $\Lambda$, and the surface trace bound in Corollary \ref{cor:surfacetracebound}, allows us to create a well-defined map from admissible surface elevations $s$ to the corresponding surface velocity solution $\bu|_s$, as long as $s\in\cK$ is sufficiently regular.  The map is defined via \eqref{eq:icydomain}, followed by the solution of \eqref{eq:glenstokes:weak} over $\Lambda$, and then evaluation of the trace of $\bu$ along $\Gamma_s$.  Note that ``$\bu|_s$'' in the current context is a function of $x$: $\bu|_s(x) = \bu(t_n,x,s(x))$.
+The well-posedness of the weak-form Stokes problem \eqref{eq:glenstokes:weak}, over a 3D domain $\Lambda$, and the surface trace bound in Corollary \ref{cor:surfacetracebound}, allows us to create a well-defined map from an admissible surface elevation $s$ to the corresponding surface velocity solution $\bu|_s$, which is a function of $x$, i.e.~$\bu|_s(x) = \bu(t_n,x,s(x))$.  The map is defined via definition \eqref{eq:icydomain}, followed by the solution of \eqref{eq:glenstokes:weak} over $\Lambda$, and then evaluation of the trace of $\bu$ along $\Gamma_s$.  For this map to be well-defined, $s\in\cK$ must be sufficiently regular so that the Corollary can be applied.
 
-In fact, we will define the \emph{surface motion map} $\Phi(s) = - \bu|_s\cdot \bn_s$ for this term in the SKE \eqref{eq:be:ske}.  Constructing a bound for $\Phi$ will help to identify a Banach space $\cX$ in which to seek surface elevation solutions $s$.  With this identification we will also have $\Phi:\cX \to \cX'$ where $\cX'$ is the dual space.
+Denote by $\Phi(s) = - \bu|_s\cdot \bn_s$ the full \emph{surface motion map}, which maps the scalar surface elevation $s$ to a scalar term in the SKE \eqref{eq:be:ske}.  Constructing a bound for $\Phi$ will help to identify a Banach space $\cX$ in which to seek admissible solutions $s$.
 
-Recall from Section \ref{sec:stokes} that $\pp=1+1/\nn \approx 4/3$ and $\pp'=\pp/(\pp-1) \approx 4$ is the conjugate exponent.  Let $[L]>0$ be a representative horizontal scale.  For $\rr>1$, similar to the Sobolev norm given in Section \ref{sec:stokes}, for $q\in W^{1,\rr}(\Omega)$ we define
+Recall from Section \ref{sec:stokes} that $\pp=1+1/\nn \approx 4/3$, and that $\pp'=\pp/(\pp-1) \approx 4$ is the conjugate exponent.  Let $[L]>0$ be the horizontal scale used in the $\cV$ norm (see \eqref{eq:vnorm}).  For $\rr>1$ and $q\in W^{1,\rr}(\Omega)$ we define
 \begin{equation}
 \|q\|_{W^{1,\rr}} = \left(\int_\Omega |q|^\rr\,dx + [L]^\rr \int_\Omega |\grad q|^\rr\,dx\right)^{1/\rr}. \label{eq:norm:Omega}
 \end{equation}
 
-\begin{lemma}[Bound on $\Phi(s)=- \bu|_s\cdot \bn_s$] \label{lem:phibound:early}
-Suppose $s$ is regular enough so that its weak gradient $\grad s$ is a measurable function.  Assume that the bound in inequality \eqref{eq:surfacetracebound} is finite.  Then $\Phi(s)$ is a well-defined measurable function.  Furthermore if $\rr > 2$ and $q\in W^{1,\rr}(\Omega)$ then there is a constant $C(\Lambda,\|s\|_{W^{1,\rr}})$, depending on $\Lambda$ and $s$ but independent of $q$, so that
+\begin{lemma}[Preliminary bound on $\Phi(s)=- \bu|_s\cdot \bn_s$] \label{lem:phibound:early}
+Let $\rr > 2$ and suppose $s\in W^{1,\rr}(\Omega)$ is admissible ($s\ge b$).  With $\Lambda$ defined by \eqref{eq:icydomain}, assume that the hypotheses of Theorem \ref{thm:stokeswellposed} and Corollary \ref{cor:surfacetracebound} apply, so that $\Phi(s)$ is a well-defined measurable function, with \eqref{eq:surfacetracebound} giving a finite bound.  Then there is a constant $C=C(\Lambda,\|s\|_{W^{1,\rr}})$ so that, for all $q\in W^{1,\rr}(\Omega)$,
 \begin{equation}
-\left|\int_\Omega \Phi(s) q\,dx\right| \le C(\Lambda,\|s\|_{W^{1,\rr}})\, \|q\|_{W^{1,\rr}}.  \label{eq:phibound:early}
+\left|\int_\Omega \Phi(s) q\,dx\right| \le C\, \|q\|_{W^{1,\rr}}.  \label{eq:phibound:early}
 \end{equation}
 \end{lemma}
 
-\begin{proof}  Observe that $dS = |\bn_s|\,dx = \sqrt{1+|\grad s|^2}\,dx$ is the surface area element for $\Gamma_s \subset \partial \Lambda$.  The triangle inequality, H\"older's inequality (twice), and the surface trace bound in Corollary \ref{cor:surfacetracebound} therefore give this estimate:
+\begin{proof}  Observe that $dS = |\bn_s|\,dx = \sqrt{1+|\grad s|^2}\,dx$ is the surface area element for $\Gamma_s \subset \partial \Lambda$.  Apply the triangle inequality, H\"older's inequality (twice), and \eqref{eq:surfacetracebound}:
 \begin{align}
 \left|\int_\Omega \Phi(s) q\,dx\right| &\le \int_\Omega \big|\bu|_s\big| |\bn_s| |q|\,dx = \int_\Omega \big|\bu|_s\big| |\bn_s|^{1/\pp} |\bn_s|^{1/\pp'} |q|\,dx \label{eq:phibound:zero} \\
     &\le \left(\int_\Omega \big|\bu|_s\big|^\pp |\bn_s|\,dx\right)^{1/\pp} \left(\int_\Omega |\bn_s| |q|^{\pp'} \,dx\right)^{1/\pp'} \notag \\
     &\le \left(\int_{\Gamma_s} |\bu|^\pp \,dS\right)^{1/\pp} \left(\int_\Omega |\bn_s|^\rr \,dx\right)^{1/(\pp'\rr)} \left(\int_\Omega |q|^{\pp'\rr'} \,dx\right)^{1/(\pp'\rr')} \notag \\
-    &\le c_\pp(\Lambda)^{1/\pp} \left(\int_\Omega \left(1+|\grad s|^2\right)^{\rr/2}\,dx\right)^{1/(\pp'\rr)} \|q\|_{L^{\pp'\rr'}}. \notag
+    &\le C_1^{1/\pp} \left(\int_\Omega \left(1+|\grad s|^2\right)^{\rr/2}\,dx\right)^{1/(\pp'\rr)} \|q\|_{L^{\pp'\rr'}}. \notag
 \end{align}
-Here $c_\pp(\Lambda)$ denotes the bound in inequality \eqref{eq:surfacetracebound}.  Note that for $\alpha\ge 0$ we have $(1+\alpha)^{\rr/2} \le 2^{\rr/2} (1+\alpha^{\rr/2})$ so
-\begin{equation}
-\left|\int_\Omega \Phi(s) q\,dx\right| \le 2^{1/(2\pp')} c_\pp(\Lambda)^{1/\pp} \left(|\Omega| + \|s\|_{W^{1,\rr}}^\rr\right)^{1/(\pp'\rr)} \|q\|_{L^{\pp'\rr'}}. \label{eq:phibound:one}
-\end{equation}
-Since $\rr$ exceeds the dimension of $\Omega$, by the Sobolev inequality \cite[Theorem 5.6.5]{Evans2010} we have $\|q\|_{L^\infty} \le c_\rr \|q\|_{W^{1,\rr}}$ for some $c_\rr>0$, and so
-\begin{equation}
-\|q\|_{L^{\pp'\rr'}} \le c_\rr |\Omega|^{1/(\pp'\rr')} \|q\|_{W^{1,\rr}}. \label{eq:phibound:two}
-\end{equation}
-Inequality \eqref{eq:phibound:early} follows by combining \eqref{eq:phibound:one} and \eqref{eq:phibound:two}.
+(Here $C_1$ is the bound from \eqref{eq:surfacetracebound}.)  Note that if $\alpha\ge 0$ then $(1+\alpha)^{\rr/2} \le 2^{(\rr-2)/2} (1+\alpha^{\rr/2})$, so
+\begin{align}
+\left|\int_\Omega \Phi(s) q\,dx\right| &\le C_1^{1/\pp} \left(2^{(\rr-2)/2} \int_\Omega 1 + |\grad s|^\rr\,dx\right)^{1/(\pp'\rr)} \|q\|_{L^{\pp'\rr'}} \label{eq:phibound:one} \\
+  &\le C_2 \left(|\Omega| + [L]^{-\rr}\|s\|_{W^{1,\rr}}^\rr\right)^{1/(\pp'\rr)} \|q\|_{L^{\pp'\rr'}} \notag
+\end{align}
+for a constant $C_2$.  Since $\rr$ exceeds the dimension of $\Omega$, by Sobolev's inequality \cite[Theorem 5.6.5]{Evans2010} we have $\|q\|_{L^\infty} \le C_3 \|q\|_{W^{1,\rr}}$, and so $\|q\|_{L^{\pp'\rr'}} \le C_3 |\Omega|^{1/(\pp'\rr')} \|q\|_{W^{1,\rr}}$.  Inequality \eqref{eq:phibound:early} then follows from \eqref{eq:phibound:one}.
 \end{proof}
 
-Greater care with Sobolev inequalities would likely weaken the assumption $\rr>2$.  However, since $\pp'\rr'>4$ using Glen exponent $\nn=3$, the above argument requires $q$ to be nearly bounded anyway.
+The key assumption in Lemma \ref{lem:phibound:early} is that $s\in W^{1,\rr}(\Omega)$ implies that the domain $\Lambda$ is nice enough so that Corollary \ref{cor:surfacetracebound} gives a finite bound.  The key conclusion is that $\Phi(s) \in \left(W^{1,\rr}(\Omega)\right)'$ is in the dual space.  This conclusion will be critical in analyzing the weak form of NCP \eqref{eq:be:ncp}.
 
-Based on the above calculations, we assume $\rr>2$ and define
+For $\rr>2$ the conjugate exponent $\rr'=\rr/(\rr-1)$ satisfies $1<\rr'<2$.  We conjecture next that the $L^{\rr'}$-norm of the surface trace $\bu|_s$ is Lipschitz as a function of $s \in W^{1,\rr}(\Omega)$.  In reading the Conjecture, observe that $\bu|_s$ refers to the zero-extended surface trace of the Stokes solution, as a function of $x\in\Omega$.  While $\bu|_s$ is a measurable function over $\Omega$, we do not assume it is continuous.
+
+\begin{conjecture} \label{conj:a}  There exists $\rr>2$ with the following two properties:  \emph{(i)} If $s\in W^{1,\rr}(\Omega)$ is admissible ($s\ge b$) then the conclusion of Theorem \ref{thm:stokeswellposed} applies, giving a well-defined surface velocity $\bu|_s$.  \emph{(ii)} If also $r\in W^{1,\rr}(\Omega)$ is admissible ($r\ge b$), yielding a (generally) different surface velocity $\bu|_r$, then there exists $C$, independent of $s$ and $r$, such that
 \begin{equation}
-\cX = W^{1,\rr}(\Omega). \label{eq:defineX}
-\end{equation}
-
-For admissible $s,b\in \cX$, such that $s\ge b$, we assume from now on that the weak form Stokes problem \eqref{eq:glenstokes:weak} over the domain $\Lambda$, defined using $b$ and $s$ (definition \eqref{eq:icydomain}), has a unique solution.  That is, we assume that Theorem \ref{thm:stokeswellposed} applies on the 3D domain $\Lambda$ built from $b$ and $s$.
-
-Note that the conjugate exponent $\rr'=\rr/(\rr-1)$ satisfies $1<\rr'<2$.  We conjecture next that the $L^{\rr'}$-norm of the surface trace $\bu|_s$ is Lipschitz as a function of $s \in \cX$.  Observer that notation $\bu|_s$ refers to the zero-extended surface trace of this Stokes solution, as a function of $x\in\Omega$.  In this usage, $\bu|_s$ depends on the ice geometry including the bed elevation $b$.  Note that, by Corollary \ref{cor:surfacetracebound}, $\bu|_s$ a measurable function over $\Omega$, but we do not assume it is continuous.
-
-\begin{conjecture} \label{conj:a}  There exists $\rr>2$ and a constant $C>0$ so that if $\cX = W^{1,\rr}(\Omega)$, $b\in \cX$ is any bed elevation, and $s,r\in\cX$ are (generally) different surface elevations, admissible relative to $b$, defining (generally) different ice geometries, then
-\begin{equation}
-\big\|\bu|_s - \bu|_r\big\|_{L^{\rr'}} \le C \|s-r\|_{\cX} \label{eq:ulipschitz}
+\big\|\bu|_s - \bu|_r\big\|_{L^{\rr'}} \le C \|s-r\|_{W^{1,\rr}} \label{eq:ulipschitz}
 \end{equation}
 where $L^{\rr'}=L^{\rr'}(\Omega;\RR^2)$.
 \end{conjecture}
 
-Recall definition \eqref{eq:be:admissible} of the admissible subset $\cK \subset \cX$.  The essential consequences of Conjecture \ref{conj:a}, proven next, are that the surface motion map $\Phi(s)=-\bu|_s\cdot \bn_s$ has known domain and range, and that this map is Lipschitz continuous.
+From now on we assume Conjecture \ref{conj:a} holds for a particular $\rr>2$, and we define
+\begin{equation}
+\cX = W^{1,\rr}(\Omega), \label{eq:defineX}
+\end{equation}
+so that definition \eqref{eq:be:admissible} describes the admissible subset $\cK \subset \cX$.  Now we prove that the surface motion map $\Phi(s)=-\bu|_s\cdot \bn_s$ in the SKE has known domain and range, and that this map is Lipschitz continuous.
 
 \begin{lemma} \label{lem:philipschitz}
-Fix $b \in \cX$ and let $s\in\cK$.  If Conjecture \ref{conj:a} applies then there exists $C>0$ so that for all $q\in\cX$,
+Assume Conjecture \ref{conj:a}.  Fix $b \in \cX$ and let $s\in\cK$.  Then there exists $C>0$ so that for all $q\in\cX$,
 \begin{equation}
 \left|\int_\Omega \Phi(s) q\,dx\right| \le C\, \|s-b\|_{\cX} \|q\|_{\cX} \label{eq:phibound}
 \end{equation}
-so $\Phi(s)\in\cX'$.  Furthermore, the map $\Phi:\cK\to\cX'$ is Lipschitz on bounded subsets of $\cK$.  That is, for each radius $\rho>0$ there is $C(\rho)>0$ so that if $s,r\in B_\rho \cap \cK = \{t\in \cK\,:\,\|t\|_{\cX} \le \rho\}$ and $q\in\cX$ then
+so $\Phi(s)\in\cX'$.  Furthermore, the map $\Phi:\cK\to\cX'$ is Lipschitz on bounded subsets of $\cK$, that is, for each radius $\rho>0$ there is $C(\rho)>0$ so that if $s,r\in B_\rho \cap \cK = \{t\in \cK\,:\,\|t\|_{\cX} \le \rho\}$ and $q\in\cX$ then
 \begin{equation}
 \left|\int_\Omega \left(\Phi(s) - \Phi(r)\right) q\,dx\right| \le C(\rho)\, \|s-r\|_{\cX} \|q\|_{\cX}  \label{eq:philipschitz}
 \end{equation}
 \end{lemma}
 
 \begin{proof}
-We start by proving \eqref{eq:philipschitz}.  Suppose $s,r\in\cK$.  Add and subtract $\bu|_r \cdot \bn_s$ and apply triangle inequalities including $|\bn_s|=\left(1+|\grad s|^2\right)^{1/2} \le 1 + |\grad s|$:
+We start by proving \eqref{eq:philipschitz}.  Suppose $s,r\in\cK$.  Add and subtract $\bu|_r \cdot \bn_s$, and apply triangle inequalities, including $|\bn_s|=\left(1+|\grad s|^2\right)^{1/2} \le 1 + |\grad s|$:
 \begin{align}
-\bigg|\int_\Omega \big(\Phi(s) - &\Phi(r)\big) q\,dx\bigg| \le \int_\Omega \Big|\bu|_s\cdot \bn_s - \bu|_r \cdot \bn_r\Big| |q|\,dx \\
+\bigg|\int_\Omega \big(\Phi(s) - \Phi(r)\big) q\,dx\bigg| &\le \int_\Omega \Big|\bu|_s\cdot \bn_s - \bu|_r \cdot \bn_r\Big| |q|\,dx \\
     &\le \int_\Omega \big|\bu|_s - \bu|_r\big| |\bn_s| |q|\,dx + \int_\Omega \big|\bu|_r\big| |\bn_s-\bn_r| |q|\,dx \notag \\
     &\le \int_\Omega \big|\bu|_s - \bu|_r\big| |q|\,dx + \int_\Omega \big|\bu|_s - \bu|_r\big| |\grad s| |q|\,dx \notag \\
     &\qquad\qquad + \int_\Omega \big|\bu|_r\big| |\grad s-\grad r| |q|\,dx \notag
 \end{align}
-Apply H\"older's inequality to each of the three integrals; use definition \eqref{eq:norm:Omega}:
+Recalling definition \eqref{eq:norm:Omega}, apply H\"older's inequality to each of these three integrals:
 \begin{align}
 \int_\Omega \big|\bu|_s - \bu|_r\big| |q|\,dx &\le \big\|\bu|_s - \bu|_r\big\|_{L^{\rr'}} \|q\|_{L^{\rr}}, \\
 \int_\Omega \big|\bu|_s - \bu|_r\big| |\grad s| |q|\,dx &\le [L]^{-\rr} \left(\int_\Omega \big|\bu|_s - \bu|_r\big|^{\rr'} |q|^{\rr'}\, dx\right)^{1/\rr'} \|s\|_{\cX} \\
@@ -458,18 +452,18 @@ Now assume $s,r,b\in B_\rho\cap \cK$.  Then \eqref{eq:philipschitz} follows with
 To show \eqref{eq:phibound} let $r=b$ in \eqref{eq:philipschitz}.
 \end{proof}
 
-Bound \eqref{eq:phibound} includes the norm of the ice thickness $s-b$.  By contrast, the constant in Lemma \ref{lem:phibound:early} depends on other geometric properties of the domain $\Lambda$, properties presumably including the thickness, and presumably other geometric features.  In this sense Conjecture \ref{conj:a} is stronger than the hypotheses in Lemma \ref{lem:phibound:early}.
+Bound \eqref{eq:phibound} includes the norm of the ice thickness $s-b$.  By contrast, the constant in Lemma \ref{lem:phibound:early} depends on other geometric properties of the domain $\Lambda$, properties presumably including the thickness and perhaps other geometric features.  In this sense Conjecture \ref{conj:a} is stronger than the hypotheses in Lemma \ref{lem:phibound:early}.
 
-Using the last Lemma we can define a weak form operator which puts our backward Euler time step VI \eqref{eq:be:viearly} in clean, and mathematically precise, form.  If $s\in\cK$ and $q\in\cX$ then we define $F_{\Delta t}:\cK\to\cX'$:
+Using Lemma \ref{lem:philipschitz}, we now define a weak form operator which puts our backward Euler time step VI \eqref{eq:be:viearly} in clean, and mathematically precise, form.  If $s\in\cK$ and $q\in\cX$ then we define $F_{\Delta t}:\cK\to\cX'$:
 \begin{align}
 \ip{F_{\Delta t}(s)}{q} &= \Delta t\,\ip{\Phi(s)}{q} + \int_\Omega s q \label{eq:be:Fdefine}\\
     &= \int_\Omega \left(s - \Delta t\, \bu|_s \cdot \bn_s\right) q. \notag
 \end{align}
-Lemma \ref{lem:philipschitz} says that if Conjecture \ref{conj:a} holds then this operator is well-defined and Lipschitz on bounded subsets.  We also assume\footnote{This restriction is not restrictive.  For example, the SMB function $a^n(x)$ could be concentrated in a delta function.} that the source term $\ell^n$, defined in \eqref{eq:be:source}, is in the dual space $\cX'$.  Then we seek $s = s^n \in \cK$ so that
+Lemma \ref{lem:philipschitz} (and Conjecture \ref{conj:a}) says that this operator is well-defined and Lipschitz on bounded subsets.  We also assume that the source term $\ell^n$, defined in \eqref{eq:be:source}, is in the dual space $\cX'$.  Then we will seek $s = s^n \in \cK$ so that
 \begin{equation}
 \ip{F_{\Delta t}(s)}{r-s} \ge \ip{\ell^n}{r-s} \quad \text{for all } r \in \cK. \label{eq:be:vi}
 \end{equation}
-This VI is the preferred weak form of our implicit time-step problem for theoretical and FE considerations.  The reader should keep in mind its corresponding strong-form NCP statement \eqref{eq:be:ncp}.
+This VI is the weak form of the implicit time-step problem.  While a VI is preferred for theoretical and FE considerations, the reader should keep its strong-form NCP \eqref{eq:be:ncp} in mind as well.
 
 
 \section{Theoretical considerations for VI problem~(\ref{eq:be:vi})} \label{sec:theory}
