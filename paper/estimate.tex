@@ -560,15 +560,17 @@ Theorem \ref{thm:stepwellposed} addresses the well-posedness of a single implici
 While practitioners of numerical ice sheet and glacier modeling using Stokes dynamics must expect conjectures like the above to hold, they may be difficult to prove despite the results in Sections \ref{sec:stokes} and \ref{sec:model}.  That greater progress has been made in the SIA case \cite{Calvoetal2003,JouvetBueler2012,PiersantiTemam2023} might be of assistance.  However, the geometry error bounds and results in the next two Sections only require Conjectures \ref{conj:a} and \ref{conj:b}.
 
 
-\section{Abstract error estimate} \label{sec:abstractestimate}
+\section{Abstract error estimate for a finite element approximation} \label{sec:abstractestimate}
 
-We now consider the FE approximation of an abstract variational inequality (VI) problem.  We will return to \eqref{eq:be:vi} in Section \ref{sec:application}.  Let $\cV$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cV'$.  Denote the dual pairing of $\phi \in \cV'$ and $v\in\cV$ by $\ip{\phi}{v} = \phi(v)$, and define the (Banach space) norm on $\cV'$ by $\|\phi\|_{\cV'} = \sup_{\|v\|=1} |\!\ip{\phi}{v}\!|$.  Let $\cK \subset \cV$ be a nonempty, closed, and convex subset, the constraint set; elements are said to be admissible.  For a continuous, but generally nonlinear, operator $f:\cK \to \cV'$, and a linear source $\ell\in \cV'$, the VI problem is to find $u\in \cK$ such that
+We now consider the FE approximation of an abstract variational inequality (VI) problem.  We will return to glaciological VI problem \eqref{eq:be:vi} in Section \ref{sec:application}.
+
+Let $\cV$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cV'$.  Denote the dual pairing of $\phi \in \cV'$ and $v\in\cV$ by $\ip{\phi}{v} = \phi(v)$, and define the (Banach space) norm on $\cV'$ by $\|\phi\|_{\cV'} = \sup_{\|v\|=1} |\!\ip{\phi}{v}\!|$.  Let $\cK \subset \cV$ be a nonempty, closed, and convex subset, the constraint set; elements are said to be admissible.  For a continuous, but generally nonlinear, operator $f:\cK \to \cV'$, and a linear source $\ell\in \cV'$, the VI problem is to find $u\in \cK$ such that
 \begin{equation}
 \ip{f(u)}{v-u} \ge \ip{\ell}{v-u} \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
 The best known example of such a problem is the obstacle problem for the Laplacian operator; see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for its theory and FE analysis.
 
-The following definitions are standard \cite[Chapter III]{KinderlehrerStampacchia1980}.
+The following definitions are standard \cite[Chapter III]{KinderlehrerStampacchia1980}.  The definition of $\pp$-coercive has already appeared in Conjecture \ref{conj:b} (and in \cite{Bueler2021conservation}).
 
 \begin{definition} \label{def:monotonepcoercive}
 An operator $f:\cK \to \cV'$ is said to be \emph{monotone} if
@@ -585,8 +587,10 @@ Let $\pp>1$.  The operator is \emph{$\pp$-coercive \cite{Bueler2021conservation}
 \end{equation}
 \end{definition}
 
-It is well-known that if $f:\cK \to \cV'$ is monotone and coercive, and also continuous on finite-dimensional subspaces, then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then a solution is unique.  If $f$ is $\pp$-coercive then it coercive and strictly monotone.  It follows that $\pp$-coercivity and continuity yield well-posedness for \eqref{eq:vi}.
+It is well-known that if $f:\cK \to \cV'$ is monotone and coercive, and also continuous on finite-dimensional subspaces, then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then the solution is unique.  If $f$ is $\pp$-coercive then it coercive and strictly monotone, so $\pp$-coercivity and continuity yield well-posedness for \eqref{eq:vi}.
 % \cite{Peral1997} uniform continuity over bounded sets for p-Laplacian: Thm A.0.6
+
+The following definition appeared in Conjecture \ref{conj:a}.
 
 \begin{definition} \label{def:lipshitz}
 For $\rho>0$ let $B_\rho = \{v\in \cV\,:\,\|v\|\le \rho\}$.  We say $f:\cK \to \cV'$ is \emph{Lipshitz on bounded subsets of $\cK$} if for every $\rho>0$ there is $C(\rho)>0$ so that if $v,w \in B_\rho \cap \cK$ and $z\in\cV$ then $|\ip{f(v)-f(w)}{z}| \le C(\rho) \|v-w\| \|z\|$, equivalently
