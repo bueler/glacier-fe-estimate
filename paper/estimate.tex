@@ -512,13 +512,13 @@ Here $\nn\approx 3$ is Glen's exponent \cite{GreveBlatter2009}, and the constant
 
 Well-posedness results are partially known for SIA models, though with ice geometry usually parameterized by the ice thickness.  For $H=s-b$, let $\tilde{\cK} = \{H\ge 0\}$ be the thickness constraint set.   For steady SIA models with (otherwise arbitrary) smooth bed elevations, existence is known with $\eta = H^{2\qq/(\qq-1)} \in W^{1,\qq}(\Omega)$ for $\qq=\nn+1$ \cite{JouvetBueler2012}.  (However, the set of functions whose $\rr$th power is in a Sobolev space is not generally even a vector space.)  In time-dependent cases existence and uniqueness is known, but only when the bedrock is flat \cite{Calvoetal2003,PiersantiTemam2023}.
 
-The regularity exhibited by solutions to  will not fully persist in solutions to the Stokes-based VI problem \eqref{eq:be:vi}.  The surface response in a Stokes model is known to have a different small-wavelength limit \cite{Pattynetal2008} versus \eqref{eq:ske:sia}, though longer wavelengths are handled correctly by the SIA.
+The regularity exhibited by solutions to  will not fully persist in solutions to the Stokes-based VI problem \eqref{eq:be:vi}.  The surface response in a Stokes model is known to have a different small-wavelength limit \cite{Pattynetal2008}, versus model \eqref{eq:ske:sia}, though longer wavelengths are handled correctly by the SIA.
 
 \subsection{The problem is not of optimization type} \label{subsec:notopt}  FIXME porous medium character, i.e.~coercivity blocked by thickness (power) scaling of operator; calculation shows weak form op $\ip{F(u)}{v} = F(u)[v] = \int u \grad u\cdot \grad v$ does not have symmetry $F'(u)[v,w] = F'(u)[w,v]$ which would arise if $F(u)=J'(u)$ for objective $J(u) \in \RR$
 
 FIXME physically, thin ice does not flow much regardless of surface slope, which is reflected in $(s-b)^4$ coefficient in surface velocity formula
 
-\subsection{Physical reasoning regarding margin/terminus shape} \label{subsec:margin}  The theoretically predicted shape of the grounded margin of a glacier (Figure \ref{fig:margins}) is not so clear, but the question relates to which Sobolev spaces are credible for claims of well-posedness.  The SIA theory suggests root-type (fractional-power) shapes \cite{Bueleretal2005} for the marginal surface elevation, with unbounded gradients.  By contrast, a ``wedge'' margin shape with a bounded gradient has been hypothesized \cite[for example]{EchelmeyerKamb1986}, which would allow $s\in W^{1,\rr}(\Omega)$.  Actually, in the vicinity of any steep ice margin, especially on steep bedrock features, real glacier ice can generate overhangs which violate the assumption that a surface elevation function is even meaningful, and similarly the bedrock can overhang.  Reality itself is even more complicated, with fractures, crevasses, and cliffs commonly found in glacier margins, but modeling such features escapes from our viscous fluid paradigm.
+\subsection{Physical reasoning regarding margin/terminus shape} \label{subsec:margin}  The theoretically predicted shape of the grounded margin of a glacier (Figure \ref{fig:margins}) is not so clear, but it relates to which Sobolev spaces might allow well-posedness.  The SIA theory suggests root-type (fractional-power) shapes \cite{Bueleretal2005} for the marginal surface elevation, with unbounded gradients.  By contrast, a ``wedge'' margin shape with a bounded gradient has been hypothesized \cite[for example]{EchelmeyerKamb1986}, which would allow $s\in W^{1,\rr}(\Omega)$.  Reality is more complicated.  In the vicinity of any steep ice margin, especially on steep bedrock features, real glacier ice can generate overhangs which violate the assumption that a surface elevation function is meaningful, and similarly the bedrock can overhang.  Fractures, crevasses, and cliffs are commonly found in glacier margins, but modeling such features escapes from the viscous fluid paradigm.
 
 \begin{figure}
 %FIXME replace with better figure
@@ -529,21 +529,35 @@ FIXME physically, thin ice does not flow much regardless of surface slope, which
 \label{fig:margins}
 \end{figure}
 
-Because margins are small features compared to the overall scale of glaciers and ice sheets, almost all modeling literature ignores overhangs and assumes instead that surface and bed elevation functions are well-defined; see \cite{IsaacStadlerGhattas2015,Jouvetetal2008,LofgrenAhlkronaHelanow2022,WirbelJarosch2020} among many examples.  Extending our Stokes-based viscous models by allowing overhangs, and furthermore supplementing the momentum conservation model with an additional advected damage variable \cite{PralongFunk2005}, so that ice-cliff calving can occur via a stress-based failure criterion, might provide a mechanism to explain how (nearly) well-defined surface elevation and thickness functions arise as solutions to the kind of models considered in this paper.  Allowing our glacier models to form cliffs might finesse the question of which is the right Sobolev space for surface elevation functions.
+However, because margins are small features compared to the overall scale of glaciers and ice sheets, almost all modeling literature ignores overhangs and assumes instead that surface and bed elevation functions are well-defined; see \cite{IsaacStadlerGhattas2015,Jouvetetal2008,LofgrenAhlkronaHelanow2022,WirbelJarosch2020} among many examples.  Extending Stokes-based viscous models by allowing overhangs, and supplementing the momentum conservation model with an additional advected damage variable \cite{PralongFunk2005}, so that ice-cliff calving can occur via a stress-failure criterion, might provide a mechanism to explain how (nearly) well-defined surface elevation and thickness functions arise as solutions to the kind of models considered in this paper.
 
-\subsection{Conjectural well-posedness for the continuum problem} \label{subsec:conjecture} Subsections \ref{subsec:explicit}--\ref{subsec:margin} above deploy imperfect arguments to explain why VI problem \eqref{eq:be:vi} is the one we will concentrate on.  With the understanding that this problem is non-trivial---e.g.~it is neither a simple advection or an optimization problem---we now give our best guess regarding the final form of the continuum model.
+\subsection{Conjectural well-posedness for the continuum problem} \label{subsec:conjecture} Subsections \ref{subsec:explicit}--\ref{subsec:margin} have deployed imperfect arguments to explain why VI problem \eqref{eq:be:vi} could be well-posed.  With the understanding that this problem is non-trivial, for reasons sketched already, we now propose a mathematically-precise conjectural framework for well-posedness.  It uses a conjecture that the operator assigns sufficiently different results to inputs which are different in norm.
 
 \begin{conjecture} \label{conj:b}
-There exists an exponent $\rr$ so that if $\cV = W^{1,\rr}(\Omega)$ then, for all sufficiently-small values $\Delta t>0$, there exists a unique solution $s \in \cK = \{r\ge b\} \subset \cV$ to VI problem \eqref{eq:be:vi}.
+There exists $\rr>2$ so that Conjecture \ref{conj:a} holds and, with $\cX = W^{1,\rr}(\Omega)$ and $\cK=\{r\in\cX\,:\,r\ge b\}$ as before, furthermore it is true that, for each sufficiently-small step size $\Delta t>0$, there is a constant $\alpha>0$ and a power $\qq>1$ so that the operator in \eqref{eq:be:vi} satisfies
+\begin{equation}
+\ip{F_{\Delta t}(r) - F_{\Delta t}(s)}{r-s} \ge \alpha \|r-s\|_{\cX}^\qq \qquad \text{for all } r,s\in\cK. \label{eq:conj:b}
+\end{equation}
 \end{conjecture}
 
-Conjecture \ref{conj:b} addresses the well-posedness of a single implicit time-step problem, and this is not sufficient to show well-posedness of the time-dependent problem.  Without making a further formal conjecture, versions of the following propositions may also true:
-\renewcommand{\labelenumi}{\emph{\roman{enumi})}}
-\begin{enumerate}
-\item The solution $s$ of \eqref{eq:be:vi} is sufficiently regular so that $\ell^{n+1} \in \cV'$ is well-defined for the next step, and
-\item the parabolic VI problem \cite{Glowinski1984} corresponding to time-dependent NCP \eqref{eq:ncp} is well-posed.
-\end{enumerate}
-While practitioners of numerical ice sheet and glacier modeling using Stokes dynamics expects facts like these to hold, they are likely to be difficult to prove despite progress in the SIA case, especially on \emph{ii)} \cite{Calvoetal2003,PiersantiTemam2023}, and despite the results in Sections \ref{sec:stokes} and \ref{sec:model}.  On the other hand, the results in the next two Sections only require Conjecture \ref{conj:b}.
+Inequality \eqref{eq:conj:b} is called $\qq$-\emph{coercivity}.  In the abstract VI context considered in Section \ref{sec:abstractestimate}, the fact that $F_{\Delta t}$ is both Lipschitz continuous (Lemma \ref{lem:philipschitz}) and $\qq$-coercive, over a closed and convex subset $\cK$ of a Banach space $\cX$, shows that the VI problem \eqref{eq:be:vi} is well-posed.  Thus Conjectures \ref{conj:a} and \ref{conj:b} are mathematically sufficient for well-posedness of each implicit time step problem.  We state this as a theorem.
+
+\begin{theorem} \label{thm:stepwellposed}
+Assume Conjectures \ref{conj:a} and \ref{conj:b} hold for $\rr>2$ and $\Delta t>0$.  Fix a bed elevation $b \in \cX=W^{1,\rr}(\Omega)$, which defines $\cK=\{r\in \cX\,:\,r\ge b\}$.  Suppose that the SMB function $a(t,x)$ is in $C([0,T]; L^{\rr'}(\Omega))$.  Suppose $s^{n-1}\in\cK$.  Then there exists a unique surface elevation $s\in\cK$ satisfying VI \eqref{eq:be:vi}.
+\end{theorem}
+
+\begin{proof}
+Since $F_{\Delta t}$ is $\qq$-coercive it is also coercive and strictly-monotone (Section \ref{sec:abstractestimate}).  Let $q\in\cX$.  From definition \eqref{eq:be:source}, the given hypothesis on $a$, and H\"older's inequality,
+\begin{equation}
+|\ip{\ell^n}{q}| \le \left(\|s^{n-1}\|_{L^{\rr'}} + \Delta t \max_{t\in[t_{n-1},t_n]} \|a(t,\cdot)\|_{L^{\rr'}}\right) \|q\|_{L^\rr}.
+\label{eq:sourcetermbound}
+\end{equation}
+Because $\|s^{n-1}\|_{L^{\rr'}}$ is finite by Sobolev's inequality, and because $\|q\|_{L^\rr} \le \|q\|_{\cX}$, it follows that the source term $\ell^n$ is in the dual space $\cX'$.  Now Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows existence, and strict monotonicity shows uniqueness.
+\end{proof}
+
+Theorem \ref{thm:stepwellposed} addresses the well-posedness of a single implicit time-step problem over $[t_{n-1},t_n]$.  It is not sufficient to show well-posedness of the time-dependent problem over $[0,T]$.  The parabolic VI problem corresponding to the time-dependent NCP \eqref{eq:ncp} might also be well-posed, and this would be the minimum to analyze whether the implicit steps described here converge in the $\Delta t\to 0$ limit.
+
+While practitioners of numerical ice sheet and glacier modeling using Stokes dynamics must expect conjectures like the above to hold, they may be difficult to prove despite the results in Sections \ref{sec:stokes} and \ref{sec:model}.  That greater progress has been made in the SIA case \cite{Calvoetal2003,JouvetBueler2012,PiersantiTemam2023} might be of assistance.  However, the geometry error bounds and results in the next two Sections only require Conjectures \ref{conj:a} and \ref{conj:b}.
 
 
 \section{Abstract error estimate} \label{sec:abstractestimate}
