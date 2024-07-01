@@ -452,7 +452,7 @@ Now assume $s,r,b\in B_\rho\cap \cK$.  Then \eqref{eq:philipschitz} follows with
 
 With the above tools we can now define a weak form operator which puts the backward Euler time step VI \eqref{eq:be:viearly} into a clean and mathematically-precise form.  If $s\in\cK$ and $q\in\cX$ then we define $F_{\Delta t}:\cK\to\cX'$:
 \begin{align}
-F_{\Delta t}(s)[q] &= \Delta t\,\ip{\Phi(s)}{q} + \int_\Omega s q \label{eq:be:Fdefine}\\
+F_{\Delta t}(s)[q] &= \Delta t\,\Phi(s)[q] + \int_\Omega s q \label{eq:be:Fdefine}\\
     &= \int_\Omega \left(s - \Delta t\, \bu|_s \cdot \bn_s\right) q. \notag
 \end{align}
 Conjecture \ref{conj:a} and Lemma \ref{lem:philipschitz} say that this operator is well-defined and Lipschitz on bounded subsets, with a constant which depends linearly on $\Delta t$.  We also assume that the source term $\ell^n$, defined in \eqref{eq:be:source}, is in $\cX'$.  Then we will seek $s = s^n \in \cK$ so that
@@ -525,33 +525,41 @@ FIXME physically, thin ice does not flow much regardless of surface slope, which
 
 Because margins are small features compared to the overall scale of glaciers and ice sheets, almost all modeling literature ignores overhangs and assumes instead that surface and bed elevation functions are well-defined; see \cite{IsaacStadlerGhattas2015,Jouvetetal2008,LofgrenAhlkronaHelanow2022,WirbelJarosch2020} among many examples.  Extending Stokes-based viscous models by allowing overhangs, and supplementing the momentum conservation model with an additional advected damage variable \cite{PralongFunk2005}, so that ice-cliff calving can occur via a stress-failure criterion, might provide a mechanism to explain how (nearly) well-defined surface elevation and thickness functions arise as solutions to the kind of models considered in this paper.
 
-\subsection{Conjectural well-posedness for the continuum problem} \label{subsec:conjecture} Subsections \ref{subsec:noflow}--\ref{subsec:margin} have deployed imperfect arguments to explain why the backward Euler VI problem \eqref{eq:be:vi} could be well-posed, or why other problems are less promising.  We now propose a mathematically-precise conjectural framework for well-posedness of \eqref{eq:be:vi} based upon a conjecture that the surface motion map $\Phi(s) = -\bu|_s\cdot \bn_s$ assigns sufficiently different results to inputs which are different in norm.
+\subsection{Conjectural well-posedness for the continuum problem} \label{subsec:conjecture} Subsections \ref{subsec:noflow}--\ref{subsec:margin} have deployed various imperfect arguments to explain why the backward Euler VI problem \eqref{eq:be:vi} could be well-posed, or at least why other approaches are less promising.  We now state a mathematically-precise conjectural framework for well-posedness of this problem based upon the idea that the surface motion map $\Phi(s) = -\bu|_s\cdot \bn_s$ assigns significantly different results to inputs which are different in norm.
 
-\begin{conjecture} \label{conj:b}
-There exists $\rr>2$ so that Conjecture \ref{conj:a} holds and, with $\cX = W^{1,\rr}(\Omega)$ and $\cK=\{r\in\cX\,:\,r\ge b\}$ as before, furthermore it is true that, for each sufficiently-small step size $\Delta t>0$, there is a constant $\alpha>0$ and a power $\qq>1$ so that the operator in \eqref{eq:be:vi} satisfies
+\begin{conjecture} \label{conj:b}  For $\rr>2$ such that Conjecture \ref{conj:a} holds, let $\cX = W^{1,\rr}(\Omega)$.  Fix $b\in\cX$ and let $\cK=\{r\in\cX\,:\,r\ge b\}$.  Recall $\Phi:\cK\to\cX'$ is then well-defined by Lemma \ref{lem:philipschitz}.  Then there are constants $\alpha>0$ and $\qq>1$ so that
 \begin{equation}
-\ip{F_{\Delta t}(r) - F_{\Delta t}(s)}{r-s} \ge \alpha \|r-s\|_{\cX}^\qq \qquad \text{for all } r,s\in\cK. \label{eq:conj:b}
+\left(\Phi(r) - \Phi(s)\right)[r-s] \ge \alpha \|r-s\|_{\cX}^\qq \qquad \text{for all } r,s\in\cK. \label{eq:conj:b}
 \end{equation}
 \end{conjecture}
 
-Inequality \eqref{eq:conj:b} is called $\qq$-\emph{coercivity}.  In the abstract VI context considered in Section \ref{sec:abstractestimate}, the fact that $F_{\Delta t}$ is both Lipschitz continuous (Lemma \ref{lem:philipschitz}) and $\qq$-coercive, over a closed and convex subset $\cK$ of a Banach space $\cX$, shows that the VI problem \eqref{eq:be:vi} is well-posed.  Thus Conjectures \ref{conj:a} and \ref{conj:b} are mathematically sufficient for well-posedness of each implicit time step problem.  We state this as a theorem.
+In Section \ref{sec:abstractestimate}, inequality \eqref{eq:conj:b} will be called $\qq$-\emph{coercivity} of $\Phi$ over $\cK$.  In the abstract VI context of that Section, if $F_{\Delta t}$ is both Lipschitz continuous (Lemma \ref{lem:philipschitz}) and $\qq$-coercive, over a closed and convex subset $\cK$ of a Banach space $\cX$, then \eqref{eq:be:vi} is well-posed.  This is what we prove next, namely that Conjectures \ref{conj:a} and \ref{conj:b} are sufficient for well-posedness of each implicit time step VI problem \eqref{eq:be:vi}.
 
-\begin{theorem} \label{thm:stepwellposed}
-Assume Conjectures \ref{conj:a} and \ref{conj:b} hold for $\rr>2$ and $\Delta t>0$.  Fix a bed elevation $b \in \cX=W^{1,\rr}(\Omega)$, which defines $\cK=\{r\in \cX\,:\,r\ge b\}$.  Suppose that the SMB function $a(t,x)$ is in $C([0,T]; L^{\rr'}(\Omega))$.  Suppose $s^{n-1}\in\cK$.  Then there exists a unique surface elevation $s\in\cK$ satisfying VI \eqref{eq:be:vi}.
-\end{theorem}
+\begin{theorem} \label{thm:stepwellposed}  Assume Conjectures \ref{conj:a} and \ref{conj:b}, and fix $b \in \cX$ to define $\cK$.  Suppose that $s^{n-1}\in\cK$ and that the SMB function $a(t,x)$ is in $C([0,T]; L^{\rr'}(\Omega))$.  Then there exists a unique surface elevation $s\in\cK$ satisfying VI problem \eqref{eq:be:vi}. \end{theorem}
 
-\begin{proof}
-Since $F_{\Delta t}$ is $\qq$-coercive it is also coercive and strictly-monotone (Section \ref{sec:abstractestimate}).  Let $q\in\cX$.  From definition \eqref{eq:be:source}, the given hypothesis on $a$, and H\"older's inequality,
+\begin{proof}  Let $\rho>0$.  By Lemma \ref{lem:philipschitz} there is $C(\rho)>0$ so that if $r,s\in B_\rho\cap\cK$ then $\big|\Phi(r)[q] - \Phi(s)[q]\big| \le C(\rho) \|r-s\|_{\cX} \|q\|_{\cX}$.  Then by definition \eqref{eq:be:Fdefine}, H\"older's inequality, and Sobolev's inequality we have
+\begin{align}
+\left|F_{\Delta t}(r)[q] - F_{\Delta t}(s)[q]\right| &\le \int_\Omega |r-s||q| + \Delta t\, \big|\Phi(r)[q] - \Phi(s)[q]\big| \\
+    &\le C(\rho,\Delta t) \|r-s\|_{\cX} \|q\|_\cX. \notag
+\end{align}
+Thus $F_{\Delta t}$ is also Lipschitz continuous on bounded subsets of $\cK$.  If $\Delta t>0$ and \eqref{eq:conj:b} holds then
+\begin{align}
+\left(F_{\Delta t}(r) - F_{\Delta t}(s)\right)[r-s] &= \int_\Omega (r-s)^2 + \Delta t\, \left(\Phi(r) - \Phi(s)\right)[r-s] \\
+    &\ge \alpha\Delta t \|r-s\|_{\cX}^\qq, \notag
+\end{align}
+so $F_{\Delta t}$ is $\qq$-coercive over $\cX$.  Let $q\in\cX$.  From definition \eqref{eq:be:source}, the hypothesis on $a$, and H\"older's inequality,
 \begin{equation}
-|\ip{\ell^n}{q}| \le \left(\|s^{n-1}\|_{L^{\rr'}} + \Delta t \max_{t\in[t_{n-1},t_n]} \|a(t,\cdot)\|_{L^{\rr'}}\right) \|q\|_{L^\rr}.
+\big|\ell^n[q]\big| \le \left(\|s^{n-1}\|_{L^{\rr'}} + \Delta t \max_{t\in[t_{n-1},t_n]} \|a(t,\cdot)\|_{L^{\rr'}}\right) \|q\|_{L^\rr}.
 \label{eq:sourcetermbound}
 \end{equation}
-Because $\|s^{n-1}\|_{L^{\rr'}}$ is finite by Sobolev's inequality, and because $\|q\|_{L^\rr} \le \|q\|_{\cX}$, it follows that the source term $\ell^n$ is in the dual space $\cX'$.  Now Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows existence, and strict monotonicity shows uniqueness.
+Because $\|s^{n-1}\|_{L^{\rr'}}$ is finite by Sobolev's inequality, and because $\|q\|_{L^\rr} \le \|q\|_{\cX}$, it follows that the source term $\ell^n$ is in the dual space $\cX'$.
+
+As noted in Section \ref{sec:abstractestimate}, because $F_{\Delta t}$ is $\qq$-coercive, it is also coercive and strictly-monotone.  Now Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows existence of a solution to \eqref{eq:be:vi}, which is unique by strict monotonicity.
 \end{proof}
 
-Theorem \ref{thm:stepwellposed} addresses the well-posedness of a single implicit time-step problem over $[t_{n-1},t_n]$.  It is not sufficient to show well-posedness of the time-dependent problem over $[0,T]$.  The parabolic VI problem corresponding to the time-dependent NCP \eqref{eq:ncp} might also be well-posed, and this would be the minimum to analyze whether the implicit steps described here converge in the $\Delta t\to 0$ limit.
+Theorem \ref{thm:stepwellposed} addresses the well-posedness of a single implicit time-step problem over $[t_{n-1},t_n]$.  It is not sufficient to show well-posedness of the time-dependent problem over $[0,T]$.  As noted above, if the parabolic VI problem for time-dependent NCP \eqref{eq:ncp} were known to be well-posed then one might analyze whether the implicit steps described here converge in the $\Delta t\to 0$ limit.
 
-While practitioners of numerical ice sheet and glacier modeling using Stokes dynamics must expect conjectures like the above to hold, they may be difficult to prove despite the results in Sections \ref{sec:stokes} and \ref{sec:model}.  That greater progress has been made in the SIA case \cite{Calvoetal2003,JouvetBueler2012,PiersantiTemam2023} might be of assistance.  However, the geometry error bounds and results in the next two Sections only require Conjectures \ref{conj:a} and \ref{conj:b}.
+While practitioners of numerical ice sheet and glacier modeling using Stokes dynamics must expect conjectures like the above to hold, they may be difficult to prove despite the results in Sections \ref{sec:stokes} and \ref{sec:model}.  It might be of assistance to use the greater progress which has been made in the SIA case \cite{Calvoetal2003,JouvetBueler2012,PiersantiTemam2023}.  On the other hand, the geometry error bounds and results in the next two Sections only require \ref{thm:stepwellposed}.
 
 
 \section{Abstract error estimate for a finite element approximation} \label{sec:abstractestimate}
