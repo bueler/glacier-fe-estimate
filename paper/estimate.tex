@@ -721,14 +721,33 @@ Note that \eqref{eq:abstractestimate:subset:Cea} is Cea's lemma \cite[Theorem 2.
 
 \section{Application of the estimate to glacier models} \label{sec:application}
 
-FIXME consider cases where $b_h\ge b$ using maximum monotone restriction, but do not assume $f=f_h$
+FIXME talk through what happens
 
-FIXME apply Theorem \ref{thm:abstractestimate} and talk through what happens
+FIXME consider cases where $b_h\ge b$, using maximum monotone restriction $R^\oplus$, but do not assume $F_{\Delta t}=F^h_{\Delta t}$
+
+FIXME the FE VI:
+\begin{equation}
+F^h_{\Delta t}(s_h)[r_h-s_h] \ge \ell^n[r_h-s_h] \quad \text{for all } r_h \in \cK_h. \label{eq:fe:be:vi}
+\end{equation}
+
+Applying Theorem \ref{thm:abstractestimate} in the case where Theorem \ref{thm:stepwellposed} holds, we get the following.
+
+\begin{theorem} \label{thm:glacierapplication}  Assume that Conjectures \ref{conj:a} and \ref{conj:b} are true, for $\rr>2$, $\cX=W^{1,\rr}(\Omega)$ and $\alpha>0$.  Fix $b \in \cX$ to define $\cK\subset\cX$.  Suppose that $s^{n-1}\in\cK$ and that $a\in C([0,T]; L^{\rr'}(\Omega))$, and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  Let $s\in\cK$ be the unique surface elevation satisfying the continuum time-step VI problem \eqref{eq:be:vi}.  Choose a conforming FE space $\cX_h \subset \cX$.  Let $b_h = R^\oplus b \in \cX_h$, or otherwise choose $b_h\in\cX_h$ with $b_h\ge b$, which defines $\cK_h\subset \cK$.  Let $s_h\in\cK_h$ be the unique FE solution to the FE VI problem \eqref{eq:fe:be:vi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $c=c(\alpha,R_h)>0$, which does not otherwise depend on $s$ or $s_h$, so that
+\begin{align}
+\|s-s_h\|_\cX^\rr &\le \quad \frac{2}{\alpha} \inf_{r_h\in\cK_h} \left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] \label{eq:glacierestimate} \\
+   &\quad\, + \frac{2}{\alpha} \left(F_{\Delta t}(s_h)-F^h_{\Delta t}(s_h)\right)[s_h] \notag \\
+   &\quad\, + \inf_{r_h\in\cK_h} c \|r_h - s\|^\qq \notag
+\end{align}
+\end{theorem}
+
+FIXME simplify/clarify first two terms in \eqref{eq:glacierestimate}
 
 FIXME accomodate the barrier theory from \cite{Bueler2021conservation}
 
 
 \section{Demonstration of computable geometry error bounds in a glacier model} \label{sec:demo}
+
+FIXME study 2D glaciers with Halfar-ish surfaces and 3 bed cases: flat, smooth, rough
 
 FIXME for pairs of states generated in this study also compute ratios
 \begin{equation}
@@ -737,7 +756,14 @@ FIXME for pairs of states generated in this study also compute ratios
 to evaluate Conjectures \ref{conj:a} and \ref{conj:b}; presumably use $\rr=\rr'=\qq=2$
 
 
-\section{Conclusion} \label{sec:conclusion}
+\section{Discussion and conclusion} \label{sec:conclusion}
+
+FIXME the following version of Conjecture \ref{conj:b} does not address the marginal overhang issue, and it is likely to be easier to profe, but it is not sufficient for Theorem \ref{thm:stepwellposed}
+\begin{conjecture} \label{conj:c}  For $\rr>2$ such that Conjecture \ref{conj:a} holds, let $\cX = W^{1,\rr}(\Omega)$.  Fix $b\in\cX$, let $\cK=\{r\in\cX\,:\,r\ge b\}$, and assume $s\in \cK$.  Then there are constants $\alpha>0$, $\qq>1$, $\delta>0$ so that for all $\psi\in\cX$ supported in the inactive set of $s$, namely $\{x\in\Omega\,:\,s(x)>b(x)\}$, such that $s+\psi\in\cK$ and $\|\psi\|_\cX \le \delta$, the following inequality holds:
+\begin{equation}
+\left(\Phi(s+\psi) - \Phi(s)\right)[\psi] \ge \alpha \|\psi\|_{\cX}^\qq. \label{eq:conj:c}
+\end{equation}
+\end{conjecture}
 
 FIXME
 
