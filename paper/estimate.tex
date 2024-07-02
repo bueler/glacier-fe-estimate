@@ -622,12 +622,12 @@ The following abstract error estimate extends \cite{Falk1974} and Theorem 5.1.1 
 \begin{equation}
 \hcK = \overline{\Hull{(\cK \cup \cK_h)}}  \label{eq:convexhull}
 \end{equation}
-as the closure in $\cX$ of the convex hull of $\cK \cup \cK_h$, and suppose that $f$ can be extended to $\hcK$.  For $\qq>1$ assume that $f$ is $\qq$-coercive over $\hcK$ with constant $\alpha>0$, and Lipshitz on bounded sets of $\hcK$.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c=c(\alpha,R_h)>0$, which does not otherwise depend on $u$ or $u_h$, so that
+as the closure in $\cX$ of the convex hull of $\cK \cup \cK_h$, and suppose that $f$ can be extended to $\hcK$.  For $\qq>1$, with conjugate $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive over $\hcK$ with constant $\alpha>0$, and Lipshitz on bounded sets of $\hcK$.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c=c(\alpha,R_h)>0$, which does not otherwise depend on $u$ or $u_h$, so that
 \begin{align}
-\|u-u_h\|^p &\le \quad \frac{2}{\alpha} \inf_{v\in\cK} \left(f(u)-\ell\right)[v-u_h] \label{eq:abstractestimate} \\
+\|u-u_h\|^\qq &\le \quad \frac{2}{\alpha} \inf_{v\in\cK} \left(f(u)-\ell\right)[v-u_h] \label{eq:abstractestimate} \\
    &\quad\, + \frac{2}{\alpha} \inf_{v_h\in\cK_h} \left(f(u)-\ell\right)[v_h-u] \notag \\
    &\quad\, + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] \notag \\
-   &\quad\, + \inf_{v_h\in\cK_h} c \|v_h - u\|^\qq \notag
+   &\quad\, + \inf_{v_h\in\cK_h} c \|v_h - u\|^{\qq'} \notag
 \end{align}
 \end{theorem}
 
@@ -654,12 +654,12 @@ Since $u,u_h\in B_{R_h}$, by the Lipshitz assumption over $\hcK$ there is $C(R_h
 Noting $1<\qq<\infty$, now use Young's inequality with $\eps>0$ \cite[Appendix B.2]{Evans2010}:
 \begin{align*}
 \alpha \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u] \\
-  &\qquad + C(R_h) \left(\eps\|u-u_h\|^\qq + \tilde C(\eps) \|u-v_h\|^{\qq'}\right) + \left(f(u_h)-f_h(u_h)\right)[u_h]
+  &\qquad + C(R_h) \left(\eps\|u-u_h\|^\qq + \tilde C(\eps) \|u-v_h\|^{\qq'}\right) + \left(f(u_h)-f_h(u_h)\right)[u_h],
 \end{align*}
-where $\qq'=\qq/(\qq-1)$ and $\tilde C(\eps) = (\eps \qq)^{-\qq'/\qq} {\qq'}^{-1}$.  Choose $\eps>0$ so that $C(R_h) \eps \le \alpha/2$, and subtract:
+where $\tilde C(\eps) = (\eps \qq)^{-\qq'/\qq} {\qq'}^{-1}$.  Choose $\eps>0$ so that $C(R_h) \eps \le \alpha/2$, and subtract:
 \begin{align*}
-\frac{\alpha}{2} \|u-u_h\|^\pp &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u] \\
-  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^\qq + \left(f(u_h)-f_h(u_h)\right)[u_h]
+\frac{\alpha}{2} \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u] \\
+  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^{\qq'} + \left(f(u_h)-f_h(u_h)\right)[u_h]
 \end{align*}
 Take infimums to show \eqref{eq:abstractestimate}.
 \end{proof}
@@ -683,8 +683,8 @@ Observe that $\cB' \subset \cX'$.  A standard example is $\cX=W^{1,\rr}(\Omega)$
 
 \begin{corollary}  \label{cor:abstractestimate:Bnorm}  In addition to the assumptions of Theorem \ref{thm:abstractestimate}, suppose \eqref{eq:VembedsinB} and that $\|f(u)-\ell\|_{\cB'} < \infty$.  Then
 \begin{align}
-\|u-u_h\|^\pp &\le \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \left( \inf_{v\in\cK} \|v-u_h\|_{\cB} +   \inf_{v_h\in\cK_h} \|v_h-u\|_{\cB} \right) \label{eq:abstractestimate:Bnorm} \\
-   &\qquad + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] + \inf_{v_h\in\cK_h} c \|v_h - u\|^\qq \notag
+\|u-u_h\|^\qq &\le \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \left( \inf_{v\in\cK} \|v-u_h\|_{\cB} +   \inf_{v_h\in\cK_h} \|v_h-u\|_{\cB} \right) \label{eq:abstractestimate:Bnorm} \\
+   &\qquad + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] + \inf_{v_h\in\cK_h} c \|v_h - u\|^{\qq'} \notag
 \end{align}
 \end{corollary}
 
@@ -704,15 +704,15 @@ The following corollary collects various conclusions one may draw from making st
 
 \begin{corollary}  \label{cor:abstractestimate:various}  Make the assumptions of case i) of Corollary \ref{cor:abstractestimate:nohull}, including that $\cK_h \subset \cK$.  Also assume that $f_h(u_h)[u_h] = f(u_h)[u_h]$.  Then
 \begin{equation}
-\|u-u_h\|^\pp \le  \inf_{v_h\in\cK_h} \left\{\frac{2}{\alpha} \left(f(u)-\ell\right)[v_h-u] + c \|v_h - u\|^\qq\right\}. \label{eq:abstractestimate:subset}
+\|u-u_h\|^\qq \le  \inf_{v_h\in\cK_h} \left\{\frac{2}{\alpha} \left(f(u)-\ell\right)[v_h-u] + c \|v_h - u\|^{\qq'}\right\}. \label{eq:abstractestimate:subset}
 \end{equation}
 If also the assumptions of Corollary \ref{cor:abstractestimate:Bnorm} hold then
 \begin{equation}
-\|u-u_h\|^\pp \le \inf_{v_h\in\cK_h} \left\{\frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \|v_h-u\|_{\cB} + c \|v_h-u\|^\qq\right\} \label{eq:abstractestimate:subset:Bnorm}
+\|u-u_h\|^\qq \le \inf_{v_h\in\cK_h} \left\{\frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \|v_h-u\|_{\cB} + c \|v_h-u\|^{\qq'}\right\} \label{eq:abstractestimate:subset:Bnorm}
 \end{equation}
 Finally, if additionally $f(u)=\ell$, for example if $u$ is in the interior of $\cK$, then
 \begin{equation}
-\|u-u_h\| \le \tilde c \inf_{v_h\in\cK_h} \|v_h-u\|^{\qq/\pp} \label{eq:abstractestimate:subset:Cea}
+\|u-u_h\| \le \tilde c \inf_{v_h\in\cK_h} \|v_h-u\|^{\qq'-1} \label{eq:abstractestimate:subset:Cea}
 \end{equation}
 \end{corollary}
 
