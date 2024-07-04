@@ -1,6 +1,6 @@
 # glacier-fe-estimate/py/
 
-Use the [`stokesextrude`](https://github.com/bueler/stokes-extrude) package to run a study of the glacier geometry bounds.
+Use the [`stokesextrude`](https://github.com/bueler/stokes-extrude) package to run a study of the glacier geometry bounds described in the paper.
 
 ## requirements
 

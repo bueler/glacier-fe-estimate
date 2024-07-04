@@ -1,37 +1,36 @@
 # A study of the geometry error bounds described in the paper.
 # Constructs 2D glaciers with a Halfar or Halfar-like profile
-# over different beds.  Does a few time-steps using the free-surface
+# over different beds.  Does time-steps using the free-surface
 # stabilization algorithm (FSSA) from Lofgren et al 2022.
-# The steps are explicit but evaluated as solutions of the
-# implicit backward-Euler method.  Each step solves the Glen-law
-# Stokes problem using the FSSA modification, computes the surface
-# motion map Phi(s) = - u|_s . n_s, and evaluates the diagnostic
-# quantities defined in Theorem 6.1.
+# The steps are explicit but regarded as approximate solutions of the
+# implicit backward-Euler method of the paper.  Each step solves the
+# Stokes problem, with the FSSA modification, computes the surface
+# motion map Phi(s) = - u|_s . n_s, does the truncated explicit step,
+# and evaluates the diagnostic quantities defined in Theorem 6.1.
 
 # TODO:
-#   * explicit step of SKE
-#   * time-stepping loop
 #   * FSSA
+#   * bed cases
 #   * evaluate bounds
 #   * evaluate ratios
 
 import numpy as np
 from firedrake import *
-from firedrake.output import VTKFile
 from stokesextruded import *
-from initialgeometry import initials
+from initialgeometry import initialgeometry
+from livefigure import *
 
-mx = 201
+secpera = 31556926.0    # seconds per year
+
+mx = 201  # odd is slightly better(!) for symmetrical Halfar-on-flat case
 mz = 15
+Nsteps = 50
+dt = 1.0 * secpera
 
 L = 100.0e3             # domain is [-L,L]
-R0 = 70.0e3             # Halfar dome radius
-H0 = 1200.0             # Halfar dome height
-
-Hmin = 50.0             # kludge
+Hmin = 20.0             # kludge
 
 # physics parameters
-secpera = 31556926.0    # seconds per year
 g, rho = 9.81, 910.0    # m s-2, kg m-3
 nglen = 3.0
 A3 = 3.1689e-24         # Pa-3 s-1; EISMINT I value of ice softness
@@ -50,63 +49,75 @@ def _form_stokes(mesh, se):
               - p * div(v) - div(u) * q - inner(se.f_body, v) ) * dx(degree=4)
     return F
 
+# set up basemesh once
 basemesh = IntervalMesh(mx, -L, L)
+P1bm = FunctionSpace(basemesh, 'P', 1)
 xb = basemesh.coordinates.dat.data_ro
-sb = initials(xb, Hmin, nglen=nglen)
+sb_initial = initialgeometry(xb, nglen=nglen)  # FIXME also b
 
-# extend sbase, defined on the base mesh, to the extruded mesh using the
-#   'R' constant-in-the-vertical space
+# set up extruded mesh, but leave z coordinate unfilled
 mesh = ExtrudedMesh(basemesh, layers=mz, layer_height=1.0/mz)
+P1 = FunctionSpace(mesh, 'P', 1)
 P1R = FunctionSpace(mesh, 'P', 1, vfamily='R', vdegree=0)
-s = Function(P1R)
-s.dat.data[:] = sb
 Vcoord = mesh.coordinates.function_space()
-x, z = SpatialCoordinate(mesh)
-newcoord = Function(Vcoord).interpolate(as_vector([x, s * z]))
-mesh.coordinates.assign(newcoord)
+x, _ = SpatialCoordinate(mesh)
+z_flat = mesh.coordinates.dat.data_ro[:,1].copy()
 
+# set up the Stokes solver on the extruded mesh
 se = StokesExtruded(mesh)
 se.mixed_TaylorHood()
 se.body_force(Constant((0.0, - rho * g)))
-se.dirichlet((1,2), Constant((0.0,0.0)))  # wrong if ice advances to margin
-se.dirichlet(('bottom',), Constant((0.0,0.0)))
-
+se.dirichlet((1,2), Constant((0.0, 0.0)))  # wrong if ice advances to margin
+se.dirichlet(('bottom',), Constant((0.0, 0.0)))
 params = SolverParams['newton']
 params.update(SolverParams['mumps'])
-params.update({'snes_monitor': None,
-               'snes_converged_reason': None})
+#params.update({'snes_monitor': None})
+params.update({'snes_converged_reason': None})
+params.update({'snes_atol': 1.0e-1})
 
-printpar(f'solving 2D Stokes on {mx} x {mz} extruded mesh ...')
-n_u, n_p = se.V.dim(), se.W.dim()
-printpar(f'  sizes: n_u = {n_u}, n_p = {n_p}')
-u, p = se.solve(par=params, F=_form_stokes(mesh, se))
-se.savesolution(name='result.pvd')
-printpar(f'u, p solution norms = {norm(u):8.3e}, {norm(p):8.3e}')
+def geometryreport(n, t, sbm):
+    xbmax = max(xb[sbm.dat.data_ro > 1.0])
+    xbmin = min(xb[sbm.dat.data_ro > 1.0])
+    wkm = (xbmax - xbmin) / 1000.0
+    snorm = norm(sbm, norm_type='H1')
+    printpar(f't_{n} = {t / secpera:7.3f} a:  width = {wkm:.3f} km,  |s|_H1 = {snorm:.3e}')
 
-sbm = trace_scalar_to_p1(basemesh, mesh, z)
-sbm.rename('surface elevation (m)')
-ns = [-sbm.dx(0), Constant(1.0)]
-ubm = trace_vector_to_p2(basemesh, mesh, u)
-ubm.rename('surface velocity (m s-1)')
+# time-stepping loop
+newcoord = Function(Vcoord)
+sbm = Function(P1bm, name='surface elevation (m)')  # this is the state variable
+sbm.dat.data[:] = sb_initial
+sR = Function(P1R)
+t = 0.0
+mkoutdir('result/')
+printpar(f'time-stepping 2D Stokes + SKE on {mx} x {mz} extruded mesh ...')
+printpar(f'  Stokes solver sizes: n_u = {se.V.dim()}, n_p = {se.W.dim()}')
+for n in range(Nsteps):
+    if n == 0:
+        geometryreport(n, t, sbm)
+        if basemesh.comm.size == 1:
+            livefigure(basemesh, sbm, None, t=t, fname=f'result/t{t/secpera:010.3f}.png')
 
-P1bm = FunctionSpace(basemesh, 'CG', 1)
-# observation: if interpolate() is used in next line then asymmetry results
-Phibm = Function(P1bm).project(- dot(ubm, as_vector(ns)))
-Phibm.rename('surface motion map Phi (m s-1)')
+    # set geometry (z coordinate) of extruded mesh
+    sR.dat.data[:] = np.maximum(sbm.dat.data_ro, Hmin)  # only *here* is the fake ice
+    ztmp = Function(P1)
+    ztmp.dat.data[:] = z_flat
+    newcoord.interpolate(as_vector([x, sR * ztmp]))
+    mesh.coordinates.assign(newcoord)
 
-if basemesh.comm.size == 1:
-    # figure with s(x) and Phi(s)  [serial only]
-    xx = basemesh.coordinates.dat.data
-    import matplotlib.pyplot as plt
-    fig, (ax1, ax2) = plt.subplots(2, 1)
-    ax1.plot(xx / 1.0e3, sbm.dat.data, color='C1', label='s')
-    ax1.legend(loc='upper left')
-    ax1.set_xticklabels([])
-    ax1.grid(visible=True)
-    ax1.set_ylabel('elevation (m)')
-    ax2.plot(xx / 1.0e3, Phibm.dat.data * secpera, color='C2', label=r'$\Phi(s)$')
-    ax2.legend(loc='upper right')
-    ax2.set_ylabel(r'$\Phi$ (m a-1)')
-    ax2.grid(visible=True)
-    plt.xlabel('x (km)')
-    plt.show()
+    # solve Stokes, which internally is using se.up as initial iterate
+    u, p = se.solve(par=params, F=_form_stokes(mesh, se))
+    #se.savesolution(name='result.pvd')
+    printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
+
+    # compute surface motion map  Phi(s) = - u|_s . n_s   (m s-1)
+    ns = as_vector([-sbm.dx(0), Constant(1.0)])
+    ubm = trace_vector_to_p2(basemesh, mesh, u)  # surface velocity (m s-1)
+    Phibm = Function(P1bm).project(- dot(ubm, ns))  # interpolate bad here (because P2 nodes)
+
+    # explicit step SKE using truncation
+    snew = sbm - dt * Phibm
+    sbm.interpolate(conditional(snew < 0.0, Constant(0.0), snew))
+    t += dt
+    geometryreport(n+1, t, sbm)
+    if basemesh.comm.size == 1:
+        livefigure(basemesh, sbm, Phibm, t=t, fname=f'result/t{t/secpera:010.3f}.png')
