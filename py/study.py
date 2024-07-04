@@ -71,6 +71,7 @@ def geometryreport(n, t, sbm):
     xbmin = min(xb[sbm.dat.data_ro > 1.0])
     wkm = (xbmax - xbmin) / 1000.0
     snorm = norm(sbm, norm_type='H1')
+    # FIXME width bogus in parallel
     printpar(f't_{n} = {t / secpera:7.3f} a:  width = {wkm:.3f} km,  |s|_H1 = {snorm:.3e}')
 
 sbm = Function(P1bm, name='surface elevation (m)')  # this is the state variable
@@ -91,7 +92,7 @@ def _form_stokes(mesh, se, sbm):
         nsR = as_vector([-sR.dx(0), Constant(1.0)])
         nunit = nsR / sqrt(sR.dx(0)**2 + 1.0)
         F -= theta_fssa * dt * inner(u, nunit) * inner(se.f_body, v) * ds_t
-        #FIXME SMB a into source
+        # FIXME SMB a into source
     F -= source
     return F
 
@@ -103,6 +104,7 @@ mkoutdir('result/')
 printpar(f'time-stepping 2D Stokes + SKE on {mx} x {mz} extruded mesh ...')
 printpar(f'  Stokes solver sizes: n_u = {se.V.dim()}, n_p = {se.W.dim()}')
 for n in range(Nsteps):
+    # start with reporting
     if n == 0:
         geometryreport(n, t, sbm)
         if basemesh.comm.size == 1:
@@ -115,7 +117,7 @@ for n in range(Nsteps):
     newcoord.interpolate(as_vector([x, sR * ztmp]))
     mesh.coordinates.assign(newcoord)
 
-    # solve Stokes, which internally is using se.up as initial iterate
+    # solve Stokes; this uses se.up as initial iterate
     u, p = se.solve(par=params, F=_form_stokes(mesh, se, sbm))
     #se.savesolution(name='result.pvd')
     printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
@@ -126,9 +128,12 @@ for n in range(Nsteps):
     Phibm = Function(P1bm).project(- dot(ubm, ns))  # interpolate bad here (because P2 nodes)
 
     # explicit step SKE using truncation
+    # FIXME make semi-implicit an option
     snew = sbm - dt * Phibm
     sbm.interpolate(conditional(snew < 0.0, Constant(0.0), snew))
     t += dt
+
+    # end of step reporting
     geometryreport(n+1, t, sbm)
     if basemesh.comm.size == 1:
         livefigure(basemesh, sbm, Phibm, t=t, fname=f'result/t{t/secpera:010.3f}.png')
