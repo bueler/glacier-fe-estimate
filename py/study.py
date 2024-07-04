@@ -67,12 +67,14 @@ params.update({'snes_converged_reason': None})
 params.update({'snes_atol': 1.0e-1})
 
 def geometryreport(n, t, sbm):
-    xbmax = max(xb[sbm.dat.data_ro > 1.0])
-    xbmin = min(xb[sbm.dat.data_ro > 1.0])
-    wkm = (xbmax - xbmin) / 1000.0
     snorm = norm(sbm, norm_type='H1')
-    # FIXME width bogus in parallel
-    printpar(f't_{n} = {t / secpera:7.3f} a:  width = {wkm:.3f} km,  |s|_H1 = {snorm:.3e}')
+    if basemesh.comm.size == 1:
+        xbmax = max(xb[sbm.dat.data_ro > 1.0])
+        xbmin = min(xb[sbm.dat.data_ro > 1.0])
+        wkm = (xbmax - xbmin) / 1000.0
+        printpar(f't_{n} = {t / secpera:7.3f} a:  |s|_H1 = {snorm:.3e},  width = {wkm:.3f} km')
+    else:
+        printpar(f't_{n} = {t / secpera:7.3f} a:  |s|_H1 = {snorm:.3e}')
 
 sbm = Function(P1bm, name='surface elevation (m)')  # this is the state variable
 sbm.dat.data[:] = sb_initial
