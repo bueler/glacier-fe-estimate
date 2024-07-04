@@ -9,7 +9,6 @@
 # and evaluates the diagnostic quantities defined in Theorem 6.1.
 
 # TODO:
-#   * FSSA
 #   * bed cases
 #   * evaluate bounds
 #   * evaluate ratios
@@ -24,11 +23,13 @@ secpera = 31556926.0    # seconds per year
 
 mx = 201  # odd is slightly better(!) for symmetrical Halfar-on-flat case
 mz = 15
-Nsteps = 50
-dt = 1.0 * secpera
+Nsteps = 20
+dt = 5.0 * secpera
 
 L = 100.0e3             # domain is [-L,L]
 Hmin = 20.0             # kludge
+fssa = True
+theta_fssa = 1.0
 
 # physics parameters
 g, rho = 9.81, 910.0    # m s-2, kg m-3
@@ -38,16 +39,6 @@ B3 = A3**(-1.0/3.0)     # Pa s(1/3);  ice hardness
 eps = 0.01
 Dtyp = 2.0 / secpera    # 2 a-1
 qq = 1.0 / nglen - 1.0
-
-def _form_stokes(mesh, se):
-    def D(w):
-        return 0.5 * (grad(w) + grad(w).T)
-    u, p = split(se.up)
-    v, q = TestFunctions(se.Z)
-    Du2 = 0.5 * inner(D(u), D(u)) + (eps * Dtyp)**2.0
-    F = ( inner(B3 * Du2**(qq / 2.0) * D(u), D(v)) \
-              - p * div(v) - div(u) * q - inner(se.f_body, v) ) * dx(degree=4)
-    return F
 
 # set up basemesh once
 basemesh = IntervalMesh(mx, -L, L)
@@ -82,10 +73,30 @@ def geometryreport(n, t, sbm):
     snorm = norm(sbm, norm_type='H1')
     printpar(f't_{n} = {t / secpera:7.3f} a:  width = {wkm:.3f} km,  |s|_H1 = {snorm:.3e}')
 
-# time-stepping loop
-newcoord = Function(Vcoord)
 sbm = Function(P1bm, name='surface elevation (m)')  # this is the state variable
 sbm.dat.data[:] = sb_initial
+
+def _form_stokes(mesh, se, sbm):
+    def D(w):
+        return 0.5 * (grad(w) + grad(w).T)
+    u, p = split(se.up)
+    v, q = TestFunctions(se.Z)
+    Du2 = 0.5 * inner(D(u), D(u)) + (eps * Dtyp)**2.0
+    F = inner(B3 * Du2**(qq / 2.0) * D(u), D(v)) * dx(degree=4)
+    F -= (p * div(v) + div(u) * q) * dx
+    source = inner(se.f_body, v) * dx
+    if fssa:
+        # see section 4.2 in Lofgren et al
+        sR = extend_p1_from_basemesh(mesh, sbm)
+        nsR = as_vector([-sR.dx(0), Constant(1.0)])
+        nunit = nsR / sqrt(sR.dx(0)**2 + 1.0)
+        F -= theta_fssa * dt * inner(u, nunit) * inner(se.f_body, v) * ds_t
+        #FIXME SMB a into source
+    F -= source
+    return F
+
+# time-stepping loop
+newcoord = Function(Vcoord)
 sR = Function(P1R)
 t = 0.0
 mkoutdir('result/')
@@ -105,7 +116,7 @@ for n in range(Nsteps):
     mesh.coordinates.assign(newcoord)
 
     # solve Stokes, which internally is using se.up as initial iterate
-    u, p = se.solve(par=params, F=_form_stokes(mesh, se))
+    u, p = se.solve(par=params, F=_form_stokes(mesh, se, sbm))
     #se.savesolution(name='result.pvd')
     printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
 
