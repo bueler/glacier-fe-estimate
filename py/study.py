@@ -10,11 +10,13 @@
 
 # TODO:
 #   * bed cases
+#   * in last frame show Halfar by comparison (if b=0)
 #   * evaluate bounds
 #   * evaluate ratios
 
 import numpy as np
 from firedrake import *
+from firedrake.output import VTKFile
 from stokesextruded import *
 from initialgeometry import initialgeometry
 from livefigure import *
@@ -23,7 +25,7 @@ secpera = 31556926.0    # seconds per year
 
 mx = 201  # odd is slightly better(!) for symmetrical Halfar-on-flat case
 mz = 15
-Nsteps = 20
+Nsteps = 100
 dt = 5.0 * secpera
 
 L = 100.0e3             # domain is [-L,L]
@@ -79,13 +81,15 @@ def geometryreport(n, t, sbm):
 sbm = Function(P1bm, name='surface elevation (m)')  # this is the state variable
 sbm.dat.data[:] = sb_initial
 
+def _D(w):
+    return 0.5 * (grad(w) + grad(w).T)
+
+# the weak form for the Stokes problem
 def _form_stokes(mesh, se, sbm):
-    def D(w):
-        return 0.5 * (grad(w) + grad(w).T)
     u, p = split(se.up)
     v, q = TestFunctions(se.Z)
-    Du2 = 0.5 * inner(D(u), D(u)) + (eps * Dtyp)**2.0
-    F = inner(B3 * Du2**(qq / 2.0) * D(u), D(v)) * dx(degree=4)
+    Du2 = 0.5 * inner(_D(u), _D(u)) + (eps * Dtyp)**2.0
+    F = inner(B3 * Du2**(qq / 2.0) * _D(u), _D(v)) * dx(degree=4)
     F -= (p * div(v) + div(u) * q) * dx
     source = inner(se.f_body, v) * dx
     if fssa:
@@ -98,6 +102,13 @@ def _form_stokes(mesh, se, sbm):
     F -= source
     return F
 
+# generate effective viscosity nu from the velocity solution
+def _effective_viscosity(mesh, u):
+    Du2 = 0.5 * inner(_D(u), _D(u)) + (eps * Dtyp)**2
+    nu = Function(P1).interpolate(0.5 * B3 * Du2**(qq/2.0))
+    nu.rename('effective viscosity (Pa s)')
+    return nu
+
 # time-stepping loop
 newcoord = Function(Vcoord)
 sR = Function(P1R)
@@ -105,6 +116,7 @@ t = 0.0
 mkoutdir('result/')
 printpar(f'time-stepping 2D Stokes + SKE on {mx} x {mz} extruded mesh ...')
 printpar(f'  Stokes solver sizes: n_u = {se.V.dim()}, n_p = {se.W.dim()}')
+outfile = VTKFile("result.pvd")
 for n in range(Nsteps):
     # start with reporting
     if n == 0:
@@ -121,8 +133,11 @@ for n in range(Nsteps):
 
     # solve Stokes; this uses se.up as initial iterate
     u, p = se.solve(par=params, F=_form_stokes(mesh, se, sbm))
-    #se.savesolution(name='result.pvd')
     printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
+    u.rename('velocity (m s-1)')
+    p.rename('pressure (Pa)')
+    nu = _effective_viscosity(mesh, u)
+    outfile.write(u, p, nu, time=t)
 
     # compute surface motion map  Phi(s) = - u|_s . n_s   (m s-1)
     ns = as_vector([-sbm.dx(0), Constant(1.0)])
