@@ -1,15 +1,15 @@
 # A study using the geometry error bounds which are described in the
-# paper.  Constructs 2D glaciers with a Halfar or Halfar-like profile
+# paper.  Constructs 2D glaciers with a Halfar profile
 # over different beds.  Does time-steps using the free-surface
 # stabilization algorithm (FSSA) from Lofgren et al 2022.
 # The steps are explicit but regarded as approximate solutions of the
 # implicit backward-Euler method of the paper.  Each step solves the
-# Stokes problem, with the FSSA modification, computes the surface
-# motion map Phi(s) = - u|_s . n_s, does the truncated explicit step,
-# and evaluates the diagnostic quantities defined in Theorem 6.1.
+# Stokes problem, with FSSA modification, then computes the surface
+# motion map Phi(s) = - u|_s . n_s, and then does the truncated
+# explicit step.  The diagnostic quantities defined in Theorem 6.1
+# are evaluated at each step.
 
 # TODO:
-#   * bed cases
 #   * in last frame show Halfar by comparison (if b=0)
 #   * evaluate bounds
 #   * evaluate ratios
@@ -18,21 +18,20 @@ import numpy as np
 from firedrake import *
 from firedrake.output import VTKFile
 from stokesextruded import *
-from geometry import geometry
+from geometry import geometry, bedtypes
 from livefigure import *
 
 secpera = 31556926.0    # seconds per year
-bedtypes = ['flat', 'smooth', 'rough']
 
 mx = 201  # odd is slightly better(!) for symmetrical Halfar-on-flat case
 mz = 15
-Nsteps = 100
-dt = 5.0 * secpera
+Nsteps = 20
+dt = 1.0 * secpera
 bed = 'flat'
 
 L = 100.0e3             # domain is [-L,L]
-Hmin = 20.0             # kludge: fake ice for Stokes solve, where ice-free
-fssa = True             # use Lofgren et al (2022) FSSA technique,
+Hmin = 20.0             # kludge: insert fake ice for Stokes solve
+fssa = True             # use Lofgren et al (2022) FSSA technique
 theta_fssa = 1.0        #   with this theta value
 writediag = True        # write extra diagnostics into .pvd
 
@@ -49,7 +48,8 @@ qq = 1.0 / nglen - 1.0
 basemesh = IntervalMesh(mx, -L, L)
 P1bm = FunctionSpace(basemesh, 'P', 1)
 xb = basemesh.coordinates.dat.data_ro
-b, sb_initial = geometry(xb, nglen=nglen, bed=bed)
+assert bed in bedtypes
+b, sb_initial = geometry(xb, nglen=nglen, bed=bed)  # get numpy arrays
 bbm = Function(P1bm, name='bed elevation (m)')
 bbm.dat.data[:] = b
 sbm = Function(P1bm, name='surface elevation (m)')  # this is the state variable
@@ -130,7 +130,7 @@ bR.dat.data[:] = b
 t = 0.0
 mkoutdir('result/')
 printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a ...')
-printpar(f'  solving 2D Stokes + SKE on {mx} x {mz} extruded mesh')
+printpar(f'  solving 2D Stokes + SKE on {mx} x {mz} extruded mesh over {bed} bed')
 printpar(f'  dimensions: n_u = {se.V.dim()}, n_p = {se.W.dim()}')
 outfile = VTKFile("result.pvd")
 for n in range(Nsteps):
@@ -167,7 +167,8 @@ for n in range(Nsteps):
     Phibm = Function(P1bm).project(- dot(ubm, ns))  # interpolate bad here (because P2 nodes)
 
     # explicit step SKE using truncation
-    # FIXME make semi-implicit an option
+    # FIXME include SMB choices
+    # FIXME replace with semi-implicit VI solve (explicit as option)
     snew = sbm - dt * Phibm
     sbm.interpolate(conditional(snew < bbm, bbm, snew))
     t += dt
