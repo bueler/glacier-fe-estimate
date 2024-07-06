@@ -1,5 +1,5 @@
-# A study of the geometry error bounds described in the paper.
-# Constructs 2D glaciers with a Halfar or Halfar-like profile
+# A study using the geometry error bounds which are described in the
+# paper.  Constructs 2D glaciers with a Halfar or Halfar-like profile
 # over different beds.  Does time-steps using the free-surface
 # stabilization algorithm (FSSA) from Lofgren et al 2022.
 # The steps are explicit but regarded as approximate solutions of the
@@ -29,9 +29,10 @@ Nsteps = 100
 dt = 5.0 * secpera
 
 L = 100.0e3             # domain is [-L,L]
-Hmin = 20.0             # kludge
-fssa = True
-theta_fssa = 1.0
+Hmin = 20.0             # kludge: fake ice for Stokes solve, where ice-free
+fssa = True             # use Lofgren et al (2022) FSSA technique,
+theta_fssa = 1.0        #   with this theta value
+writediag = True        # write extra diagnostics into .pvd
 
 # physics parameters
 g, rho = 9.81, 910.0    # m s-2, kg m-3
@@ -104,18 +105,28 @@ def _form_stokes(mesh, se, sbm):
 
 # generate effective viscosity nu from the velocity solution
 def _effective_viscosity(mesh, u):
-    Du2 = 0.5 * inner(_D(u), _D(u)) + (eps * Dtyp)**2
+    Du2 = 0.5 * inner(_D(u), _D(u))
     nu = Function(P1).interpolate(0.5 * B3 * Du2**(qq/2.0))
-    nu.rename('effective viscosity (Pa s)')
-    return nu
+    nu.rename('nu (unregularized; Pa s)')
+    nueps = Function(P1).interpolate(0.5 * B3 * (Du2  + (eps * Dtyp)**2)**(qq/2.0))
+    nueps.rename(f'nu (eps={eps:.3f}; Pa s)')
+    return nu, nueps
+
+# generate effective viscosity nu from the velocity solution
+def _p_hydrostatic(mesh, sR):
+    _, z = SpatialCoordinate(mesh)
+    phydro = Function(P1).interpolate(rho * g * (sR - z))
+    phydro.rename('p_hydro (Pa)')
+    return phydro
 
 # time-stepping loop
 newcoord = Function(Vcoord)
 sR = Function(P1R)
 t = 0.0
 mkoutdir('result/')
-printpar(f'time-stepping 2D Stokes + SKE on {mx} x {mz} extruded mesh ...')
-printpar(f'  Stokes solver sizes: n_u = {se.V.dim()}, n_p = {se.W.dim()}')
+printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a ...')
+printpar(f'  solving 2D Stokes + SKE on {mx} x {mz} extruded mesh')
+printpar(f'  dimensions: n_u = {se.V.dim()}, n_p = {se.W.dim()}')
 outfile = VTKFile("result.pvd")
 for n in range(Nsteps):
     # start with reporting
@@ -136,8 +147,14 @@ for n in range(Nsteps):
     printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
     u.rename('velocity (m s-1)')
     p.rename('pressure (Pa)')
-    nu = _effective_viscosity(mesh, u)
-    outfile.write(u, p, nu, time=t)
+    if writediag:
+        nu, nueps = _effective_viscosity(mesh, u)
+        phydro = _p_hydrostatic(mesh, sR)
+        pdiff = Function(P1).interpolate(p - phydro)
+        pdiff.rename('pdiff = phydro - p (Pa)')
+        outfile.write(u, p, nu, nueps, pdiff, time=t)
+    else:
+        outfile.write(u, p, time=t)
 
     # compute surface motion map  Phi(s) = - u|_s . n_s   (m s-1)
     ns = as_vector([-sbm.dx(0), Constant(1.0)])
@@ -154,3 +171,5 @@ for n in range(Nsteps):
     geometryreport(n+1, t, sbm)
     if basemesh.comm.size == 1:
         livefigure(basemesh, sbm, Phibm, t=t, fname=f'result/t{t/secpera:010.3f}.png')
+
+printpar('finished writing to result.pvd')
