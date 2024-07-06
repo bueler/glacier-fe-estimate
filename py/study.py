@@ -39,7 +39,7 @@ nglen = 3.0
 A3 = 3.1689e-24         # Pa-3 s-1; EISMINT I value of ice softness
 B3 = A3**(-1.0/3.0)     # Pa s(1/3);  ice hardness
 eps = 0.01
-Dtyp = 2.0 / secpera    # 2 a-1
+Dtyp = 1.0 / secpera    # 1 a-1
 qq = 1.0 / nglen - 1.0
 
 # set up basemesh once
