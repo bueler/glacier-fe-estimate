@@ -18,15 +18,17 @@ import numpy as np
 from firedrake import *
 from firedrake.output import VTKFile
 from stokesextruded import *
-from initialgeometry import initialgeometry
+from geometry import geometry
 from livefigure import *
 
 secpera = 31556926.0    # seconds per year
+bedtypes = ['flat', 'smooth', 'rough']
 
 mx = 201  # odd is slightly better(!) for symmetrical Halfar-on-flat case
 mz = 15
 Nsteps = 100
 dt = 5.0 * secpera
+bed = 'flat'
 
 L = 100.0e3             # domain is [-L,L]
 Hmin = 20.0             # kludge: fake ice for Stokes solve, where ice-free
@@ -47,7 +49,11 @@ qq = 1.0 / nglen - 1.0
 basemesh = IntervalMesh(mx, -L, L)
 P1bm = FunctionSpace(basemesh, 'P', 1)
 xb = basemesh.coordinates.dat.data_ro
-sb_initial = initialgeometry(xb, nglen=nglen)  # FIXME also b
+b, sb_initial = geometry(xb, nglen=nglen, bed=bed)
+bbm = Function(P1bm, name='bed elevation (m)')
+bbm.dat.data[:] = b
+sbm = Function(P1bm, name='surface elevation (m)')  # this is the state variable
+sbm.dat.data[:] = sb_initial
 
 # set up extruded mesh, but leave z coordinate unfilled
 mesh = ExtrudedMesh(basemesh, layers=mz, layer_height=1.0/mz)
@@ -68,19 +74,16 @@ params.update(SolverParams['mumps'])
 #params.update({'snes_monitor': None})
 params.update({'snes_converged_reason': None})
 params.update({'snes_atol': 1.0e-1})
+params.update({'snes_linesearch_type': 'bt'})  # helps with non-flat beds, it seems
 
 def geometryreport(n, t, sbm):
     snorm = norm(sbm, norm_type='H1')
     if basemesh.comm.size == 1:
-        xbmax = max(xb[sbm.dat.data_ro > 1.0])
-        xbmin = min(xb[sbm.dat.data_ro > 1.0])
-        wkm = (xbmax - xbmin) / 1000.0
+        H = sbm.dat.data_ro - b
+        wkm = (max(xb[H > 1.0]) - min(xb[H > 1.0])) / 1000.0
         printpar(f't_{n} = {t / secpera:7.3f} a:  |s|_H1 = {snorm:.3e},  width = {wkm:.3f} km')
     else:
         printpar(f't_{n} = {t / secpera:7.3f} a:  |s|_H1 = {snorm:.3e}')
-
-sbm = Function(P1bm, name='surface elevation (m)')  # this is the state variable
-sbm.dat.data[:] = sb_initial
 
 def _D(w):
     return 0.5 * (grad(w) + grad(w).T)
@@ -122,6 +125,8 @@ def _p_hydrostatic(mesh, sR):
 # time-stepping loop
 newcoord = Function(Vcoord)
 sR = Function(P1R)
+bR = Function(P1R)
+bR.dat.data[:] = b
 t = 0.0
 mkoutdir('result/')
 printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a ...')
@@ -133,13 +138,13 @@ for n in range(Nsteps):
     if n == 0:
         geometryreport(n, t, sbm)
         if basemesh.comm.size == 1:
-            livefigure(basemesh, sbm, None, t=t, fname=f'result/t{t/secpera:010.3f}.png')
+            livefigure(basemesh, b, sbm, None, t=t, fname=f'result/t{t/secpera:010.3f}.png')
 
     # set geometry (z coordinate) of extruded mesh
-    sR.dat.data[:] = np.maximum(sbm.dat.data_ro, Hmin)  # only *here* is the fake ice
+    sR.dat.data[:] = np.maximum(sbm.dat.data_ro, Hmin + b)  # only *here* is the fake ice
     ztmp = Function(P1)
     ztmp.dat.data[:] = z_flat
-    newcoord.interpolate(as_vector([x, sR * ztmp]))
+    newcoord.interpolate(as_vector([x, bR + (sR - bR) * ztmp]))
     mesh.coordinates.assign(newcoord)
 
     # solve Stokes; this uses se.up as initial iterate
@@ -164,12 +169,12 @@ for n in range(Nsteps):
     # explicit step SKE using truncation
     # FIXME make semi-implicit an option
     snew = sbm - dt * Phibm
-    sbm.interpolate(conditional(snew < 0.0, Constant(0.0), snew))
+    sbm.interpolate(conditional(snew < bbm, bbm, snew))
     t += dt
 
     # end of step reporting
     geometryreport(n+1, t, sbm)
     if basemesh.comm.size == 1:
-        livefigure(basemesh, sbm, Phibm, t=t, fname=f'result/t{t/secpera:010.3f}.png')
+        livefigure(basemesh, b, sbm, Phibm, t=t, fname=f'result/t{t/secpera:010.3f}.png')
 
 printpar('finished writing to result.pvd')

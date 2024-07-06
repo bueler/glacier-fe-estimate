@@ -9,14 +9,15 @@ def mkoutdir(dirname):
     except FileExistsError:
         pass
 
-def livefigure(basemesh, sbm, Phibm, t=None, fname=None):
+def livefigure(basemesh, b, sbm, Phibm, t=None, fname=None):
         xx = basemesh.coordinates.dat.data
         fig, (ax1, ax2) = plt.subplots(2, 1)
         if t == None:
-            slabel = 's'
+            raise NotImplementedError
         else:
-            slabel = f's at t = {t / _secpera:.3f} a'
+            slabel = f's(t,x) at t = {t / _secpera:.3f} a'
         ax1.plot(xx / 1.0e3, sbm.dat.data, color='C1', label=slabel)
+        ax1.plot(xx / 1.0e3, b, color='C3', label='b(x)')
         ax1.legend(loc='upper left')
         ax1.set_xticklabels([])
         ax1.grid(visible=True)
