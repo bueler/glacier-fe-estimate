@@ -10,7 +10,6 @@
 # are evaluated at each step.
 
 # TODO:
-#   * in last frame show Halfar by comparison (if b=0)
 #   * evaluate bounds
 #   * evaluate ratios
 
@@ -18,10 +17,8 @@ import numpy as np
 from firedrake import *
 from firedrake.output import VTKFile
 from stokesextruded import *
-from geometry import geometry, bedtypes
+from icegeometry import *
 from livefigure import *
-
-secpera = 31556926.0    # seconds per year
 
 mx = 201  # odd is slightly better(!) for symmetrical Halfar-on-flat case
 mz = 15
@@ -35,11 +32,7 @@ fssa = True             # use Lofgren et al (2022) FSSA technique
 theta_fssa = 1.0        #   with this theta value
 writediag = True        # write extra diagnostics into .pvd
 
-# physics parameters
-g, rho = 9.81, 910.0    # m s-2, kg m-3
-nglen = 3.0
-A3 = 3.1689e-24         # Pa-3 s-1; EISMINT I value of ice softness
-B3 = A3**(-1.0/3.0)     # Pa s(1/3);  ice hardness
+# Stokes regularization
 eps = 0.01
 Dtyp = 1.0 / secpera    # 1 a-1
 qq = 1.0 / nglen - 1.0
@@ -49,7 +42,8 @@ basemesh = IntervalMesh(mx, -L, L)
 P1bm = FunctionSpace(basemesh, 'P', 1)
 xbm = basemesh.coordinates.dat.data_ro
 assert bed in bedtypes
-b_np, s_np = geometry(xbm, nglen=nglen, bed=bed)  # get numpy arrays
+#print(f"Halfar t0 = {t0 / secpera:.3f} a")
+b_np, s_np = geometry(xbm, t=t0, bed=bed)  # get numpy arrays
 b = Function(P1bm, name='bed elevation (m)')
 b.dat.data[:] = b_np
 s = Function(P1bm, name='surface elevation (m)')  # this is the state variable
@@ -176,8 +170,9 @@ for n in range(Nsteps):
     t += dt
 
     # end of step reporting
-    _geometry_report(n+1, t, s)
+    _geometry_report(n + 1, t, s)
     if basemesh.comm.size == 1:
-        livefigure(basemesh, b, s, Phi, t, fname=f'result/t{t/secpera:010.3f}.png')
+        livefigure(basemesh, b, s, Phi, t, fname=f'result/t{t/secpera:010.3f}.png',
+                   writehalfar=(bed == 'flat' and n + 1 == Nsteps))
 
 printpar('finished writing to result.pvd')
