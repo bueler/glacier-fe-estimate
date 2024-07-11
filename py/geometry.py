@@ -1,5 +1,5 @@
 # Compute 1D numpy arrays for b(x) and s(x).  Used to set
-# initial geometry.
+# initial geometries in the study.
 
 import numpy as np
 
