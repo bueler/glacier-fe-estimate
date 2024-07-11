@@ -47,13 +47,13 @@ qq = 1.0 / nglen - 1.0
 # set up basemesh once
 basemesh = IntervalMesh(mx, -L, L)
 P1bm = FunctionSpace(basemesh, 'P', 1)
-xb = basemesh.coordinates.dat.data_ro
+xbm = basemesh.coordinates.dat.data_ro
 assert bed in bedtypes
-b, sb_initial = geometry(xb, nglen=nglen, bed=bed)  # get numpy arrays
-bbm = Function(P1bm, name='bed elevation (m)')
-bbm.dat.data[:] = b
-sbm = Function(P1bm, name='surface elevation (m)')  # this is the state variable
-sbm.dat.data[:] = sb_initial
+b_np, s_np = geometry(xbm, nglen=nglen, bed=bed)  # get numpy arrays
+b = Function(P1bm, name='bed elevation (m)')
+b.dat.data[:] = b_np
+s = Function(P1bm, name='surface elevation (m)')  # this is the state variable
+s.dat.data[:] = s_np
 
 # set up extruded mesh, but leave z coordinate unfilled
 mesh = ExtrudedMesh(basemesh, layers=mz, layer_height=1.0/mz)
@@ -76,12 +76,12 @@ params.update({'snes_converged_reason': None})
 params.update({'snes_atol': 1.0e-1})
 params.update({'snes_linesearch_type': 'bt'})  # helps with non-flat beds, it seems
 
-def geometryreport(n, t, sbm):
-    snorm = norm(sbm, norm_type='H1')
+def _geometry_report(n, t, s):
+    snorm = norm(s, norm_type='H1')
     if basemesh.comm.size == 1:
-        H = sbm.dat.data_ro - b
-        wkm = (max(xb[H > 1.0]) - min(xb[H > 1.0])) / 1000.0
-        printpar(f't_{n} = {t / secpera:7.3f} a:  |s|_H1 = {snorm:.3e},  width = {wkm:.3f} km')
+        H = s.dat.data_ro - b.dat.data_ro # numpy array
+        width = max(xbm[H > 1.0]) - min(xbm[H > 1.0])
+        printpar(f't_{n} = {t / secpera:7.3f} a:  |s|_H1 = {snorm:.3e},  width = {width / 1000.0:.3f} km')
     else:
         printpar(f't_{n} = {t / secpera:7.3f} a:  |s|_H1 = {snorm:.3e}')
 
@@ -89,7 +89,7 @@ def _D(w):
     return 0.5 * (grad(w) + grad(w).T)
 
 # the weak form for the Stokes problem
-def _form_stokes(mesh, se, sbm):
+def _form_stokes(mesh, se, sR):
     u, p = split(se.up)
     v, q = TestFunctions(se.Z)
     Du2 = 0.5 * inner(_D(u), _D(u)) + (eps * Dtyp)**2.0
@@ -98,7 +98,6 @@ def _form_stokes(mesh, se, sbm):
     source = inner(se.f_body, v) * dx
     if fssa:
         # see section 4.2 in Lofgren et al
-        sR = extend_p1_from_basemesh(mesh, sbm)
         nsR = as_vector([-sR.dx(0), Constant(1.0)])
         nunit = nsR / sqrt(sR.dx(0)**2 + 1.0)
         F -= theta_fssa * dt * inner(u, nunit) * inner(se.f_body, v) * ds_t
@@ -124,9 +123,10 @@ def _p_hydrostatic(mesh, sR):
 
 # time-stepping loop
 newcoord = Function(Vcoord)
+sRfake = Function(P1R)
 sR = Function(P1R)
 bR = Function(P1R)
-bR.dat.data[:] = b
+bR.dat.data[:] = b.dat.data_ro
 t = 0.0
 mkoutdir('result/')
 printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a ...')
@@ -136,25 +136,26 @@ outfile = VTKFile("result.pvd")
 for n in range(Nsteps):
     # start with reporting
     if n == 0:
-        geometryreport(n, t, sbm)
+        _geometry_report(n, t, s)
         if basemesh.comm.size == 1:
-            livefigure(basemesh, b, sbm, None, t=t, fname=f'result/t{t/secpera:010.3f}.png')
+            livefigure(basemesh, b, s, None, t, fname=f'result/t{t/secpera:010.3f}.png')
 
     # set geometry (z coordinate) of extruded mesh
-    sR.dat.data[:] = np.maximum(sbm.dat.data_ro, Hmin + b)  # only *here* is the fake ice
+    sRfake.dat.data[:] = np.maximum(s.dat.data_ro, Hmin + b.dat.data_ro)  # *here* is the fake ice
     ztmp = Function(P1)
     ztmp.dat.data[:] = z_flat
-    newcoord.interpolate(as_vector([x, bR + (sR - bR) * ztmp]))
+    newcoord.interpolate(as_vector([x, bR + (sRfake - bR) * ztmp]))
     mesh.coordinates.assign(newcoord)
 
-    # solve Stokes; this uses se.up as initial iterate
-    u, p = se.solve(par=params, F=_form_stokes(mesh, se, sbm))
+    # solve Stokes on extruded mesh
+    # this uses fake ice, and se.up as initial iterate
+    u, p = se.solve(par=params, F=_form_stokes(mesh, se, sRfake))
     printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
     u.rename('velocity (m s-1)')
     p.rename('pressure (Pa)')
     if writediag:
         nu, nueps = _effective_viscosity(mesh, u)
-        phydro = _p_hydrostatic(mesh, sR)
+        phydro = _p_hydrostatic(mesh, sRfake)
         pdiff = Function(P1).interpolate(p - phydro)
         pdiff.rename('pdiff = phydro - p (Pa)')
         outfile.write(u, p, nu, nueps, pdiff, time=t)
@@ -162,20 +163,21 @@ for n in range(Nsteps):
         outfile.write(u, p, time=t)
 
     # compute surface motion map  Phi(s) = - u|_s . n_s   (m s-1)
-    ns = as_vector([-sbm.dx(0), Constant(1.0)])
+    # this uses true surface elevation s
+    ns = as_vector([-s.dx(0), Constant(1.0)])
     ubm = trace_vector_to_p2(basemesh, mesh, u)  # surface velocity (m s-1)
-    Phibm = Function(P1bm).project(- dot(ubm, ns))  # interpolate bad here (because P2 nodes)
+    Phi = Function(P1bm).project(- dot(ubm, ns))  # interpolate() would be bad here (P2 nodes)
 
     # explicit step SKE using truncation
     # FIXME include SMB choices
     # FIXME replace with semi-implicit VI solve (explicit as option)
-    snew = sbm - dt * Phibm
-    sbm.interpolate(conditional(snew < bbm, bbm, snew))
+    snew = s - dt * Phi
+    s.interpolate(conditional(snew < b, b, snew))
     t += dt
 
     # end of step reporting
-    geometryreport(n+1, t, sbm)
+    _geometry_report(n+1, t, s)
     if basemesh.comm.size == 1:
-        livefigure(basemesh, b, sbm, Phibm, t=t, fname=f'result/t{t/secpera:010.3f}.png')
+        livefigure(basemesh, b, s, Phi, t, fname=f'result/t{t/secpera:010.3f}.png')
 
 printpar('finished writing to result.pvd')
