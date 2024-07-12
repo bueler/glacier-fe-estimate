@@ -206,9 +206,8 @@ if writepvd:
     printpar('finished writing to result.pvd')
 
 printpar(f'computing ratios from {Nsamples} pair samples ...')
-printpar('  ', end='')
 from random import randrange
-_min_us_rat = np.Inf
+_max_us_rat = -np.Inf
 _min_Phi_rat = np.Inf
 _n = 0
 while _n < Nsamples:
@@ -218,8 +217,7 @@ while _n < Nsamples:
         usrat = _us_ratio(i1, i2)
         Phirat = _Phi_ratio(i1, i2, b)
         if Phirat < 0.0:
-            printpar(RED % f'{i1},{i2}', end='')
-            printpar('|', end='')
+            printpar(RED % f'{i1},{i2}')
             badcoercivefigure(basemesh,
                               b,
                               _list[i1]['s'],
@@ -228,11 +226,8 @@ while _n < Nsamples:
                               _list[i2]['Phi'],
                               _list[i1]['t'],
                               _list[i2]['t'])
-        else:
-            printpar(f'{i1},{i2}|', end='')
-        _min_us_rat = min(_min_us_rat, usrat)
+        _max_us_rat = max(_max_us_rat, usrat)
         _min_Phi_rat = min(_min_Phi_rat, Phirat)
         _n += 1
-printpar()
-printpar(f'min ratio |ur-us|_L2/|r-s|_L2:           {_min_us_rat:.3e}')
-printpar(f'min ratio (Phi(r)-Phi(s))[r-s]/|r-s|_H1: {_min_Phi_rat:.3e}')
+printpar(f'  max continuity ratio |ur-us|_L2/|r-s|_L2:           {_max_us_rat:.3e}')
+printpar(f'  min coercivity ratio (Phi(r)-Phi(s))[r-s]/|r-s|_H1: {_min_Phi_rat:.3e}')
