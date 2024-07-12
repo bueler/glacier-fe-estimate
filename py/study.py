@@ -1,15 +1,14 @@
-# A study of the geometry error theory from the paper.
-# Constructs 2D glaciers with initial Halfar profiles
+# A study of the well-posedness and error theory for the glacier geometry
+# problem.  Constructs 2D glaciers with initial Halfar profiles
 # over different beds.  Does time-steps using the free-surface
 # stabilization algorithm (FSSA) from Lofgren et al 2022.
-# (The steps are explicit but regarded as approximate solutions of the
-# implicit backward-Euler method of the paper.)  Each step solves the
+# (The steps are explicit, but may be regarded as approximate solutions of
+# the implicit backward-Euler method of the paper.)  Each step solves the
 # Stokes problem, with FSSA modification, then computes the surface
 # motion map Phi(s) = - u|_s . n_s, and then does the truncated
 # explicit step.
 
 # TODO:
-#   * evaluate ratios
 #   * outer loop for study
 
 import numpy as np
@@ -19,17 +18,18 @@ from stokesextruded import *
 from icegeometry import *
 from livefigure import *
 
-mx = 201  # odd is slightly better(!) for symmetrical Halfar-on-flat case
+mx = 201
 mz = 15
 Nsteps = 20
 dt = 1.0 * secpera
 bed = 'flat'
+Nsamples = 200          # number of samples when evaluating minimal ratios
+writepvd = False        # if True, write Stokes solution and diagnostics into .pvd
 
 L = 100.0e3             # domain is [-L,L]
 Hmin = 20.0             # kludge: insert fake ice for Stokes solve
 fssa = True             # use Lofgren et al (2022) FSSA technique
 theta_fssa = 1.0        #   with this theta value
-writediag = True        # write extra diagnostics into .pvd
 
 # Stokes regularization
 eps = 0.01
@@ -48,19 +48,19 @@ b.dat.data[:] = b_np
 s = Function(P1bm, name='surface elevation (m)')  # this is the state variable
 s.dat.data[:] = s_np
 
-# set up extruded mesh, but leave z coordinate unfilled
+# set up extruded mesh, but leave z coordinate unassigned
 mesh = ExtrudedMesh(basemesh, layers=mz, layer_height=1.0/mz)
 P1 = FunctionSpace(mesh, 'P', 1)
 P1R = FunctionSpace(mesh, 'P', 1, vfamily='R', vdegree=0)
 Vcoord = mesh.coordinates.function_space()
 x, _ = SpatialCoordinate(mesh)
-z_flat = mesh.coordinates.dat.data_ro[:,1].copy()
+z_flat = mesh.coordinates.dat.data_ro[:,1].copy()  # z coord before assignment
 
 # set up the Stokes solver on the extruded mesh
 se = StokesExtruded(mesh)
 se.mixed_TaylorHood()
 se.body_force(Constant((0.0, - rho * g)))
-se.dirichlet((1,2), Constant((0.0, 0.0)))  # wrong if ice advances to margin
+se.dirichlet((1,2), Constant((0.0, 0.0)))      # problematic if ice advances to margin
 se.dirichlet(('bottom',), Constant((0.0, 0.0)))
 params = SolverParams['newton']
 params.update(SolverParams['mumps'])
@@ -114,6 +114,27 @@ def _p_hydrostatic(mesh, sR):
     phydro.rename('p_hydro (Pa)')
     return phydro
 
+_list = []
+
+def _us_ratio(k, l):
+    # compute the ratio  |ur-us|_L2 / |r-s|_L2
+    dus = errornorm(_list[k]['us'], _list[l]['us'], norm_type='L2')
+    ds = errornorm(_list[k]['s'], _list[l]['s'], norm_type='L2')
+    return dus / ds
+
+def _Phi_ratio(k, l, b):
+    # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_H1, but zero r,s used
+    # in "[r-s]" where r-b or s-b is below threshold thickness
+    Hth = 300.0
+    rr, ss = _list[k]['s'], _list[l]['s']
+    # OBSERVATION: this cropping can be strengthed so that r-s is replaced by
+    # zero if either thickness is below threshold
+    rrcrop = conditional(rr - b > Hth, rr, 0.0)
+    sscrop = conditional(ss - b > Hth, ss, 0.0)
+    dPhi = assemble((_list[k]['Phi'] - _list[l]['Phi']) * (rrcrop - sscrop) * dx)
+    ds = errornorm(rr, ss, norm_type='H1')
+    return dPhi / ds
+
 # time-stepping loop
 newcoord = Function(Vcoord)
 sRfake = Function(P1R)
@@ -125,7 +146,8 @@ mkoutdir('result/')
 printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a ...')
 printpar(f'  solving 2D Stokes + SKE on {mx} x {mz} extruded mesh over {bed} bed')
 printpar(f'  dimensions: n_u = {se.V.dim()}, n_p = {se.W.dim()}')
-outfile = VTKFile("result.pvd")
+if writepvd:
+    outfile = VTKFile("result.pvd")
 for n in range(Nsteps):
     # start with reporting
     if n == 0:
@@ -146,20 +168,26 @@ for n in range(Nsteps):
     printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
     u.rename('velocity (m s-1)')
     p.rename('pressure (Pa)')
-    if writediag:
+
+    # optionally write t-dependent .pvd
+    if writepvd:
         nu, nueps = _effective_viscosity(mesh, u)
         phydro = _p_hydrostatic(mesh, sRfake)
         pdiff = Function(P1).interpolate(p - phydro)
         pdiff.rename('pdiff = phydro - p (Pa)')
         outfile.write(u, p, nu, nueps, pdiff, time=t)
-    else:
-        outfile.write(u, p, time=t)
 
     # compute surface motion map  Phi(s) = - u|_s . n_s   (m s-1)
     # this uses true surface elevation s
     ns = as_vector([-s.dx(0), Constant(1.0)])
     ubm = trace_vector_to_p2(basemesh, mesh, u)  # surface velocity (m s-1)
     Phi = Function(P1bm).project(- dot(ubm, ns))  # interpolate() would be bad here (P2 nodes)
+
+    # save surface elevation and velocity into list for ratio evals
+    _list.append({'t': t,
+                  's': s.copy(deepcopy=True),
+                  'us': ubm.copy(deepcopy=True),
+                  'Phi': Phi.copy(deepcopy=True)})
 
     # explicit step SKE using truncation
     # FIXME include SMB choices
@@ -174,4 +202,37 @@ for n in range(Nsteps):
         livefigure(basemesh, b, s, Phi, t, fname=f'result/t{t/secpera:010.3f}.png',
                    writehalfar=(bed == 'flat' and n + 1 == Nsteps))
 
-printpar('finished writing to result.pvd')
+if writepvd:
+    printpar('finished writing to result.pvd')
+
+printpar(f'computing ratios from {Nsamples} pair samples ...')
+printpar('  ', end='')
+from random import randrange
+_min_us_rat = np.Inf
+_min_Phi_rat = np.Inf
+_n = 0
+while _n < Nsamples:
+    i1 = randrange(0, len(_list))
+    i2 = randrange(0, len(_list))
+    if i1 != i2:
+        usrat = _us_ratio(i1, i2)
+        Phirat = _Phi_ratio(i1, i2, b)
+        if Phirat < 0.0:
+            printpar(RED % f'{i1},{i2}', end='')
+            printpar('|', end='')
+            badcoercivefigure(basemesh,
+                              b,
+                              _list[i1]['s'],
+                              _list[i2]['s'],
+                              _list[i1]['Phi'],
+                              _list[i2]['Phi'],
+                              _list[i1]['t'],
+                              _list[i2]['t'])
+        else:
+            printpar(f'{i1},{i2}|', end='')
+        _min_us_rat = min(_min_us_rat, usrat)
+        _min_Phi_rat = min(_min_Phi_rat, Phirat)
+        _n += 1
+printpar()
+printpar(f'min ratio |ur-us|_L2/|r-s|_L2:           {_min_us_rat:.3e}')
+printpar(f'min ratio (Phi(r)-Phi(s))[r-s]/|r-s|_H1: {_min_Phi_rat:.3e}')
