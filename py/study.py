@@ -1,17 +1,16 @@
-# A study using the geometry error bounds which are described in the
-# paper.  Constructs 2D glaciers with a Halfar profile
+# A study of the geometry error theory from the paper.
+# Constructs 2D glaciers with initial Halfar profiles
 # over different beds.  Does time-steps using the free-surface
 # stabilization algorithm (FSSA) from Lofgren et al 2022.
-# The steps are explicit but regarded as approximate solutions of the
-# implicit backward-Euler method of the paper.  Each step solves the
+# (The steps are explicit but regarded as approximate solutions of the
+# implicit backward-Euler method of the paper.)  Each step solves the
 # Stokes problem, with FSSA modification, then computes the surface
 # motion map Phi(s) = - u|_s . n_s, and then does the truncated
-# explicit step.  The diagnostic quantities defined in Theorem 6.1
-# are evaluated at each step.
+# explicit step.
 
 # TODO:
-#   * evaluate bounds
 #   * evaluate ratios
+#   * outer loop for study
 
 import numpy as np
 from firedrake import *
