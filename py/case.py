@@ -26,9 +26,10 @@ import sys
 import numpy as np
 from firedrake import *
 from firedrake.output import VTKFile
-from stokesextruded import *
-from icegeometry import *
-from livefigure import *
+from stokesextruded import StokesExtruded, SolverParams, trace_vector_to_p2, printpar
+from geometry import secpera, bedtypes, g, rho, nglen, A3, B3, t0, halfargeometry
+from figures import mkoutdir, livefigure, badcoercivefigure
+from measure import sampleratios
 
 mx = int(sys.argv[1])
 Nsteps = int(sys.argv[2])
@@ -57,7 +58,7 @@ P1bm = FunctionSpace(basemesh, 'P', 1)
 xbm = basemesh.coordinates.dat.data_ro
 assert bed in bedtypes
 #print(f"Halfar t0 = {t0 / secpera:.3f} a")
-b_np, s_np = geometry(xbm, t=t0, bed=bed)  # get numpy arrays
+b_np, s_np = halfargeometry(xbm, t=t0, bed=bed)  # get numpy arrays
 b = Function(P1bm, name='bed elevation (m)')
 b.dat.data[:] = b_np
 s = Function(P1bm, name='surface elevation (m)')  # this is the state variable
@@ -129,25 +130,6 @@ def _p_hydrostatic(mesh, sR):
     phydro.rename('p_hydro (Pa)')
     return phydro
 
-_list = []
-
-def _us_ratio(k, l):
-    # compute the ratio  |ur-us|_L2 / |r-s|_L2
-    dus = errornorm(_list[k]['us'], _list[l]['us'], norm_type='L2')
-    ds = errornorm(_list[k]['s'], _list[l]['s'], norm_type='L2')
-    return dus / ds
-
-def _Phi_ratio(k, l, b):
-    # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_H1,  but chop
-    # where either thickness r-b, s-b is below threshold
-    Hth = 100.0
-    rr, ss = _list[k]['s'], _list[l]['s']
-    ig = (_list[k]['Phi'] - _list[l]['Phi']) * (rr - ss)
-    igcrop = conditional(rr - b > Hth, conditional(ss - b > Hth, ig, 0.0), 0.0)
-    dPhi = assemble(igcrop * dx)
-    ds = errornorm(rr, ss, norm_type='H1')
-    return dPhi / ds**qcoercive
-
 # time-stepping loop
 newcoord = Function(Vcoord)
 sRfake = Function(P1R)
@@ -164,6 +146,7 @@ if writepng:
 if writepvd:
     printpar(f'  opening {sys.argv[6]} ...')
     outfile = VTKFile(sys.argv[6])
+_slist = []
 for n in range(Nsteps):
     # start with reporting
     if n == 0:
@@ -200,10 +183,10 @@ for n in range(Nsteps):
     Phi = Function(P1bm).project(- dot(ubm, ns))  # interpolate() would be bad here (P2 nodes)
 
     # save surface elevation and velocity into list for ratio evals
-    _list.append({'t': t,
-                  's': s.copy(deepcopy=True),
-                  'us': ubm.copy(deepcopy=True),
-                  'Phi': Phi.copy(deepcopy=True)})
+    _slist.append({'t': t,
+                   's': s.copy(deepcopy=True),
+                   'us': ubm.copy(deepcopy=True),
+                   'Phi': Phi.copy(deepcopy=True)})
 
     # explicit step SKE using truncation
     # FIXME include SMB choices
@@ -223,29 +206,4 @@ if writepng:
 if writepvd:
     printpar(f'finished writing to {sys.argv[6]}')
 
-printpar(f'computing ratios from {Nsamples} pair samples ...')
-from random import randrange
-_max_us_rat = -np.Inf
-_min_Phi_rat = np.Inf
-_n = 0
-while _n < Nsamples:
-    i1 = randrange(0, len(_list))
-    i2 = randrange(0, len(_list))
-    if i1 != i2:
-        usrat = _us_ratio(i1, i2)
-        Phirat = _Phi_ratio(i1, i2, b)
-        if Phirat < 0.0:
-            printpar(RED % f'{i1},{i2}')
-            badcoercivefigure(basemesh,
-                              b,
-                              _list[i1]['s'],
-                              _list[i2]['s'],
-                              _list[i1]['Phi'],
-                              _list[i2]['Phi'],
-                              _list[i1]['t'],
-                              _list[i2]['t'])
-        _max_us_rat = max(_max_us_rat, usrat)
-        _min_Phi_rat = min(_min_Phi_rat, Phirat)
-        _n += 1
-printpar(f'  max continuity ratio |ur-us|_L2/|r-s|_L2:             {_max_us_rat:.3e}')
-printpar(f'  min coercivity ratio (Phi(r)-Phi(s))[r-s]/|r-s|_H1^q: {_min_Phi_rat:.3e}')
+sampleratios(_slist, basemesh, b, Nsamples=Nsamples, qcoercive=qcoercive)

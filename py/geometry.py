@@ -40,7 +40,7 @@ def _s_halfar(x, t=t0, nglen=3.0):
     s[abs(x) >= s0] = -10000.0  # needs max with bed below
     return s
 
-def geometry(x, t=t0, bed='flat'):
+def halfargeometry(x, t=t0, bed='flat'):
     import numpy as np
     assert bed in bedtypes
     b = np.zeros(np.shape(x))
