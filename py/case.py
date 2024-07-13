@@ -5,15 +5,21 @@
 # the implicit backward-Euler method of the paper.)  Each step solves the
 # Stokes problem, with FSSA modification, then computes the surface
 # motion map Phi(s) = - u|_s . n_s, and then does the truncated
-# explicit step.
+# explicit step.  Note this runs only in serial.
 #
 # After activating the Firedrake venv, run as
 #   $ python3 study.py MX NSTEPS DT BED
-# The default run is
+# For example:
 #   $ python3 study.py 201 20 1.0 flat
+# To write an optional t-dependent image files indo directory do:
+#   $ python3 study.py 201 20 1.0 flat result/
 # To write an optional t-dependent .pvd file with Stokes results and
 # diagnostics, append the filename:
-#   $ python3 study.py 201 20 1.0 flat result.pvd
+#   $ python3 study.py 201 20 1.0 flat result/ result.pvd
+
+# TODO:
+#   * separate stuff into measure.py, and scale H1 norm with [L] as in paper
+#   * use qcoercive = 1.5
 
 import sys
 import numpy as np
@@ -27,7 +33,8 @@ mx = int(sys.argv[1])
 Nsteps = int(sys.argv[2])
 dt = float(sys.argv[3]) * secpera
 bed = sys.argv[4]
-writepvd = (len(sys.argv) > 5)
+writepng = (len(sys.argv) > 5)
+writepvd = (len(sys.argv) > 6)
 
 mz = 15                 # number of cells in each column
 Nsamples = 200          # number of samples when evaluating minimal ratios
@@ -148,18 +155,20 @@ sR = Function(P1R)
 bR = Function(P1R)
 bR.dat.data[:] = b.dat.data_ro
 t = 0.0
-mkoutdir('result/')
 printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a ...')
 printpar(f'  solving 2D Stokes + SKE on {mx} x {mz} extruded mesh over {bed} bed')
 printpar(f'  dimensions: n_u = {se.V.dim()}, n_p = {se.W.dim()}')
+if writepng:
+    printpar(f'  creating directory {sys.argv[5]} for image files ...')
+    mkoutdir(sys.argv[5])
 if writepvd:
-    printpar(f'  opening {sys.argv[5]} ...')
-    outfile = VTKFile(sys.argv[5])
+    printpar(f'  opening {sys.argv[6]} ...')
+    outfile = VTKFile(sys.argv[6])
 for n in range(Nsteps):
     # start with reporting
     if n == 0:
         _geometry_report(n, t, s)
-        if basemesh.comm.size == 1:
+        if writepng:
             livefigure(basemesh, b, s, None, t, fname=f'result/t{t/secpera:010.3f}.png')
 
     # set geometry (z coordinate) of extruded mesh
@@ -205,12 +214,14 @@ for n in range(Nsteps):
 
     # end of step reporting
     _geometry_report(n + 1, t, s)
-    if basemesh.comm.size == 1:
+    if writepng:
         livefigure(basemesh, b, s, Phi, t, fname=f'result/t{t/secpera:010.3f}.png',
                    writehalfar=(bed == 'flat' and n + 1 == Nsteps))
 
-if writepvd:
+if writepng:
     printpar(f'finished writing to {sys.argv[5]}')
+if writepvd:
+    printpar(f'finished writing to {sys.argv[6]}')
 
 printpar(f'computing ratios from {Nsamples} pair samples ...')
 from random import randrange
