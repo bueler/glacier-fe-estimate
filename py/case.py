@@ -138,15 +138,13 @@ def _us_ratio(k, l):
     return dus / ds
 
 def _Phi_ratio(k, l, b):
-    # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_H1,  but chop thicknesses
-    # r-b, r-s in "[r-s]" where they are below threshold thickness
-    Hth = 300.0
+    # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_H1,  but chop
+    # where either thickness r-b, s-b is below threshold
+    Hth = 100.0
     rr, ss = _list[k]['s'], _list[l]['s']
-    # OBSERVATION: this cropping can be strengthed so that r-s is replaced by
-    # b if either thickness is below threshold
-    rrcrop = conditional(rr - b > Hth, rr, b)
-    sscrop = conditional(ss - b > Hth, ss, b)
-    dPhi = assemble((_list[k]['Phi'] - _list[l]['Phi']) * (rrcrop - sscrop) * dx)
+    ig = (_list[k]['Phi'] - _list[l]['Phi']) * (rr - ss)
+    igcrop = conditional(rr - b > Hth, conditional(ss - b > Hth, ig, 0.0), 0.0)
+    dPhi = assemble(igcrop * dx)
     ds = errornorm(rr, ss, norm_type='H1')
     return dPhi / ds**qcoercive
 
