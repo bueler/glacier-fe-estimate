@@ -19,7 +19,8 @@
 
 # TODO:
 #   * separate stuff into measure.py, and scale H1 norm with [L] as in paper
-#   * use qcoercive = 1.5
+#   * BUG: denominator of continuity ratio also H1 norm
+#   * better visualization of badcoercive ... with color for where integrand is negative
 
 import sys
 import numpy as np
@@ -38,6 +39,7 @@ writepvd = (len(sys.argv) > 6)
 
 mz = 15                 # number of cells in each column
 Nsamples = 200          # number of samples when evaluating minimal ratios
+qcoercive = 1.5         # try this?
 
 L = 100.0e3             # domain is [-L,L]
 Hmin = 20.0             # kludge: insert fake ice for Stokes solve
@@ -146,7 +148,7 @@ def _Phi_ratio(k, l, b):
     sscrop = conditional(ss - b > Hth, ss, b)
     dPhi = assemble((_list[k]['Phi'] - _list[l]['Phi']) * (rrcrop - sscrop) * dx)
     ds = errornorm(rr, ss, norm_type='H1')
-    return dPhi / ds
+    return dPhi / ds**qcoercive
 
 # time-stepping loop
 newcoord = Function(Vcoord)
@@ -247,5 +249,5 @@ while _n < Nsamples:
         _max_us_rat = max(_max_us_rat, usrat)
         _min_Phi_rat = min(_min_Phi_rat, Phirat)
         _n += 1
-printpar(f'  max continuity ratio |ur-us|_L2/|r-s|_L2:           {_max_us_rat:.3e}')
-printpar(f'  min coercivity ratio (Phi(r)-Phi(s))[r-s]/|r-s|_H1: {_min_Phi_rat:.3e}')
+printpar(f'  max continuity ratio |ur-us|_L2/|r-s|_L2:             {_max_us_rat:.3e}')
+printpar(f'  min coercivity ratio (Phi(r)-Phi(s))[r-s]/|r-s|_H1^q: {_min_Phi_rat:.3e}')
