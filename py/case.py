@@ -1,16 +1,21 @@
-# A study of the well-posedness and error theory for the glacier geometry
-# problem.  Constructs 2D glaciers with initial Halfar profiles
-# over different beds.  Does time-steps using the free-surface
-# stabilization algorithm (FSSA) from Lofgren et al 2022.
+# Run one case as specified by runtime options.  Constructs 2D glaciers
+# with initial Halfar profiles over different beds.  Does time-steps using
+# the free-surface stabilization algorithm (FSSA) from Lofgren et al 2022.
 # (The steps are explicit, but may be regarded as approximate solutions of
 # the implicit backward-Euler method of the paper.)  Each step solves the
 # Stokes problem, with FSSA modification, then computes the surface
 # motion map Phi(s) = - u|_s . n_s, and then does the truncated
 # explicit step.
+#
+# After activating the Firedrake venv, run as
+#   $ python3 study.py MX NSTEPS DT BED
+# The default run is
+#   $ python3 study.py 201 20 1.0 flat
+# To write an optional t-dependent .pvd file with Stokes results and
+# diagnostics, append the filename:
+#   $ python3 study.py 201 20 1.0 flat result.pvd
 
-# TODO:
-#   * outer loop for study
-
+import sys
 import numpy as np
 from firedrake import *
 from firedrake.output import VTKFile
@@ -18,13 +23,14 @@ from stokesextruded import *
 from icegeometry import *
 from livefigure import *
 
-mx = 201
-mz = 15
-Nsteps = 20
-dt = 1.0 * secpera
-bed = 'flat'
+mx = int(sys.argv[1])
+Nsteps = int(sys.argv[2])
+dt = float(sys.argv[3]) * secpera
+bed = sys.argv[4]
+writepvd = (len(sys.argv) > 5)
+
+mz = 15                 # number of cells in each column
 Nsamples = 200          # number of samples when evaluating minimal ratios
-writepvd = False        # if True, write Stokes solution and diagnostics into .pvd
 
 L = 100.0e3             # domain is [-L,L]
 Hmin = 20.0             # kludge: insert fake ice for Stokes solve
@@ -147,7 +153,8 @@ printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a ...')
 printpar(f'  solving 2D Stokes + SKE on {mx} x {mz} extruded mesh over {bed} bed')
 printpar(f'  dimensions: n_u = {se.V.dim()}, n_p = {se.W.dim()}')
 if writepvd:
-    outfile = VTKFile("result.pvd")
+    printpar(f'  opening {sys.argv[5]} ...')
+    outfile = VTKFile(sys.argv[5])
 for n in range(Nsteps):
     # start with reporting
     if n == 0:
@@ -203,7 +210,7 @@ for n in range(Nsteps):
                    writehalfar=(bed == 'flat' and n + 1 == Nsteps))
 
 if writepvd:
-    printpar('finished writing to result.pvd')
+    printpar(f'finished writing to {sys.argv[5]}')
 
 printpar(f'computing ratios from {Nsamples} pair samples ...')
 from random import randrange
