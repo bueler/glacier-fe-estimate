@@ -13,7 +13,6 @@
 % Used for creating new theorem and remark environments
 \newsiamremark{remark}{Remark}
 \newsiamthm{claim}{Claim}
-%\newsiamthm{conjecture}{Conjecture}
 \newsiamremark{example}{Example}
 
 \newcommand{\newindthm}[2]{
@@ -209,11 +208,11 @@ FIXME: WHAT WE ACCOMPLISH
 This paper is organized as follows.  Section \ref{sec:stokes} recalls the existing theory of the Glen-law Stokes problem on a fixed domain, but we add an apparently-new bound on the surface trace of the velocity solution (Corollary \ref{cor:surfacetracebound}).  In Section \ref{sec:model} we discretize the time derivative and then reformulate the coupled problem \eqref{eq:icydomain}--\eqref{eq:stokes} as a VI weak form for an implicit (backward Euler) time step.  The key coupling term in this problem is the surface motion portion (i.e.~$\bu|_s\cdot \bn_s$) of the SKE \eqref{eq:ske}, for which we provide a quantitative bound (Lemma \ref{lem:philipschitz}) over a Sobolev space of surface elevation functions.  However, this bound is subject to a conjecture that the surface trace of velocity is Lipschitz continuous with respect to surface elevation.  Well-posedness for each implicit time-step problem is considered in Section \ref{sec:theory}, including a second conjecture on the coercivity of the surface motion term.  Certain physical and modeling ideas are discussed here, as context needed to understand the latter conjecture.  At this point we have in hand a mathematically-precise, time-discretized continuum model, though one with only conjectural well-posedness; see Theorem \ref{thm:stepwellposed}.  This continuum model, precisely stated here for what we believe is the first time, is one which can be approximated by a finite element (FE) method.  In Section \ref{sec:abstractestimate} we prove an abstract FE error estimate, namely Theorem \ref{thm:abstractestimate}, and its corollaries, for general VI problems involving fully-nonlinear operators on Banach spaces.  This new estimate, which makes coercive and Lipshitz assumptions, extends the classical case by Falk \cite{Falk1974} for bilinear forms.  [FIXME: rewrite needed from here] In Section \ref{sec:application} we apply the estimate to the glacier model.  The distinctive character of non-sliding land-based glaciers, in terms of how they respond to climate (mass balance) perturbations, and how they stagnate as ice thickness approaches zero, implies that certain terms in the error estimate are small.  Computable geometry error upper bounds follow.  These estimates are demonstrated in Section \ref{sec:demo} on an idealized, but non-trivial, glacier simulation implemented in Firedrake \cite{Hametal2023}.
 
 
-\section{On the surface velocity from a Stokes problem} \label{sec:stokes}
+\section{The surface velocity from a glacier Stokes problem} \label{sec:stokes}
 
-In this Section we consider the weak form of the non-sliding, isothermal, and Glen-law Stokes sub-model \eqref{eq:glen}--\eqref{eq:stokes}.  This sub-model is applied on a fixed 3D domain $\Lambda = \Lambda(t)$, defined by \eqref{eq:icydomain}, at a fixed time $t$.  It computes the surface velocity field $\bu|_s$ which appears in NCP \eqref{eq:ncp}, the weak form of which is presented in Section \ref{sec:model} below.
+In this Section we consider the weak form of the non-sliding, isothermal, and Glen-law Stokes sub-model \eqref{eq:glen}--\eqref{eq:stokes}.  This sub-model is applied on a fixed 3D domain $\Lambda = \Lambda(t)$, defined by \eqref{eq:icydomain}, at a fixed time $t$, and it computes the surface velocity field $\bu|_s$ which appears in NCP \eqref{eq:ncp}.  Note that the weak form of \eqref{eq:ncp} will be presented in Section \ref{sec:model} below.
 
-Suitable function spaces for this Stokes problem are well-known so long as the domain $\Lambda$ is sufficiently regular.  We assume that the ice base $\Gamma_b\subset\partial \Lambda$, on which a Dirichlet condition $\bu=\bzero$ holds, has positive measure.  The remaining Neumann boundary $\Gamma_s = \partial \Lambda \setminus \overline{\Gamma_b}$ must be sufficiently-smooth so that a zero normal stress condition can be applied.
+Suitable function spaces for Stokes problem \eqref{eq:glen}--\eqref{eq:stokes} are well-known so long as the domain $\Lambda$ is sufficiently regular.  We will assume that the ice base $\Gamma_b\subset\partial \Lambda$, on which a Dirichlet condition $\bu=\bzero$ holds, has positive measure, and that the remaining Neumann boundary $\Gamma_s = \partial \Lambda \setminus \overline{\Gamma_b}$ is sufficiently-smooth so that a zero normal stress condition can be applied.
 
 Let $1 < \pp \le 2$.  (Recall that $\pp=(1/\nn)+1\approx 4/3$ in viscosity formula \eqref{eq:glen}.)  The Sobolev space \cite{Evans2010} of real-valued functions with $\pp$th-power integrable first derivatives is denoted $W^{1,\pp}(\Lambda)$.  Let
 \begin{equation}
@@ -223,7 +222,7 @@ denote the corresponding space of vector-valued functions with value (trace) zer
 \begin{equation}
 \|\bv\|_{\cV} = \left(\int_\Lambda |\bv|^\pp\,dx\,dz + [L]^\pp \int_\Lambda |\grad\bv|^\pp\,dx\,dz\right)^{1/\pp}. \label{eq:vnorm}
 \end{equation}
-Here $dx\,dz = dx_1\,dx_2\,dz$ is the 3D volume element, which will be suppressed in later integrals over $\Lambda$.  Note that $|\bv|$ denotes the Euclidean norm of $\bv\in\RR^3$ and $|\grad\bv|=\left((\grad\bv)_{ij} (\grad\bv)_{ij}\right)^{1/2}$ is the Frobenius norm of $\grad\bv\in\RR^{3\times 3}$.  Remark 1.2.1 in \cite{BoffiBrezziFortin2013} explains the length scaling in \eqref{eq:vnorm}, so that $\|\bv\|_{\cV}$ has consistent units.
+Here $dx\,dz = dx_1\,dx_2\,dz$ is the 3D volume element, which will be suppressed from now on in integrals over $\Lambda$.  Note that $|\bv|$ denotes the Euclidean norm of $\bv\in\RR^3$ and $|\grad\bv|=\left((\grad\bv)_{ij} (\grad\bv)_{ij}\right)^{1/2}$ is the Frobenius norm of $\grad\bv\in\RR^{3\times 3}$.  Remark 1.2.1 in \cite{BoffiBrezziFortin2013} explains the length scaling in \eqref{eq:vnorm}, such that $\|\bv\|_{\cV}$ has consistent units.
 
 Let $\cQ=L^{\pp'}(\Lambda)$ where $\pp'=\pp/(\pp-1)\approx 4$ is the conjugate exponent.  Define
 \begin{equation}
@@ -231,64 +230,72 @@ Let $\cQ=L^{\pp'}(\Lambda)$ where $\pp'=\pp/(\pp-1)\approx 4$ is the conjugate e
 \end{equation}
 as the space of admissible velocity and pressure pairs.  For $(\bu,p) \in \mathcal{M}$ define
 \begin{equation}
-F_\Lambda(\bu,p)[\bv,q] = \int_\Lambda 2 \nu(|D\bu|) D\bu : D\bv - p \Div\bv - (\Div\bu) q - \rhoi \bg \cdot \bv. \label{eq:glenstokes:fcnl}
+F_\Lambda(\bu,p)[\bv,q] = \int_\Lambda 2 \nu(D\bu) D\bu : D\bv - p \Div\bv - (\Div\bu) q - \rhoi \bg \cdot \bv. \label{eq:glenstokes:fcnl}
 \end{equation}
-The (mixed) weak form seeks the solution $(\bu,p)$ satisfying
+The (mixed) weak form of the Stokes sub-model seeks the solution $(\bu,p)$ satisfying
 \begin{equation}
 F_\Lambda(\bu,p)[\bv,q] = 0 \qquad \text{for all } (\bv,q) \in \mathcal{M}. \label{eq:glenstokes:weak}
 \end{equation}
 
-Jouvet and Rappaz \cite{JouvetRappaz2011} have proven that problem \eqref{eq:glenstokes:weak} is well-posed if the Neumann portion of $\partial\Lambda$ is $C^1$.  Their proof uses the equivalence of \eqref{eq:glenstokes:weak} and the minimization of a convex and coercive functional over the divergence-free subspace $\Vdiv = \{\bv\in\cV\,:\,\Div\bv=0\}$.  Our regularization in Glen law \eqref{eq:glen} differs from that in \cite{JouvetRappaz2011}, but the necessary modifications are addressed in \cite{IsaacStadlerGhattas2015}.  Note that if the weak solution is sufficiently regular then the strong form \eqref{eq:stokes} is satisfied.
+Jouvet and Rappaz \cite{JouvetRappaz2011} have proven that problem \eqref{eq:glenstokes:weak} is well-posed if the Neumann portion of $\partial\Lambda$ is $C^1$.  Their proof uses the equivalence of \eqref{eq:glenstokes:weak} and the minimization of a convex and coercive functional over the divergence-free subspace $\Vdiv = \{\bv\in\cV\,:\,\Div\bv=0\}$.  Our regularization in Glen law \eqref{eq:glen} differs from that in \cite{JouvetRappaz2011}, but the necessary modifications are addressed in \cite{IsaacStadlerGhattas2015}.  Note that if the weak solution is sufficiently regular then the strong form \eqref{eq:stokes} is also satisfied.
 
-\begin{theorem} \label{thm:stokeswellposed} \cite[Theorem 3.10]{JouvetRappaz2011} and \cite[Appendix A]{IsaacStadlerGhattas2015}.  Suppose $\Lambda$ is bounded, $\partial\Lambda$ is Lipschitz, $\Gamma_s$ is $C^1$, and $\Gamma_b$ has positive measure.  Let $1<\pp\le 2$ and $\eps>0$ in \eqref{eq:glen}.  Then there exists a unique pair $(\bu,p) \in \mathcal{M}$ solving \eqref{eq:glenstokes:weak}, and $\bu\in \Vdiv$.
+\begin{theorem}[Theorem 3.10 in \cite{JouvetRappaz2011} and Appendix A of \cite{IsaacStadlerGhattas2015}] \label{thm:stokeswellposed}  Suppose $\Lambda$ is bounded, $\partial\Lambda$ is Lipschitz, $\Gamma_s$ is $C^1$, and $\Gamma_b$ has positive measure.  Let $1<\pp\le 2$ and $\eps>0$ in \eqref{eq:glen}.  Then there exists a unique pair $(\bu,p) \in \mathcal{M}$ solving \eqref{eq:glenstokes:weak}, and $\bu\in \Vdiv$.
 \end{theorem}
 
-Our primary purpose, resumed in the next Section, is to study the glacier geometry NCP \eqref{eq:ncp}, and its weak form.  For that analysis we need to bound the surface trace $\bu|_s$ in terms of geometric properties of $\Lambda$.  This uses several inequalities.
+Our primary purpose, resumed in the next Section, is to study the glacier geometry NCP \eqref{eq:ncp}, and its weak form.  For that analysis we need to bound the surface trace $\bu|_s$ in terms of certain geometric properties of $\Lambda$.  This uses several inequalities.
 
-\begin{lemma}[Poincar\'e's inequality] \label{lem:poincare}
-Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists a dimensionless constant $c_{\pp}(\Lambda)>0$ so that for all $\bv \in \cV$,
+\begin{lemma}[Poincar\'e's inequality; (7.44) in \cite{GilbargTrudinger2001}] \label{lem:poincare}
+Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists a dimensionless constant $c_{\pp}(\Lambda)>0$ so that
 \begin{equation}
-\int_\Lambda |\bv|^\pp \le c_{\pp}(\Lambda) [L]^\pp \int_\Lambda |\grad\bv|^\pp. \label{eq:poincare}
+\int_\Lambda |\bv|^\pp \le c_{\pp}(\Lambda) [L]^\pp \int_\Lambda |\grad\bv|^\pp \qquad \text{for all } \bv \in \cV. \label{eq:poincare}
 \end{equation}
 \end{lemma}
 
-\begin{lemma}[Korn's inequality] \label{lem:korns}
-Under the same assumptions, there exists a dimensionless constant $k_{\pp}(\Lambda)>0$ so that for all $\bv \in \cV$,
+Assuming $[L]\ge 1$, it  follows from Lemma \ref{lem:poincare} that $\|\bu\|_{\cV}^\pp \le (c_{\pp}(\Lambda) + 1) [L]^\pp \int_\Lambda |\grad\bv|^\pp$; this is used below.
+ 
+\begin{lemma}[Korn's inequality; set $F(x)$ to the identity in Corollary 4.1 of \cite{Pompe2003}] \label{lem:korns}
+Under the same assumptions, there exists a dimensionless constant $k_{\pp}(\Lambda)>0$ so that
 \begin{equation}
-\int_\Lambda |\grad\bv|^\pp \le k_{\pp}(\Lambda) \int_\Lambda |D\bv|^\pp. \label{eq:korns}
+\int_\Lambda |\grad\bv|^\pp \le k_{\pp}(\Lambda) \int_\Lambda |D\bv|^\pp \qquad \text{for all } \bv \in \cV. \label{eq:korns}
 \end{equation}
 \end{lemma}
 
-From Lemma \ref{lem:poincare} it follows that $\|\bu\|_{\cV}^\pp \le (c_{\pp}(\Lambda) + 1) [L]^\pp \int_\Lambda |\grad\bv|^\pp$; this is used below.  To prove Lemma \ref{lem:korns}, set $F(x)$ to the identity in Corollary 4.1 of \cite{Pompe2003}.  A similar $\pp$-norm Korn's inequality was earlier proven by Ting \cite{Ting1972}---see Theorem 5.12 in \cite{KikuchiOden1988}---but only for zero Dirichlet conditions over all of $\partial \Lambda$.
+A similar $\pp$-norm Korn's inequality was earlier proven by Ting \cite{Ting1972}---see Theorem 5.12 in \cite{KikuchiOden1988}---but for zero Dirichlet conditions over all of $\partial \Lambda$.
 
-The main idea of the following bound is that velocity is controlled by geometric properties of the domain $\Lambda$, including constants in the above inequalities, and physical constants.  It is an exercise for the reader to check unit consistency in this result.
+The main idea of the following \emph{a priori}  bound is that velocity is controlled by geometric properties of the domain $\Lambda$, including the constants in the above inequalities, along with certain physical constants.  We will denote the ice volume by $|\Lambda|$.
 
-\begin{lemma}[3D \emph{a priori} bound] \label{lem:stokesapriori}
-Suppose $\bu\in\cV$ is the Stokes velocity solution from Theorem \ref{thm:stokeswellposed}.  Let $|\Lambda|$ denote the ice volume.  Then:
+\begin{lemma} \label{lem:stokesapriori}
+Suppose $\bu\in\cV$ is the Stokes velocity solution from Theorem \ref{thm:stokeswellposed}.  Then there is $C>0$ depending on $\pp$, $\rhoi |\bg|$, $\nu_\pp$, $\eps$, $[L]$, $|\Lambda|$, $c_\pp(\Lambda)$, and $k_\pp(\Lambda)$, but not on $\bu$, so that
 \begin{equation}
-\|\bu\|_{\cV}^\pp \le \left(\frac{\rhoi |\bg| (c_{\pp}(\Lambda) + 1) k_{\pp}(\Lambda)}{2 \nu_\pp}\right)^{\pp'} [L]^{\pp\pp'} |\Lambda|. \label{eq:stokesapriori}
+\|\bu\|_{\cV} \le C. \label{eq:stokesapriori}
 \end{equation}
-
 \end{lemma}
 
 \begin{proof}
 From \eqref{eq:glenstokes:weak} and $\bu \in\Vdiv$ it follows that
 \begin{equation}
-0= F_\Lambda(\bu,p)[\bu,p] = \int_\Lambda 2 \nu(|D\bu|) D\bu : D\bu - \rhoi \bg \cdot \bu.  \label{eq:stokes:substituteu}
+0= F_\Lambda(\bu,p)[\bu,p] = \int_\Lambda 2 \nu(D\bu) D\bu : D\bu - \rhoi \bg \cdot \bu.  \label{eq:stokes:substituteu}
 \end{equation}
-Apply Lemma \ref{lem:korns}, equation \eqref{eq:glen}, equation \eqref{eq:stokes:substituteu}, and H\"older's inequality:
+Apply Korn's inequality, the facts that $\pp>0$ and $(\pp-2)/2 \le 0$, and equation \eqref{eq:glen}:
 \begin{align}
-\int_\Lambda |\grad\bu|^\pp &\le k_{\pp}(\Lambda) \int_\Lambda |D\bu|^{\pp-2} D\bu:D\bu \label{eq:stokes:workapriori} \\
-	&\le \frac{k_{\pp}(\Lambda)}{2 \nu_\pp} \int_\Lambda 2 \nu_\pp \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} D\bu:D\bu \notag \\
-	&= \frac{k_{\pp}(\Lambda)}{2 \nu_\pp} \int_\Lambda \rhoi \bg \cdot \bu \notag \\
-	&\le \frac{k_{\pp}(\Lambda)}{2 \nu_\pp} \|\rhoi \bg\|_{L^{\pp'}} \|\bu\|_{L^\pp} \notag \\
-	&\le \frac{\rhoi |\bg| k_{\pp}(\Lambda)}{2 \nu_\pp} |\Lambda|^{1/\pp'} \|\bu\|_{L^\pp}. \notag
+\int_\Lambda |\grad\bu|^\pp &\le k_{\pp}(\Lambda) \int_\Lambda |D\bu|^\pp \le k_{\pp}(\Lambda) \int_\Lambda \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} \left(D\bu:D\bu + \eps\right) \label{eq:stokes:startapriori} \\
+	&= k_{\pp}(\Lambda) \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \int_\Lambda \nu(D\bu) D\bu:D\bu\right]. \notag
 \end{align}
-(This assumes that ice density and gravity are constant.)  By the comment after Lemma \ref{lem:poincare}, and the simple fact $\|\bu\|_{L^\pp} \le \|\bu\|_{\cV}$, we have
-\begin{align*}
-\|\bu\|_{\cV}^\pp \le (c_{\pp}(\Lambda) + 1) [L]^\pp \frac{\rhoi |\bg| k_{\pp}(\Lambda)}{2 \nu_\pp} |\Lambda|^{1/\pp'} \|\bu\|_{\cV}.
-\end{align*}
-Divide by the norm and raise both sides to the $\pp' = \pp/(\pp-1)$ power to yield \eqref{eq:stokesapriori}.
+Thus by equation \eqref{eq:stokes:substituteu} and H\"older's inequality we have
+\begin{align}
+\int_\Lambda |\grad\bu|^\pp &\le k_{\pp}(\Lambda) \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \int_\Lambda \rhoi \bg \cdot \bu\right] \label{eq:stokes:workapriori} \\
+	&\le k_{\pp}(\Lambda) \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \rhoi |\bg| |\Lambda|^{1/\pp'} \|\bu\|_\cV\right]. \notag
+\end{align}
+(This assumes that $\rhoi$ and $|\bg|$ are constant.)  By the comment after Lemma \ref{lem:poincare},
+\begin{equation}
+\|\bu\|_{\cV}^\pp \le (c_{\pp}(\Lambda) + 1) [L]^\pp k_{\pp}(\Lambda) \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \rhoi |\bg| |\Lambda|^{1/\pp'} \|\bu\|_\cV\right].
+\end{equation}
+
+Let $z=\|\bu\|_\cV$.  We have proved that
+\begin{equation}
+z^\pp \le c_0 + c_1 z
+\end{equation}
+for $\pp>1$ and some constants $c_i>0$.  Note that $g(y) = y^\pp - c_1 y - c_0$ is smooth with $g(0)=-c_0<0$ and $g(y) \to \infty$ as $y \to \infty$, so there exists a right-most root $\tilde y>0$, with $\tilde y = f(\pp,c_0,c_1)$ in some manner, such that since $g(z)\le 0$ we have $z \le \tilde y$.  This proves inequality \eqref{eq:stokesapriori} with $C=\tilde y$.
 \end{proof}
 
 \begin{lemma}[Trace inequality] \label{lem:trace}
@@ -296,34 +303,34 @@ Under the domain assumptions of Theorem \ref{thm:stokeswellposed}, there exists 
 \begin{equation}
 \int_{\Gamma_s} |\bv|^\pp \,dS \le \frac{\gamma_{\pp}(\Lambda)}{[L]} \|\bv\|_{\cV}^\pp \label{eq:trace}
 \end{equation}
-where $\bv$ on the left is the trace on $\Gamma_s$.
+where $\bv$ on the left is the trace on $\Gamma_s$.  (Here $dS$ is the area element over $\partial\Lambda$.)
 \end{lemma}
 
 \begin{proof}
-Theorem 5.5.1 in \cite{Evans2010} defines a trace operator $T:\cV\to L^\pp(\partial\Lambda)$, and a constant $C>0$, dependent only on $\pp$ and $\Lambda$, so that
+Theorem 5.5.1 in \cite{Evans2010} defines a trace operator $T:\cV\to L^\pp(\partial\Lambda)$, and a constant $c>0$, dependent only on $\pp$ and $\Lambda$, so that
 \begin{equation}
-\int_{\partial\Lambda} |T\bv|^p\,dS \le C^\pp \int_{\Lambda} |\bv|^\pp + |\grad\bv|^\pp \label{eq:tracework}
+\int_{\partial\Lambda} |T\bv|^p\,dS \le c^\pp \int_{\Lambda} |\bv|^\pp + |\grad\bv|^\pp \label{eq:tracework}
 \end{equation}
-for $\bv\in\cV$.  Here $dS$ is the area element over $\partial\Lambda$.  Assuming that $[L] \ge 1$ then, because $\bv=\bzero$ along $\Gamma_b$,
+for $\bv\in\cV$.  Assuming that $[L] \ge 1$ then, because $\bv=\bzero$ along $\Gamma_b$,
 \begin{equation}
-\int_{\Gamma_s} |T\bv|^p\,dS = \int_{\partial\Lambda} |T\bv|^p\,dS \le C^\pp \int_{\Lambda} |\bv|^\pp + [L]^p |\grad\bv|^\pp = C^\pp \|\bv\|_{\cV}^\pp. \label{eq:traceworktwo}
+\int_{\Gamma_s} |T\bv|^p\,dS = \int_{\partial\Lambda} |T\bv|^p\,dS \le c^\pp \int_{\Lambda} |\bv|^\pp + [L]^p |\grad\bv|^\pp = c^\pp \|\bv\|_{\cV}^\pp. \label{eq:traceworktwo}
 \end{equation}
-Define $\gamma_{\pp}(\Lambda)=[L] C^\pp$, which can be shown to be dimensionless.
+Define $\gamma_{\pp}(\Lambda)=[L] c^\pp$, which can be shown to be dimensionless.
 \end{proof}
 
-Combining the results in Lemmata \ref{lem:stokesapriori} and \ref{lem:trace} yields the following bound.  In using this bound one must recall that $\Lambda$ is determined by $s$ and $b$ (definition \eqref{eq:icydomain}).
+Combining Lemmata \ref{lem:stokesapriori} and \ref{lem:trace} yields the following bound.  In using this result, recall that $\Lambda$ is determined by $s$ and $b$ (definition \eqref{eq:icydomain}).
 
 \begin{corollary}[Surface velocity bound] \label{cor:surfacetracebound}
-Suppose $\bu\in\cV$ is the Stokes velocity solution from Theorem \ref{thm:stokeswellposed}.  The norm of its trace over $\Gamma_s$ is controlled, \emph{a priori}, by geometric properties of the domain $\Lambda$, the horizontal scale $[L]$, and physical constants:
+Suppose $\bu\in\cV$ is the Stokes velocity solution from Theorem \ref{thm:stokeswellposed}.  The norm of its trace over $\Gamma_s$ is controlled, \emph{a priori}, by $[L]$, $\gamma_{\pp}(\Lambda)$ in \eqref{eq:trace}, and $C$ in \eqref{eq:stokesapriori}:
 \begin{equation}
-\int_{\Gamma_s} |\bu|^\pp \,dS \le \gamma_{\pp}(\Lambda) \left(\frac{\rhoi |\bg| (c_{\pp}(\Lambda) + 1) k_{\pp}(\Lambda)}{2 \nu_\pp}\right)^{\pp'} [L]^{\pp\pp'-1} |\Lambda|. \label{eq:surfacetracebound}
+\int_{\Gamma_s} |\bu|^\pp \,dS \le \frac{\gamma_{\pp}(\Lambda)}{[L]} C^\pp. \label{eq:surfacetracebound}
 \end{equation}
 \end{corollary}
 
 
 \section{The implicit time-step model, in weak form} \label{sec:model}
 
-Now we consider implicit time-stepping models based on model \eqref{eq:icydomain}--\eqref{eq:stokes}, including NCP \eqref{eq:ncp}.  Let $\{t_n\}$ be an increasing sequence of times.  Let $\Delta t = t_n-t_{n-1}$ denote the step length.  Let $a^n(x)$ be the (temporal) average of the data $a(t,x)$ over $[t_{n-1},t_n]$.
+Now we consider implicit time-stepping models based on model \eqref{eq:icydomain}--\eqref{eq:stokes}.  Let $\{t_n\}$ be any increasing sequence of times in $[0,T]$, with $t_0=0$ and $\Delta t = t_n-t_{n-1}$ denoting the generic step length.  Let $a^n(x)$ be the (temporal) average of the data $a(t,x)$ over $[t_{n-1},t_n]$.
 
 Suppose that $s(x)\approx s(t_n,x)$ approximates the surface elevation at time $t_n$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
 \begin{equation}
