@@ -40,7 +40,7 @@ writepvd = (len(sys.argv) > 6)
 
 mz = 15                 # number of cells in each column
 Nsamples = 200          # number of samples when evaluating minimal ratios
-qcoercive = 1.5         # try this?
+qcoercive = 2.0         # try this?  justified by scaling argument?
 
 L = 100.0e3             # domain is [-L,L]
 Hmin = 20.0             # kludge: insert fake ice for Stokes solve
