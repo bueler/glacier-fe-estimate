@@ -85,6 +85,7 @@
 
 \newcommand{\Vdiv}{\cV_{\text{\textnormal{div}}}}
 
+\newcommand{\CA}{C_\text{\textnormal{A}}}
 
 % running headers and PDF metadata
 \headers{Glacier geometry evolution under Stokes dynamics}{E. Bueler}
@@ -405,66 +406,66 @@ Since $\pp'\rr' < \infty$ and $\pp'\rr' \ge \pp' \ge 2$, by Sobolev's inequality
 
 The key assumption in Lemma \ref{lem:phibound:early} is that $s\in W^{1,\rr}(\Omega)$ implies that the domain $\Lambda$ is nice enough so that Corollary \ref{cor:surfacetracebound} gives a finite bound.  The key conclusion is that $\Phi(s) \in \left(W^{1,\rr}(\Omega)\right)'$ is in the dual space.  This conclusion will be critical in analyzing the weak form of NCP \eqref{eq:be:ncp}.
 
-For $\rr>2$ the conjugate exponent $\rr'=\rr/(\rr-1)$ satisfies $1<\rr'<2$.  We conjecture next that the $L^{\rr'}$-norm of the surface trace $\bu|_s$ is Lipschitz as a function of $s \in W^{1,\rr}(\Omega)$.  In reading the Conjecture, observe that $\bu|_s$ refers to the zero-extended surface trace of the Stokes solution, as a function of $x\in\Omega$.  While $\bu|_s$ is a measurable function over $\Omega$, we do not assume it is continuous.
+For $2 \le \rr \le \infty$ the conjugate exponent $\rr'=\rr/(\rr-1)$ satisfies $1 \le \rr' \le 2$.  Now we conjecture that for some $\rr >2$, i.e.~subject to a strict inequality,\footnote{The reason for requiring $\rr>2$ is seen in Lemma \ref{lem:philipschitz}.  It would seem to be only a technical requirement.  Section \ref{sec:application} demonstrates well-behaved results using the convenient exponent $\rr=2$.} the $L^{\rr'}$-norm of the surface trace $\bu|_s$ is Lipschitz as a function of $s \in W^{1,\rr}(\Omega)$.  Note that we do not assume that $\bu|_s$ is continuous, but it is a measurable function defined over all of $\Omega$.
 
-\begin{conjecture} \label{conj:a}  There exists $\rr>2$ with the following two properties:  \emph{(i)} If $s\in W^{1,\rr}(\Omega)$ is admissible ($s\ge b$) then the conclusion of Theorem \ref{thm:stokeswellposed} applies, giving a well-defined surface velocity $\bu|_s$.  \emph{(ii)} If also $r\in W^{1,\rr}(\Omega)$ is admissible ($r\ge b$), yielding a (generally) different surface velocity $\bu|_r$, then there exists $C$, independent of $s$ and $r$, such that
+\begin{conjecture} \label{conj:a}  There exists $2 < \rr \le \infty$ with the following two properties:  \emph{(i)} If $s\in W^{1,\rr}(\Omega)$ is admissible ($s\ge b$) then the conclusion of Theorem \ref{thm:stokeswellposed} applies, giving a well-defined surface velocity $\bu|_s$.  \emph{(ii)} If also $r\in W^{1,\rr}(\Omega)$ is admissible ($r\ge b$), yielding different values $\bu|_r$, then there exists $\CA>0$, independent of $s$ and $r$, such that
 \begin{equation}
-\big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \le C \|r-s\|_{W^{1,\rr}} \label{eq:ulipschitz}
+\big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \le \CA \|r-s\|_{W^{1,\rr}}. \label{eq:ulipschitz}
 \end{equation}
-where $L^{\rr'}=L^{\rr'}(\Omega;\RR^2)$.
 \end{conjecture}
 
-From now on we will assume Conjecture \ref{conj:a} holds for some $\rr>2$.  We define
+From now on we will assume Conjecture \ref{conj:a} holds for some $2 < \rr \le \infty$.  We define
 \begin{equation}
 \cX = W^{1,\rr}(\Omega). \label{eq:defineX}
 \end{equation}
-Definition \eqref{eq:be:admissible} describes the closed and convex subset $\cK \subset \cX$.  If $s\in\cK$ then, by Conjecture \ref{conj:a}, $\bu|_s\cdot\bn_s$ is a measurable, real-valued function on $\Omega$.   For $q\in\cX$ we will write
+Definition \eqref{eq:be:admissible} describes the closed and convex admissible subset $\cK \subset \cX$.  If $s\in\cK$ then, by Conjecture \ref{conj:a}, $\bu|_s\cdot\bn_s$ is a measurable, real-valued function on $\Omega$.  For $q\in\cX$ we will, from now on, write $\Phi(s)$ as a linear functional in $\cX'$:
 \begin{equation}
 \Phi(s)[q] = -\int_\Omega \bu|_s\cdot\bn_s\,q\,dx. \label{eq:definePhi}
 \end{equation}
-Note that $\Phi(s)[q]$ is nonlinear in $s$ but (obviously) linear in $q$.  Lemma \ref{lem:phibound:early} shows that $\Phi$ maps from $\cK$ to the (topological) dual space $\cX'$.  The next Lemma proves that $\Phi$ is Lipschitz-continuous.
+(Lemma \ref{lem:phibound:early} has already shown that $\Phi$ maps from $\cK$ to the (topological) dual space $\cX'$.)  Note that $\Phi(s)[q]$ is nonlinear in $s$ but linear in $q$.  The next Lemma simply proves that $\Phi$ is Lipschitz-continuous if we assume Conjecture \ref{conj:a}.
 
 \begin{lemma} \label{lem:philipschitz}
-Assume Conjecture \ref{conj:a}.  Fix $b \in \cX$ to define $\cK$.  The map $\Phi:\cK\to\cX'$ is Lipschitz on bounded subsets of $\cK$, that is, for each radius $\rho>0$ there is $C(\rho)>0$ so that if $r,s\in B_\rho \cap \cK = \{t\in \cK\,:\,\|t\|_{\cX} \le \rho\}$ and $q\in\cX$ then
+Assume Conjecture \ref{conj:a}.  Fix $b \in \cX$ and use definition \eqref{eq:be:admissible} to define $\cK$.  The map $\Phi:\cK\to\cX'$ is Lipschitz on bounded subsets of $\cK$, that is, for each $R>0$ there is $C(R)>0$ so that if $r,s\in B_R \cap \cK = \{t\in \cK\,:\,\|t\|_{\cX} \le R\}$ and $q\in\cX$ then
 \begin{equation}
-\big|\Phi(r)[q] - \Phi(s)[q]\big| \le C(\rho)\, \|r-s\|_{\cX} \|q\|_{\cX}  \label{eq:philipschitz}
+\Big|\Phi(r)[q] - \Phi(s)[q]\Big| \le C(R)\, \|r-s\|_{\cX} \|q\|_{\cX}  \label{eq:philipschitz}
 \end{equation}
 \end{lemma}
 
-\begin{proof}
-We start by proving \eqref{eq:philipschitz}.  Suppose $s,r\in\cK$.  Add and subtract $\bu|_s \cdot \bn_r$, and apply triangle inequalities, including $|\bn_r|=\left(1+|\grad r|^2\right)^{1/2} \le 1 + |\grad r|$:
+\begin{proof}  Suppose $s,r\in\cK$.  Add and subtract $\bu|_s \cdot \bn_r$, and apply triangle inequalities, including $|\bn_r|=\left(1+|\grad r|^2\right)^{1/2} \le 1 + |\grad r|$:
 \begin{align}
 \big|\Phi(r)[q] - \Phi(s)[q]\big| &\le \int_\Omega \Big|\bu|_r\cdot \bn_r - \bu|_s \cdot \bn_s\Big| |q|\,dx \\
     &\le \int_\Omega \big|\bu|_r - \bu|_s\big| |\bn_r| |q|\,dx + \int_\Omega \big|\bu|_s\big| |\bn_r-\bn_s| |q|\,dx \notag \\
     &\le \int_\Omega \big|\bu|_r - \bu|_s\big| |q|\,dx + \int_\Omega \big|\bu|_r - \bu|_s\big| |\grad r| |q|\,dx \notag \\
     &\qquad\qquad + \int_\Omega \big|\bu|_s\big| |\grad r-\grad s| |q|\,dx \notag
 \end{align}
-Recalling definition \eqref{eq:norm:Omega}, apply H\"older's inequality to each of these integrals:
+Because $\rr>2$, Sobolev's inequality gives $\|q\|_{L^{\rr}} \le c \|q\|_\cX$ and $\|q\|_{L^\infty} \le c_\infty \|q\|_\cX$ for some $c,c_\infty>0$.  By applying H\"older's inequality to each integral we have
 \begin{align}
 \int_\Omega \big|\bu|_r - \bu|_s\big| |q|\,dx &\le \big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \|q\|_{L^{\rr}}, \label{eq:philipschitz:1} \\
-\int_\Omega \big|\bu|_r - \bu|_s\big| |\grad r| |q|\,dx &\le [L]^{-\rr} \left(\int_\Omega \big|\bu|_r - \bu|_s\big|^{\rr'} |q|^{\rr'}\, dx\right)^{1/\rr'} \|r\|_{\cX} \label{eq:philipschitz:2} \\
-    &\le [L]^{-\rr} \big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \|r\|_{\cX} \|q\|_{L^\infty}, \notag \\
-\int_\Omega \big|\bu|_s\big| |\grad r-\grad s| |q|\,dx &\le [L]^{-\rr} \left(\int_\Omega \big|\bu|_s\big|^{\rr'} |q|^{\rr'}\, dx\right)^{1/\rr'} \|r-s\|_{\cX}  \label{eq:philipschitz:3} \\
-    &\le [L]^{-\rr} \big\|\bu|_s - \bzero\big\|_{L^{\rr'}} \|r-s\|_{\cX} \|q\|_{L^\infty}. \notag
+\int_\Omega \big|\bu|_r - \bu|_s\big| |\grad r| |q|\,dx &\le \left(\int_\Omega \big|\bu|_r - \bu|_s\big|^{\rr'} |q|^{\rr'}\, dx\right)^{1/\rr'} \|\grad r\|_{L^\rr} \label{eq:philipschitz:2} \\
+    &\le [L]^{-1} \big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \|r\|_{\cX} \|q\|_{L^\infty}, \notag \\
+\int_\Omega \big|\bu|_s\big| |\grad r-\grad s| |q|\,dx &\le \left(\int_\Omega \big|\bu|_s\big|^{\rr'} |q|^{\rr'}\, dx\right)^{1/\rr'} \|\grad r- \grad s\|_{L^\rr}  \label{eq:philipschitz:3} \\
+    &\le [L]^{-1} \big\|\bu|_s - \bzero\big\|_{L^{\rr'}} \|r-s\|_{\cX} \|q\|_{L^\infty}. \notag
 \end{align}
-Also, because $\rr>2$, Sobolev's inequality gives $\|q\|_{L^{\rr}} \le c \|q\|_{W^{1,\rr}}$ and $\|q\|_{L^\infty} \le c \|q\|_{W^{1,\rr}}$.  Use these facts and Conjecture \ref{conj:a} on \eqref{eq:philipschitz:1}, \eqref{eq:philipschitz:2}, and \eqref{eq:philipschitz:3}:
-\begin{align}
-\big|\Phi(r)[q] - \Phi(s)[q]\big| &\le C \|r-s\|_{\cX} \|q\|_{\cX} + C [L]^{-\rr} \|r-s\|_{\cX} \|r\|_{\cX} \|q\|_{\cX} \\
-    &\hspace{10mm} + C [L]^{-\rr} \|s - b\|_{\cX} \|r-s\|_{\cX} \|q\|_{\cX}. \notag
-\end{align}
-Now assume $s,r,b\in B_\rho\cap \cK$.  Then \eqref{eq:philipschitz} follows with $C(\rho) = C (1 + 3 [L]^{-\rr} \rho)$ since $\|s - b\|_{\cX}\le 2\rho$ by the triangle inequality.
+Note that $\bu|_b=\bzero$, that is, when there is no glacier.  Now apply Conjecture \ref{conj:a} to \eqref{eq:philipschitz:1}, \eqref{eq:philipschitz:2}, and \eqref{eq:philipschitz:3}:
+\begin{equation}
+\big|\Phi(r)[q] - \Phi(s)[q]\big| \le \CA \left[c + c_\infty [L]^{-1} \left(\|r\|_{\cX} + \|s - b\|_{\cX}\right)\right] \|r-s\|_{\cX} \|q\|_{\cX}.
+\end{equation}
+Assume $s,r,b\in B_R\cap \cK$.\footnote{This requires $R \ge \|b\|_\cX$, in particular.}  Then, by the triangle inequality, \eqref{eq:philipschitz} follows with $C(R) = \CA \left(c + 3 c_\infty [L]^{-1} R\right)$.
 \end{proof}
 
 With the above tools we can now define a weak form operator which puts the backward Euler time step VI \eqref{eq:be:viearly} into a clean and mathematically-precise form.  If $s\in\cK$ and $q\in\cX$ then we define $F_{\Delta t}:\cK\to\cX'$:
-\begin{align}
-F_{\Delta t}(s)[q] &= \Delta t\,\Phi(s)[q] + \int_\Omega s q \label{eq:be:Fdefine}\\
-    &= \int_\Omega \left(s - \Delta t\, \bu|_s \cdot \bn_s\right) q. \notag
-\end{align}
+\begin{equation}
+F_{\Delta t}(s)[q] = \Delta t\,\Phi(s)[q] + \int_\Omega s q = \int_\Omega \left(s - \Delta t\, \bu|_s \cdot \bn_s\right) q.  \label{eq:be:Fdefine}
+\end{equation}
 Conjecture \ref{conj:a} and Lemma \ref{lem:philipschitz} say that this operator is well-defined and Lipschitz on bounded subsets, with a constant which depends linearly on $\Delta t$.  We also assume that the source term $\ell^n$, defined in \eqref{eq:be:source}, is in $\cX'$.  Then we will seek $s = s^n \in \cK$ so that
 \begin{equation}
 F_{\Delta t}(s)[r-s] \ge \ell^n[r-s] \quad \text{for all } r \in \cK. \label{eq:be:vi}
 \end{equation}
-This VI, which simply rewrites \eqref{eq:be:viearly}, is the weak form of the implicit time-step problem.  While a VI is preferred for theoretical and FE considerations, the reader should keep in mind its strong-form NCP \eqref{eq:be:ncp} as well.
+This VI, which simply rewrites \eqref{eq:be:viearly}, is the final weak form of the implicit time-step problem.  The reader should keep in mind its strong-form NCP \eqref{eq:be:ncp} as well.
+
+Instead of the specific Lipschitz statement \eqref{eq:philipschitz}, it would suffice for well-posedness purposes to know $\Big|\Phi(r)[q] - \Phi(s)[q]\Big| \le C(R)\, (\|r-s\|_{\cX})^\omega \|q\|_{\cX}$ for some $\omega>0$, which is weaker.  This is sufficient continuity for the well-posedness theorem in Section \ref{sec:theory}.  However, the finite element error theorem in Section \ref{sec:abstractestimate} needs \eqref{eq:philipschitz} with $\omega=1$.
+
+FIXME in definition \eqref{eq:be:Fdefine} one may integrate by parts [SHOW], but it is not clear how to trade-off required regularity between $\bu|_s$ and $s$ in using the functional $F_{\Delta t}$.
 
 
 \section{Theoretical considerations for VI problem~(\ref{eq:be:vi})} \label{sec:theory}
@@ -493,7 +494,7 @@ F^{\text{e}}_{\Delta t}(s)[r-s] \ge \ell^n[r-s]
 \end{equation}
 is well-posed in $L^2(\Omega)$, and again it is solved for $s \in \cK_{L^2}$ by truncation:
 \begin{equation}
-s = \max\{b, s^{n-1} - \Delta t\, \bu|_{s^{n-1}} \cdot \bn_{s^{n-1}} + \Delta t\,a^n\} \qquad (\text{\emph{explicit step}}). \label{eq:explicits}
+s = \max\{b, s^{n-1} + \Delta t\, \bu|_{s^{n-1}} \cdot \bn_{s^{n-1}} + \Delta t\,a^n\} \qquad (\text{\emph{explicit step}}). \label{eq:explicits}
 \end{equation}
 
 However, formula \eqref{eq:explicits} would seem to leave no regularity for the next step.  The derivatives in $\bn_{s}$, the trace evaluation $\bu|_{s}$, and the truncation itself all (generally) reduce regularity of $s$ relative to $s^{n-1}$.  It would seem from what we know about well-posed Stokes problems that the function $s$ defined by \eqref{eq:explicits} is not regular enough, i.e.~not sufficiently differentiable in space, so as to serve as the surface elevation at the start of the next time step.  That is, it is not clear that $s$ from \eqref{eq:explicits} defines a sufficiently-smooth domain $\Lambda$ so that the (weak) Stokes problem \eqref{eq:glenstokes:weak} is well-posed.
@@ -549,7 +550,7 @@ In Section \ref{sec:abstractestimate}, inequality \eqref{eq:conj:b} will be call
 \left|F_{\Delta t}(r)[q] - F_{\Delta t}(s)[q]\right| &\le \int_\Omega |r-s||q| + \Delta t\, \big|\Phi(r)[q] - \Phi(s)[q]\big| \\
     &\le C(\rho,\Delta t) \|r-s\|_{\cX} \|q\|_\cX. \notag
 \end{align}
-Thus $F_{\Delta t}$ is also Lipschitz continuous on bounded subsets of $\cK$.  If $\Delta t>0$ and \eqref{eq:conj:b} holds then
+Thus $F_{\Delta t}$ is also (Lipschitz) continuous on bounded subsets of $\cK$.  If $\Delta t>0$ and \eqref{eq:conj:b} holds then
 \begin{align}
 \left(F_{\Delta t}(r) - F_{\Delta t}(s)\right)[r-s] &= \int_\Omega (r-s)^2 + \Delta t\, \left(\Phi(r) - \Phi(s)\right)[r-s] \\
     &\ge \alpha\Delta t \|r-s\|_{\cX}^\qq, \notag
@@ -750,7 +751,7 @@ FIXME simplify/clarify first two terms in \eqref{eq:glacierestimate}
 FIXME accomodate the barrier theory from \cite{Bueler2021conservation}
 
 
-\section{Demonstration of computable geometry error bounds in a glacier model} \label{sec:demo}
+\section{Demonstration in a numerical glacier model} \label{sec:demo}
 
 FIXME study 2D glaciers with Halfar-ish surfaces and 3 bed cases: flat, smooth, rough
 
