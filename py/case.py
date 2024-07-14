@@ -17,11 +17,6 @@
 # diagnostics, append the filename:
 #   $ python3 study.py 201 20 1.0 flat result/ result.pvd
 
-# TODO:
-#   * separate stuff into measure.py, and scale H1 norm with [L] as in paper
-#   * BUG: denominator of continuity ratio also H1 norm
-#   * better visualization of badcoercive ... with color for where integrand is negative
-
 import sys
 import numpy as np
 from firedrake import *
@@ -29,7 +24,7 @@ from firedrake.output import VTKFile
 from stokesextruded import StokesExtruded, SolverParams, trace_vector_to_p2, printpar
 from geometry import secpera, bedtypes, g, rho, nglen, A3, B3, t0, halfargeometry
 from figures import mkoutdir, livefigure, badcoercivefigure
-from measure import sampleratios
+from measure import norm_h1sc, sampleratios
 
 mx = int(sys.argv[1])
 Nsteps = int(sys.argv[2])
@@ -86,7 +81,7 @@ params.update({'snes_atol': 1.0e-1})
 params.update({'snes_linesearch_type': 'bt'})  # helps with non-flat beds, it seems
 
 def _geometry_report(n, t, s):
-    snorm = norm(s, norm_type='H1')
+    snorm = norm_h1sc(s, Lsc=L)
     if basemesh.comm.size == 1:
         H = s.dat.data_ro - b.dat.data_ro # numpy array
         width = max(xbm[H > 1.0]) - min(xbm[H > 1.0])
@@ -206,4 +201,4 @@ if writepng:
 if writepvd:
     printpar(f'finished writing to {sys.argv[6]}')
 
-sampleratios(_slist, basemesh, b, Nsamples=Nsamples, qcoercive=qcoercive)
+sampleratios(_slist, basemesh, b, N=Nsamples, q=qcoercive, Lsc=L)
