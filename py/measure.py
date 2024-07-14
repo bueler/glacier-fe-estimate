@@ -11,6 +11,7 @@ import numpy as np
 from firedrake import *
 from stokesextruded import printpar
 from figures import badcoercivefigure
+from geometry import secpera
 
 def norm_h1sc(v, Lsc):
     '''Scaled H^1 = W^{1,2} norm as in paper, using a characteristic length
@@ -20,6 +21,16 @@ def norm_h1sc(v, Lsc):
     assert Lsc > 0
     expr = inner(v, v) + Lsc**2 * inner(grad(v), grad(v))
     return assemble(expr * dx)**0.5
+
+def geometryreport(basemesh, n, t, s, b, Lsc):
+    snorm = norm_h1sc(s, Lsc=Lsc)
+    if basemesh.comm.size == 1:
+        H = s.dat.data_ro - b.dat.data_ro # numpy array
+        x = basemesh.coordinates.dat.data_ro
+        width = max(x[H > 1.0]) - min(x[H > 1.0])
+        printpar(f't_{n} = {t / secpera:.3f} a:  |s|_H1 = {snorm:.3e},  width = {width / 1000.0:.3f} km')
+    else:
+        printpar(f't_{n} = {t / secpera:.3f} a:  |s|_H1 = {snorm:.3e}')
 
 def _us_ratio(slist, k, l, Lsc):
     # compute the ratio  |ur-us|_L2 / |r-s|_H1

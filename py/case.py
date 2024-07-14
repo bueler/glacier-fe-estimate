@@ -24,7 +24,7 @@ from firedrake.output import VTKFile
 from stokesextruded import StokesExtruded, SolverParams, trace_vector_to_p2, printpar
 from geometry import secpera, bedtypes, g, rho, nglen, A3, B3, t0, halfargeometry
 from figures import mkoutdir, livefigure, badcoercivefigure
-from measure import norm_h1sc, sampleratios
+from measure import geometryreport, sampleratios
 
 mx = int(sys.argv[1])
 Nsteps = int(sys.argv[2])
@@ -79,15 +79,6 @@ params.update(SolverParams['mumps'])
 params.update({'snes_converged_reason': None})
 params.update({'snes_atol': 1.0e-1})
 params.update({'snes_linesearch_type': 'bt'})  # helps with non-flat beds, it seems
-
-def _geometry_report(n, t, s):
-    snorm = norm_h1sc(s, Lsc=L)
-    if basemesh.comm.size == 1:
-        H = s.dat.data_ro - b.dat.data_ro # numpy array
-        width = max(xbm[H > 1.0]) - min(xbm[H > 1.0])
-        printpar(f't_{n} = {t / secpera:7.3f} a:  |s|_H1 = {snorm:.3e},  width = {width / 1000.0:.3f} km')
-    else:
-        printpar(f't_{n} = {t / secpera:7.3f} a:  |s|_H1 = {snorm:.3e}')
 
 def _D(w):
     return 0.5 * (grad(w) + grad(w).T)
@@ -145,7 +136,7 @@ _slist = []
 for n in range(Nsteps):
     # start with reporting
     if n == 0:
-        _geometry_report(n, t, s)
+        geometryreport(basemesh, 0, t, s, b, L)
         if writepng:
             livefigure(basemesh, b, s, None, t, fname=f'result/t{t/secpera:010.3f}.png')
 
@@ -159,12 +150,12 @@ for n in range(Nsteps):
     # solve Stokes on extruded mesh
     # this uses fake ice, and se.up as initial iterate
     u, p = se.solve(par=params, F=_form_stokes(mesh, se, sRfake))
-    printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
-    u.rename('velocity (m s-1)')
-    p.rename('pressure (Pa)')
+    #printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
 
     # optionally write t-dependent .pvd
     if writepvd:
+        u.rename('velocity (m s-1)')
+        p.rename('pressure (Pa)')
         nu, nueps = _effective_viscosity(mesh, u)
         phydro = _p_hydrostatic(mesh, sRfake)
         pdiff = Function(P1).interpolate(p - phydro)
@@ -191,7 +182,7 @@ for n in range(Nsteps):
     t += dt
 
     # end of step reporting
-    _geometry_report(n + 1, t, s)
+    geometryreport(basemesh, n + 1, t, s, b, L)
     if writepng:
         livefigure(basemesh, b, s, Phi, t, fname=f'result/t{t/secpera:010.3f}.png',
                    writehalfar=(bed == 'flat' and n + 1 == Nsteps))
