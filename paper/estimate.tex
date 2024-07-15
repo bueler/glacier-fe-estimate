@@ -26,6 +26,16 @@
 \newindthm{conjecture}{Conjecture}
 \renewcommand{\theconjecture}{\Alph{conjecture}}
 
+\newcommand{\newindthmstar}[2]{
+  \theoremstyle{plain}
+  \theoremheaderfont{\normalfont\sc}
+  \theorembodyfont{\normalfont\itshape}
+  \theoremseparator{.}
+  \theoremsymbol{}
+  \newtheorem*{#1}{#2}
+}
+\newindthmstar{assumptions}{Standard Assumptions}
+
 \usepackage{amsopn}
 \DeclareMathOperator{\diag}{diag}
 
@@ -698,7 +708,7 @@ The result by Falk \cite{Falk1974} combines the above two Corollaries, under the
 
 As observed in \cite{Ciarlet2002}, the quantity in estimates \eqref{eq:abstractestimate} and \eqref{eq:abstractestimate:Bnorm} which involves $v-u_h$, for $v\in\cK$, is generally nonzero in obstacle problems where $\cK_h \nsubseteq \cK$.  This observation is important for glacier models tracking the surface elevation, as opposed to thickness.  In fact, consider a unilateral obstacle problem where $\cK=\{v \in \cX\,:\,v\ge \psi\}$.  Suppose $\psi_h$ is an FE interpolant of $\psi$, and $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge \psi_h\}$.  Observe that, while $\psi_h(x_j)=\psi(x_j)$ for interpolation nodes $x_j$, generally $\psi_h(x) \ge \psi(x)$ does not hold for all $x\in\Omega$, even if $\psi$ is arbitrarily smooth.  In other words, nodal admissiblity does not imply admissibility (Figure \ref{fig:nonadmissible}).  However, in Section \ref{sec:application} we will see that a one-sided interpolation process allows us to bypass this concern for glacier models using surface elevation.  Those which solve for ice thickness avoid this concern because then $\cK = \{v\in\cX\,:\,v\ge 0\}$, and generally $\cK_h=\cK\cap\cX_h \subset \cK$.
 
-\begin{figure}
+\begin{figure}[ht]
 \begin{center}
 FIXME figure like Ciarlet Figure 5.1.3 %\includegraphics[width=0.8\textwidth]{figs/xxx.jpg}
 \end{center}
@@ -725,28 +735,76 @@ Finally, if additionally $f(u)=\ell$, for example if $u$ is in the interior of $
 Note that \eqref{eq:abstractestimate:subset:Cea} is Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002} in a Banach space.  This has reduced to the PDE case where there is no active set or free boundary.  In the glacier context, \eqref{eq:abstractestimate:subset:Cea} applies if the entire domain $\Omega$ is covered in ice, and the other assumptions of Corollary \ref{cor:abstractestimate:various} apply.
 
 
-\section{Application of the estimate to glacier models} \label{sec:application}
+\section{Application of the theory to glacier models} \label{sec:application}
 
-FIXME talk through what happens
+Now we can synthesize the theory of previous Sections, and apply it to an implicit time step of a glacier simulation which uses Stokes dynamics.  We will combine the well-posedness theory and \emph{a priori} bounds for the glaciological Stokes problem on a fixed domain (Section \ref{sec:stokes}), the conjectural well-posedness theory of the surface elevation VI problem (Sections \ref{sec:model} and \ref{sec:theory}), and the abstract error estimate for finite element (FE) solutions of VIs (Section \ref{sec:abstractestimate}).  This section also gives a precise meaning to the phrase ``conforming FE method'' for an evolving glacier geometry simulation.
 
-FIXME consider cases where $b_h\ge b$, using maximum monotone restriction $R^\oplus$, but do not assume $F_{\Delta t}=F^h_{\Delta t}$
-
-FIXME the FE VI:
+The numerical methods considered here solve FE approximations of VI \eqref{eq:be:vi}.  For some chosen finite-dimensional FE subspace $\cX_h\subset \cX$, with a constraint set $\cK_h\subset \cX_h$ (more below), we seek $s_h\in\cK_h$ solving
 \begin{equation}
 F^h_{\Delta t}(s_h)[r_h-s_h] \ge \ell^n[r_h-s_h] \quad \text{for all } r_h \in \cK_h. \label{eq:fe:be:vi}
 \end{equation}
+Here $\ell^n = s^{n-1} + \Delta t\,a^n$ is defined as before, by equation \eqref{eq:be:source}.
 
-Applying Theorem \ref{thm:abstractestimate} in the case where Theorem \ref{thm:stepwellposed} holds, we get the following.
+The operator $F^h_{\Delta t}$ in \eqref{eq:fe:be:vi} denotes an FE approximation to the operator $F_{\Delta t}$, which is defined in \eqref{eq:be:Fdefine}.  As illustrated in Figure \ref{fig:fe:operatorvisualization}, evaluation of $F^h_{\Delta t}(s_h)$ requires the numerical solution of a glaciological Stokes problem \eqref{eq:stokes} for the surface elevation $s_h$, presumably over a 3D mesh generated for the domain $\Lambda=\Lambda_{s_h}$ between $s_h$ and $b_h$.  This numerical result will not produce the exact value $F_{\Delta t}(s_h)$ for the same surface because the trace of the numerical velocity will be only approximate: $\bu_h|_{s_h} \approx \bu|_{s_h}$.
 
-\begin{theorem} \label{thm:glacierapplication}  Assume that Conjectures \ref{conj:a} and \ref{conj:b} are true, for $\rr>2$, $\cX=W^{1,\rr}(\Omega)$ and $\alpha>0$.  Fix $b \in \cX$ to define $\cK\subset\cX$.  Suppose that $s^{n-1}\in\cK$ and that $a\in C([0,T]; L^{\rr'}(\Omega))$, and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  Let $s\in\cK$ be the unique surface elevation satisfying the continuum time-step VI problem \eqref{eq:be:vi}.  Choose a conforming FE space $\cX_h \subset \cX$.  Let $b_h = R^\oplus b \in \cX_h$, or otherwise choose $b_h\in\cX_h$ with $b_h\ge b$, which defines $\cK_h\subset \cK$.  Let $s_h\in\cK_h$ be the unique FE solution to the FE VI problem \eqref{eq:fe:be:vi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $c=c(\alpha,R_h)>0$, which does not otherwise depend on $s$ or $s_h$, so that
+\begin{figure}[ht]
+\begin{center}
+\includegraphics[width=0.55\textwidth]{genfigs/extruded.pdf}
+\end{center}
+\caption{Evaluating $F^h_{\Delta t}(s_h)$ in the numerical free-boundary problem \eqref{eq:fe:be:vi} requires numerically solving a Stokes problem on a mesh like this, then evaluating the surface trace, on $s_h$, of the solution velocity $\bu_h$.  See formula \eqref{eq:be:Fdefine}.}
+\label{fig:fe:operatorvisualization}
+\end{figure}
+
+A key concern in applying Theorem \ref{thm:abstractestimate}, or its Corollaries, is the choice of the numerical bed elevation $b_h \approx b\in\cX$, needed to construct the constraint set $\cK_h$.  In the glaciological context one may assume $b$ is continuous on the closed domain $\bar\Omega$.  An abstract $b\in C(\bar\Omega) \cap \cX$ can be considered, but in practice $b$ will be provided via a high resolution map derived from e.g.~ice-penetrating radar \cite{Morlighemetal2017}.  In the following we are asserting that $b_h \in \cX_h$ with $b_h\ge b$ should be chosen; the results demonstrate why this is a good choice.  To achieve $b_h\ge b$, maximum monotone restriction \cite{BuelerFarrell2024} or similar can be applied, that is, $b_h = R^\oplus b$ or $b_h = (R^\oplus)^k b$, at least if $\cX_h$ is from a submesh of the data mesh.  We will also assume that $b|_{\partial\Omega}$ is piecewise-polynomial, to allow ``conforming'' in the classical sense \cite{Elmanetal2014}.
+
+From now on we make these standard assumptions.
+
+\smallskip
+\begin{assumptions}
+The following data are given:
+\begin{enumerate}
+\item A bounded, convex polygon $\Omega\subset\RR^2$.
+\item An exponent $\rr > 2$, with conjugate exponent $\rr' = \rr/(\rr-1)$. \label{item:rr}
+\item A time-dependent SMB function $a\in C([0,T]; L^{\rr'}(\Omega))$.
+\item A bed topography $b \in C(\bar\Omega) \cap W^{1,\rr}(\Omega)$, with piecewise-polynomial boundary values $b|_{\partial\Omega}$.
+\end{enumerate}
+We make these definitions:
+\begin{enumerate}
+\setcounter{enumi}{4}
+\item $\cX = W^{1,\rr}(\Omega)$.
+\item $\cK = \{r\in\cX\,:\,r|_{\partial \Omega} = b|_{\partial \Omega} \text{ and } r \ge b\}$.
+\item $\cX_h \subset \cX$ is a finite-dimensional, conforming FE space, from a mesh over $\bar\Omega$ such that the boundary values $b|_{\partial\Omega}$ are exactly represented.
+\end{enumerate}
+The following are assumed to hold, for the $\rr > 2$ given in item \emph{\ref{item:rr}}:
+\begin{enumerate}
+\setcounter{enumi}{7}
+\item Conjecture \ref{conj:a} holds with Lipschitz constant $\CA > 0$.
+\item Conjecture \ref{conj:b} holds with exponent $\qq>1$ and coercivity constant $\alpha > 0$.
+\end{enumerate}
+We also assume and define:
+\begin{enumerate}
+\setcounter{enumi}{9}
+\item $b_h\in\cX_h$ is given, with $b_h\ge b$ on $\bar\Omega$ and $b_h|_{\partial \Omega} = b|_{\partial \Omega}$. \label{item:goodbh}
+\item $\cK_h = \{r_h\in\cX_h\,:\,r_h|_{\partial \Omega} = b_h|_{\partial \Omega} \text{ and } r_h \ge b_h\}$. \label{item:defineKh}
+\end{enumerate}
+\end{assumptions}
+
+\medskip
+We will see the advantages which follow from the conforming condition $\cK_h\subset \cK$, which follows from assumptions \ref{item:goodbh} and \ref{item:defineKh}.  Applying Corollary \ref{cor:abstractestimate:nohull}, we get the following Lemma.  Note here that $s_h\in\cK$.  Also note that $F_{\Delta t}$ is $\qq$-coercive and Lipschitz on bounded subsets, over $\cK$, as shown in the proof of Theorem \ref{thm:stepwellposed}.
+
+\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  Let $s\in\cK$ be the unique surface elevation satisfying the continuum implicit time-step VI problem \eqref{eq:be:vi}, the result of Theorem \ref{thm:stepwellposed}.  Assume $F^h_{\Delta t}$ represents a numerical scheme for the FE VI problem \eqref{eq:fe:be:vi}, and let $s_h\in\cK_h$ be a solution of \eqref{eq:fe:be:vi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $c=c(R_h)>0$, not otherwise depending on $s$ or $s_h$, so that
 \begin{align}
 \|s-s_h\|_\cX^\rr &\le \quad \frac{2}{\alpha} \inf_{r_h\in\cK_h} \left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] \label{eq:glacierestimate} \\
    &\quad\, + \frac{2}{\alpha} \left(F_{\Delta t}(s_h)-F^h_{\Delta t}(s_h)\right)[s_h] \notag \\
-   &\quad\, + \inf_{r_h\in\cK_h} c \|r_h - s\|^\qq \notag
+   &\quad\, + \inf_{r_h\in\cK_h} c \|r_h - s\|_{\cX}^\qq \notag
 \end{align}
-\end{theorem}
+\end{lemma}
 
-FIXME simplify/clarify first two terms in \eqref{eq:glacierestimate}
+\begin{proof}
+A straightforward application of Corollary \ref{cor:abstractestimate:nohull} in case \emph{i)}.
+\end{proof}
+
+FIXME generate a full theorem from the Lemma
 
 FIXME accomodate the barrier theory from \cite{Bueler2021conservation}
 
