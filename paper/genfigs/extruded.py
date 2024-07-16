@@ -50,6 +50,6 @@ def plotextruded(x, b, s, mz=5, Hmin=0.0):
     plt.axis('off')
 
 # extruded FE domain figure
-plt.figure(figsize=(9,4))
+plt.figure(figsize=(15,4))
 plotextruded(x, b, s)
 writeout('extruded.pdf')
