@@ -72,6 +72,7 @@
 \newcommand{\cH}{\mathcal{H}}
 \newcommand{\cK}{\mathcal{K}}
 \newcommand{\cQ}{\mathcal{Q}}
+\newcommand{\cT}{\mathcal{T}}
 \newcommand{\cV}{\mathcal{V}}
 \newcommand{\cX}{\mathcal{X}}
 
@@ -755,9 +756,15 @@ As illustrated in Figure \ref{fig:fe:operatorvisualization}, evaluation of $F^h_
 \label{fig:fe:operatorvisualization}
 \end{figure}
 
-The numerical velocity result from the Stokes problem shown in the Figure is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  Observe that $\bu_h|_{s_h}$ will generally be different from the trace of the exact solution of the same Stokes boundary value problem for the same geometry, which is denoted $\bu|_{s_h}$.  Therefore, although $F^h_{\Delta t}(s_h)$ is also defined by formula \eqref{eq:be:Fdefine}, it is a different operator because it uses only the numerical/approximate surface velocity trace for the given geometry: $\bu_h|_{s_h} \approx \bu|_{s_h}$.
+The numerical velocity result from the Stokes problem shown in the Figure, resulting from the geometry defined by $s_h$, is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  Observe that $\bu_h|_{s_h}$ will generally be different from the trace of the exact solution of the same Stokes boundary value problem for the same geometry.  This exact solution will simply be denoted by $\bu$, and its surface trace by $\bu|_{s_h}$.  Although $F^h_{\Delta t}(s_h)$ is defined by formula \eqref{eq:be:Fdefine}, it is a different operator from $F_{\Delta t}(s_h)$ because it uses the numerical surface velocity trace $\bu_h|_{s_h}$, for the given geometry, and not the trace of the exact solution of that problem, $\bu|_{s_h}$.
 
-Now, a key concern in applying abstract FE Theorem \ref{thm:abstractestimate}, or its Corollaries, is the choice of the numerical bed elevation $b_h \approx b$, which defines the constraint set $\cK_h$.  In the glaciological context one may assume $b$ is continuous on the closed domain $\bar\Omega$.  An abstract $b\in C(\bar\Omega) \cap \cX$ can be considered, but in practice $b$ will be provided via a high resolution map derived from e.g.~ice-penetrating radar \cite{Morlighemetal2017}, thus one may suppose $b$ is itself in an FE space, but on a (much) finer mesh.  We assert that, because of what we prove below about the solution to \eqref{eq:fe:be:vi}, $b_h \in \cX_h$ should be chosen to satisfy $b_h\ge b$.  To achieve this maximum monotone restriction \cite{BuelerFarrell2024} or similar can be applied, that is, $b_h = R^\oplus b$ or $b_h = (R^\oplus)^k b$, at least if $\cX_h$ is from a submesh of the fine data mesh on which $b$ is provided.  We will also assume that $b|_{\partial\Omega}$ is piecewise-polynomial, as one would in ``conforming'' FE methods for classical PDE problems \cite{Elmanetal2014}.
+A key concern in applying abstract FE Theorem \ref{thm:abstractestimate}, or its Corollaries, is the choice of the numerical bed elevation $b_h \approx b$, which defines the constraint set $\cK_h$.  In the glaciological context one may assume $b$ is continuous on the closed domain $\bar\Omega$.  An abstract $b\in C(\bar\Omega) \cap \cX$ can be considered, but in practice $b$ will be provided via a high resolution map derived from e.g.~ice-penetrating radar \cite{Morlighemetal2017}, thus one may suppose $b$ is itself in an FE space, but on a (much) finer mesh.  We assert that, because of what we prove below about the solution to \eqref{eq:fe:be:vi}, $b_h \in \cX_h$ should be chosen to satisfy $b_h\ge b$.  To achieve this maximum monotone restriction \cite{BuelerFarrell2024} or similar can be applied, that is, $b_h = R^\oplus b$ or $b_h = (R^\oplus)^k b$, at least if $\cX_h$ is from a submesh of the fine data mesh on which $b$ is provided.
+
+We will also assume that $b|_{\partial\Omega}$ is piecewise-polynomial, as one would in ``conforming'' FE methods for classical PDE problems \cite{Elmanetal2014}.  Furthermore we will need an interpolation/truncation operation $\Pi_h : \cX \to \cK_h$.  When applied to $r\in\cX$ this operation gives the unique admissible FE function $\Pi_h(r) \in \cK_h$ so that
+\begin{equation}
+\Pi_h(r)(x_j) = \max \,\{b_h(x_j), r(x_j)\} \label{eq:definePi}
+\end{equation}
+for every node $x_j \in \cT_h$, and $\Pi_h(x_j)=b(x_j)$ if $x_j\in\partial\Omega$.  Observe, however, that nodal interpolation and truncation in definition \eqref{eq:definePi} only yield nodal admissibility $\Pi_h(r)(x_j) \ge b_h(x_j)$.  The FE space must be such that this implies admissibility \emph{per se}, namely $\Pi_h(r)(x) \ge b_h(x)$ for all $x \in \Omega$.  This condition is satisfied by the continuous and piecewise-linear FE space $P_1$, but not, for example, by $P_2$ \cite{BuelerFarrell2024}.
 
 To summarize, from now on we make these standard assumptions.
 
@@ -775,19 +782,21 @@ We make these definitions:
 \setcounter{enumi}{4}
 \item $\cX = W^{1,\rr}(\Omega)$.
 \item $\cK = \{r\in\cX\,:\,r|_{\partial \Omega} = b|_{\partial \Omega} \text{ and } r \ge b\}$.
-\item $\cX_h \subset \cX$ denotes a finite-dimensional and conforming FE space, from a mesh over $\bar\Omega$, such that the boundary values $b|_{\partial\Omega}$ are exactly represented.
+\item $\cX_h \subset \cX$ denotes a finite-dimensional and conforming FE space, from a mesh $\cT_h$ exactly tiling $\bar\Omega$.
+\item The boundary values $b|_{\partial\Omega}$ are exactly representable in the FE space.
 \end{enumerate}
 The following are assumed to hold, for the $\rr > 2$ given in item \emph{\ref{item:rr}}:
 \begin{enumerate}
-\setcounter{enumi}{7}
+\setcounter{enumi}{8}
 \item Conjecture \ref{conj:a} holds with Lipschitz constant $\CA > 0$. \label{item:conj:a}
 \item Conjecture \ref{conj:b} holds with exponent $\qq>1$ and coercivity constant $\alpha > 0$.\label{item:conj:b}
 \end{enumerate}
 We also assume and define:
 \begin{enumerate}
-\setcounter{enumi}{9}
+\setcounter{enumi}{10}
 \item $b_h\in\cX_h$ is given, with $b_h\ge b$ on $\bar\Omega$ and $b_h|_{\partial \Omega} = b|_{\partial \Omega}$. \label{item:goodbh}
 \item $\cK_h = \{r_h\in\cX_h\,:\,r_h|_{\partial \Omega} = b_h|_{\partial \Omega} \text{ and } r_h \ge b_h\}$. \label{item:defineKh}
+\item Interpolation/truncation $\Pi_h$ yields admissible elements in $\cK_h$.  \label{item:Pi}
 \end{enumerate}
 \end{assumptions}
 
@@ -806,60 +815,60 @@ The conforming condition $\cK_h\subset \cK$ follows from assumptions \ref{item:g
 Theorem \ref{thm:stepwellposed} shows that $s$ is well-defined.  Then a straightforward application of Corollary \ref{cor:abstractestimate:nohull} in case \emph{i)}, using formula \eqref{eq:be:Fdefine} to define $F_{\Delta t}$, gives \eqref{eq:preglacierestimate}.
 \end{proof}
 
-Each term in estimate \eqref{eq:preglacierestimate} has a glaciological meaning, exposed in the following theorem.  Recall that $\gamma_\pp(\Lambda_{s_h})$ denotes the trace constant (Lemma \ref{lem:trace}) for the domain defined by the surface $s_h$, $h$ denotes the maximum diameter of a mesh cell over $\Omega$, and $\|\cdot\|_\cV$ is the norm defined in \eqref{eq:vnorm}.
+Each term in estimate \eqref{eq:preglacierestimate} has a glaciological meaning, which we expose in the following Theorem.  For this purpose recall that $\gamma_\pp(\Lambda_{s_h})$ denotes the trace constant (Lemma \ref{lem:trace}) for the domain defined by the surface $s_h$, $h$ denotes the maximum diameter of a mesh cell over $\Omega$, $\cV=W_b^{1,\pp}(\Lambda_{s_h}; \RR^3)$ is the velocity space for the Stokes weak-form problem \eqref{eq:glenstokes:weak}, and $\|\cdot\|_\cV$ is the norm defined in \eqref{eq:vnorm}.
 
-\begin{theorem} \label{thm:glacierapp} Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Define $\Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$, a measurable subset of $\Omega$.  With $c_0>0$ from the Lemma, there exists $c_2>0$ independent of $s,s_h$ such that
-
-FIXME: ALL TERMS NEED CHECKING FROM PROOF
+\begin{theorem} \label{thm:glacierapp} Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Define $\Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$, a measurable subset of $\Omega$.  Then
 \begin{align}
 \|s-s_h\|_\cX^\rr &\le \quad \frac{2}{\alpha} \int_{\Omega_A(s)} (b - \ell^n) (b_h - b) &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
    &\quad\, + \frac{\Delta t}{\alpha} \, \Gamma(s_h) \big\|\bu_h - \bu\big\|_{\cV} &&\text{\textnormal{[term 2]}} \notag \\
-   &\quad\, + c_0 c_2 h \left(\|s\|_{W^{2,\rr}(\Omega)}\right)^\qq &&\text{\textnormal{[term 3]}} \notag
+   &\quad\, + c_0 \|\Pi_h(s) - s\|_\cX^\qq. &&\text{\textnormal{[term 3]}} \notag
 \end{align}
-where
+In inequality \eqref{eq:glacierestimate},
 \begin{equation}
 \Gamma(s_h) = c_1 \left(\frac{\gamma_\pp(\Lambda_{s_h})}{[L]}\right)^{1/\pp} \left(|\Omega| + [L]^{-\rr}\|s_h\|_{\cX}^\rr\right)^{1/(\pp'\rr)} \|s_h\|_{L^{\pp'\rr'}}
 \end{equation}
-depends on $s_h$, the length scale $[L]$, and the area of $\Omega$, and where $c_1>0$ depends only on the exponents $\rr$, $\pp$.
+depends on $s_h$, the length scale $[L]$, and the area of $\Omega$.  The constant $c_0>0$ is from Lemma \ref{lem:preglacierapp}, and the constant $c_1>0$ depends only on the exponents $\rr$, $\pp$.
 \end{theorem}
 
-Before proving the Theorem let us give meaning to the terms:
+Before proving the Theorem, consider the meaning of each term.
 
 \medskip
 \begin{itemize}
-\item[term 1:] This term arise from the approximation of the bed in the ice-free area.\footnote{That is, in the ice-free area \emph{according to the exact solution} $s$.}  If the bed happens to be exactly representable on the mesh ($b_h=b$) then it is zero.  Because the meshed bed $b_h$ is above the exact bed $b$, $b_h$ stops $s_h$ from having the correct values $s=b$ in the ice-free area, and this is the smallest such error.  Note that $b_h\ge b$ and $b-\ell^n\ge 0$---see the argument in Section \ref{sec:model}---in this case, so the integrand is positive.  The presence of the coercivity constant $\alpha$ the set $\Omega_A(s)$ in this term, shows it relates to the ice flow in a subtle manner.
-\item[term 2:] This term shows how numerical errors in the numerical solution of the Stokes equations, i.e.~over the particular domain $\Lambda_{s_h}$, affect the error in $s_h$ itself.  For example, if a higher-order FE method is applied to the Stokes problem \eqref{eq:stokes}, so that $\big\|\bu_h - \bu\big\|_{\cV} = O(h^k)$, then this will be reflected in the convergence rate in this term.
-\item[term 3:] This term arises from the classical interpolation-error argument for convergence of FE methods, but with the added complication that a $P^1$ interpolant of $s$ must be truncated into $\cK_h$ before the element-wise interpolation argument can be applied.  (See the proof.)
+\item[term 1:] This arises from approximation of the bed in the ice-free domain defined by the exact solution $s$.  If the bed is exactly representable ($b_h=b$) then this term is zero, but generally $b_h\ge b$ and $b-\ell^n\ge 0$---see the argument in Section \ref{sec:model}---so the integrand is positive.  Note that $s_h \ge b_h \ge b = s$ in the ice-free area, the factor $b_h-b$ in the integrand is the smallest error $s_h \approx s$ which is possible here.  The presence of the coercivity constant $\alpha$ in this term shows that it relates to the ice flow in a subtle manner.
+
+\item[term 2:] This shows how numerical errors in the numerical solution of the Stokes equations, over the domain $\Lambda_{s_h}$, affect the error in $s_h$.  For example, if a higher-order FE method were applied to the Stokes problem \eqref{eq:stokes}, so that $\|\bu_h - \bu\|_{\cV} = O(h^k)$, then this term would reflect that convergence rate.
+
+\item[term 3:] This arises in the classical Cea's argument for convergence of FE methods \cite{Elmanetal2014}, but with added complications.  The interpolant of $s$ must be truncated into $\cK_h$, and nodal admissibility must imply admissibility.
 \end{itemize}
 
 \begin{proof}
-Apply Lemma \ref{lem:preglacierapp}.  Consider the first term on the right side of inequality \eqref{eq:preglacierestimate}.  Because $s$ solves \eqref{eq:be:vi}, the residual $F_{\Delta t}(s)-\ell^n \in \cX'$, while generally nonzero, is supported in $\Omega_A(s)$ \cite[subsection FIXME]{KinderlehrerStampacchia1980}.  Also, $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.  Suppose $\phi_h \in \cX_h$ is nonnegative and supported in $\Omega_A(s)$, and define $r_h = b_h + \phi_h \in \cK_h$.  Then from definition \eqref{eq:be:Fdefine} we have
+First, apply Lemma \ref{lem:preglacierapp}.  Now consider the first term on the right side of inequality \eqref{eq:preglacierestimate}.  Because $s$ solves \eqref{eq:be:vi}, the residual $\Psi = F_{\Delta t}(s)-\ell^n \in \cX'$, while generally nonzero, is non-negative.  In particular, if $\phi\in C_c^\infty(\Omega)$ is nonnegative then $r=s+\phi \in \cK$ and $\Psi[r-s] = \Psi[\phi] \ge 0$.  Thus $\Psi\in\cX'$ is a non-negative distribution, and so it is represented by a positive Borel measure $\mu$, $\Psi[\phi] = \int_\Omega \phi\,d\mu$ \cite[Theorem 6.22]{LiebLoss1997}.  However, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in $\Omega_A(s)$.  In fact, recall from Section \ref{sec:model} that $b-\ell^n\ge 0$ on $\Omega_A(s)$---this gives the density of $\mu$--and note also that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.  Suppose $\phi_h \in \cX_h$ is nonnegative and supported in $\Omega_A(s)$, and define $r_h = b_h + \phi_h \in \cK_h$.  Then from definition \eqref{eq:be:Fdefine} we have
 \begin{equation}
-\left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] = \int_{\Omega_A(s)} \left(b - \ell^n\right) (b_h - b) + \int_{\Omega_A(s)} \left(b - \ell^n\right) \phi.
+\left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] = \int_{\Omega_A(s)} \left(b - \ell^n\right) (b_h - b) + \int_{\Omega_A(s)} \left(b - \ell^n\right) \phi_h.
 \end{equation}
-Recall from Section \ref{sec:model} that $b-\ell^n\ge 0$ on $\Omega_A(s)$.  Therefore set $\phi=0$ to derive term 1:
+Therefore set $\phi_h=0$ to derive term 1:
 \begin{equation}
 \frac{2}{\alpha} \inf_{r_h\in\cK_h} \left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] \le \frac{2}{\alpha}  \int_{\Omega_A(s)} \left(b - \ell^n\right) (b_h - b).
 \end{equation}
 
-Consider the second term in \eqref{eq:preglacierestimate}.  After expanding definition \eqref{eq:be:Fdefine}, and similar to steps in the proof of Lemma \ref{lem:phibound:early}, apply the triangle and H\"older inequalities:
+Consider the second term in \eqref{eq:preglacierestimate}.  Recall that $dS = |\bn_{s_h}|\,dx$ is the surface area element for the surface $\Gamma_{s_h} \subset \partial \Lambda_{s_h}$.  After expanding definition \eqref{eq:be:Fdefine}, apply the triangle and H\"older inequalities:\footnote{A similar argument was used in the proof of Lemma \ref{lem:phibound:early}.}
 \begin{align}
 \left(F_{\Delta t}(s_h)-F^h_{\Delta t}(s_h)\right)&[s_h] = - \Delta t \int_\Omega \left(\bu|_{s_h} - \bu_h|_{s_h}\right)\cdot \bn_{s_h} s_h  \\
   &\le \Delta t \int_\Omega \Big|\bu|_{s_h} - \bu_h|_{s_h}\Big| |\bn_{s_h}|^{1/\pp} |\bn_{s_h}|^{1/\pp'} |s_h| \notag \\
   &\le \Delta t \left(\int_\Omega \Big|\bu|_{s_h} - \bu_h|_{s_h}\Big|^\pp |\bn_{s_h}|\right)^{1/\pp} \left(\int_\Omega |\bn_{s_h}| |s_h|^{\pp'}\right)^{1/\pp'} \notag \\
   &\le \Delta t \left(\int_{\Gamma_{s_h}} \big|\bu - \bu_h\big|^\pp dS\right)^{1/\pp} \left(\int_\Omega |\bn_{s_h}|^\rr\right)^{1/(\pp'\rr)} \|s_h\|_{L^{\pp'\rr'}} \notag
 \end{align}
-(We have used the fact that $dS = |\bn_{s_h}|\,dx$ is the surface area element for the surface $\Gamma_{s_h} \subset \partial \Lambda_{s_h}$.)  Now apply the trace inequality, Lemma \ref{lem:trace}, and use the fact that $(1+\alpha)^{\rr/2} \le 2^{(\rr-2)/2} (1+\alpha^{\rr/2})$ on $|\bn_{s_h}|^\rr$:
+Now apply the trace inequality, Lemma \ref{lem:trace}, and use the fact that $(1+\alpha)^{\rr/2} \le 2^{(\rr-2)/2} (1+\alpha^{\rr/2})$ on $|\bn_{s_h}|^\rr$:
 \begin{align}
 \left(F_{\Delta t}(s_h)-F^h_{\Delta t}(s_h)\right)[s_h] &\le \Delta t \left(\frac{\gamma_\pp(\Lambda_{s_h})}{[L]}\right)^{1/\pp} \|\bu - \bu_h\|_{\cV} \\
   &\qquad \cdot \left(2^{(\rr-2)/2} \int_\Omega 1 + |\grad s_h|^\rr\right)^{1/(\pp'\rr)} \|s_h\|_{L^{\pp'\rr'}}.  \notag
 \end{align}
 Recalling the scaling of the $\cX$ norm, equation \eqref{eq:norm:Omega}, we have term 2.
 
-Finally consider the last term in \eqref{eq:preglacierestimate}.  For $r \in \cX$
-%\|r_h - s\|_{\cX}
-FIXME $s$ MUST BE REGULAR TO HAVE POINT VALUES, AND THEN USE RESULT IN \cite{JouvetBueler2012}
+Term 3 follows by substituting $r_h=\Pi_h(s)$.  (This uses item \ref{item:Pi} in the Standard Assumptions.)
 \end{proof}
+
+FIXME USE RESULT IN \cite{JouvetBueler2012}, namely \cite[Theorem 3.1.6]{Ciarlet2002}, to bound term 3
 
 FIXME accomodate the barrier theory from \cite{Bueler2021conservation}
 
