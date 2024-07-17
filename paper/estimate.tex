@@ -806,15 +806,15 @@ The conforming condition $\cK_h\subset \cK$ follows from assumptions \ref{item:g
 Theorem \ref{thm:stepwellposed} shows that $s$ is well-defined.  Then a straightforward application of Corollary \ref{cor:abstractestimate:nohull} in case \emph{i)}, using formula \eqref{eq:be:Fdefine} to define $F_{\Delta t}$, gives \eqref{eq:preglacierestimate}.
 \end{proof}
 
-Each term in estimate \eqref{eq:preglacierestimate} has a glaciological meaning, exposed in the following theorem.  Recall that $\gamma_\pp(\Lambda_{s_h})$ denotes the trace constant (Lemma \ref{lem:trace}) for the domain defined by the surface $s_h$.  Recall that $h$ denotes the maximum diameter of a mesh cell over $\Omega$, while the norm $\|\cdot\|_\cV$ is defined in \eqref{eq:vnorm}.
+Each term in estimate \eqref{eq:preglacierestimate} has a glaciological meaning, exposed in the following theorem.  Recall that $\gamma_\pp(\Lambda_{s_h})$ denotes the trace constant (Lemma \ref{lem:trace}) for the domain defined by the surface $s_h$, $h$ denotes the maximum diameter of a mesh cell over $\Omega$, and $\|\cdot\|_\cV$ is the norm defined in \eqref{eq:vnorm}.
 
-\begin{theorem} \label{thm:glacierapp} Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Define $\Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$.  With $c_0>0$ from the Lemma, there exists $c_2>0$ independent of $s,s_h$ such that
+\begin{theorem} \label{thm:glacierapp} Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Define $\Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$, a measurable subset of $\Omega$.  With $c_0>0$ from the Lemma, there exists $c_2>0$ independent of $s,s_h$ such that
 
 FIXME: ALL TERMS NEED CHECKING FROM PROOF
 \begin{align}
-\|s-s_h\|_\cX^\rr &\le \quad \frac{2}{\alpha} \int_{\Omega_A(s)} (b - \ell^n) (b_h - b) &&\text{[term 1]} \label{eq:glacierestimate} \\
-   &\quad\, + \frac{\Delta t}{\alpha} \, \Gamma(s_h) \big\|\bu_h - \bu\big\|_{\cV} &&\text{[term 2]} \notag \\
-   &\quad\, + c_0 c_2 h \left(\|s\|_{W^{2,\rr}(\Omega)}\right)^\qq &&\text{[term 3]} \notag
+\|s-s_h\|_\cX^\rr &\le \quad \frac{2}{\alpha} \int_{\Omega_A(s)} (b - \ell^n) (b_h - b) &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
+   &\quad\, + \frac{\Delta t}{\alpha} \, \Gamma(s_h) \big\|\bu_h - \bu\big\|_{\cV} &&\text{\textnormal{[term 2]}} \notag \\
+   &\quad\, + c_0 c_2 h \left(\|s\|_{W^{2,\rr}(\Omega)}\right)^\qq &&\text{\textnormal{[term 3]}} \notag
 \end{align}
 where
 \begin{equation}
@@ -827,12 +827,38 @@ Before proving the Theorem let us give meaning to the terms:
 
 \medskip
 \begin{itemize}
-\item[\emph{[term 1]:}] This term arise from the approximation of the bed in the ice-free area.\footnote{That is, in the ice-free area \emph{according to the exact solution} $s$.}  If the bed happens to be exactly representable on the mesh ($b_h=b$) then it is zero.  Because the meshed bed $b_h$ is above the exact bed $b$, $b_h$ stops $s_h$ from having the correct values $s=b$ in the ice-free area, and this is the smallest such error.  Note that $b_h\ge b$ and $b-\ell^n\ge 0$---see the argument in Section \ref{sec:model}---in this case, so the integrand is positive.  The presence of the coercivity constant $\alpha$ the set $\Omega_A(s)$ in this term, shows it relates to the ice flow in a subtle manner.
-\item[\emph{[term 2]:}] This term shows how numerical errors in the numerical solution of the Stokes equations, i.e.~over the particular domain $\Lambda_{s_h}$, affect the error in $s_h$ itself.  For example, if a higher-order FE method is applied to the Stokes problem \eqref{eq:stokes}, so that $\big\|\bu_h - \bu\big\|_{\cV} = O(h^k)$, then this will be reflected in the convergence rate in this term.
-\item[\emph{[term 3]:}] This term arises from the classical interpolation-error argument for convergence of FE methods, but with the added complication that a $P^1$ interpolant of $s$ must be truncated into $\cK_h$ before the element-wise interpolation argument can be applied.  (See the proof.)
+\item[term 1:] This term arise from the approximation of the bed in the ice-free area.\footnote{That is, in the ice-free area \emph{according to the exact solution} $s$.}  If the bed happens to be exactly representable on the mesh ($b_h=b$) then it is zero.  Because the meshed bed $b_h$ is above the exact bed $b$, $b_h$ stops $s_h$ from having the correct values $s=b$ in the ice-free area, and this is the smallest such error.  Note that $b_h\ge b$ and $b-\ell^n\ge 0$---see the argument in Section \ref{sec:model}---in this case, so the integrand is positive.  The presence of the coercivity constant $\alpha$ the set $\Omega_A(s)$ in this term, shows it relates to the ice flow in a subtle manner.
+\item[term 2:] This term shows how numerical errors in the numerical solution of the Stokes equations, i.e.~over the particular domain $\Lambda_{s_h}$, affect the error in $s_h$ itself.  For example, if a higher-order FE method is applied to the Stokes problem \eqref{eq:stokes}, so that $\big\|\bu_h - \bu\big\|_{\cV} = O(h^k)$, then this will be reflected in the convergence rate in this term.
+\item[term 3:] This term arises from the classical interpolation-error argument for convergence of FE methods, but with the added complication that a $P^1$ interpolant of $s$ must be truncated into $\cK_h$ before the element-wise interpolation argument can be applied.  (See the proof.)
 \end{itemize}
+
 \begin{proof}
-FIXME
+Apply Lemma \ref{lem:preglacierapp}.  Consider the first term on the right side of inequality \eqref{eq:preglacierestimate}.  Because $s$ solves \eqref{eq:be:vi}, the residual $F_{\Delta t}(s)-\ell^n \in \cX'$, while generally nonzero, is supported in $\Omega_A(s)$ \cite[subsection FIXME]{KinderlehrerStampacchia1980}.  Also, $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.  Suppose $\phi_h \in \cX_h$ is nonnegative and supported in $\Omega_A(s)$, and define $r_h = b_h + \phi_h \in \cK_h$.  Then from definition \eqref{eq:be:Fdefine} we have
+\begin{equation}
+\left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] = \int_{\Omega_A(s)} \left(b - \ell^n\right) (b_h - b) + \int_{\Omega_A(s)} \left(b - \ell^n\right) \phi.
+\end{equation}
+Recall from Section \ref{sec:model} that $b-\ell^n\ge 0$ on $\Omega_A(s)$.  Therefore set $\phi=0$ to derive term 1:
+\begin{equation}
+\frac{2}{\alpha} \inf_{r_h\in\cK_h} \left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] \le \frac{2}{\alpha}  \int_{\Omega_A(s)} \left(b - \ell^n\right) (b_h - b).
+\end{equation}
+
+Consider the second term in \eqref{eq:preglacierestimate}.  After expanding definition \eqref{eq:be:Fdefine}, and similar to steps in the proof of Lemma \ref{lem:phibound:early}, apply the triangle and H\"older inequalities:
+\begin{align}
+\left(F_{\Delta t}(s_h)-F^h_{\Delta t}(s_h)\right)&[s_h] = - \Delta t \int_\Omega \left(\bu|_{s_h} - \bu_h|_{s_h}\right)\cdot \bn_{s_h} s_h  \\
+  &\le \Delta t \int_\Omega \Big|\bu|_{s_h} - \bu_h|_{s_h}\Big| |\bn_{s_h}|^{1/\pp} |\bn_{s_h}|^{1/\pp'} |s_h| \notag \\
+  &\le \Delta t \left(\int_\Omega \Big|\bu|_{s_h} - \bu_h|_{s_h}\Big|^\pp |\bn_{s_h}|\right)^{1/\pp} \left(\int_\Omega |\bn_{s_h}| |s_h|^{\pp'}\right)^{1/\pp'} \notag \\
+  &\le \Delta t \left(\int_{\Gamma_{s_h}} \big|\bu - \bu_h\big|^\pp dS\right)^{1/\pp} \left(\int_\Omega |\bn_{s_h}|^\rr\right)^{1/(\pp'\rr)} \|s_h\|_{L^{\pp'\rr'}} \notag
+\end{align}
+(We have used the fact that $dS = |\bn_{s_h}|\,dx$ is the surface area element for the surface $\Gamma_{s_h} \subset \partial \Lambda_{s_h}$.)  Now apply the trace inequality, Lemma \ref{lem:trace}, and use the fact that $(1+\alpha)^{\rr/2} \le 2^{(\rr-2)/2} (1+\alpha^{\rr/2})$ on $|\bn_{s_h}|^\rr$:
+\begin{align}
+\left(F_{\Delta t}(s_h)-F^h_{\Delta t}(s_h)\right)[s_h] &\le \Delta t \left(\frac{\gamma_\pp(\Lambda_{s_h})}{[L]}\right)^{1/\pp} \|\bu - \bu_h\|_{\cV} \\
+  &\qquad \cdot \left(2^{(\rr-2)/2} \int_\Omega 1 + |\grad s_h|^\rr\right)^{1/(\pp'\rr)} \|s_h\|_{L^{\pp'\rr'}}.  \notag
+\end{align}
+Recalling the scaling of the $\cX$ norm, equation \eqref{eq:norm:Omega}, we have term 2.
+
+Finally consider the last term in \eqref{eq:preglacierestimate}.  For $r \in \cX$
+%\|r_h - s\|_{\cX}
+FIXME $s$ MUST BE REGULAR TO HAVE POINT VALUES, AND THEN USE RESULT IN \cite{JouvetBueler2012}
 \end{proof}
 
 FIXME accomodate the barrier theory from \cite{Bueler2021conservation}
