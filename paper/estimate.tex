@@ -110,7 +110,7 @@
 \maketitle
 
 \begin{abstract}
-The primary data which determine the evolution of glaciation are the bedrock elevation and surface mass balance functions.  From this data the glacier's geometry solves a free-boundary problem over a set of admissible surface elevation functions; a surface is admissible if it is above the bedrock topography, equivalently if the ice thickness is nonnegative.  For an implicit time step, this free-boundary problem can be posed in weak form as a variational inequality over a fixed map-plane region.  After some preparatory theory, recalling and expanding upon what is known about the glaciological Stokes problem, we conjecture that, in the case of Stokes dynamics, the continuous-space problems at each implicit time step are well-posed.  This conjecture is supported by certain numerical evidence.  We then prove a general theorem which estimates the error made by a finite element approximation of a variational inequality problem over a Banach space.  The provided estimate is a sum of errors of different types, mostly specific to variational inequalities.  When specialized to the glacier case the terms in the error estimate can be physically-interpreted.  Practical approaches to bound and/or reduce these errors are then proposed.
+The primary data which determine the evolution of glaciation are the bedrock elevation and surface mass balance functions.  From this data the glacier's geometry solves a free-boundary problem over a set of admissible surface elevation functions; a surface is admissible if it is above the bedrock topography, equivalently if the ice thickness is nonnegative.  For an implicit time step, this free-boundary problem can be posed in weak form as a variational inequality over a fixed map-plane region.  After some preparatory theory, recalling and expanding upon what is known about the glaciological Stokes problem, we conjecture that the continuous-space problem at each implicit time step is well-posed.  This conjecture is supported by physical arguments and certain numerical evidence.  We then prove a general theorem which estimates the error made by a finite element approximation of a variational inequality problem over a Banach space.  The provided estimate is a sum of errors of different types, specific to variational inequalities.  When specialized to the glacier case the terms in the error estimate can be physically-interpreted.  Practical approaches to bound and/or reduce these errors are then proposed.
 \end{abstract}
 
 % REQUIRED
@@ -340,9 +340,11 @@ Suppose $\bu\in\cV$ is the Stokes velocity solution from Theorem \ref{thm:stokes
 \end{corollary}
 
 
-\section{The implicit time-step model, in weak form} \label{sec:model}
+\section{The implicit time-step model} \label{sec:model}
 
-Now we consider the simplest implicit time-stepping scheme based on \eqref{eq:icydomain}--\eqref{eq:stokes}.  Let $\{t_n\}$ be any increasing sequence of times in $[0,T]$, with $t_0=0$.  Let $\Delta t = t_n-t_{n-1}$ denote the generic step length.  Let $a^n(x)$ be the (temporal) average of the data $a(t,x)$ over $[t_{n-1},t_n]$.
+Now we consider the simplest implicit time-stepping scheme based on \eqref{eq:icydomain}--\eqref{eq:stokes}.
+
+\subsection{Backward Euler step equations and inequalities} \label{subsec:bestrong}  Let $\{t_n\}$ be any increasing sequence of times in $[0,T]$, with $t_0=0$.  Let $\Delta t = t_n-t_{n-1}$ denote the generic step length.  Let $a^n(x)$ be the (temporal) average of the data $a(t,x)$ over $[t_{n-1},t_n]$.
 
 Suppose that $s(x)=s^n(x)\approx s(t_n,x)$ approximates the surface elevation at time $t_n$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
 \begin{equation}
@@ -366,8 +368,10 @@ Equation \eqref{eq:be:ncp:complementarity} says that, at the solution time $t=t_
 
 The strong form NCP \eqref{eq:be:ncp} has a weak-form variational inequality (VI; \cite{Evans2010,KinderlehrerStampacchia1980}) version, derived as follows via the argument in \cite{Bueler2021conservation}, which is suited to both well-posedness theory and finite element (FE) analysis.  The precise Banach space $\cX$ of surface elevations here is unknown, so for now this space is abstract.  However, the admissible surface elevations come from a convex and closed subset
 \begin{equation}
-\cK = \left\{r \in\cX\,:\,r \ge b\right\}.  \label{eq:be:admissible}
+\cK = \left\{r \in\cX\,:\,r|_{\partial\Omega}=b|_{\partial\Omega} \text{ and } r \ge b\right\}.  \label{eq:be:admissible}
 \end{equation}
+Noting that the fixed boundary condition is included in the definition of $\cK$, if the glacier does not reach $\partial\Omega$ then this condition is of little importance.
+
 Suppose that $s \in \cK$ is a sufficiently-regular solution of NCP \eqref{eq:be:ncp}.  Let $\Omega_I$ be the (measurable) subset of $\Omega$ on which constraint \eqref{eq:be:ncp:constraint} is inactive, i.e.~where glacier ice is present: $\Omega_I = \{x\,:\,s(x)>b(x)\}$.  From \eqref{eq:be:ncp:complementarity}, integration over $\Omega_I$ shows that
 \begin{equation}
 \int_{\Omega_I} \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = 0.  \label{eq:inactivetruth}
@@ -382,7 +386,7 @@ Almost everywhere on $\Omega$, either land is glacier covered (within $\Omega_I$
 \end{equation}
 This integral inequality is known to be true in advance of any knowledge of which is the ice-covered part of $\Omega$.
 	
-Now, the well-posedness of the weak-form Stokes problem \eqref{eq:glenstokes:weak}, over a 3D domain $\Lambda$, and the surface trace bound in Corollary \ref{cor:surfacetracebound}, allows us to create a well-defined map from an admissible surface elevation $s$ to the corresponding surface velocity solution $\bu|_s(x)$.  The map is defined via definition \eqref{eq:icydomain}, followed by the solution of \eqref{eq:glenstokes:weak} over $\Lambda$, evaluation of the trace of $\bu$ along $\Gamma_s$ (Corollary \ref{cor:surfacetracebound}), and then definition \eqref{eq:defineus}.  For this map to be well-defined, $s$ must admissible ($s\in\cK$) and it must be sufficiently regular so that these steps are justified.
+\subsection{The surface motion map} \label{subsec:surfacemotion}  Now, the well-posedness of the weak-form Stokes problem \eqref{eq:glenstokes:weak}, over a 3D domain $\Lambda$, and the surface trace bound in Corollary \ref{cor:surfacetracebound}, allows us to create a well-defined map from an admissible surface elevation $s$ to the corresponding surface velocity solution $\bu|_s(x)$.  The map is defined via definition \eqref{eq:icydomain}, followed by the solution of \eqref{eq:glenstokes:weak} over $\Lambda$, evaluation of the trace of $\bu$ along $\Gamma_s$ (Corollary \ref{cor:surfacetracebound}), and then definition \eqref{eq:defineus}.  For this map to be well-defined, $s$ must admissible ($s\in\cK$) and it must be sufficiently regular so that these steps are justified.
 
 We call $\Phi(s) = - \bu|_s\cdot \bn_s$ the \emph{surface motion map}.  It maps the scalar surface elevation $s$ to a scalar term in the SKE \eqref{eq:be:ske}.  Constructing a preliminary bound for $\Phi$ will help to identify a Banach space $\cX$ in which to seek admissible solutions $s$.
 
@@ -419,7 +423,7 @@ The key assumption in Lemma \ref{lem:phibound:early} is that $s\in W^{1,\rr}(\Om
 
 For $2 \le \rr \le \infty$ the conjugate exponent $\rr'=\rr/(\rr-1)$ satisfies $1 \le \rr' \le 2$.  Now we conjecture that for some $\rr >2$, i.e.~subject to a strict inequality,\footnote{The reason for requiring $\rr>2$ is seen in Lemma \ref{lem:philipschitz}.  It would seem to be only a technical requirement.  Section \ref{sec:application} demonstrates well-behaved results using the convenient exponent $\rr=2$.} the $L^{\rr'}$-norm of the surface trace $\bu|_s$ is Lipschitz as a function of $s \in W^{1,\rr}(\Omega)$.  Note that we do not assume that $\bu|_s$ is continuous, but it is a measurable function defined over all of $\Omega$.
 
-\begin{conjecture} \label{conj:a}  There exists $2 < \rr \le \infty$ with the following two properties:  \emph{(i)} If $s\in W^{1,\rr}(\Omega)$ is admissible ($s\ge b$) then the conclusion of Theorem \ref{thm:stokeswellposed} applies, giving a well-defined surface velocity $\bu|_s$.  \emph{(ii)} If also $r\in W^{1,\rr}(\Omega)$ is admissible ($r\ge b$), yielding different values $\bu|_r$, then there exists $\CA>0$, independent of $s$ and $r$, such that
+\begin{conjecture} \label{conj:a}  There exists $2 < \rr \le \infty$ with the following two properties:  \emph{(i)} If $s\in W^{1,\rr}(\Omega)$ is admissible ($s\ge b$ and $s=b$ on $\partial\Omega$) then the conclusion of Theorem \ref{thm:stokeswellposed} applies, giving a well-defined surface velocity $\bu|_s$.  \emph{(ii)} If also $r\in W^{1,\rr}(\Omega)$ is admissible, yielding different values $\bu|_r$, then there exists $\CA>0$, independent of $s$ and $r$, such that
 \begin{equation}
 \big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \le \CA \|r-s\|_{W^{1,\rr}}. \label{eq:ulipschitz}
 \end{equation}
@@ -435,8 +439,7 @@ Definition \eqref{eq:be:admissible} describes the closed and convex admissible s
 \end{equation}
 (Lemma \ref{lem:phibound:early} has already shown that $\Phi$ maps from $\cK$ to the (topological) dual space $\cX'$.)  Note that $\Phi(s)[q]$ is nonlinear in $s$ but linear in $q$.  The next Lemma simply proves that $\Phi$ is Lipschitz-continuous if we assume Conjecture \ref{conj:a}.
 
-\begin{lemma} \label{lem:philipschitz}
-Assume Conjecture \ref{conj:a}.  Fix $b \in \cX$ and use definition \eqref{eq:be:admissible} to define $\cK$.  The map $\Phi:\cK\to\cX'$ is Lipschitz on bounded subsets of $\cK$, that is, for each $R>0$ there is $C(R)>0$ so that if $r,s\in B_R \cap \cK = \{t\in \cK\,:\,\|t\|_{\cX} \le R\}$ and $q\in\cX$ then
+\begin{lemma} \label{lem:philipschitz}  Suppose that Conjecture \ref{conj:a} holds.  Fix $b \in \cX$ and use definition \eqref{eq:be:admissible} to define $\cK$.  The map $\Phi:\cK\to\cX'$ is Lipschitz on bounded subsets of $\cK$, that is, for each $R>0$ there is $C(R)>0$ so that if $r,s\in B_R \cap \cK = \{t\in \cK\,:\,\|t\|_{\cX} \le R\}$ and $q\in\cX$ then
 \begin{equation}
 \Big|\Phi(r)[q] - \Phi(s)[q]\Big| \le C(R)\, \|r-s\|_{\cX} \|q\|_{\cX}  \label{eq:philipschitz}
 \end{equation}
@@ -464,19 +467,21 @@ Note that $\bu|_b=\bzero$, that is, when there is no glacier.  Now apply Conject
 Assume $s,r,b\in B_R\cap \cK$.\footnote{This requires $R \ge \|b\|_\cX$, in particular.}  Then, by the triangle inequality, \eqref{eq:philipschitz} follows with $C(R) = \CA \left(c + 3 c_\infty [L]^{-1} R\right)$.
 \end{proof}
 
-With the above tools we can now define a weak form operator which puts the backward Euler time step VI \eqref{eq:be:viearly} into a clean and mathematically-precise form.  If $s\in\cK$ and $q\in\cX$ then we define $F_{\Delta t}:\cK\to\cX'$:
+\subsection{Weak form} \label{subsec:weakform} With the above tools we can now define an operator which puts the backward Euler time step VI \eqref{eq:be:viearly} into a clean and mathematically-precise weak form.  If $s\in\cK$ and $q\in\cX$ then we define $F_{\Delta t}:\cK\to\cX'$:
 \begin{equation}
 F_{\Delta t}(s)[q] = \Delta t\,\Phi(s)[q] + \int_\Omega s q = \int_\Omega \left(s - \Delta t\, \bu|_s \cdot \bn_s\right) q.  \label{eq:be:Fdefine}
 \end{equation}
-Conjecture \ref{conj:a} and Lemma \ref{lem:philipschitz} say that this operator is well-defined and Lipschitz on bounded subsets, with a constant which depends linearly on $\Delta t$.  We also assume that the source term $\ell^n$, defined in \eqref{eq:be:source}, is in $\cX'$.  Then we will seek $s = s^n \in \cK$ so that
+If Conjecture \ref{conj:a} holds then Lemma \ref{lem:philipschitz} says that this operator is well-defined and Lipschitz on bounded subsets, with a constant which depends linearly on $\Delta t$.  We also assume that the source term $\ell^n$, defined in \eqref{eq:be:source}, is in $\cX'$.  Then we will seek $s = s^n \in \cK$ so that
 \begin{equation}
-F_{\Delta t}(s)[r-s] \ge \ell^n[r-s] \quad \text{for all } r \in \cK. \label{eq:be:vi}
+\boxed{F_{\Delta t}(s)[r-s] \ge \ell^n[r-s] \quad \text{for all } r \in \cK.} \label{eq:be:vi}
 \end{equation}
 This VI, which simply rewrites \eqref{eq:be:viearly}, is the final weak form of the implicit time-step problem.  The reader should keep in mind its strong-form NCP \eqref{eq:be:ncp} as well.
 
 Instead of the specific Lipschitz statement \eqref{eq:philipschitz}, it would suffice for well-posedness purposes to know $\Big|\Phi(r)[q] - \Phi(s)[q]\Big| \le C(R)\, (\|r-s\|_{\cX})^\omega \|q\|_{\cX}$ for some $\omega>0$, which is weaker.  This is sufficient continuity for the well-posedness theorem in Section \ref{sec:theory}.  However, the finite element error theorem in Section \ref{sec:abstractestimate} needs \eqref{eq:philipschitz} with $\omega=1$.
 
 FIXME in definition \eqref{eq:be:Fdefine} one may integrate by parts [SHOW], but it is not clear how to trade-off required regularity between $\bu|_s$ and $s$ in using the functional $F_{\Delta t}$.
+
+FIXME show what follows from (3.23): 1. SKE, 2. inequality in $\{s=b\}$, esp $b - \ell^n\ge 0$, 3. 1D condition at margin?
 
 
 \section{Theoretical considerations for VI problem~(\ref{eq:be:vi})} \label{sec:theory}
@@ -546,7 +551,7 @@ Because margins are small features compared to the overall scale of glaciers and
 
 \subsection{Conjectural well-posedness for the continuum problem} \label{subsec:conjecture} Subsections \ref{subsec:noflow}--\ref{subsec:margin} have deployed various imperfect arguments to explain why the backward Euler VI problem \eqref{eq:be:vi} could be well-posed, or at least why other approaches are less promising.  We now state a mathematically-precise conjectural framework for well-posedness of this problem based upon the idea that the surface motion map $\Phi(s) = -\bu|_s\cdot \bn_s$ assigns significantly different results to inputs which are different in norm.
 
-\begin{conjecture} \label{conj:b}  For $\rr>2$ such that Conjecture \ref{conj:a} holds, let $\cX = W^{1,\rr}(\Omega)$.  Fix $b\in\cX$ and let $\cK=\{r\in\cX\,:\,r\ge b\}$.  Recall $\Phi:\cK\to\cX'$ is then well-defined by Lemma \ref{lem:philipschitz}.  Then there are constants $\alpha>0$ and $\qq>1$ so that
+\begin{conjecture} \label{conj:b}  For $\rr>2$ such that Conjecture \ref{conj:a} holds, let $\cX = W^{1,\rr}(\Omega)$.  Fix $b\in\cX$ and let $\cK=\{r\in\cX\,:\,r|_{\partial\Omega}=b|_{\partial\Omega} \text{ and } r\ge b\}$.  Recall $\Phi:\cK\to\cX'$ is then well-defined by Lemma \ref{lem:philipschitz}.  Then there are constants $\alpha>0$ and $\qq>1$ so that
 \begin{equation}
 \left(\Phi(r) - \Phi(s)\right)[r-s] \ge \alpha \|r-s\|_{\cX}^\qq \qquad \text{for all } r,s\in\cK. \label{eq:conj:b}
 \end{equation}
@@ -556,31 +561,40 @@ In Section \ref{sec:abstractestimate}, inequality \eqref{eq:conj:b} will be call
 
 \begin{theorem} \label{thm:stepwellposed}  Assume Conjectures \ref{conj:a} and \ref{conj:b}, and fix $b \in \cX$ to define $\cK$.  Suppose that $s^{n-1}\in\cK$ and that the SMB function $a(t,x)$ is in $C([0,T]; L^{\rr'}(\Omega))$.  Then there exists a unique surface elevation $s\in\cK$ satisfying backwards Euler VI problem \eqref{eq:be:vi}. \end{theorem}
 
-\begin{proof}  Let $\rho>0$.  By Lemma \ref{lem:philipschitz} there is $C(\rho)>0$ so that if $r,s\in B_\rho\cap\cK$ then $\big|\Phi(r)[q] - \Phi(s)[q]\big| \le C(\rho) \|r-s\|_{\cX} \|q\|_{\cX}$.  Then by definition \eqref{eq:be:Fdefine}, H\"older's inequality, and Sobolev's inequality we have
+\begin{proof}  Let $R>0$.  By Lemma \ref{lem:philipschitz} there is $C(R)>0$ so that if $r,s\in B_R\cap\cK$ then $\big|\Phi(r)[q] - \Phi(s)[q]\big| \le C(R) \|r-s\|_{\cX} \|q\|_{\cX}$.  Then by definition \eqref{eq:be:Fdefine}, H\"older's inequality, and Sobolev's inequality we have
 \begin{align}
 \left|F_{\Delta t}(r)[q] - F_{\Delta t}(s)[q]\right| &\le \int_\Omega |r-s||q| + \Delta t\, \big|\Phi(r)[q] - \Phi(s)[q]\big| \\
-    &\le C(\rho,\Delta t) \|r-s\|_{\cX} \|q\|_\cX. \notag
+    &\le C \|r-s\|_{\cX} \|q\|_\cX \notag
 \end{align}
-Thus $F_{\Delta t}$ is also (Lipschitz) continuous on bounded subsets of $\cK$.  If $\Delta t>0$ and \eqref{eq:conj:b} holds then
+for some $C>0$ which depends on $R$ and $\Delta t$.  Thus $F_{\Delta t}$ is (Lipschitz) continuous on bounded subsets of $\cK$.  If Conjecture \ref{conj:b} holds then
 \begin{align}
 \left(F_{\Delta t}(r) - F_{\Delta t}(s)\right)[r-s] &= \int_\Omega (r-s)^2 + \Delta t\, \left(\Phi(r) - \Phi(s)\right)[r-s] \\
     &\ge \alpha\Delta t \|r-s\|_{\cX}^\qq, \notag
 \end{align}
-so $F_{\Delta t}$ is $\qq$-coercive over $\cX$.  Let $q\in\cX$.  From definition \eqref{eq:be:source}, the hypothesis on $a$, and H\"older's inequality,
+so $F_{\Delta t}$ is $\qq$-coercive over $\cX$.  From definition \eqref{eq:be:source}, the hypothesis on $a$, and H\"older's inequality,
 \begin{equation}
-\big|\ell^n[q]\big| \le \left(\|s^{n-1}\|_{L^{\rr'}} + \Delta t \max_{t\in[t_{n-1},t_n]} \|a(t,\cdot)\|_{L^{\rr'}}\right) \|q\|_{L^\rr}.
+\big|\ell^n[q]\big| \le \left(\|s^{n-1}\|_{L^{\rr'}} + \Delta t \max_{t\in[t_{n-1},t_n]} \|a(t,\cdot)\|_{L^{\rr'}}\right) \|q\|_{L^\rr}
 \label{eq:sourcetermbound}
 \end{equation}
-Because $\|s^{n-1}\|_{L^{\rr'}}$ is finite by Sobolev's inequality, and because $\|q\|_{L^\rr} \le \|q\|_{\cX}$, it follows that the source term $\ell^n$ is in the dual space $\cX'$.
-
-As noted below in Section \ref{sec:abstractestimate}, because $F_{\Delta t}$ is $\qq$-coercive it is also coercive and strictly-monotone.  Now Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows existence of a solution to \eqref{eq:be:vi}, which is unique by strict monotonicity.
+for all $q \in \cX$.  Because $\|s^{n-1}\|_{L^{\rr'}}<\infty$ by Sobolev's inequality, and $\|q\|_{L^\rr} \le \|q\|_{\cX}$, it follows that $\ell^n \in \cX'$.  Because $F_{\Delta t}$ is $\qq$-coercive it is also coercive and strictly-monotone.\footnote{``Coercive'' and ``strictly-monotone'' are defined in Section \ref{sec:abstractestimate} below, and in Chapter III of \cite{KinderlehrerStampacchia1980}.}  Now Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows existence of a solution to \eqref{eq:be:vi}, which is unique by strict monotonicity.
 \end{proof}
 
 Theorem \ref{thm:stepwellposed} addresses the well-posedness of a single time-step problem over $[t_{n-1},t_n]$.  Its conclusion is not sufficient to show well-posedness of the time-dependent problem parabolic VI problem, over $[0,T]$, corresponding to NCP \eqref{eq:ncp}.  If this problem were known to be well-posed then one might analyze whether implicit steps converge in the $\Delta t\to 0$ limit.
 
-It would seem that those modeling practitioners who use Stokes dynamics expect Conjectures \ref{conj:a} and \ref{conj:b}, or equivalents, to hold, but they may be difficult to prove despite some progress in Sections \ref{sec:stokes} and \ref{sec:model}.  Greater progress which has been made in the SIA case \cite{Calvoetal2003,JouvetBueler2012,PiersantiTemam2023}, which might be helpful.
+It would seem that those modeling practitioners who use Stokes dynamics expect Conjectures \ref{conj:a} and \ref{conj:b}, or equivalents, to hold, but they may be difficult to prove despite some progress in Sections \ref{sec:stokes} and \ref{sec:model}.  Greater progress has been made in the SIA case \cite{Calvoetal2003,JouvetBueler2012,PiersantiTemam2023}, which might be helpful.
 
-The computation of $\bu|_s$ and $\Phi(s)=-\bu|_s\cdot \bn_s$, or equivalent expressions, would seem to be necessary in any evolving-geometry Stokes framework, and only these expressions are addressed in the Conjectures.  By contrast, the backward Euler scheme used here is merely the simplest A-stable \cite{AscherPetzold1998} scheme which can be applied.  (Note that for finite dimensional DAE problems, implicit and A-stable schemes are standard \cite{AscherPetzold1998}.)  In any case, the geometry error bounds and results in the next two Sections only require Theorem \ref{thm:stepwellposed}.
+The computation of $\bu|_s$ and $\Phi(s)=-\bu|_s\cdot \bn_s$, or equivalent expressions, would seem to be necessary in any evolving-geometry Stokes framework, and only these expressions are addressed in the Conjectures.  By contrast, the backward Euler scheme used here is merely the simplest A-stable \cite{AscherPetzold1998} scheme which can be applied.  (Note that for finite dimensional DAE problems, implicit and A-stable schemes are standard \cite{AscherPetzold1998}.)  In any case, the geometry error bounds and results in the next two Sections only require the conclusion of Theorem \ref{thm:stepwellposed}.
+
+
+\section{Numerical exploration of Conjectures \ref{conj:a} and \ref{conj:b}} \label{sec:numerical}
+
+FIXME study 2D glaciers with Halfar-ish surfaces and 3 bed cases: flat, smooth, rough
+
+FIXME for pairs of states generated in this study also compute ratios
+\begin{equation}
+\frac{\big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}}}{\|r-s\|_{W^{1,\rr}}} \qquad \text{and} \qquad \frac{\left(\Phi(r) - \Phi(s)\right)[r-s]}{\|r-s\|_{W^{1,\rr}}^\qq}
+\end{equation}
+to evaluate Conjectures \ref{conj:a} and \ref{conj:b}; presumably use $\rr=\rr'=\qq=2$
 
 
 \section{Abstract error estimate for a finite element approximation} \label{sec:abstractestimate}
@@ -819,30 +833,30 @@ Each term in estimate \eqref{eq:preglacierestimate} has a glaciological meaning,
 
 \begin{theorem} \label{thm:glacierapp} Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Define $\Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$, a measurable subset of $\Omega$.  Then
 \begin{align}
-\|s-s_h\|_\cX^\rr &\le \quad \frac{2}{\alpha} \int_{\Omega_A(s)} (b - \ell^n) (b_h - b) &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
+\phantom{dfkljsd} \|s-s_h\|_\cX^\rr &\le \quad \frac{2}{\alpha} \int_{\Omega_A(s)} (b - \ell^n) (b_h - b) &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
    &\quad\, + \frac{\Delta t}{\alpha} \, \Gamma(s_h) \big\|\bu_h - \bu\big\|_{\cV} &&\text{\textnormal{[term 2]}} \notag \\
    &\quad\, + c_0 \|\Pi_h(s) - s\|_\cX^\qq. &&\text{\textnormal{[term 3]}} \notag
 \end{align}
-In inequality \eqref{eq:glacierestimate},
+The constant $c_0>0$ is from Lemma \ref{lem:preglacierapp}.  The coefficient in term 2, namely
 \begin{equation}
-\Gamma(s_h) = c_1 \left(\frac{\gamma_\pp(\Lambda_{s_h})}{[L]}\right)^{1/\pp} \left(|\Omega| + [L]^{-\rr}\|s_h\|_{\cX}^\rr\right)^{1/(\pp'\rr)} \|s_h\|_{L^{\pp'\rr'}}
+\Gamma(s_h) = c_1 \left(\frac{\gamma_\pp(\Lambda_{s_h})}{[L]}\right)^{1/\pp} \left(|\Omega| + [L]^{-\rr}\|s_h\|_{\cX}^\rr\right)^{1/(\pp'\rr)} \|s_h\|_{L^{\pp'\rr'}},
 \end{equation}
-depends on $s_h$, the length scale $[L]$, and the area of $\Omega$.  The constant $c_0>0$ is from Lemma \ref{lem:preglacierapp}, and the constant $c_1>0$ depends only on the exponents $\rr$, $\pp$.
+depends on nontrivially on $s_h$, but $c_1>0$ depends only on the exponents $\rr$, $\pp$.
 \end{theorem}
 
 Before proving the Theorem, consider the meaning of each term.
 
 \medskip
 \begin{itemize}
-\item[term 1:] This arises from approximation of the bed in the ice-free domain defined by the exact solution $s$.  If the bed is exactly representable ($b_h=b$) then this term is zero, but generally $b_h\ge b$ and $b-\ell^n\ge 0$---see the argument in Section \ref{sec:model}---so the integrand is positive.  Note that $s_h \ge b_h \ge b = s$ in the ice-free area, the factor $b_h-b$ in the integrand is the smallest error $s_h \approx s$ which is possible here.  The presence of the coercivity constant $\alpha$ in this term shows that it relates to the ice flow in a subtle manner.
+\item[term 1:] This error comes from approximation of the bed in the ice-free domain (as defined by the exact solution $s$).  If the bed is exactly representable $b_h=b$ then this term is zero, but generally $b_h\ge b$ and $b-\ell^n\ge 0$---see the argument in Section \ref{sec:model}---so the integrand is positive.  Note that $s_h \ge b_h \ge b = s$ in the ice-free area, so the factor $b_h-b$ in the integrand reflects the smallest error $s_h \approx s$ which is possible here.  The presence of the coercivity constant $\alpha$ in this term shows that it relates to the ice flow.
 
-\item[term 2:] This shows how numerical errors in the numerical solution of the Stokes equations, over the domain $\Lambda_{s_h}$, affect the error in $s_h$.  For example, if a higher-order FE method were applied to the Stokes problem \eqref{eq:stokes}, so that $\|\bu_h - \bu\|_{\cV} = O(h^k)$, then this term would reflect that convergence rate.
+\item[term 2:] This shows how numerical errors in the numerical solution of the Stokes equations, over the domain $\Lambda_{s_h}$, affect the error in $s_h$.  For an FE method applied to the Stokes problem \eqref{eq:stokes} with some convergence rate $\|\bu_h - \bu\|_{\cV} = O(h^k)$, this term would reflect that rate.
 
-\item[term 3:] This arises in the classical Cea's argument for convergence of FE methods \cite{Elmanetal2014}, but with added complications.  The interpolant of $s$ must be truncated into $\cK_h$, and nodal admissibility must imply admissibility.
+\item[term 3:] A similar expression arises in the classical Cea's lemma argument for convergence of FE methods \cite{Ciarlet2002}, but here there is an added complication.  The interpolant of $s$ must be truncated into $\cK_h$, and nodal admissibility must imply admissibility.
 \end{itemize}
 
 \begin{proof}
-First, apply Lemma \ref{lem:preglacierapp}.  Now consider the first term on the right side of inequality \eqref{eq:preglacierestimate}.  Because $s$ solves \eqref{eq:be:vi}, the residual $\Psi = F_{\Delta t}(s)-\ell^n \in \cX'$, while generally nonzero, is non-negative.  In particular, if $\phi\in C_c^\infty(\Omega)$ is nonnegative then $r=s+\phi \in \cK$ and $\Psi[r-s] = \Psi[\phi] \ge 0$.  Thus $\Psi\in\cX'$ is a non-negative distribution, and so it is represented by a positive Borel measure $\mu$, $\Psi[\phi] = \int_\Omega \phi\,d\mu$ \cite[Theorem 6.22]{LiebLoss1997}.  However, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in $\Omega_A(s)$.  In fact, recall from Section \ref{sec:model} that $b-\ell^n\ge 0$ on $\Omega_A(s)$---this gives the density of $\mu$--and note also that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.  Suppose $\phi_h \in \cX_h$ is nonnegative and supported in $\Omega_A(s)$, and define $r_h = b_h + \phi_h \in \cK_h$.  Then from definition \eqref{eq:be:Fdefine} we have
+Consider the first term on the right side of inequality \eqref{eq:preglacierestimate}.  Because $s$ solves \eqref{eq:be:vi}, the residual $\Psi = F_{\Delta t}(s)-\ell^n \in \cX'$, while generally nonzero, is non-negative.  In particular, if $\phi\in C_c^\infty(\Omega)$ is nonnegative then $r=s+\phi \in \cK$ and $\Psi[r-s] = \Psi[\phi] \ge 0$.  Thus $\Psi\in\cX'$ is a non-negative distribution, and so it is represented by a positive Borel measure $\mu$, $\Psi[\phi] = \int_\Omega \phi\,d\mu$ \cite[Theorem 6.22]{LiebLoss1997}.  However, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in $\Omega_A(s)$.  In fact, recall from Section \ref{sec:model} that $b-\ell^n\ge 0$ on $\Omega_A(s)$---this gives the density of $\mu$--and note also that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.  Suppose $\phi_h \in \cX_h$ is nonnegative and supported in $\Omega_A(s)$, and define $r_h = b_h + \phi_h \in \cK_h$.  Then from definition \eqref{eq:be:Fdefine} we have
 \begin{equation}
 \left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] = \int_{\Omega_A(s)} \left(b - \ell^n\right) (b_h - b) + \int_{\Omega_A(s)} \left(b - \ell^n\right) \phi_h.
 \end{equation}
@@ -868,32 +882,14 @@ Recalling the scaling of the $\cX$ norm, equation \eqref{eq:norm:Omega}, we have
 Term 3 follows by substituting $r_h=\Pi_h(s)$.  (This uses item \ref{item:Pi} in the Standard Assumptions.)
 \end{proof}
 
-FIXME USE RESULT IN \cite{JouvetBueler2012}, namely \cite[Theorem 3.1.6]{Ciarlet2002}, to bound term 3
-
-FIXME accomodate the barrier theory from \cite{Bueler2021conservation}
-
-
-\section{Demonstration in a numerical glacier model} \label{sec:demo}
-
-FIXME study 2D glaciers with Halfar-ish surfaces and 3 bed cases: flat, smooth, rough
-
-FIXME for pairs of states generated in this study also compute ratios
-\begin{equation}
-\frac{\big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}}}{\|r-s\|_{W^{1,\rr}}} \qquad \text{and} \qquad \frac{\left(\Phi(r) - \Phi(s)\right)[r-s]}{\|r-s\|_{W^{1,\rr}}^\qq}
-\end{equation}
-to evaluate Conjectures \ref{conj:a} and \ref{conj:b}; presumably use $\rr=\rr'=\qq=2$
+FIXME SUSPICIOUSLY STRONG REGULARITY ASSUMPTION ON $s$, AND BELIEVABLE ON $\bu$ ALLOW US TO DEAL WITH terms 2,3; USE RESULT IN \cite{JouvetBueler2012}, namely \cite[Theorem 3.1.6]{Ciarlet2002}; term 1 WOULD SEEM TO REQUIRE FURTHER THEORY FOR HOW REGULARITY HELPS WITH $R^\oplus$
 
 
 \section{Discussion and conclusion} \label{sec:conclusion}
 
-FIXME the following version of Conjecture \ref{conj:b} does not address the marginal overhang issue, and it is likely to be easier to profe, but it is not sufficient for Theorem \ref{thm:stepwellposed}
-\begin{conjecture} \label{conj:c}  For $\rr>2$ such that Conjecture \ref{conj:a} holds, let $\cX = W^{1,\rr}(\Omega)$.  Fix $b\in\cX$, let $\cK=\{r\in\cX\,:\,r\ge b\}$, and assume $s\in \cK$.  Then there are constants $\alpha>0$, $\qq>1$, $\delta>0$ so that for all $\psi\in\cX$ supported in the inactive set of $s$, namely $\{x\in\Omega\,:\,s(x)>b(x)\}$, such that $s+\psi\in\cK$ and $\|\psi\|_\cX \le \delta$, the following inequality holds:
-\begin{equation}
-\left(\Phi(s+\psi) - \Phi(s)\right)[\psi] \ge \alpha \|\psi\|_{\cX}^\qq. \label{eq:conj:c}
-\end{equation}
-\end{conjecture}
+FIXME the barrier theory from \cite{Bueler2021conservation} applies to thickness-based models; term 1 in Theorem \ref{thm:glacierapp} is novel relative to that
 
-FIXME
+FIXME a weaker version of Conjecture \ref{conj:b}, which does not address the marginal overhang issue, may be easier to prove, but it is not sufficient for Theorem \ref{thm:stepwellposed}; it comes from setting $r=s + \phi$ for $\phi$ supported where $s>b$
 
 
 \bibliographystyle{siamplain}
