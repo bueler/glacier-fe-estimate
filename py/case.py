@@ -123,7 +123,7 @@ sR = Function(P1R)
 bR = Function(P1R)
 bR.dat.data[:] = b.dat.data_ro
 t = 0.0
-printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a ...')
+printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a and saving states ...')
 printpar(f'  solving 2D Stokes + SKE on {mx} x {mz} extruded mesh over {bed} bed')
 printpar(f'  dimensions: n_u = {se.V.dim()}, n_p = {se.W.dim()}')
 if writepng:
@@ -188,8 +188,8 @@ for n in range(Nsteps):
                    writehalfar=(bed == 'flat' and n + 1 == Nsteps))
 
 if writepng:
-    printpar(f'finished writing to {sys.argv[5]}')
+    printpar(f'  finished writing to {sys.argv[5]}')
 if writepvd:
-    printpar(f'finished writing to {sys.argv[6]}')
+    printpar(f'  finished writing to {sys.argv[6]}')
 
 sampleratios(_slist, basemesh, b, N=Nsamples, q=qcoercive, Lsc=L)
