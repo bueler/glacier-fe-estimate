@@ -217,7 +217,7 @@ FIXME: state backward Euler step SKE \eqref{eq:be:ske} here, to commit to implic
 
 FIXME: WHAT WE ACCOMPLISH
 
-This paper is organized as follows.  Section \ref{sec:stokes} recalls the existing theory of the Glen-law Stokes problem on a fixed domain, but we add an apparently-new bound on the surface trace of the velocity solution (Corollary \ref{cor:surfacetracebound}).  In Section \ref{sec:model} we discretize the time derivative and then reformulate the coupled problem \eqref{eq:icydomain}--\eqref{eq:stokes} as a VI weak form for an implicit (backward Euler) time step.  The key coupling term in this problem is the surface motion portion (i.e.~$\bu|_s\cdot \bn_s$) of the SKE \eqref{eq:ske}, for which we provide a quantitative bound (Lemma \ref{lem:philipschitz}) over a Sobolev space of surface elevation functions.  However, this bound is subject to a conjecture that the surface trace of velocity is Lipschitz continuous with respect to surface elevation.  Well-posedness for each implicit time-step problem is considered in Section \ref{sec:theory}, including a second conjecture on the coercivity of the surface motion term.  Certain physical and modeling ideas are discussed here, as context needed to understand the latter conjecture.  At this point we have in hand a mathematically-precise, time-discretized continuum model, though one with only conjectural well-posedness; see Theorem \ref{thm:stepwellposed}.  This continuum model, precisely stated here for what we believe is the first time, is one which can be approximated by a finite element (FE) method.  In Section \ref{sec:abstractestimate} we prove an abstract FE error estimate, namely Theorem \ref{thm:abstractestimate}, and its corollaries, for general VI problems involving fully-nonlinear operators on Banach spaces.  This new estimate, which makes coercive and Lipshitz assumptions, extends the classical case by Falk \cite{Falk1974} for bilinear forms.  [FIXME: rewrite needed from here] In Section \ref{sec:application} we apply the estimate to the glacier model.  The distinctive character of non-sliding land-based glaciers, in terms of how they respond to climate (mass balance) perturbations, and how they stagnate as ice thickness approaches zero, implies that certain terms in the error estimate are small.  Computable geometry error upper bounds follow.  These estimates are demonstrated in Section \ref{sec:demo} on an idealized, but non-trivial, glacier simulation implemented in Firedrake \cite{Hametal2023}.
+This paper is organized as follows.  Section \ref{sec:stokes} recalls the known theory of the Glen-law Stokes problem on a fixed domain, but we add an apparently-new bound on the surface trace of the velocity solution (Corollary \ref{cor:surfacetracebound}).  In Section \ref{sec:model} we discretize the time derivative and then reformulate the coupled problem \eqref{eq:icydomain}--\eqref{eq:stokes} as a VI weak form for an implicit (backward Euler) time step.  The key coupling term in this problem is the surface motion ($\bu|_s\cdot \bn_s$) from the SKE \eqref{eq:ske}, for which we provide a quantitative bound over a Sobolev space of surface elevation functions (Lemma \ref{lem:philipschitz}).  However, this bound is subject to Conjecture \ref{conj:a}, namely that the surface trace of velocity is Lipschitz continuous with respect to surface elevation.  Well-posedness for each implicit time-step problem is considered in Section \ref{sec:theory}, based upon a second conjecture, Conjecture \ref{conj:b}, on the coercivity of the surface motion term.  Certain physical and modeling ideas are discussed here, as context needed to understand Conjecture \ref{conj:b}.  Section \ref{sec:numerical} provides basic numerical evidence for the validity of the Conjectures, using Stokes glacier simulations in one dimension.  At this point we have in hand a mathematically-precise, time-discretized continuum model, though one with only conjectural well-posedness; see Theorem \ref{thm:stepwellposed}.  This continuum model, precisely stated here for what we believe is the first time, can be approximated by a finite element (FE) method.  In Section \ref{sec:abstractestimate} we prove an abstract FE error estimate, Theorem \ref{thm:abstractestimate}, and its several Corollaries, for general VI problems involving nonlinear operators on Banach spaces.  This new estimate, which makes coercive and Lipshitz assumptions on the operator, extends the classical case by Falk \cite{Falk1974} for bilinear forms.  In Section \ref{sec:application} we apply the estimate to the glacier model to show Theorem \ref{thm:glacierapp}, our final result.  We explain the physical significance of each term in this error estimate, and implications for how choices are made in FE-based evolving glacier simulations using Stokes dynamics.
 
 
 \section{The surface velocity from a glacier Stokes problem} \label{sec:stokes}
@@ -539,11 +539,10 @@ FIXME physically, thin ice does not flow much regardless of surface slope, which
 \subsection{Margin/terminus shape obscures the choice of Sobolev space} \label{subsec:margin}  The theoretically-predicted shape of the grounded margin of a glacier is not so clear (Figure \ref{fig:margins}), and this makes it difficult to speculate on which Sobolev spaces might allow well-posedness.  The SIA theory suggests root-type (fractional-power) shapes \cite{Bueleretal2005} for the marginal surface elevation, with unbounded gradients.  By contrast, a ``wedge'' margin shape with a bounded gradient has been hypothesized \cite[for example]{EchelmeyerKamb1986}, which would allow $s\in W^{1,\rr}(\Omega)$.  However, reality is more complicated.  In the vicinity of any steep ice margin, especially on steep bedrock features, real glacier ice can generate overhangs which violate the assumption that a surface elevation function is meaningful, and similarly the bedrock can overhang.  Fractures, crevasses, and cliffs are commonly found in glacier margins, but modeling such features escapes from the viscous fluid paradigm considered here.
 
 \begin{figure}
-%FIXME replace with better figure
 \begin{center}
 \includegraphics[width=0.8\textwidth]{figs/margins.jpg}
 \end{center}
-\caption{In which Sobolev space should we seek the surface elevation function?  This question relates to the theoretically-expected shape of the ice margin.  The shallow ice theory yields a fractional power shape (left).  Other glacier models hypothesize a ``wedge'' shape (center).  On the other hand, actual glacier margins often have overhangs, crevasses, and cliffs (right).}
+\caption{FIXME REDRAW.  In which Sobolev space should we seek the surface elevation function?  This question relates to the theoretically-expected shape of the ice margin.  The shallow ice theory yields a fractional power shape (left).  Other glacier models hypothesize a ``wedge'' shape (center).  On the other hand, actual glacier margins often have overhangs, crevasses, and cliffs (right).}
 \label{fig:margins}
 \end{figure}
 
@@ -576,7 +575,7 @@ so $F_{\Delta t}$ is $\qq$-coercive over $\cX$.  From definition \eqref{eq:be:so
 \big|\ell^n[q]\big| \le \left(\|s^{n-1}\|_{L^{\rr'}} + \Delta t \max_{t\in[t_{n-1},t_n]} \|a(t,\cdot)\|_{L^{\rr'}}\right) \|q\|_{L^\rr}
 \label{eq:sourcetermbound}
 \end{equation}
-for all $q \in \cX$.  Because $\|s^{n-1}\|_{L^{\rr'}}<\infty$ by Sobolev's inequality, and $\|q\|_{L^\rr} \le \|q\|_{\cX}$, it follows that $\ell^n \in \cX'$.  Because $F_{\Delta t}$ is $\qq$-coercive it is also coercive and strictly-monotone.\footnote{``Coercive'' and ``strictly-monotone'' are defined in Section \ref{sec:abstractestimate} below, and in Chapter III of \cite{KinderlehrerStampacchia1980}.}  Now Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows existence of a solution to \eqref{eq:be:vi}, which is unique by strict monotonicity.
+for all $q \in \cX$.  Because $\|s^{n-1}\|_{L^{\rr'}}<\infty$ by Sobolev's inequality, and $\|q\|_{L^\rr} \le \|q\|_{\cX}$, it follows that $\ell^n \in \cX'$.  Because $F_{\Delta t}$ is $\qq$-coercive it is also coercive and strictly-monotone (Definition \ref{def:monotonecoercive}).  Now Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows existence of a solution to \eqref{eq:be:vi}, which is unique by strict monotonicity.
 \end{proof}
 
 Theorem \ref{thm:stepwellposed} addresses the well-posedness of a single time-step problem over $[t_{n-1},t_n]$.  Its conclusion is not sufficient to show well-posedness of the time-dependent problem parabolic VI problem, over $[0,T]$, corresponding to NCP \eqref{eq:ncp}.  If this problem were known to be well-posed then one might analyze whether implicit steps converge in the $\Delta t\to 0$ limit.
@@ -587,6 +586,8 @@ The computation of $\bu|_s$ and $\Phi(s)=-\bu|_s\cdot \bn_s$, or equivalent expr
 
 
 \section{Numerical exploration of Conjectures \ref{conj:a} and \ref{conj:b}} \label{sec:numerical}
+
+FIXME using Firedrake \cite{Hametal2023}
 
 FIXME study 2D glaciers with Halfar-ish surfaces and 3 bed cases: flat, smooth, rough
 
@@ -599,17 +600,15 @@ to evaluate Conjectures \ref{conj:a} and \ref{conj:b}; presumably use $\rr=\rr'=
 
 \section{Abstract error estimate for a finite element approximation} \label{sec:abstractestimate}
 
-We now consider the finite element (FE) approximation of an abstract variational inequality (VI) problem.  We will return to the glaciological problem \eqref{eq:be:vi} in Section \ref{sec:application}.
+In this Section we consider the finite element (FE) approximation of an abstract variational inequality (VI) problem.  We will return to glaciological problem \eqref{eq:be:vi} in Section \ref{sec:application}.
 
-Let $\cX$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cX'$.  Denote the dual pairing of $\ell \in \cX'$ and $v\in\cX$ by $\ell[v]$, and define the (Banach space) norm on $\cX'$ by $\|\phi\|_{\cX'} = \sup_{\|v\|=1} \big|\ell[v]\big|$.  Let $\cK \subset \cX$ be a nonempty, closed, and convex subset.  It is called the constraint set, and its elements are said to be admissible.
-
-For a continuous, but generally nonlinear, operator $f:\cK \to \cX'$, and a linear source $\ell\in \cX'$, the VI problem is to find $u\in \cK$ such that
+Let $\cX$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological dual (Banach) space $\cX'$.  Denote the dual pairing of $\ell \in \cX'$ and $v\in\cX$ by $\ell[v]$, and define $\|\ell\|_{\cX'} = \sup_{\|v\|=1} \big|\ell[v]\big|$.  Let $\cK \subset \cX$ be a nonempty, closed, and convex subset, called the constraint set, whose elements are called admissible.  For a continuous, but generally nonlinear, operator $f:\cK \to \cX'$, and a source $\ell\in \cX'$, the VI problem is to find $u\in \cK$ such that
 \begin{equation}
 f(u)[v-u] \ge \ell[v-u] \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
-The best known example of such a problem is the obstacle problem for the Laplacian operator; see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for its theory and FE analysis.
+The best known example of such a problem is the obstacle problem for the Laplacian operator---see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis---but clearly VI \eqref{eq:be:vi} is in this form.  A key observation is that $f(u)-\ell \in \cX'$ is generally nonzero when $u$ solves \eqref{eq:vi}, though if $u$ is in the interior of $\cK$ then $f(u)=\ell$.  Under sufficient regularity assumptions an NCP like \eqref{eq:ncp} or \eqref{eq:be:ncp} follows from \eqref{eq:vi}.
 
-The following definitions are standard \cite[Chapter III]{KinderlehrerStampacchia1980}.  The definition of $\qq$-coercive has already appeared in Conjecture \ref{conj:b}.
+The following definitions are standard \cite[Chapter III]{KinderlehrerStampacchia1980}.  The definition of $\qq$-coercive appeared in Conjecture \ref{conj:b}.
 
 \begin{definition} \label{def:monotonecoercive}
 An operator $f:\cK \to \cX'$ is said to be \emph{monotone} if
@@ -620,82 +619,79 @@ and \emph{strictly monotone} if equality in \eqref{eq:monotone} implies $v=w$.  
 \begin{equation}
 \frac{\left(f(v)-f(w)\right)[v-w]}{\|v-w\|} \to +\infty \qquad \text{for } v \in \cK \text{ as } \|v\| \to +\infty. \label{eq:coercive}
 \end{equation}
-Let $\qq>1$.  The operator is \emph{$\qq$-coercive \cite{Bueler2021conservation}} if there exists $\alpha>0$ such that
+It is \emph{$\qq$-coercive} \cite{Bueler2021conservation}, for some $\qq>1$, if there exists $\alpha>0$ such that
 \begin{equation}
 \left(f(v)-f(w)\right)[v-w] \ge \alpha \|v-w\|^\qq \qquad \text{for all } v,w \in \cK. \label{eq:qcoercive}
 \end{equation}
 \end{definition}
 
-If $f:\cK \to \cX'$ is monotone and coercive, and also continuous on finite-dimensional subspaces, then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then the solution is unique.  If $f$ is $\qq$-coercive then it coercive and strictly monotone, so $\qq$-coercivity and continuity yield well-posedness for \eqref{eq:vi}.
-% \cite{Peral1997} uniform continuity over bounded sets for p-Laplacian: Thm A.0.6
-
-The following definition appeared in Lemma \ref{lem:philipschitz}.  Note that Definitions \ref{def:monotonecoercive} and \ref{def:lipshitz} do not require $f$ to be defined on all of the vector space $\cX$, but only on $\cK$.  If Definition \ref{def:lipshitz} applies then $f$ is continuous.
+If $f:\cK \to \cX'$ is monotone and coercive, and also continuous on finite-dimensional subspaces, then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then the solution is unique.  If $f$ is $\qq$-coercive then it coercive and strictly monotone, so $\qq$-coercivity and continuity yield well-posedness for \eqref{eq:vi}.  Note that Definitions \ref{def:monotonecoercive} and \ref{def:lipshitz} do not require $f$ to be defined on all of the Banach space $\cX$, but only on $\cK$.  
+  
+The following definition appeared in Lemma \ref{lem:philipschitz}.  If it holds then $f$ is continuous.
 
 \begin{definition} \label{def:lipshitz}
-For $\rho>0$ let $B_\rho = \{v\in \cX\,:\,\|v\|\le \rho\}$.  We say $f:\cK \to \cX'$ is \emph{Lipshitz on bounded subsets of $\cK$} if for every $\rho>0$ there is $C(\rho)>0$ so that if $v,w \in B_\rho \cap \cK$ and $z\in\cX$ then $|\left(f(v)-f(w)\right)[z]| \le C(\rho) \|v-w\| \|z\|$, equivalently
+For $R>0$ let $B_R = \{v\in \cX\,:\,\|v\|\le R\}$.  We say $f:\cK \to \cX'$ is \emph{Lipshitz on bounded subsets of $\cK$} if for every $R>0$ there is $C(R)>0$ so that if $v,w \in B_R \cap \cK$ and $z\in\cX$ then $|\left(f(v)-f(w)\right)[z]| \le C(R) \|v-w\| \|z\|$, equivalently
 \begin{equation}
-\|f(v)-f(w)\|_{\cX'} \le C(\rho) \|v-w\| \quad \text{ for all } v,w \in B_\rho \cap \cK.  \label{eq:liponbounded}
+\|f(v)-f(w)\|_{\cX'} \le C(R) \|v-w\| \quad \text{ for all } v,w \in B_R \cap \cK.  \label{eq:liponbounded}
 \end{equation}
 \end{definition}
 
-A key concept in the following theorem is that $f(u)-\ell \in \cX'$ is generally nonzero when $u$ solves \eqref{eq:vi}.  An NCP like \eqref{eq:ncp} or \eqref{eq:be:ncp} holds, at least in sufficiently regular cases, but only for $u$ in the interior of $\cK$ should we expect equality $f(u)=\ell$.
-%See \cite[Exercise 5.1.1]{Ciarlet2002} and \cite[section 7]{BuelerFarrell2024} for examples.
+An FE method for \eqref{eq:vi} is a finite-dimensional VI problem.  Suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, typically some space of continuous, piecewise-polynomial functions defined on a mesh.  The FE constraint set $\cK_h\subset \cX_h$ is assumed to be closed and convex, but generally $\cK_h \nsubseteq \cK$.  Let $f_h:\cK_h\to\cX'$, but note that generally $f_h\ne f$ because of quadrature and other approximations.  Looking ahead, both $\cK_h \nsubseteq \cK$ and $f_h\ne f$ occur naturally in the glacier geometry problem (Section \ref{sec:application}).
 
-An FE method for \eqref{eq:vi} is a finite-dimensional VI problem.  Suppose $\cX_h \subset \cX$ is a finite-dimensional subspace; typically $\cX_h$ consists of continuous, piecewise-polynomial functions defined on a mesh.  The FE constraint set $\cK_h\subset \cX_h$ is closed and convex, but generally $\cK_h \nsubseteq \cK$.  Let $f_h:\cK_h\to\cX'$, and note that generally $f_h\ne f$ because of quadrature and other approximations.  The FE VI problem is
+The FE VI problem is
 \begin{equation}
-f_h(u_h)[v_h-u_h] \ge \ell[v_h-u_h] \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
+f_h(u_h)[v_h-u_h] \ge \ell[v_h-u_h] \quad \text{for all } v_h\in \cK_h, \label{eq:fe:vi}
 \end{equation}
-We will assume that this FE problem is well-posed, so that it uniquely defines $u_h\in\cK_h$, but we will not need to assume specifically that $f_h$ is $\qq$-coercive, Lipschitz, or even continuous.
+just like \eqref{eq:vi}.  We will assume that \eqref{eq:fe:vi} has a solution $u_h\in\cK_h$.
 
-The following abstract error estimate extends \cite{Falk1974} and Theorem 5.1.1 in \cite{Ciarlet2002}.  Here we do not assume that $f$ is linear, nor that $\cK_h \subset \cK$ or $f_h=f$.  Also, $f_h$ needs only be defined on $\cK_h$.  However, we must extend the domain of $f$ to include the FE solution.
+The following abstract error estimation theorem extends the well-known result by \cite{Falk1974}; see also Theorem 5.1.1 in \cite{Ciarlet2002}.  We will not assume that $f$ is linear, nor that $\cK_h \subset \cK$ or $f_h=f$, nor that $f_h$ is $\qq$-coercive, or Lipschitz, or even continuous.  However, we must assume that the domain of $f$ includes the FE solution, which is achieved here\footnote{This technical assumption permits a clean and general estimation theorem, but the choice of $\cK_h$ made in Section \ref{sec:application} means that $\hcK$ is not needed in our glacier application.  See Corollary \ref{cor:abstractestimate:nohull}.} by defining a convex superset of $\cK$ and $\cK_h$.
 
-\begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  Define
-\begin{equation}
-\hcK = \overline{\Hull{(\cK \cup \cK_h)}}  \label{eq:convexhull}
-\end{equation}
-as the closure in $\cX$ of the convex hull of $\cK \cup \cK_h$, and suppose that $f$ can be extended to $\hcK$.  For $\qq>1$, with conjugate $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive over $\hcK$ with constant $\alpha>0$, and Lipshitz on bounded sets of $\hcK$.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c=c(\alpha,R_h)>0$, which does not otherwise depend on $u$ or $u_h$, so that
+\begin{theorem} \label{thm:abstractestimate}  Define $\hcK = \overline{\Hull{(\cK \cup \cK_h)}}$ as the closure in $\cX$ of the convex hull of $\cK \cup \cK_h$, and suppose that $f:\hcK \to \cX'$.  For $\qq>1$, with conjugate exponent $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive over $\hcK$ with constant $\alpha>0$, and Lipshitz on bounded sets of $\hcK$.  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}, and let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c=c(R_h)>0$, not otherwise depending on $u$ or $u_h$, so that
 \begin{align}
 \|u-u_h\|^\qq &\le \quad \frac{2}{\alpha} \inf_{v\in\cK} \left(f(u)-\ell\right)[v-u_h] \label{eq:abstractestimate} \\
    &\quad\, + \frac{2}{\alpha} \inf_{v_h\in\cK_h} \left(f(u)-\ell\right)[v_h-u] \notag \\
    &\quad\, + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] \notag \\
-   &\quad\, + \inf_{v_h\in\cK_h} c \|v_h - u\|^{\qq'} \notag
+   &\quad\, + \inf_{v_h\in\cK_h} c \|v_h - u\|^{\qq'}. \notag
 \end{align}
 \end{theorem}
 
 \begin{proof}  For arbitrary $v\in\cK$ and $v_h\in\cK_h$, rewrite \eqref{eq:vi} and \eqref{eq:fe:vi} as follows:
-\begin{align*}
-f(u)[u]     &\le f(u)[v] + \ell[u-v],  \\
-f_h(u_h)[u_h] &\le f_h(u_h)[v_h] + \ell[u_h-v_h].
-\end{align*}
-It follows from $\qq$-coercivity of $f$, and these inequalities, that
-\begin{align*}
-\alpha \|u-u_h\|^\qq &\le \left(f(u)-f(u_h)\right)[u-u_h] \\
-  &= f(u)[u] + f(u_h)[u_h] - f(u)[u_h] - f(u_h)[u] \\
-  &= f(u)[u] + f_h(u_h)[u_h] \\
-  &\qquad - f(u)[u_h] - f(u_h)[u] + \left(f(u_h)-f_h(u_h)\right)[u_h] \\
-  &\le f(u)[v] + \ell[u-v] + f(u_h)[v_h] + \ell[u_h-v_h] \\
-  &\qquad - f(u)[u_h] - f(u_h)[u] + \left(f(u_h)-f_h(u_h)\right)[u_h] \\
-  &= f(u)[v-u_h] - \ell[v-u_h] + f(u_h)[v_h-u] - \ell[v_h-u] \\
-  &\qquad + \left(f(u_h)-f_h(u_h)\right)[u_h] \\
-  &= \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u] \\
-  &\qquad + \left(f(u)-f(u_h)\right)[u-v_h] + \left(f(u_h)-f_h(u_h)\right)[u_h]
-\end{align*}
+\begin{align}
+f(u)[u]     &\le f(u)[v] + \ell[u-v], \label{eq:abstract:one}  \\
+f_h(u_h)[u_h] &\le f_h(u_h)[v_h] + \ell[u_h-v_h]. \notag
+\end{align}
+It follows from \eqref{eq:abstract:one} and the $\qq$-coercivity of $f$ that
+\begin{align}
+\alpha \|u-u_h\|^\qq &\le \left(f(u)-f(u_h)\right)[u-u_h] \label{eq:abstract:two} \\
+  &= f(u)[u] + f(u_h)[u_h] - f(u)[u_h] - f(u_h)[u] \notag \\
+  &= f(u)[u] + f_h(u_h)[u_h] \notag \\
+  &\qquad - f(u)[u_h] - f(u_h)[u] + \left(f(u_h)-f_h(u_h)\right)[u_h] \notag \\
+  &\le f(u)[v] + \ell[u-v] + f(u_h)[v_h] + \ell[u_h-v_h] \notag \\
+  &\qquad - f(u)[u_h] - f(u_h)[u] + \left(f(u_h)-f_h(u_h)\right)[u_h] \notag \\
+  &= f(u)[v-u_h] - \ell[v-u_h] + f(u_h)[v_h-u] - \ell[v_h-u] \notag \\
+  &\qquad + \left(f(u_h)-f_h(u_h)\right)[u_h] \notag \\
+  &= \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u] \notag \\
+  &\qquad + \left(f(u)-f(u_h)\right)[u-v_h] + \left(f(u_h)-f_h(u_h)\right)[u_h] \notag
+\end{align}
 Since $u,u_h\in B_{R_h}$, by the Lipshitz assumption over $\hcK$ there is $C(R_h)>0$ so that
-    $$\left(f(u)-f(u_h)\right)[u-v_h] \le C(R_h) \|u-u_h\|\|u-v_h\|.$$
+\begin{equation}
+\left(f(u)-f(u_h)\right)[u-v_h] \le C(R_h) \|u-u_h\|\|u-v_h\|. \label{eq:abstract:three}
+\end{equation}
 Noting $1<\qq<\infty$, now use Young's inequality with $\eps>0$ \cite[Appendix B.2]{Evans2010}:
-\begin{align*}
-\alpha \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u] \\
-  &\qquad + C(R_h) \left(\eps\|u-u_h\|^\qq + \tilde C(\eps) \|u-v_h\|^{\qq'}\right) + \left(f(u_h)-f_h(u_h)\right)[u_h],
-\end{align*}
+\begin{align}
+\alpha \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u]  \label{eq:abstract:four} \\
+  &\qquad + C(R_h) \left(\eps\|u-u_h\|^\qq + \tilde C(\eps) \|u-v_h\|^{\qq'}\right) \notag \\
+  &\qquad + \left(f(u_h)-f_h(u_h)\right)[u_h], \notag
+\end{align}
 where $\tilde C(\eps) = (\eps \qq)^{-\qq'/\qq} {\qq'}^{-1}$.  Choose $\eps>0$ so that $C(R_h) \eps \le \alpha/2$, and subtract:
-\begin{align*}
-\frac{\alpha}{2} \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u] \\
-  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^{\qq'} + \left(f(u_h)-f_h(u_h)\right)[u_h]
-\end{align*}
+\begin{align}
+\frac{\alpha}{2} \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u]  \label{eq:abstract:five} \\
+  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^{\qq'} + \left(f(u_h)-f_h(u_h)\right)[u_h] \notag
+\end{align}
 Take infimums to show \eqref{eq:abstractestimate}.
 \end{proof}
 
-There are two important cases where the essentially-technical convex hull operation \eqref{eq:convexhull} is not needed.  We will see in Section \ref{sec:application} that case \emph{i)} can be practically arranged in glacier simulations.
+There are two important cases where the convex hull operation to create $\hcK$ is not needed, as in this Corollary.  We will see in Section \ref{sec:application} that case \emph{i)} can easily be imposed in glacier simulations.
 
 \begin{corollary}  \label{cor:abstractestimate:nohull}  In addition to the assumptions of Theorem \ref{thm:abstractestimate}, suppose that one of the following situations apply:
 \renewcommand{\labelenumi}{\roman{enumi})}
@@ -703,37 +699,39 @@ There are two important cases where the essentially-technical convex hull operat
 \item $\cK_h \subset \cK$, with $f$ being $\qq$-coercive over $\cK$, or
 \item $f$ is defined on, and $\qq$-coercive over, all of $\cX$.
 \end{enumerate}
-Then, without the construction of the convex hull $\hcK$, conclusion \eqref{eq:abstractestimate} applies as stated, except that in case i) the ``\,$\inf_{v\in\cK}$'' term is zero.
+Then, without the construction of the convex hull $\hcK$, conclusion \eqref{eq:abstractestimate} applies as stated, except that in case i) the ``\,$\inf_{v\in\cK}$'' term in \eqref{eq:abstractestimate} is zero.
 \end{corollary}
 
-Consider $f(u)-\ell\in \cX'$ in Theorem \ref{thm:abstractestimate}, which might be a signed measure or a real-valued measurable function.  The first two terms in estimate \eqref{eq:abstractestimate} include information about its sign.  By contrast, the Hilbert space result in \cite{Falk1974} (and \cite[section 5.1]{Ciarlet2002}) computes norms, and loses this information.  The following corollary, with easy proof, takes the norm-based approach.  We suppose that $\cX$ continuously and densely embeds into a larger Banach space $\cB$:
+Consider $f(u)-\ell\in \cX'$.  It might be a measure or a measurable function, and the first two terms in estimate \eqref{eq:abstractestimate} preserve information about its support, which plays an important role in the glacier application of Section \ref{sec:application}.  By contrast, the Hilbert space result by Falk \cite{Falk1974}, \cite[section 5.1]{Ciarlet2002} computes norms and loses this information.  The following Corollary, with easy proof, takes such a norm-based approach.  We suppose that $\cX$ continuously and densely embeds into a larger Banach space $\cB$:
 \begin{equation}
 \cX \hookrightarrow \cB, \quad \bar{\cX} = \cB \label{eq:VembedsinB}
 \end{equation}
 Observe that $\cB' \subset \cX'$.  A standard example is $\cX=W^{1,\rr}(\Omega)$ and $\cB=L^\rr(\Omega)$.
 
-\begin{corollary}  \label{cor:abstractestimate:Bnorm}  In addition to the assumptions of Theorem \ref{thm:abstractestimate}, suppose \eqref{eq:VembedsinB} and that $\|f(u)-\ell\|_{\cB'} < \infty$.  Then
+\begin{corollary}  \label{cor:abstractestimate:Bnorm}  In addition to the assumptions of Theorem \ref{thm:abstractestimate}, suppose \eqref{eq:VembedsinB} holds, and that $\|f(u)-\ell\|_{\cB'} < \infty$.  Then
 \begin{align}
 \|u-u_h\|^\qq &\le \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \left( \inf_{v\in\cK} \|v-u_h\|_{\cB} +   \inf_{v_h\in\cK_h} \|v_h-u\|_{\cB} \right) \label{eq:abstractestimate:Bnorm} \\
    &\qquad + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] + \inf_{v_h\in\cK_h} c \|v_h - u\|^{\qq'} \notag
 \end{align}
 \end{corollary}
 
-The result by Falk \cite{Falk1974} combines the above two Corollaries, under the further assumption that $f$ is linear.  Specifically, suppose $f(v)[w]=a(v,w)$ is actually bilinear, uniformly elliptic, and continuous on a Hilbert space $\cX$.  In this bilinear case, the definition of uniformly elliptic coincides with definition \eqref{eq:qcoercive} of $2$-coercive, and continuity of $a(v,w)$ implies Lipshitz on bounded sets \eqref{eq:liponbounded} for $f$.  Suppose that $\cX\hookrightarrow \cH$ and $\bar{\cX} = \cH$ for some Hilbert space $\cH$, and that $\|f(u)-\ell\|_{\cH'} < \infty$ so that, up to isomorphism, $f(u)-\ell \in \cH$.  Finally, suppose that $f(u_h)=f_h(u_h)$.  Then case \emph{ii)} of Corollary \ref{cor:abstractestimate:nohull}, and Corollary \ref{cor:abstractestimate:Bnorm}, reduce to Theorem 1 in \cite{Falk1974}, and also Theorem 5.1.1 in \cite{Ciarlet2002}.
+In fact the precise result by Falk \cite{Falk1974} combines the above two Corollaries, and the further assumption that $f$ is linear.  Suppose $f(v)[w]=a(v,w)$ is bilinear, uniformly elliptic, and continuous on a Hilbert space $\cX$.  (The definition of uniformly elliptic coincides with definition \eqref{eq:qcoercive} of $2$-coercive, and continuity of $a(v,w)$ implies \eqref{eq:liponbounded}.)  Suppose that $\cX\hookrightarrow \cH$ and $\bar{\cX} = \cH$ for some Hilbert space $\cH$, and that $\|f(u)-\ell\|_{\cH'} < \infty$ so that, up to isomorphism, $f(u)-\ell \in \cH$.  Finally, suppose that $f(u_h)=f_h(u_h)$.  Then case \emph{ii)} of Corollary \ref{cor:abstractestimate:nohull} combines with Corollary \ref{cor:abstractestimate:Bnorm} to yield Theorem 1 in \cite{Falk1974}, and also Theorem 5.1.1 in \cite{Ciarlet2002}.
 
-As observed in \cite{Ciarlet2002}, the quantity in estimates \eqref{eq:abstractestimate} and \eqref{eq:abstractestimate:Bnorm} which involves $v-u_h$, for $v\in\cK$, is generally nonzero in obstacle problems where $\cK_h \nsubseteq \cK$.  This observation is important for glacier models tracking the surface elevation, as opposed to thickness.  In fact, consider a unilateral obstacle problem where $\cK=\{v \in \cX\,:\,v\ge \psi\}$.  Suppose $\psi_h$ is an FE interpolant of $\psi$, and $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge \psi_h\}$.  Observe that, while $\psi_h(x_j)=\psi(x_j)$ for interpolation nodes $x_j$, generally $\psi_h(x) \ge \psi(x)$ does not hold for all $x\in\Omega$, even if $\psi$ is arbitrarily smooth.  In other words, nodal admissiblity does not imply admissibility (Figure \ref{fig:nonadmissible}).  However, in Section \ref{sec:application} we will see that a one-sided interpolation process allows us to bypass this concern for glacier models using surface elevation.  Those which solve for ice thickness avoid this concern because then $\cK = \{v\in\cX\,:\,v\ge 0\}$, and generally $\cK_h=\cK\cap\cX_h \subset \cK$.
+The quantity in estimates \eqref{eq:abstractestimate} and \eqref{eq:abstractestimate:Bnorm} which involves $v-u_h$ and $\inf_{v\in\cK}$ is generally nonzero in obstacle problems where $\cK_h \nsubseteq \cK$ \cite{Ciarlet2002}.  In fact, consider a unilateral obstacle problem where $\cK=\{v \in \cX\,:\,v\ge \psi\}$.  Suppose $\psi_h$ is an FE interpolant of $\psi$, and define $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge \psi_h\}$.  Observe that, while $\psi_h(x_j)=\psi(x_j)$ for interpolation nodes $x_j$, generally $\psi_h(x) \ge \psi(x)$ does not hold for all $x\in\Omega$, even if $\psi$ is arbitrarily smooth.  In other words, nodal admissiblity does not imply admissibility (Figure \ref{fig:nonadmissible}) when interpolation is applied to the obstacle.
 
 \begin{figure}[ht]
 \begin{center}
 FIXME figure like Ciarlet Figure 5.1.3 %\includegraphics[width=0.8\textwidth]{figs/xxx.jpg}
 \end{center}
-\caption{Nodal admissibility generally does not imply admissibility.  Thus, if $\phi_h$ is the FE interpolant of an obstacle $\psi$, it is possible that $\cK_h \nsubseteq \cK$.}
+\caption{Nodal admissibility generally does not imply admissibility.  When $\psi_h$ is an FE interpolant of an obstacle $\psi$, it is possible that $\cK_h \nsubseteq \cK$.}
 \label{fig:nonadmissible}
 \end{figure}
 
-The following corollary collects various conclusions one may draw from making stronger assumptions, especially that the discretized operator is exact on $u_h$.
+This observation is important for glacier models tracking the surface elevation, but in Section \ref{sec:application} we will see that a one-sided interpolation process allows us to bypass this concern.  Models which solve for ice thickness avoid it because then $\cK = \{v\in\cX\,:\,v\ge 0\}$, and generally $\cK_h=\cK\cap\cX_h \subset \cK$ holds in the FE method.
 
-\begin{corollary}  \label{cor:abstractestimate:various}  Make the assumptions of case i) of Corollary \ref{cor:abstractestimate:nohull}, including that $\cK_h \subset \cK$.  Also assume that $f_h(u_h)[u_h] = f(u_h)[u_h]$.  Then
+The following Corollary collects various conclusions one might draw from assuming $\cK_h \subset \cK$ and then making stronger assumptions, especially that $f_h=f$, at least on $u_h$.  We also connect to the familiar PDE case.
+
+\begin{corollary}  \label{cor:abstractestimate:various}  Make the assumptions of case i) of Corollary \ref{cor:abstractestimate:nohull}.  Also assume that $f_h(u_h)[u_h] = f(u_h)[u_h]$.  Then
 \begin{equation}
 \|u-u_h\|^\qq \le  \inf_{v_h\in\cK_h} \left\{\frac{2}{\alpha} \left(f(u)-\ell\right)[v_h-u] + c \|v_h - u\|^{\qq'}\right\}. \label{eq:abstractestimate:subset}
 \end{equation}
@@ -741,13 +739,13 @@ If also the assumptions of Corollary \ref{cor:abstractestimate:Bnorm} hold then
 \begin{equation}
 \|u-u_h\|^\qq \le \inf_{v_h\in\cK_h} \left\{\frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \|v_h-u\|_{\cB} + c \|v_h-u\|^{\qq'}\right\} \label{eq:abstractestimate:subset:Bnorm}
 \end{equation}
-Finally, if additionally $f(u)=\ell$, for example if $u$ is in the interior of $\cK$, then
+On the other hand, if $f(u)=\ell$, for example if $u$ is in the interior of $\cK$, then
 \begin{equation}
-\|u-u_h\| \le \tilde c \inf_{v_h\in\cK_h} \|v_h-u\|^{\qq'-1} \label{eq:abstractestimate:subset:Cea}
+\|u-u_h\|^\qq \le c \inf_{v_h\in\cK_h} \|v_h-u\|^{\qq'} \label{eq:abstractestimate:subset:Cea}
 \end{equation}
 \end{corollary}
 
-Note that \eqref{eq:abstractestimate:subset:Cea} is Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002} in a Banach space.  This has reduced to the PDE case where there is no active set or free boundary.  In the glacier context, \eqref{eq:abstractestimate:subset:Cea} applies if the entire domain $\Omega$ is covered in ice, and the other assumptions of Corollary \ref{cor:abstractestimate:various} apply.
+Note that \eqref{eq:abstractestimate:subset:Cea} is Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002} in a Banach space, though with a constant which depends on $R_h=\max\{\|u\|,\|u_h\|\}$.  This case is a reduction to the PDE case where there is no active set or free boundary.  In the glacier context it applies when the entire domain $\Omega$ is covered in ice.
 
 
 \section{Application of the theory to numerical glacier models} \label{sec:application}
