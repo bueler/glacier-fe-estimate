@@ -1,6 +1,12 @@
-python3 ./case.py 201 100 1.0 flat
-python3 ./case.py 201 100 1.0 smooth
-python3 ./case.py 201 100 1.0 rough
-python3 ./case.py 401 100 0.25 flat
-python3 ./case.py 401 100 0.25 smooth
-python3 ./case.py 401 100 0.25 rough
+python3 ./case.py 201 100 1.0 flat 0.0
+python3 ./case.py 201 100 1.0 flat -1.0e-11
+python3 ./case.py 201 100 1.0 smooth 0.0
+python3 ./case.py 201 100 1.0 smooth -1.0e-11
+python3 ./case.py 201 100 1.0 rough 0.0
+python3 ./case.py 201 100 1.0 rough -1.0e-11
+python3 ./case.py 401 100 0.25 flat 0.0
+python3 ./case.py 401 100 0.25 flat -1.0e-11
+python3 ./case.py 401 100 0.25 smooth 0.0
+python3 ./case.py 401 100 0.25 smooth -1.0e-11
+python3 ./case.py 401 100 0.25 rough 0.0
+python3 ./case.py 401 100 0.25 rough -1.0e-11

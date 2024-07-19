@@ -8,36 +8,44 @@
 # explicit step.  Note this runs only in serial.
 #
 # After activating the Firedrake venv, run as
-#   $ python3 study.py MX NSTEPS DT BED
+#   $ python3 study.py MX NSTEPS DT BED ALAPSE
 # For example:
-#   $ python3 study.py 201 20 1.0 flat
+#   $ python3 study.py 201 20 1.0 flat -1.0e-11
 # To write an optional t-dependent image files indo directory do:
-#   $ python3 study.py 201 20 1.0 flat result/
+#   $ python3 study.py 201 20 1.0 flat 0.0 result/
 # To write an optional t-dependent .pvd file with Stokes results and
 # diagnostics, append the filename:
-#   $ python3 study.py 201 20 1.0 flat result/ result.pvd
+#   $ python3 study.py 201 20 1.0 flat 0.0 result/ result.pvd
 
 import sys
 import numpy as np
 from firedrake import *
 from firedrake.output import VTKFile
-from stokesextruded import StokesExtruded, SolverParams, trace_vector_to_p2, printpar
+from stokesextruded import StokesExtruded, SolverParams, extend_p1_from_basemesh, trace_vector_to_p2, printpar
 from geometry import secpera, bedtypes, g, rho, nglen, A3, B3, t0, halfargeometry
 from figures import mkoutdir, livefigure, badcoercivefigure
 from measure import geometryreport, sampleratios
 
-mx = int(sys.argv[1])
-Nsteps = int(sys.argv[2])
-dt = float(sys.argv[3]) * secpera
-bed = sys.argv[4]
-writepng = (len(sys.argv) > 5)
-writepvd = (len(sys.argv) > 6)
+# parameters set a runtime
+mx = int(sys.argv[1])           # number of elements in x direction
+Nsteps = int(sys.argv[2])       # number of time steps
+dt = float(sys.argv[3]) * secpera  # dt in years
+bed = sys.argv[4]               # 'flat', 'smooth', 'rough'
+alapse = float(sys.argv[5])     # (m s-1) / m = s-1; e.g. so that alapse * (L/2) = -5.0e-7
+writepng = (len(sys.argv) > 6)
+if writepng:
+    outdirname = sys.argv[6]
+writepvd = (len(sys.argv) > 7)
+if writepvd:
+    pvdfilename = sys.argv[7]
 
+# fixed major parameters
+L = 100.0e3             # domain is [-L,L]
 mz = 15                 # number of cells in each column
-Nsamples = 200          # number of samples when evaluating minimal ratios
+Nsamples = 20           # number of samples when evaluating minimal ratios
 qcoercive = 2.0         # try this?  justified by scaling argument?
 
-L = 100.0e3             # domain is [-L,L]
+# solution method
 Hmin = 20.0             # kludge: insert fake ice for Stokes solve
 fssa = True             # use Lofgren et al (2022) FSSA technique
 theta_fssa = 1.0        #   with this theta value
@@ -51,6 +59,8 @@ qq = 1.0 / nglen - 1.0
 basemesh = IntervalMesh(mx, -L, L)
 P1bm = FunctionSpace(basemesh, 'P', 1)
 xbm = basemesh.coordinates.dat.data_ro
+
+# bed and initial geometry
 assert bed in bedtypes
 #print(f"Halfar t0 = {t0 / secpera:.3f} a")
 b_np, s_np = halfargeometry(xbm, t=t0, bed=bed)  # get numpy arrays
@@ -58,6 +68,10 @@ b = Function(P1bm, name='bed elevation (m)')
 b.dat.data[:] = b_np
 s = Function(P1bm, name='surface elevation (m)')  # this is the state variable
 s.dat.data[:] = s_np
+
+# surface mass balance
+a = Function(P1bm, name='surface mass balance (m s-1)')
+a.dat.data[:] = alapse * abs(xbm)
 
 # set up extruded mesh, but leave z coordinate unassigned
 mesh = ExtrudedMesh(basemesh, layers=mz, layer_height=1.0/mz)
@@ -96,7 +110,9 @@ def _form_stokes(mesh, se, sR):
         nsR = as_vector([-sR.dx(0), Constant(1.0)])
         nunit = nsR / sqrt(sR.dx(0)**2 + 1.0)
         F -= theta_fssa * dt * inner(u, nunit) * inner(se.f_body, v) * ds_t
-        # FIXME SMB a into source
+        aR = extend_p1_from_basemesh(mesh, a)
+        zvec = Constant(as_vector([0.0, 1.0]))
+        source += theta_fssa * dt * aR * inner(zvec, nunit) * inner(se.f_body, v) * ds_t
     F -= source
     return F
 
@@ -127,11 +143,11 @@ printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a and saving states
 printpar(f'  solving 2D Stokes + SKE on {mx} x {mz} extruded mesh over {bed} bed')
 printpar(f'  dimensions: n_u = {se.V.dim()}, n_p = {se.W.dim()}')
 if writepng:
-    printpar(f'  creating directory {sys.argv[5]} for image files ...')
-    mkoutdir(sys.argv[5])
+    printpar(f'  creating directory {outdirname} for image files ...')
+    mkoutdir(outdirname)
 if writepvd:
-    printpar(f'  opening {sys.argv[6]} ...')
-    outfile = VTKFile(sys.argv[6])
+    printpar(f'  opening {pvdfilename} ...')
+    outfile = VTKFile(pvdfilename)
 _slist = []
 for n in range(Nsteps):
     # start with reporting
@@ -175,9 +191,8 @@ for n in range(Nsteps):
                    'Phi': Phi.copy(deepcopy=True)})
 
     # explicit step SKE using truncation
-    # FIXME include SMB choices
     # FIXME replace with semi-implicit VI solve (explicit as option)
-    snew = s - dt * Phi
+    snew = s + dt * (a - Phi)
     s.interpolate(conditional(snew < b, b, snew))
     t += dt
 
@@ -185,11 +200,11 @@ for n in range(Nsteps):
     geometryreport(basemesh, n + 1, t, s, b, L)
     if writepng:
         livefigure(basemesh, b, s, Phi, t, fname=f'result/t{t/secpera:010.3f}.png',
-                   writehalfar=(bed == 'flat' and n + 1 == Nsteps))
+                   writehalfar=(bed == 'flat' and alapse == 0.0 and n + 1 == Nsteps))
 
 if writepng:
-    printpar(f'  finished writing to {sys.argv[5]}')
+    printpar(f'  finished writing to {outdirname}')
 if writepvd:
-    printpar(f'  finished writing to {sys.argv[6]}')
+    printpar(f'  finished writing to {pvdfilename}')
 
 sampleratios(_slist, basemesh, b, N=Nsamples, q=qcoercive, Lsc=L)
