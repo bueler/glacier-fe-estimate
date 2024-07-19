@@ -34,7 +34,8 @@ def livefigure(basemesh, b, s, Phi, t, fname=None, writehalfar=False):
         plt.savefig(fname)
     plt.close()
 
-def badcoercivefigure(basemesh, b, r, s, Phir, Phis, tr, ts):
+def badcoercivefigure(basemesh, b, r, s, Phir, Phis, tr, ts, Hth=100.0):
+    import numpy as np
     import matplotlib.pyplot as plt
     from matplotlib.gridspec import GridSpec
     xx = basemesh.coordinates.dat.data
@@ -48,6 +49,7 @@ def badcoercivefigure(basemesh, b, r, s, Phir, Phis, tr, ts):
     ax[0].plot(xx / 1.0e3, b.dat.data, color='C3', label='b(x)')
     ax[0].legend(loc='upper left')
     ax[0].set_xticklabels([])
+    ax[0].set_xlim([1.05 * min(xx) / 1.0e3, 1.05 * max(xx) / 1.0e3])
     ax[0].grid(visible=True)
     ax[0].set_ylabel('elevation (m)')
     Phirlabel = f'Phi(t,x) at t = {tr / _secpera:.3f} a'
@@ -56,13 +58,17 @@ def badcoercivefigure(basemesh, b, r, s, Phir, Phis, tr, ts):
     ax[1].plot(xx / 1.0e3, Phis.dat.data * _secpera, ':', color='C2', label=Phislabel)
     ax[1].legend(loc='upper right')
     ax[1].set_ylabel(r'$\Phi$ (m a-1)')
+    ax[1].set_xlim([1.05 * min(xx) / 1.0e3, 1.05 * max(xx) / 1.0e3])
     ax[1].grid(visible=True)
     ig = (Phir.dat.data - Phis.dat.data) * (r.dat.data - s.dat.data)  # integrand
-    xxpos, igpos = xx[ig > 0.0] / 1.0e3, ig[ig > 0.0]
-    xxneg, igneg = xx[ig < 0.0] / 1.0e3, ig[ig < 0.0]
+    keep = np.logical_and(r.dat.data - b.dat.data > Hth, s.dat.data - b.dat.data > Hth)
+    keeppos, keepneg = np.logical_and(keep, ig > 0.0), np.logical_and(keep, ig < 0.0)
+    xxpos, igpos = xx[keeppos] / 1.0e3, ig[keeppos]
+    xxneg, igneg = xx[keepneg] / 1.0e3, ig[keepneg]
     ax[2].semilogy(xxpos, igpos, '.', color='k')
     ax[2].semilogy(xxneg, - igneg, '.', color='r')
     ax[2].set_ylabel('integrand (red negative)')
+    ax[2].set_xlim([1.05 * min(xx) / 1.0e3, 1.05 * max(xx) / 1.0e3])
     ax[2].grid(visible=True)
     ymax = max((max(igpos),max(-igneg)))
     ax[2].set_ylim([ymax * 1.0e-5, 1.5 * ymax])
