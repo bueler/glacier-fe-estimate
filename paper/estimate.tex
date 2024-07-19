@@ -62,6 +62,7 @@
 \newcommand{\bx}{\mathbf{x}}
 \newcommand{\bz}{\mathbf{z}}
 
+\newcommand{\bU}{\mathbf{U}}
 \newcommand{\bX}{\mathbf{X}}
 
 \newcommand{\bzero}{\bm{0}}
@@ -386,7 +387,7 @@ Almost everywhere on $\Omega$, either land is glacier covered (within $\Omega_I$
 \end{equation}
 This integral inequality is known to be true in advance of any knowledge of which is the ice-covered part of $\Omega$.
 	
-\subsection{The surface motion map} \label{subsec:surfacemotion}  Now, the well-posedness of the weak-form Stokes problem \eqref{eq:glenstokes:weak}, over a 3D domain $\Lambda$, and the surface trace bound in Corollary \ref{cor:surfacetracebound}, allows us to create a well-defined map from an admissible surface elevation $s$ to the corresponding surface velocity solution $\bu|_s(x)$.  The map is defined via definition \eqref{eq:icydomain}, followed by the solution of \eqref{eq:glenstokes:weak} over $\Lambda$, evaluation of the trace of $\bu$ along $\Gamma_s$ (Corollary \ref{cor:surfacetracebound}), and then definition \eqref{eq:defineus}.  For this map to be well-defined, $s$ must admissible ($s\in\cK$) and it must be sufficiently regular so that these steps are justified.
+\subsection{Surface motion map} \label{subsec:surfacemotion}  Now, the well-posedness of the weak-form Stokes problem \eqref{eq:glenstokes:weak}, over a 3D domain $\Lambda$, and the surface trace bound in Corollary \ref{cor:surfacetracebound}, allows us to create a well-defined map from an admissible surface elevation $s$ to the corresponding surface velocity solution $\bu|_s(x)$.  The map is defined via definition \eqref{eq:icydomain}, followed by the solution of \eqref{eq:glenstokes:weak} over $\Lambda$, evaluation of the trace of $\bu$ along $\Gamma_s$ (Corollary \ref{cor:surfacetracebound}), and then definition \eqref{eq:defineus}.  For this map to be well-defined, $s$ must admissible ($s\in\cK$) and it must be sufficiently regular so that these steps are justified.
 
 We call $\Phi(s) = - \bu|_s\cdot \bn_s$ the \emph{surface motion map}.  It maps the scalar surface elevation $s$ to a scalar term in the SKE \eqref{eq:be:ske}.  Constructing a preliminary bound for $\Phi$ will help to identify a Banach space $\cX$ in which to seek admissible solutions $s$.
 
@@ -467,7 +468,7 @@ Note that $\bu|_b=\bzero$, that is, when there is no glacier.  Now apply Conject
 Assume $s,r,b\in B_R\cap \cK$.\footnote{This requires $R \ge \|b\|_\cX$, in particular.}  Then, by the triangle inequality, \eqref{eq:philipschitz} follows with $C(R) = \CA \left(c + 3 c_\infty [L]^{-1} R\right)$.
 \end{proof}
 
-\subsection{Weak form} \label{subsec:weakform} With the above tools we can now define an operator which puts the backward Euler time step VI \eqref{eq:be:viearly} into a clean and mathematically-precise weak form.  If $s\in\cK$ and $q\in\cX$ then we define $F_{\Delta t}:\cK\to\cX'$:
+\subsection{Weak form} \label{subsec:weakform} With the above tools we can now define an operator which puts the backward Euler time step VI \eqref{eq:be:viearly} into a mathematically-precise weak form.  If $s\in\cK$ and $q\in\cX$ then we define $F_{\Delta t}:\cK\to\cX'$:
 \begin{equation}
 F_{\Delta t}(s)[q] = \Delta t\,\Phi(s)[q] + \int_\Omega s q = \int_\Omega \left(s - \Delta t\, \bu|_s \cdot \bn_s\right) q.  \label{eq:be:Fdefine}
 \end{equation}
@@ -475,20 +476,72 @@ If Conjecture \ref{conj:a} holds then Lemma \ref{lem:philipschitz} says that thi
 \begin{equation}
 \boxed{F_{\Delta t}(s)[r-s] \ge \ell^n[r-s] \quad \text{for all } r \in \cK.} \label{eq:be:vi}
 \end{equation}
-This VI, which simply rewrites \eqref{eq:be:viearly}, is the final weak form of the implicit time-step problem.  The reader should keep in mind its strong-form NCP \eqref{eq:be:ncp} as well.
+This VI, which rewrites \eqref{eq:be:viearly}, is the final weak form of the implicit time-step problem.  The reader should keep in mind its strong-form NCP \eqref{eq:be:ncp} as well.
 
-Instead of the specific Lipschitz statement \eqref{eq:philipschitz}, it would suffice for well-posedness purposes to know $\Big|\Phi(r)[q] - \Phi(s)[q]\Big| \le C(R)\, (\|r-s\|_{\cX})^\omega \|q\|_{\cX}$ for some $\omega>0$, which is weaker.  This is sufficient continuity for the well-posedness theorem in Section \ref{sec:theory}.  However, the finite element error theorem in Section \ref{sec:abstractestimate} needs \eqref{eq:philipschitz} with $\omega=1$.
+Instead of the specific Lipschitz statement \eqref{eq:philipschitz}, it would suffice for well-posedness purposes to know  that $\Big|\Phi(r)[q] - \Phi(s)[q]\Big| \le C(R)\, (\|r-s\|_{\cX})^\omega \|q\|_{\cX}$ for any $\omega>0$.  This is sufficient continuity for the well-posedness theorem in Section \ref{sec:theory}, but the finite element error theorem in Section \ref{sec:abstractestimate} needs \eqref{eq:philipschitz} with $\omega=1$.
 
-FIXME in definition \eqref{eq:be:Fdefine} one may integrate by parts [SHOW], but it is not clear how to trade-off required regularity between $\bu|_s$ and $s$ in using the functional $F_{\Delta t}$.
+If the horizontal components of the surface velocity are differentiable then one may revise definition \eqref{eq:be:Fdefine}.  First write $\bu=(u,v,w)$ in cartesian coordinates, and define $\bU=(u,v)$.  Assuming $\bU|_s=\bzero$ along $\partial\Omega$, e.g.~supposing the glacier is strictly inside the open domain $\Omega$, integrating \eqref{eq:be:Fdefine} by parts gives
+\begin{equation}
+F_{\Delta t}(s)[q] = \int_\Omega \left(s - \Delta t\, w|_s\right) q - \Delta t\, \Div\left(\bU|_s\, q\right).  \label{eq:be:Fdefine:alt}
+\end{equation}
+However, this seems not to be a better trade-off of regularity between $\bu|_s$ and $s$.  We have proven in Section \ref{sec:stokes} that $\bu|_s$ is an $L^\pp(\Gamma_s)$ function (Corollary \ref{cor:surfacetracebound}), but we know of no proof that it is more regular than that.  On the other hand we are hypothesizing that $\grad s$ is a well-defined function in $L^\rr$ because $s\in\cX=W^{1,\rr}(\Omega)$.  We will use definition \eqref{eq:be:Fdefine} from now on.
 
-FIXME show what follows from (3.23): 1. SKE, 2. inequality in $\{s=b\}$, esp $b - \ell^n\ge 0$, 3. 1D condition at margin?
+\subsection{Local consequences of the weak form} \label{subsec:viconsequences}  Since $\rr>2$, the Sobolev inequality shows $b\in\cX$ and $s\in\cK$ are continuous over $\bar\Omega$.  This fact allows us to derive certain consequences using admissible functions of the form $r=s+\phi$, for $\phi$ supported in portions of $\Omega$.  We show three illustrations.
+
+\smallskip
+\emph{Interior condition.}  Suppose $\phi(x) \in C(\Omega)$ is supported in the open (inactive) set $\Omega_I=\{x\in\Omega\,:\,s(x)>b(x)\}$, and let $r=s+\eps\phi$ for $\eps$ real.  By the compactness of the support of $\phi$, and the continuity of $b$ and $s$, we have $r\in\cK$ for $\eps$ sufficiently close to zero.  Substitution into \eqref{eq:be:vi} gives
+\begin{equation}
+\eps\left(F_{\Delta t}(s) - \ell^n\right)[\phi] \ge 0 \qquad \text{for $\phi$ supported in $\Omega_I$.}
+\end{equation}
+Because this holds for all $\eps$ close to zero, of either sign, it follows by considering all such $\phi$ that
+\begin{equation}
+s - \Delta t\, \bu|_s \cdot \bn_s - s^{n-1} - \Delta t\,a^n = 0 \qquad \text{within } \Omega_I.
+\end{equation}
+That is, the backward Euler step SKE \eqref{eq:be:ske} holds where there is ice.
+
+\smallskip
+\emph{Ice-free condition.}  Suppose $\phi(x) \in C(\Omega)$ is nonnegative and supported in the interior of the active set $\Omega_A=\{x\in\Omega\,:\,s(x)=b(x)\}$.  Let $r=s+\phi$, so $r\in\cK$.  Substitution into \eqref{eq:be:vi} gives
+\begin{equation}
+\left(F_{\Delta t}(s) - \ell^n\right)[\phi] \ge 0 \qquad \text{for $\phi\ge 0$ in the interior of $\Omega_A$.}
+\end{equation}
+By considering all such $\phi$, and assuming that $s^{n-1}$ and $a^n$ are also continuous, and assuming that $\Omega_A$ is the closure of its interior, then
+\begin{equation}
+b-\ell^n = b - s^{n-1} - \Delta t\,a^n \ge 0 \qquad \text{in } \Omega_A.
+\end{equation}
+
+The fact that $b-\ell^n\ge 0$ in ice-free areas will be important in Section \ref{sec:application}.  The same fact is also an upper bound on the SMB:
+\begin{equation}
+a^n \le \frac{b - s^{n-1}}{\Delta t} \qquad \text{in } \Omega_A. \label{eq:viconsequence:icefree}
+\end{equation}
+This upper bound is nonpositive because $s^{n-1}\in\cK$.  Thus ablation must occur in ice-free areas.  In fact, inequality \eqref{eq:viconsequence:icefree} shows that where $s$ indicates no ice the SMB is sufficiently negative to remove any ice present at the start of the time step \cite{Bueler2021conservation}.
+
+\smallskip
+\emph{Margin slope in 1D.}  The third illustration yields an apparently novel observation.  Assume $\Omega \subset \RR^1$ is a one-dimensional interval, and consider a glacier margin at $x=x_m$ in its interior.  Suppose ice is present on $x<x_m$ and absent where $x>x_m$ (as in Figure \ref{fig:margins}).  As before, $s,b,s^{n-1}$ are continuous on $\Omega$.  Assume that $a^n$, thus $\ell^n$, is also continuous.  Assume that the surface velocity components $u|_s$ and $w|_s$ are continuous on $x<x_m$, with finite limits $u_-$ and $w_-$ as $x\to x_m$.
+
+Construct a hat function $\phi\in\cX$ which is nonnegative, piecewise-linear, and supported in $[x_m-\delta,x_m+f\delta]$ for $\delta>0$ and $0<f<1$.  Specifically, set $\phi(x_m-\delta)=\phi(x_m+f\delta)=0$ and $\phi(x_m)=1$, and linear between.  Then $r=s+\phi\in\cK$, and substitution into \eqref{eq:be:vi} gives
+\begin{equation}
+\int_{x_m-\delta}^{x_m} \left(s + \Delta t\, (u s' - w) - \ell^n\right)\phi + \int_{x_m}^{x_m+f\delta} \left(b - \ell^n\right)\phi \ge 0
+\end{equation}
+The second integral is $O(f\delta)$, and it plays no further role.  Applying the mean value theorem to the first integral,
+\begin{equation}
+\frac{\delta}{2} \big[s(\xi_1) - \Delta t\,w(\xi_1) - \ell^n(\xi_1)\big] + \Delta t\,u(\xi_2) \int_{x_m-\delta}^{x_m} s'\phi + O(f\delta) \ge 0 \label{eq:viconsequence:margin:early}
+\end{equation}
+for $\xi_i \in (x_m-\delta,x_m)$.  Now, flow toward the margin ($u_->0$) or stagnant ice there ($u_-=0$) would seem to be the reasonable cases, even at a margin undergoing retreat.  If $u_->0$ then, taking the $f\to 0$ limit and then the $\delta \to 0$ limit, and noting $s(x_m)=b(x_m)$, yields a lower bound:
+\begin{equation}
+s'_- \ge \frac{(s^{n-1}(x_m)-b(x_m))/\Delta t + w_- + a^n(x_m)}{u_-}. \label{eq:viconsequence:margin}
+\end{equation}
+Here $s'_- = \liminf_{\delta \to 0^+} \frac{2}{\delta} \int_{x_m-\delta}^{x_m} s'\phi$ by definition; this is a kind of marginal trace of the surface slope.
+
+By inequality \eqref{eq:viconsequence:margin}, the surface slope at the margin cannot be unbounded below.  That is, if in 1D the velocity components have finite limits at the margin, and if the flow is toward the margin, then the surface must have finite slope; the margin must be wedge-shaped.  (Compare Subsection \ref{subsec:margin}.)  On the other hand, it is not known that the velocity limits exist at the marginal point, and numerical results (Section \ref{sec:numerical}) do not give much confidence that the vertical velocity limit $w_-$, in particular, exists.
+
+Consider inequality \eqref{eq:viconsequence:margin:early} in the other case $u_-=0$.  Here one can show that the SMB at the margin solves a similar inequality to \eqref{eq:viconsequence:icefree}, but with a contribution from the limiting vertical velocity; the details are left to the reader.
 
 
 \section{Theoretical considerations for VI problem~(\ref{eq:be:vi})} \label{sec:theory}
 
-There is general agreement among glaciologists that a non-sliding and isothermal glacier, modeled as a very-viscous and incompressible fluid, satisfies the conditions of NCP \eqref{eq:ncp}, or, specifically for a backward Euler time step, NCP \eqref{eq:be:ncp}.  For example, numerical ice sheet models \cite{IsaacStadlerGhattas2015,Pattynetal2008,WirbelJarosch2020} are based upon the Stokes model \eqref{eq:stokes}, and the SKE \eqref{eq:ske} is a standard way for surface geometry to evolve \cite{GreveBlatter2009,SchoofHewitt2013}.  The idea that positive SMB at a given location implies the existence of glacier ice is not controversial.  Likewise, ice-free areas are understood to correspond to negative SMB, at least supposing that SMB is both continuous in time and space, perhaps annualized, and that any initial accumulation (positive SMB) immediately becomes glacier ice by definition.
+There is general agreement among glaciologists that a non-sliding and isothermal glacier, modeled as a very-viscous and incompressible fluid, satisfies the conditions of NCP \eqref{eq:ncp}, or, specifically for a backward Euler time step, NCP \eqref{eq:be:ncp}.  For example, numerical ice sheet models \cite{IsaacStadlerGhattas2015,Pattynetal2008,WirbelJarosch2020} are based upon the Stokes model \eqref{eq:stokes}, and the SKE \eqref{eq:ske} is a standard way for surface geometry to evolve \cite{GreveBlatter2009,SchoofHewitt2013}.  The idea that positive SMB at a given location implies the existence of glacier ice is not controversial.  Likewise, ice-free areas are understood to correspond to negative SMB, at least supposing that SMB is both continuous in time and space, and that any initial accumulation (positive SMB) immediately becomes glacier ice by definition.
 
-However, the numerical error bounds proven later in Sections \ref{sec:abstractestimate} and \ref{sec:application} compare a finite element (FE) surface elevation with the unique solution of a continuum problem, so this VI problem must be well-posed.  Despite the theoretical progress made in Sections \ref{sec:stokes} and \ref{sec:model}, no results known to the author prove well-posedness for \eqref{eq:be:vi}, nor for any similar glacier geometry problem based on Stokes dynamics.  Thus we make Conjecture \ref{conj:b} in subsection \ref{subsec:conjecture} below.  We build up to this Conjecture using comparative cases and physical reasoning.
+However, the numerical error bounds proven later in Sections \ref{sec:abstractestimate} and \ref{sec:application} need to compare a finite element (FE) surface elevation with the unique solution of the continuum problem, and therefore VI problem \eqref{eq:be:vi} must be well-posed.  Despite the theoretical progress made in Sections \ref{sec:stokes} and \ref{sec:model}, no results known to the author prove well-posedness for \eqref{eq:be:vi}, nor for any similar glacier geometry problem based on Stokes dynamics, so we make Conjecture \ref{conj:b} in subsection \ref{subsec:conjecture} below.  We build up to this Conjecture using comparative cases and physical reasoning.
 
 \subsection{The no-flow problem is well-posed over $L^2$} \label{subsec:noflow}   Consider a glacier that does not flow.  The backward Euler time-step VI problem \eqref{eq:be:vi} then reduces to determining the geometry according only to the SMB and the prior geometry, a well-posed problem over $L^2(\Omega)$.  To see this precisely, let $F^{\bzero}_{\Delta t}(s)[q] = \int_\Omega sq$, which sets $\bu|_s=\bzero$ in \eqref{eq:be:Fdefine}.  Assuming that definition \eqref{eq:be:source} yields $\ell^n \in L^2(\Omega)$, there exists a unique solution $s \in \cK_{L^2} = \left\{r\in L^2(\Omega)\,:\,r \ge b\right\}$ of the no-flow VI problem
 \begin{equation}
@@ -515,9 +568,9 @@ s = \max\{b, s^{n-1} + \Delta t\, \bu|_{s^{n-1}} \cdot \bn_{s^{n-1}} + \Delta t\
 
 However, formula \eqref{eq:explicits} would seem to leave no regularity for the next step.  The derivatives in $\bn_{s}$, the trace evaluation $\bu|_{s}$, and the truncation itself all (generally) reduce regularity of $s$ relative to $s^{n-1}$.  It would seem from what we know about well-posed Stokes problems that the function $s$ defined by \eqref{eq:explicits} is not regular enough, i.e.~not sufficiently differentiable in space, so as to serve as the surface elevation at the start of the next time step.  That is, it is not clear that $s$ from \eqref{eq:explicits} defines a sufficiently-smooth domain $\Lambda$ so that the (weak) Stokes problem \eqref{eq:glenstokes:weak} is well-posed.
 
-The regularity of the surface elevation solution might be improved by use of semi-implicit Euler time-stepping  \cite{LofgrenAhlkronaHelanow2022}, which uses $s$ in the surface normal in \eqref{eq:explicitFdefine}: $\bn_{s^{n-1}} \to \bn_s$.  However, \cite{LofgrenAhlkronaHelanow2022} demonstrate that this change, by itself, has small effect on stability, so it is unlikely to address the above well-posedness concern.
+Re-stating this situation generously is worthwhile because explicit time-stepping simulations using Stokes dynamics are common in glacier science:  There is no known mathematical reason why explicit schemes should converge under temporal refinement.  This is because the continuum limit of the time-discretized solution, resulting from taking multiple explicit time steps and applying truncation \eqref{eq:explicits}, is not even conjecturally clear.  Convergence and stability being intimately related, this situation aligns with the very incomplete understanding, in the literature, of which explicit refinement paths are conditionally stable \cite[and references therein]{Bueler2023,Chengetal2017,LofgrenAhlkronaHelanow2022}.  If it were shown that the parabolic  VI problem \cite{Glowinski1984}, corresponding to all of the strong form conditions \eqref{eq:icydomain}--\eqref{eq:stokes}, were well-posed, then convergence of both implicit and explicit schemes would become generally clearer.
 
-Re-stating this situation generously is worthwhile because explicit time-stepping simulations using Stokes dynamics are common in glacier science.  There is no known mathematical reason why explicit schemes should converge under temporal refinement, because the continuum limit of the time-discretized solution, resulting from taking multiple explicit time steps and applying truncation \eqref{eq:explicits}, is not even conjecturally clear.  Convergence and stability being intimately related, this situation aligns with the very incomplete understanding, in the literature, of which explicit refinement paths are conditionally stable \cite[and references therein]{Bueler2023,Chengetal2017,LofgrenAhlkronaHelanow2022}.  If it were shown that the parabolic  VI problem \cite{Glowinski1984}, corresponding to all of the strong form conditions \eqref{eq:icydomain}--\eqref{eq:stokes}, were well-posed, then convergence of both implicit and explicit schemes would become generally clearer.
+The regularity of the surface elevation solution might be improved by use of semi-implicit Euler time-stepping  \cite{LofgrenAhlkronaHelanow2022}, which uses $s$ in the surface normal in \eqref{eq:explicitFdefine}: $\bn_{s^{n-1}} \to \bn_s$.  However, \cite{LofgrenAhlkronaHelanow2022} demonstrate that this change, by itself, has small effect on stability, and we see no reason why it would address the well-posedness concern.
 
 \subsection{The problem is not of advection type} \label{subsec:notadv}  It is common in the literature to regard the SKE \eqref{eq:ske} as an advection, based on its appearance,\footnote{Often written $\frac{\partial s}{\partial t} + u \frac{\partial s}{\partial x} + v \frac{\partial s}{\partial y} = a + w$, where $(u,v,w)$ denotes the surface velocity \cite{GreveBlatter2009,SchoofHewitt2013}.} but this is far from the whole truth.  Mathematically, it is not an advection because the surface velocity is not determined externally to \eqref{eq:ske}.  Instead, coupled stress balance equations, over the domain determined by the solution $s$, supply the ``advecting velocity'' $\bu|_s$.  Physically, glacier geometry solves a gravity-driven, free-surface, and viscous flow problem, so ice flows predominantly downhill.  The surface therefore typically responds to local surface perturbations with negative feedback; the flow response to a raised surface bump tends to remove the bump, and likewise for an indentation.  Thus the response is diffusive, not advective, in the large.  Such diffusive response explains the relatively smooth large-scale appearance of actual surface elevations (Figure \ref{fig:giscross}).
 
