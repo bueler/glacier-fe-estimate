@@ -14,8 +14,8 @@ def livefigure(basemesh, b, s, Phi, t, fname=None, writehalfar=False):
     slabel = f's(t,x) at t = {t / _secpera:.3f} a'
     ax[0].plot(xx / 1.0e3, s.dat.data, color='C1', label=slabel)
     if writehalfar:
-        from icegeometry import geometry, t0
-        _, shalfar = geometry(xx, t=t+t0, bed='flat')  # time t after initial time
+        from geometry import halfargeometry, t0
+        _, shalfar = halfargeometry(xx, t=t+t0, bed='flat')  # time t after initial time
         ax[0].plot(xx / 1.0e3, shalfar, '--', color='C1', label=f's_SIA(t,x)')
     ax[0].plot(xx / 1.0e3, b.dat.data, color='C3', label='b(x)')
     ax[0].legend(loc='upper left')
