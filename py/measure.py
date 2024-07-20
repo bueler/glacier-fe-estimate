@@ -51,7 +51,7 @@ def _Phi_ratio(slist, k, l, Lsc, b, q):
     ds = norm_h1sc(rr - ss, Lsc)
     return dPhi / ds**q
 
-def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3):
+def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):
     printpar(f'computing ratios from {N} pair samples from state list ...')
     assert N >= 2
     from random import randrange
@@ -73,7 +73,8 @@ def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3):
                                   slist[i1]['Phi'],
                                   slist[i2]['Phi'],
                                   slist[i1]['t'],
-                                  slist[i2]['t'])
+                                  slist[i2]['t'],
+                                  aconst=aconst)
             _max_us_rat = max(_max_us_rat, usrat)
             _min_Phi_rat = min(_min_Phi_rat, Phirat)
             _n += 1

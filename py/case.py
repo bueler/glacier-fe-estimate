@@ -33,7 +33,7 @@ mx = int(sys.argv[1])           # number of elements in x direction
 Nsteps = int(sys.argv[2])       # number of time steps
 dt = float(sys.argv[3]) * secpera  # dt in years
 bed = sys.argv[4]               # 'flat', 'smooth', 'rough'
-alapse = float(sys.argv[5])     # (m s-1) / m = s-1; e.g. so that alapse * (L/2) = -5.0e-7
+aconst = float(sys.argv[5])     # m s-1; e.g. -2.0e-7; applied in |x| < afrac * L
 writepng = (len(sys.argv) > 6)
 if writepng:
     outdirname = sys.argv[6]
@@ -44,6 +44,7 @@ if writepvd:
 # fixed major parameters
 L = 100.0e3             # domain is [-L,L]
 mz = 15                 # number of cells in each column
+afrac = 0.75            # fraction of domain on which nonzero (aconst) SMB is applied
 Nsamples = 20           # number of samples when evaluating minimal ratios
 qcoercive = 2.0         # try this?  justified by scaling argument?
 
@@ -74,7 +75,7 @@ s.dat.data[:] = s_np
 
 # surface mass balance
 a = Function(P1bm, name='surface mass balance (m s-1)')
-a.dat.data[:] = alapse * abs(xbm)
+a.dat.data[abs(xbm) < afrac * L] = aconst
 
 # set up extruded mesh, but leave z coordinate unassigned
 mesh = ExtrudedMesh(basemesh, layers=mz, layer_height=1.0/mz)
@@ -236,11 +237,11 @@ for n in range(Nsteps):
     geometryreport(basemesh, n + 1, t, s, b, L)
     if writepng:
         livefigure(basemesh, b, s, Phi, t, fname=f'{outdirname}t{t/secpera:010.3f}.png',
-                   writehalfar=(bed == 'flat' and alapse == 0.0 and n + 1 == Nsteps))
+                   writehalfar=(bed == 'flat' and aconst == 0.0 and n + 1 == Nsteps))
 
 if writepng:
     printpar(f'  finished writing to {outdirname}')
 if writepvd:
     printpar(f'  finished writing to {pvdfilename}')
 
-sampleratios(_slist, basemesh, b, N=Nsamples, q=qcoercive, Lsc=L)
+sampleratios(_slist, basemesh, b, N=Nsamples, q=qcoercive, Lsc=L, aconst=aconst)
