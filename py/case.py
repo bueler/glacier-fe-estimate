@@ -45,7 +45,7 @@ if writepvd:
 L = 100.0e3             # domain is [-L,L]
 mz = 15                 # number of cells in each column
 afrac = 0.75            # fraction of domain on which nonzero (aconst) SMB is applied
-Nsamples = 20           # number of samples when evaluating minimal ratios
+Nsamples = 200          # number of samples when evaluating minimal ratios
 qcoercive = 2.0         # try this?  justified by scaling argument?
 
 # solution method
