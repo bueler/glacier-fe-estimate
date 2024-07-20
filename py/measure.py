@@ -27,7 +27,9 @@ def geometryreport(basemesh, n, t, s, b, Lsc):
     if basemesh.comm.size == 1:
         H = s.dat.data_ro - b.dat.data_ro # numpy array
         x = basemesh.coordinates.dat.data_ro
-        width = max(x[H > 1.0]) - min(x[H > 1.0])
+        width = 0.0
+        if len(x[H > 1.0]) > 0:
+            width = max(x[H > 1.0]) - min(x[H > 1.0])
         printpar(f't_{n} = {t / secpera:.3f} a:  |s|_H1 = {snorm:.3e},  width = {width / 1000.0:.3f} km')
     else:
         printpar(f't_{n} = {t / secpera:.3f} a:  |s|_H1 = {snorm:.3e}')
