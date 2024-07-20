@@ -1,11 +1,13 @@
 # Run one case as specified by runtime options.  Constructs 2D glaciers
 # with initial Halfar profiles over different beds.  Does time-steps using
-# the free-surface stabilization algorithm (FSSA) from Lofgren et al 2022.
-# (The steps are explicit, but may be regarded as approximate solutions of
-# the implicit backward-Euler method of the paper.)  Each step solves the
-# Stokes problem, with FSSA modification, then computes the surface
-# motion map Phi(s) = - u|_s . n_s, and then does the truncated
-# explicit step.  Note this runs only in serial.
+# the free-surface stabilization algorithm (FSSA) from Lofgren et al 2022,
+# in the Stokes solve, and semi-implicit solves for the VI problem
+# arising from the backward Euler time step.  (Optional explicit steps
+# are available.)  Each step computes the surface
+# motion map Phi(s) = - u|_s . n_s for evaluation.  Saves the
+# surface elevation states, and at the ends computes ratios between
+# random pairs, as documented in the paper, to evaluate Conjecture A
+# and B.  Note this runs only in serial.
 #
 # After activating the Firedrake venv, run as
 #   $ python3 study.py MX NSTEPS DT BED ALAPSE
@@ -46,9 +48,10 @@ Nsamples = 20           # number of samples when evaluating minimal ratios
 qcoercive = 2.0         # try this?  justified by scaling argument?
 
 # solution method
-Hmin = 20.0             # kludge: insert fake ice for Stokes solve
-fssa = True             # use Lofgren et al (2022) FSSA technique
+Hmin = 20.0             # insert fake ice for Stokes solve
+fssa = True             # use Lofgren et al (2022) FSSA technique in Stokes solve
 theta_fssa = 1.0        #   with this theta value
+explicit = False        # defaults to semi-implicit steps
 
 # Stokes regularization
 eps = 0.01
@@ -132,6 +135,34 @@ def _p_hydrostatic(mesh, sR):
     phydro.rename('p_hydro (Pa)')
     return phydro
 
+# set up for semiimplicit: implement equation (3.7) and (3.23) in paper,
+#     but use old velocity
+ns = as_vector([-s.dx(0), Constant(1.0)])
+if not explicit:
+    sibcs = [DirichletBC(P1bm, b.dat.data_ro[0], 1),
+             DirichletBC(P1bm, b.dat.data_ro[-1], 2)]
+    siv = TestFunction(P1bm)
+    sisold = Function(P1bm)
+    siP2Vbm = VectorFunctionSpace(basemesh, 'CG', 2, dim=2)
+    siubm = Function(siP2Vbm)
+    siparams = {#"snes_monitor": None,
+                "snes_converged_reason": None,
+                "snes_rtol": 1.0e-6,
+                "snes_atol": 1.0e-6,
+                "snes_stol": 0.0,
+                "snes_type": "vinewtonrsls",
+                "snes_vi_zero_tolerance": 1.0e-8,
+                "snes_linesearch_type": "basic",
+                "snes_max_it": 200,
+                "ksp_type": "preonly",
+                "pc_type": "lu",
+                "pc_factor_mat_solver_type": "mumps"}
+    siF = inner(s - dt * dot(siubm, ns) - (sisold + dt * a), siv) * dx
+    siproblem = NonlinearVariationalProblem(siF, s, sibcs)
+    sisolver = NonlinearVariationalSolver(siproblem, solver_parameters=siparams,
+                                          options_prefix="step")
+    siub = Function(P1bm).interpolate(Constant(PETSc.INFINITY))
+
 # time-stepping loop
 newcoord = Function(Vcoord)
 sRfake = Function(P1R)
@@ -178,9 +209,8 @@ for n in range(Nsteps):
         pdiff.rename('pdiff = phydro - p (Pa)')
         outfile.write(u, p, nu, nueps, pdiff, time=t)
 
-    # compute surface motion map  Phi(s) = - u|_s . n_s   (m s-1)
+    # diagnostically compute surface motion map  Phi(s) = - u|_s . n_s   (m s-1)
     # this uses true surface elevation s
-    ns = as_vector([-s.dx(0), Constant(1.0)])
     ubm = trace_vector_to_p2(basemesh, mesh, u)  # surface velocity (m s-1)
     Phi = Function(P1bm).project(- dot(ubm, ns))  # interpolate() would be bad here (P2 nodes)
 
@@ -190,10 +220,16 @@ for n in range(Nsteps):
                    'us': ubm.copy(deepcopy=True),
                    'Phi': Phi.copy(deepcopy=True)})
 
-    # explicit step SKE using truncation
-    # FIXME replace with semi-implicit VI solve (explicit as option)
-    snew = s + dt * (a - Phi)
-    s.interpolate(conditional(snew < b, b, snew))
+    # time step of SKE using truncation
+    if explicit:
+        # explicit time step, simply by pointwise operation (interpolate and truncate)
+        snew = s + dt * (a - Phi)
+        s.interpolate(conditional(snew < b, b, snew))
+    else:
+        # semi-implicit: solve VI problem with surface velocity from old surface elevation
+        sisold.dat.data[:] = s.dat.data_ro
+        siubm.dat.data[:] = ubm.dat.data_ro
+        sisolver.solve(bounds=(b, siub))
     t += dt
 
     # end of step reporting
