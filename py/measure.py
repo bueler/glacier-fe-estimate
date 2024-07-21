@@ -57,8 +57,8 @@ def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):
     printpar(f'computing ratios from {N} pair samples from state list ...')
     assert N >= 2
     from random import randrange
-    _max_us_rat = -np.Inf
-    _min_Phi_rat = np.Inf
+    _max_us_rat = -np.inf
+    _min_Phi_rat = np.inf
     _n = 0
     while _n < N:
         i1 = randrange(0, len(slist))
