@@ -803,35 +803,33 @@ Note that \eqref{eq:abstractestimate:subset:Cea} is Cea's lemma \cite[Theorem 2.
 
 \section{Application of the theory to numerical glacier models} \label{sec:application}
 
-Now we can synthesize the theory and apply it to an implicit time step of a glacier simulation which uses Stokes dynamics.  We will combine three types of results: \emph{i)} the well-posedness theory and \emph{a priori} bounds for the glaciological Stokes problem on a fixed domain (Section \ref{sec:stokes}), \emph{ii)} the conjectural well-posedness theory of the surface elevation VI problem (Sections \ref{sec:model} and \ref{sec:theory}), and \emph{iii)} the abstract error estimate for finite element (FE) solutions of VIs (Section \ref{sec:abstractestimate}).  This section also gives a precise meaning to the phrase ``conforming FE method'' for an evolving glacier geometry simulation.
+Now we can synthesize the theory and apply it to an implicit time step of a glacier simulation which uses Stokes dynamics.  This will give ``conforming FE method'' a precise meaning for evolving-geometry glacier simulations.  We will combine three types of results: \emph{i)} well-posedness theory and \emph{a priori} bounds for the glaciological Stokes problem on a fixed domain (Section \ref{sec:stokes}), \emph{ii)} conjectural well-posedness theory of the surface elevation VI problem (Sections \ref{sec:model} and \ref{sec:theory}), and \emph{iii)} an abstract error estimate for FE solutions of VIs (Section \ref{sec:abstractestimate}).
 
-Consider an FE method for VI problem \eqref{eq:be:vi}.  For some chosen finite-dimensional subspace $\cX_h\subset \cX$, with a constraint set $\cK_h\subset \cX_h$, we seek $s_h\in\cK_h$ solving
+Consider an FE method for VI problem \eqref{eq:be:vi}.  For a finite-dimensional subspace $\cX_h\subset \cX$, with a constraint set $\cK_h\subset \cX_h$, we seek $s_h\in\cK_h$ solving
 \begin{equation}
 F^h_{\Delta t}(s_h)[r_h-s_h] \ge \ell^n[r_h-s_h] \quad \text{for all } r_h \in \cK_h. \label{eq:fe:be:vi}
 \end{equation}
-The operator $F^h_{\Delta t}$ denotes an FE approximation to the operator $F_{\Delta t}$ defined in \eqref{eq:be:Fdefine}, while $\ell^n = s^{n-1} + \Delta t\,a^n$ is defined exactly as before, by equation \eqref{eq:be:source}.
+The operator $F^h_{\Delta t}$ denotes an FE approximation to the operator $F_{\Delta t}$ defined in \eqref{eq:be:Fdefine}, while $\ell^n = s^{n-1} + \Delta t\,a^n$ is defined exactly as before, by equation \eqref{eq:be:source}.  We assume that $s^{n-1} \in \cK$ is general, and not necessarily that it is in the FE space $\cK_h$.
 
-As illustrated in Figure \ref{fig:fe:operatorvisualization}, evaluation of $F^h_{\Delta t}(s_h)$ in \eqref{eq:fe:be:vi} requires the numerical solution of a glaciological Stokes problem \eqref{eq:stokes} over a 3D mesh of the domain $\Lambda$ between $s_h$ and $b_h$.  Compared to this Figure, it is not required that the mesh be extruded vertically, nor that $s_h$ be piecewise-linear.  However, the upper and lower surfaces, at which boundary conditions \eqref{eq:stokes:stressfreesurface} and \eqref{eq:stokes:noslide} are applied, are given by the FE-space functions $s_h,b_h\in\cX_h$, respectively.
+Evaluation of $F^h_{\Delta t}(s_h)$ in the FE VI problem \eqref{eq:fe:be:vi} requires the nontrivial numerical solution of a glaciological Stokes problem \eqref{eq:stokes} over a 3D mesh of the domain between $z=b_h$ and $z=s_h$ (Figure \ref{fig:fe:operatorvisualization}).  Such a mesh need not be extruded vertically as shown, nor must $s_h$ necessarily be piecewise-linear, but the upper and lower surfaces, where boundary conditions \eqref{eq:stokes:stressfreesurface} and \eqref{eq:stokes:noslide} are applied, must be FE-space functions, i.e.~$s_h,b_h\in\cX_h$ with $s_h\ge b_h$.  The numerical velocity from solving the Stokes problem, over the domain geometry defined by $s_h$, is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  Observe that $\bu_h|_{s_h}$ will generally be different from the surface trace of the exact solution of the same Stokes boundary value problem for the same ($s_h$) geometry, denoted by $\bu|_{s_h}$.  Although $F^h_{\Delta t}(s_h)$ is defined by formula \eqref{eq:be:Fdefine}, it is a different operator from $F_{\Delta t}(s_h)$ because it uses the numerical solution velocity and not the exact solution velocity (of the \emph{same} Stokes problem).
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=0.75\textwidth]{genfigs/extruded.pdf}
 \end{center}
-\caption{Evaluating $F^h_{\Delta t}(s_h)$ in the finite element variational inequality problem \eqref{eq:fe:be:vi} requires numerically solving a Stokes problem on a mesh like this, and then evaluating the trace of the solution velocity $\bu_h$ on the surface $z=s_h$.}
+\caption{Evaluating $F^h_{\Delta t}(s_h)$ in \eqref{eq:fe:be:vi} requires numerically solving a Stokes problem for velocity $\bu_h$, on a mesh between $b_h$ and $s_h$, and then evaluating its upper surface trace.}
 \label{fig:fe:operatorvisualization}
 \end{figure}
 
-The numerical velocity result from the Stokes problem shown in the Figure, resulting from the geometry defined by $s_h$, is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  Observe that $\bu_h|_{s_h}$ will generally be different from the trace of the exact solution of the same Stokes boundary value problem for the same geometry.  This exact solution will simply be denoted by $\bu$, and its surface trace by $\bu|_{s_h}$.  Although $F^h_{\Delta t}(s_h)$ is defined by formula \eqref{eq:be:Fdefine}, it is a different operator from $F_{\Delta t}(s_h)$ because it uses the numerical surface velocity trace $\bu_h|_{s_h}$, for the given geometry, and not the trace of the exact solution of that problem, $\bu|_{s_h}$.
+A key concern in applying abstract Theorem \ref{thm:abstractestimate} or its Corollaries to a glaciological context is the choice of the numerical bed elevation $b_h \approx b$, which defines the constraint set $\cK_h$.  We will assume $b$ is continuous on the closed domain $\bar\Omega$.  An abstract $b\in C(\bar\Omega) \cap \cX$ can then be considered, but in practice $b$ is provided via a high resolution map derived from ice-penetrating radar \cite{Morlighemetal2017}.  Thus $b$ may in fact be in an FE space, but often on a (much) finer mesh.  We assert that, because of what we prove in this Section, it is better to choose $b_h \in \cX_h$ to satisfy $b_h\ge b$.  Maximum monotone restriction \cite{BuelerFarrell2024} or similar can be applied to achieve this, i.e.~$b_h = R^\oplus b$ if $\cX_h$ is generated from a submesh of the fine mesh on which $b$ is provided.  Also, as one would in ``conforming'' FE methods for classical PDE problems \cite{Elmanetal2014}, we assume $b_h=b$ along $\partial\Omega$.
 
-A key concern in applying abstract FE Theorem \ref{thm:abstractestimate}, or its Corollaries, is the choice of the numerical bed elevation $b_h \approx b$, which defines the constraint set $\cK_h$.  In the glaciological context one may assume $b$ is continuous on the closed domain $\bar\Omega$.  An abstract $b\in C(\bar\Omega) \cap \cX$ can be considered, but in practice $b$ will be provided via a high resolution map derived from e.g.~ice-penetrating radar \cite{Morlighemetal2017}, thus one may suppose $b$ is itself in an FE space, but on a (much) finer mesh.  We assert that, because of what we prove below about the solution to \eqref{eq:fe:be:vi}, $b_h \in \cX_h$ should be chosen to satisfy $b_h\ge b$.  To achieve this maximum monotone restriction \cite{BuelerFarrell2024} or similar can be applied, that is, $b_h = R^\oplus b$ or $b_h = (R^\oplus)^k b$, at least if $\cX_h$ is from a submesh of the fine data mesh on which $b$ is provided.
-
-We will also assume that $b|_{\partial\Omega}$ is piecewise-polynomial, as one would in ``conforming'' FE methods for classical PDE problems \cite{Elmanetal2014}.  Furthermore we will need an interpolation/truncation operation $\Pi_h : \cX \to \cK_h$.  When applied to $r\in\cX$ this operation gives the unique admissible FE function $\Pi_h(r) \in \cK_h$ so that
+We define an interpolation and truncation operation $\Pi_h : \cX \to \cK_h$ as follows.  For $r\in\cX$ this gives the unique FE function $\Pi_h(r) \in \cX_h$ so that
 \begin{equation}
 \Pi_h(r)(x_j) = \max \,\{b_h(x_j), r(x_j)\} \label{eq:definePi}
 \end{equation}
-for every node $x_j \in \cT_h$, and $\Pi_h(x_j)=b(x_j)$ if $x_j\in\partial\Omega$.  Observe, however, that nodal interpolation and truncation in definition \eqref{eq:definePi} only yield nodal admissibility $\Pi_h(r)(x_j) \ge b_h(x_j)$.  The FE space must be such that this implies admissibility \emph{per se}, namely $\Pi_h(r)(x) \ge b_h(x)$ for all $x \in \Omega$.  This condition is satisfied by the continuous and piecewise-linear FE space $P_1$, but not, for example, by $P_2$ \cite{BuelerFarrell2024}.
+for every interior node $x_j \in \cT_h$, with $\Pi_h(x_j)=b(x_j)$ if $x_j\in\partial\Omega$.  Observe that definition \eqref{eq:definePi} only yields nodal admissibility.  The FE space must be such that this implies admissibility \emph{per se}, namely that $\Pi_h(r)(x) \ge b_h(x)$ for all $x \in \Omega$, so that $\Pi_h(r) \in \cK_h$.  This condition is satisfied by the continuous and piecewise-linear FE space $P_1$, but not, for example, by $P_2$ \cite{BuelerFarrell2024}.
 
-To summarize, from now on we make these standard assumptions.
+To summarize, from now on we make certain standard assumptions for solving VI problem \eqref{eq:be:vi} using numerical scheme \eqref{eq:fe:be:vi}.
 
 \smallskip
 \begin{assumptions}
@@ -840,7 +838,7 @@ The following data are given:
 \item A bounded, convex polygon $\Omega\subset\RR^2$.
 \item An exponent $\rr > 2$, with conjugate exponent $\rr' = \rr/(\rr-1)$. \label{item:rr}
 \item A time-dependent SMB function $a\in C([0,T]; L^{\rr'}(\Omega))$.
-\item A bed topography function $b \in C(\bar\Omega) \cap W^{1,\rr}(\Omega)$, with piecewise-polynomial boundary values $b|_{\partial\Omega}$.
+\item A bed topography function $b \in C(\bar\Omega) \cap W^{1,\rr}(\Omega)$, with piecewise-linear boundary values $b|_{\partial\Omega}$.
 \end{enumerate}
 We make these definitions:
 \begin{enumerate}
@@ -850,7 +848,7 @@ We make these definitions:
 \item $\cX_h \subset \cX$ denotes a finite-dimensional and conforming FE space, from a mesh $\cT_h$ exactly tiling $\bar\Omega$.
 \item The boundary values $b|_{\partial\Omega}$ are exactly representable in the FE space.
 \end{enumerate}
-The following are assumed to hold, for the $\rr > 2$ given in item \emph{\ref{item:rr}}:
+The following are assumed to hold:
 \begin{enumerate}
 \setcounter{enumi}{8}
 \item Conjecture \ref{conj:a} holds with Lipschitz constant $\CA > 0$. \label{item:conj:a}
@@ -859,32 +857,28 @@ The following are assumed to hold, for the $\rr > 2$ given in item \emph{\ref{it
 We also assume and define:
 \begin{enumerate}
 \setcounter{enumi}{10}
-\item $b_h\in\cX_h$ is given, with $b_h\ge b$ on $\bar\Omega$ and $b_h|_{\partial \Omega} = b|_{\partial \Omega}$. \label{item:goodbh}
+\item $b_h\in\cX_h$ is given, with $b_h\ge b$ on $\bar\Omega$ and $b_h=b$ along $\partial \Omega$. \label{item:goodbh}
 \item $\cK_h = \{r_h\in\cX_h\,:\,r_h|_{\partial \Omega} = b_h|_{\partial \Omega} \text{ and } r_h \ge b_h\}$. \label{item:defineKh}
 \item Interpolation/truncation $\Pi_h$ yields admissible elements in $\cK_h$.  \label{item:Pi}
 \end{enumerate}
 \end{assumptions}
 
 \medskip
-The conforming condition $\cK_h\subset \cK$ follows from assumptions \ref{item:goodbh} and \ref{item:defineKh}, and the advantages of this condition will be seen.  Also note that, as seen in the proof of Theorem \ref{thm:stepwellposed}, assumptions \ref{item:conj:a} and \ref{item:conj:b} show that $F_{\Delta t}$ is $\qq$-coercive and Lipschitz on bounded subsets over $\cK$.  We have the following Lemma.
+The conforming condition $\cK_h\subset \cK$ follows from assumptions \ref{item:goodbh} and \ref{item:defineKh}, with advantages to be exposed.  As seen in the proof of Theorem \ref{thm:stepwellposed}, assumptions \ref{item:conj:a} and \ref{item:conj:b} show that $F_{\Delta t}$ is $\qq$-coercive and Lipschitz on bounded subsets of $\cK$.  By Theorem \ref{thm:stepwellposed} and case \emph{i)} of Corollary \ref{cor:abstractestimate:nohull} we have the following Lemma.
 
-\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  Let $s\in\cK$ be the unique surface elevation satisfying the continuum implicit time-step VI problem \eqref{eq:be:vi}.  Assume $F^h_{\Delta t}$ represents a numerical scheme for FE VI problem \eqref{eq:fe:be:vi}, and let $s_h\in\cK_h$ be a solution of that problem.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $c_0>0$, depending on $R_h$ but not otherwise depending on $s$ or $s_h$, so that
+\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  Let $s\in\cK$ be the unique surface elevation satisfying the implicit time-step VI problem \eqref{eq:be:vi}.  Assume that $F^h_{\Delta t}$ represents a numerical scheme for, and that $s_h\in\cK_h$ is a solution of, problem \eqref{eq:fe:be:vi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $c_0>0$, depending on $R_h$ (and not otherwise depending on $s$ or $s_h$), and independent of $\Delta t>0$, so that % FIXME is c_0 indep of Delta t?
 \begin{align}
 \|s-s_h\|_\cX^\rr &\le \quad \frac{2}{\alpha} \inf_{r_h\in\cK_h} \left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] \label{eq:preglacierestimate} \\
    &\quad\, + \frac{2}{\alpha} \left(F_{\Delta t}(s_h)-F^h_{\Delta t}(s_h)\right)[s_h] \notag \\
-   &\quad\, + c_0 \inf_{r_h\in\cK_h} \|r_h - s\|_{\cX}^\qq \notag
+   &\quad\, + c_0 \inf_{r_h\in\cK_h} \|r_h - s\|_{\cX}^\qq. \notag
 \end{align}
 \end{lemma}
 
-\begin{proof}
-Theorem \ref{thm:stepwellposed} shows that $s$ is well-defined.  Then a straightforward application of Corollary \ref{cor:abstractestimate:nohull} in case \emph{i)}, using formula \eqref{eq:be:Fdefine} to define $F_{\Delta t}$, gives \eqref{eq:preglacierestimate}.
-\end{proof}
+Each term in estimate \eqref{eq:preglacierestimate} turns out to have a clear glaciological meaning, which we expose in the following Theorem.  For the statement recall that $h$ denotes the maximum diameter of cells in $\cT_h$, $\Lambda_{s_h}$ denotes the 3D domain defined by $s_h$, $\gamma_\pp(\Lambda_{s_h})$ denotes the trace constant of that domain (Lemma \ref{lem:trace}), and $\cV=W_b^{1,\pp}(\Lambda_{s_h}; \RR^3)$ is the velocity space for the Stokes problem \eqref{eq:glenstokes:weak}.
 
-Each term in estimate \eqref{eq:preglacierestimate} has a glaciological meaning, which we expose in the following Theorem.  For this purpose recall that $\gamma_\pp(\Lambda_{s_h})$ denotes the trace constant (Lemma \ref{lem:trace}) for the domain defined by the surface $s_h$, $h$ denotes the maximum diameter of a mesh cell over $\Omega$, $\cV=W_b^{1,\pp}(\Lambda_{s_h}; \RR^3)$ is the velocity space for the Stokes weak-form problem \eqref{eq:glenstokes:weak}, and $\|\cdot\|_\cV$ is the norm defined in \eqref{eq:vnorm}.
-
-\begin{theorem} \label{thm:glacierapp} Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Define $\Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$, a measurable subset of $\Omega$.  Then
+\begin{theorem} \label{thm:glacierapp} Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Define $\Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$, the active set for $s$.  Then
 \begin{align}
-\phantom{dfkljsd} \|s-s_h\|_\cX^\rr &\le \quad \frac{2}{\alpha} \int_{\Omega_A(s)} (b - \ell^n) (b_h - b) &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
+\phantom{dfkljsd} \|s_h-s\|_\cX^\rr &\le \quad \frac{2}{\alpha} \int_{\Omega_A(s)} (b - \ell^n) (b_h - b) &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
    &\quad\, + \frac{\Delta t}{\alpha} \, \Gamma(s_h) \big\|\bu_h - \bu\big\|_{\cV} &&\text{\textnormal{[term 2]}} \notag \\
    &\quad\, + c_0 \|\Pi_h(s) - s\|_\cX^\qq. &&\text{\textnormal{[term 3]}} \notag
 \end{align}
@@ -899,21 +893,16 @@ Before proving the Theorem, consider the meaning of each term.
 
 \medskip
 \begin{itemize}
-\item[term 1:] This error comes from approximation of the bed in the ice-free domain (as defined by the exact solution $s$).  If the bed is exactly representable $b_h=b$ then this term is zero, but generally $b_h\ge b$ and $b-\ell^n\ge 0$---see the argument in Section \ref{sec:model}---so the integrand is positive.  Note that $s_h \ge b_h \ge b = s$ in the ice-free area, so the factor $b_h-b$ in the integrand reflects the smallest error $s_h \approx s$ which is possible here.  The presence of the coercivity constant $\alpha$ in this term shows that it relates to the ice flow.
+\item[term 1:]  This error term comes from approximation of the bed in the ice-free area defined by the exact solution $s$.  If the bed were exactly representable ($b_h=b$) then this term would be zero.  Note that $s_h \ge b_h \ge b = s$ in the ice-free area $\Omega_A(s)$, so the factor $b_h-b$ in the integrand reflects the smallest possible difference $s_h - s$.  Also $b-\ell^n\ge 0$ (Section \ref{sec:model}) so the integrand is nonnegative.
 
-\item[term 2:] This shows how numerical errors in the numerical solution of the Stokes equations, over the domain $\Lambda_{s_h}$, affect the error in $s_h$.  For an FE method applied to the Stokes problem \eqref{eq:stokes} with some convergence rate $\|\bu_h - \bu\|_{\cV} = O(h^k)$, this term would reflect that rate.
+\item[term 2:]  This shows how numerical errors in solving the Stokes problem over the domain $\Lambda_{s_h}$ will affect the geometrical error in $s_h$.  For an FE method applied to the Stokes problem \eqref{eq:stokes} with some convergence rate $\|\bu_h - \bu\|_{\cV} = O(h^k)$, this term would reflect that rate.
 
-\item[term 3:] A similar expression arises in the classical Cea's lemma argument for convergence of FE methods \cite{Ciarlet2002}, but here there is an added complication.  The interpolant of $s$ must be truncated into $\cK_h$, and nodal admissibility must imply admissibility.
+\item[term 3:]  An interpolation error term like this arises in the classical Cea's lemma argument for quasi-optimality, thus convergence, of FE methods \cite{Ciarlet2002}.  However, here there are the added complications that the interpolant of $s$ must be truncated into $\cK_h$, using \eqref{eq:definePi}, and that nodal admissibility must imply admissibility.
 \end{itemize}
 
-\begin{proof}
-Consider the first term on the right side of inequality \eqref{eq:preglacierestimate}.  Because $s$ solves \eqref{eq:be:vi}, the residual $\Psi = F_{\Delta t}(s)-\ell^n \in \cX'$, while generally nonzero, is non-negative.  In particular, if $\phi\in C_c^\infty(\Omega)$ is nonnegative then $r=s+\phi \in \cK$ and $\Psi[r-s] = \Psi[\phi] \ge 0$.  Thus $\Psi\in\cX'$ is a non-negative distribution, and so it is represented by a positive Borel measure $\mu$, $\Psi[\phi] = \int_\Omega \phi\,d\mu$ \cite[Theorem 6.22]{LiebLoss1997}.  However, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in $\Omega_A(s)$.  In fact, recall from Section \ref{sec:model} that $b-\ell^n\ge 0$ on $\Omega_A(s)$---this gives the density of $\mu$--and note also that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.  Suppose $\phi_h \in \cX_h$ is nonnegative and supported in $\Omega_A(s)$, and define $r_h = b_h + \phi_h \in \cK_h$.  Then from definition \eqref{eq:be:Fdefine} we have
+\begin{proof}  Apply Lemma \ref{lem:preglacierapp}.  Because $s$ solves \eqref{eq:be:vi}, the residual $\Psi = F_{\Delta t}(s)-\ell^n \in \cX'$, while generally nonzero, is non-negative.  In particular, if $\phi\in C_c^\infty(\Omega)$ is nonnegative then $r=s+\phi \in \cK$ and $\Psi[r-s] = \Psi[\phi] \ge 0$.  Thus $\Psi\in\cX'$ is a non-negative distribution, and it is represented by a positive Borel measure $\mu$, $\Psi[\phi] = \int_\Omega \phi\,d\mu$ \cite[Theorem 6.22]{LiebLoss1997}.  However, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in $\Omega_A(s)$.  In fact, recall from Section \ref{sec:model} that $b-\ell^n\ge 0$ on $\Omega_A(s)$---this gives the density of $\mu$---and note also that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.  Let $r_h = b_h \in \cK_h$.  From the first term in \eqref{eq:preglacierestimate}, and definition \eqref{eq:be:Fdefine}, we get term 1:
 \begin{equation}
-\left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] = \int_{\Omega_A(s)} \left(b - \ell^n\right) (b_h - b) + \int_{\Omega_A(s)} \left(b - \ell^n\right) \phi_h.
-\end{equation}
-Therefore set $\phi_h=0$ to derive term 1:
-\begin{equation}
-\frac{2}{\alpha} \inf_{r_h\in\cK_h} \left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] \le \frac{2}{\alpha}  \int_{\Omega_A(s)} \left(b - \ell^n\right) (b_h - b).
+\left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] = \int_{\Omega_A(s)} \left(b - \ell^n\right) (b_h - b).
 \end{equation}
 
 Consider the second term in \eqref{eq:preglacierestimate}.  Recall that $dS = |\bn_{s_h}|\,dx$ is the surface area element for the surface $\Gamma_{s_h} \subset \partial \Lambda_{s_h}$.  After expanding definition \eqref{eq:be:Fdefine}, apply the triangle and H\"older inequalities:\footnote{A similar argument was used in the proof of Lemma \ref{lem:phibound:early}.}
@@ -928,19 +917,23 @@ Now apply the trace inequality, Lemma \ref{lem:trace}, and use the fact that $(1
 \left(F_{\Delta t}(s_h)-F^h_{\Delta t}(s_h)\right)[s_h] &\le \Delta t \left(\frac{\gamma_\pp(\Lambda_{s_h})}{[L]}\right)^{1/\pp} \|\bu - \bu_h\|_{\cV} \\
   &\qquad \cdot \left(2^{(\rr-2)/2} \int_\Omega 1 + |\grad s_h|^\rr\right)^{1/(\pp'\rr)} \|s_h\|_{L^{\pp'\rr'}}.  \notag
 \end{align}
-Recalling the scaling of the $\cX$ norm, equation \eqref{eq:norm:Omega}, we have term 2.
+Recalling equation \eqref{eq:norm:Omega}, we have term 2.
 
-Term 3 follows by substituting $r_h=\Pi_h(s)$.  (This uses item \ref{item:Pi} in the Standard Assumptions.)
+Term 3 follows by substituting $r_h=\Pi_h(s)$ into the third term in \eqref{eq:preglacierestimate}.
 \end{proof}
 
-FIXME SUSPICIOUSLY STRONG REGULARITY ASSUMPTION ON $s$, AND BELIEVABLE ON $\bu$ ALLOW US TO DEAL WITH terms 2,3; USE RESULT IN \cite{JouvetBueler2012}, namely \cite[Theorem 3.1.6]{Ciarlet2002}; term 1 WOULD SEEM TO REQUIRE FURTHER THEORY FOR HOW REGULARITY HELPS WITH $R^\oplus$
+FIXME FROM BELIEVABLE ASSUMPTIONS ON $\bu$, namely error estimates for FE Stokes velocity solutions \cite{Elmanetal2014}, WE CAN get a more specific form for term 2
+
+FIXME FROM A SUSPICIOUSLY STRONG REGULARITY ASSUMPTIONS ON $s$, namely $s\in W^{2,\bar \rr}(\Omega)$ for $\bar \rr \in [\rr,+\infty]$, WE CAN get a more specific form for terms 3; USE RESULT IN \cite{JouvetBueler2012}, namely \cite[Theorem 3.1.6]{Ciarlet2002}
 
 
 \section{Discussion and conclusion} \label{sec:conclusion}
 
-FIXME the barrier theory from \cite{Bueler2021conservation} applies to thickness-based models; term 1 in Theorem \ref{thm:glacierapp} is novel relative to that
+FIXME one might simply declare that the ``fake ice'' (where $s=b$ and $s_h=b_h$ and $b_h>b$) does not exist, which reduces term 1, but generally $s$ is unknown so this is not precisely possible
 
-FIXME a weaker version of Conjecture \ref{conj:b}, which does not address the marginal overhang issue, may be easier to prove, but it is not sufficient for Theorem \ref{thm:stepwellposed}; it comes from setting $r=s + \phi$ for $\phi$ supported where $s>b$
+FIXME the barrier theory from \cite{Bueler2021conservation} is written in terms of the thickness but it applies to all models considered here; term 1 in Theorem \ref{thm:glacierapp} is novel relative to \cite{Bueler2021conservation}
+
+FIXME a weaker version of Conjecture \ref{conj:b} comes from setting $r=s + \phi$ for $\phi$ supported where $s>b$; this may be easier to prove;  even if this weaker version is true it is not sufficient for Theorem \ref{thm:stepwellposed}; it does not address the marginal overhang issue
 
 
 \bibliographystyle{siamplain}
