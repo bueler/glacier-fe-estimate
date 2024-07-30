@@ -1,6 +1,6 @@
 _secpera = 31556926.0    # seconds per year
 
-def mkoutdir(dirname):
+def mkdir(dirname):
     import os
     try:
         os.mkdir(dirname)
@@ -34,7 +34,7 @@ def livefigure(basemesh, b, s, Phi, t, fname=None, writehalfar=False):
         plt.savefig(fname)
     plt.close()
 
-def badcoercivefigure(basemesh, b, r, s, Phir, Phis, tr, ts, Hth=100.0, aconst=0.0):
+def badcoercivefigure(basemesh, b, r, s, Phir, Phis, tr, ts, Hth=100.0):
     import numpy as np
     import matplotlib.pyplot as plt
     from matplotlib.gridspec import GridSpec
@@ -48,11 +48,6 @@ def badcoercivefigure(basemesh, b, r, s, Phir, Phis, tr, ts, Hth=100.0, aconst=0
     ax[0].plot(xx / 1.0e3, s.dat.data, ':', color='C1', label=slabel)
     ax[0].plot(xx / 1.0e3, b.dat.data, color='C3', label='b(x)')
     ax[0].legend(loc='upper left')
-    if aconst != 0.0:
-        if aconst < 0.0:
-            plt.title('ablation', color='r')
-        else:
-            plt.title('accumulation', color='r')
     ax[0].set_xticklabels([])
     ax[0].set_xlim([1.05 * min(xx) / 1.0e3, 1.05 * max(xx) / 1.0e3])
     ax[0].grid(visible=True)

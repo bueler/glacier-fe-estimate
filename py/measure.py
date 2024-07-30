@@ -63,7 +63,16 @@ def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):
     while _n < N:
         i1 = randrange(0, len(slist))
         i2 = randrange(0, len(slist))
-        if i1 != i2:
+        imatch = (i1 == i2)
+        if imatch:
+            print('#', end='')
+        else:
+            smatch = (norm_h1sc(slist[i1]['s'] - slist[i2]['s'], Lsc) == 0.0)
+            if smatch:
+                print('!', end='')
+            else:
+                print('.', end='')
+        if not imatch and not smatch:
             usrat = _us_ratio(slist, i1, i2, Lsc)
             Phirat = _Phi_ratio(slist, i1, i2, Lsc, b, q)
             if Phirat < 0.0:
@@ -75,10 +84,10 @@ def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):
                                   slist[i1]['Phi'],
                                   slist[i2]['Phi'],
                                   slist[i1]['t'],
-                                  slist[i2]['t'],
-                                  aconst=aconst)
+                                  slist[i2]['t'])
             _max_us_rat = max(_max_us_rat, usrat)
             _min_Phi_rat = min(_min_Phi_rat, Phirat)
             _n += 1
+    print()
     printpar(f'  max continuity ratio:  {_max_us_rat:.3e}')
     printpar(f'  min coercivity ratio:  {_min_Phi_rat:.3e}')
