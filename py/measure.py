@@ -79,7 +79,7 @@ def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):
         if (not imatch) and (not smatch):
             usrat = _us_ratio(slist, i1, i2, Lsc)
             Phirat = _Phi_ratio(slist, i1, i2, Lsc, b, q)
-            if Phirat < 0.0:
+            if Phirat <= 0.0:
                 printpar(RED % f'{i1},{i2}')  # color provided by firedrake logging.py
                 badcoercivefigure(basemesh,
                                   b,
