@@ -13,6 +13,8 @@ from stokesextruded import printpar
 from figures import badcoercivefigure
 from geometry import secpera
 
+_Hth = 100.0   # thickness threshold when computing coercivity (Phi) ratios
+
 def norm_h1sc(v, Lsc):
     '''Scaled H^1 = W^{1,2} norm as in paper, using a characteristic length
     scale Lsc.  Works for both scalar and vector-valued Functions.  Works
@@ -45,10 +47,9 @@ def _Phi_ratio(slist, k, l, Lsc, b, q):
     # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_H1^q,  but chop
     # integrand ig where either thickness (i.e. r-b or s-b) is below threshold
     assert k != l
-    Hth = 100.0
     rr, ss = slist[k]['s'], slist[l]['s']
     ig = (slist[k]['Phi'] - slist[l]['Phi']) * (rr - ss)
-    igcrop = conditional(rr - b > Hth, conditional(ss - b > Hth, ig, 0.0), 0.0)
+    igcrop = conditional(rr - b > _Hth, conditional(ss - b > _Hth, ig, 0.0), 0.0)
     # because of threshhold, igcrop can end up identically zero if rr==b or ss==b
     if norm(igcrop) == 0.0:
         return np.inf  # won't affect min
@@ -87,7 +88,8 @@ def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):
                                   slist[i1]['Phi'],
                                   slist[i2]['Phi'],
                                   slist[i1]['t'],
-                                  slist[i2]['t'])
+                                  slist[i2]['t'],
+                                  Hth=_Hth)
             _max_us_rat = max(_max_us_rat, usrat)
             _min_Phi_rat = min(_min_Phi_rat, Phirat)
             _n += 1
