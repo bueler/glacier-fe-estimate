@@ -49,6 +49,9 @@ def _Phi_ratio(slist, k, l, Lsc, b, q):
     rr, ss = slist[k]['s'], slist[l]['s']
     ig = (slist[k]['Phi'] - slist[l]['Phi']) * (rr - ss)
     igcrop = conditional(rr - b > Hth, conditional(ss - b > Hth, ig, 0.0), 0.0)
+    # because of threshhold, igcrop can end up identically zero if rr==b or ss==b
+    if norm(igcrop) == 0.0:
+        return np.inf  # won't affect min
     dPhi = assemble(igcrop * dx)
     ds = norm_h1sc(rr - ss, Lsc)
     return dPhi / ds**q
