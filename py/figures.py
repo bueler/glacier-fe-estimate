@@ -7,26 +7,21 @@ def mkdir(dirname):
     except FileExistsError:
         pass
 
-def livefigure(basemesh, b, s, Phi, t, fname=None, writehalfar=False):
+def livefigure(basemesh, b, s, t, fname=None, writehalfar=False):
     import matplotlib.pyplot as plt
     xx = basemesh.coordinates.dat.data
-    fig, ax = plt.subplots(2, 1)
     slabel = f's(t,x) at t = {t / _secpera:.3f} a'
-    ax[0].plot(xx / 1.0e3, s.dat.data, color='C1', label=slabel)
+    plt.figure(figsize=(6.0, 2.0))
+    plt.plot(xx / 1.0e3, s.dat.data, color='C1', label=slabel)
     if writehalfar:
         from geometry import halfargeometry, t0
         _, shalfar = halfargeometry(xx, t=t+t0, bed='flat')  # time t after initial time
-        ax[0].plot(xx / 1.0e3, shalfar, '--', color='C1', label=f's_SIA(t,x)')
-    ax[0].plot(xx / 1.0e3, b.dat.data, color='C3', label='b(x)')
-    ax[0].legend(loc='upper left')
-    ax[0].set_xticklabels([])
-    ax[0].grid(visible=True)
-    ax[0].set_ylabel('elevation (m)')
-    if Phi is not None:
-        ax[1].plot(xx / 1.0e3, Phi.dat.data * _secpera, color='C2', label=r'$\Phi(s)$')
-        ax[1].legend(loc='upper right')
-        ax[1].set_ylabel(r'$\Phi$ (m a-1)')
-        ax[1].grid(visible=True)
+        plt.plot(xx / 1.0e3, shalfar, '--', color='C1', label=f's_SIA(t,x)')
+    plt.plot(xx / 1.0e3, b.dat.data, color='C3', label='b(x)')
+    plt.legend(loc='upper left')
+    plt.grid(visible=True)
+    plt.gca().set_xticklabels([])
+    plt.gca().set_ylabel('elevation (m)')
     plt.xlabel('x (km)')
     if fname == None:
         plt.show()

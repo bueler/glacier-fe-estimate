@@ -212,7 +212,7 @@ for aconst in [0.0, -2.0e-7, 1.0e-7]:
         if n == 0:
             geometryreport(basemesh, 0, t, s, b, L)
             if writepng:
-                livefigure(basemesh, b, s, None, t, fname=f'{outdirname}t{t/secpera:010.3f}.png')
+                livefigure(basemesh, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png')
 
         # set geometry (z coordinate) of extruded mesh
         sRfake.dat.data[:] = np.maximum(s.dat.data_ro, Hmin + b.dat.data_ro)  # *here* is the fake ice
@@ -262,7 +262,7 @@ for aconst in [0.0, -2.0e-7, 1.0e-7]:
         # end of step reporting
         geometryreport(basemesh, n + 1, t, s, b, L)
         if writepng:
-            livefigure(basemesh, b, s, Phi, t, fname=f'{outdirname}t{t/secpera:010.3f}.png',
+            livefigure(basemesh, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png',
                     writehalfar=(bed == 'flat' and aconst == 0.0 and n + 1 == Nsteps))
 
     if writepng:
