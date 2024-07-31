@@ -1,9 +1,9 @@
-python3 ../case.py 101 10 50 4.0 flat bflat2000m/
-python3 ../case.py 101 10 50 4.0 smooth bsmooth2000m/
-python3 ../case.py 101 10 50 4.0 rough brough2000m/
-python3 ../case.py 201 15 200 1.0 flat bflat1000m/
-python3 ../case.py 201 15 200 1.0 smooth bsmooth1000m/
-python3 ../case.py 201 15 200 1.0 rough brough1000m/
-python3 ../case.py 401 20 800 0.25 flat bflat500m/
-python3 ../case.py 401 20 800 0.25 smooth bsmooth500m/
-python3 ../case.py 401 20 800 0.25 rough brough500m/
+python3 ../case.py 101 10 50 4.0 flat ratios.txt bflat2000m/
+python3 ../case.py 101 10 50 4.0 smooth ratios.txt bsmooth2000m/
+python3 ../case.py 101 10 50 4.0 rough ratios.txt brough2000m/
+python3 ../case.py 201 15 200 1.0 flat ratios.txt bflat1000m/
+python3 ../case.py 201 15 200 1.0 smooth ratios.txt bsmooth1000m/
+python3 ../case.py 201 15 200 1.0 rough ratios.txt brough1000m/
+python3 ../case.py 401 20 800 0.25 flat ratios.txt bflat500m/
+python3 ../case.py 401 20 800 0.25 smooth ratios.txt bsmooth500m/
+python3 ../case.py 401 20 800 0.25 rough ratios.txt brough500m/

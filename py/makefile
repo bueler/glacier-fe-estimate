@@ -5,4 +5,4 @@ all:
 clean:
 	@rm -f *.pyc
 	@rm -rf .pytest_cache/ __pycache__/
-	@rm -rf result* badcoercive*.png
+	@rm -rf ratios.txt result* badcoercive*.png

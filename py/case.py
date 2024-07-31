@@ -16,17 +16,17 @@
 # Note this runs only in serial.  The details are documented in the paper.
 
 # After activating the Firedrake venv, run as
-#   $ python3 study.py MX MZ NSTEPS DT BED
+#   $ python3 study.py MX MZ NSTEPS DT BED FILE
 # For example:
-#   $ python3 study.py 201 15 20 1.0 flat
+#   $ python3 study.py 201 15 20 1.0 flat ratios.txt
 
 # To write an optional t-dependent image files into directory do:
-#   $ python3 study.py 201 15 20 1.0 flat result/
+#   $ python3 study.py 201 15 20 1.0 flat ratios.txt result/
 # This writes result/azero/*.png, result/aneg/*.png, result/apos/*.png.
 
 # To write an optional t-dependent .pvd files with Stokes results and
 # diagnostics, also append a filename root:
-#   $ python3 study.py 201 15 20 1.0 flat result/ result
+#   $ python3 study.py 201 15 20 1.0 flat ratios.txt result/ result
 # This writes result_azero.pvd, result_aneg.pvd, result_apos.pvd.
 
 import sys
@@ -44,12 +44,13 @@ mz = int(sys.argv[2])              # number of elements in z (vertical) directio
 Nsteps = int(sys.argv[3])          # number of time steps
 dt = float(sys.argv[4]) * secpera  # dt in years
 bed = sys.argv[5]                  # 'flat', 'smooth', 'rough'
-writepng = (len(sys.argv) > 6)
+ratiosfile = sys.argv[6]           # at the end, append a pair of ratios into this file
+writepng = (len(sys.argv) > 7)
 if writepng:
-    dirroot = sys.argv[6]
-writepvd = (len(sys.argv) > 7)
+    dirroot = sys.argv[7]
+writepvd = (len(sys.argv) > 8)
 if writepvd:
-    pvdroot = sys.argv[7]
+    pvdroot = sys.argv[8]
 
 # fixed major parameters
 L = 100.0e3             # domain is [-L,L]
@@ -270,4 +271,7 @@ for aconst in [0.0, -2.0e-7, 1.0e-7]:
         printpar(f'  finished writing to {pvdfilename}')
 
 # process giant _slist from all three SMB cases
-sampleratios(_slist, basemesh, b, N=Nsamples, q=qcoercive, Lsc=L)
+max_cont, min_coer = sampleratios(_slist, basemesh, b, N=Nsamples, q=qcoercive, Lsc=L)
+rfile = open(ratiosfile, 'a')
+with open(ratiosfile, 'a') as rfile:
+    rfile.write(f'{max_cont:.3e}, {min_coer:.3e}\n')
