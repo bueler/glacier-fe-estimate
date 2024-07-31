@@ -70,7 +70,16 @@ def badcoercivefigure(basemesh, b, r, s, Phir, Phis, tr, ts, Hth=100.0):
     ax[2].set_ylabel('integrand (red negative)')
     ax[2].set_xlim([1.05 * min(xx) / 1.0e3, 1.05 * max(xx) / 1.0e3])
     ax[2].grid(visible=True)
-    ymax = max((max(igpos),max(-igneg)))
+    if len(igpos) > 0:
+        if len(igneg) > 0:
+            ymax = max((max(igpos), max(-igneg)))
+        else:
+            ymax = max(igpos)
+    else:
+        if len(igneg) > 0:
+            ymax = max(-igneg)
+        else:
+            ymax = 1.0
     ax[2].set_ylim([ymax * 1.0e-5, 1.5 * ymax])
     plt.xlabel('x (km)')
     fname = f'badcoercive-{tr / _secpera:.3f}-{ts / _secpera:.3f}.png'
