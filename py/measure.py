@@ -75,7 +75,7 @@ def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):
                 print('!', end='')
             else:
                 print('.', end='')
-        if not imatch and not smatch:
+        if (not imatch) and (not smatch):
             usrat = _us_ratio(slist, i1, i2, Lsc)
             Phirat = _Phi_ratio(slist, i1, i2, Lsc, b, q)
             if Phirat < 0.0:

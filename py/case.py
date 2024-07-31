@@ -173,26 +173,21 @@ if not explicit:
 
 # outer surface mass balance (SMB) loop
 _slist = []
+newcoord = Function(Vcoord)
+bR = Function(P1R)
+bR.dat.data[:] = b.dat.data_ro  # fixed bed during whole case
+sRfake = Function(P1R)
+sR = Function(P1R)
 if writepng:
     printpar(f'creating root directory {dirroot} for image files ...')
     mkdir(dirroot)
 for aconst in [0.0, -2.0e-7, 1.0e-7]:
-    # set up for time-stepping
-    if aconst > 0.0:
-        a.dat.data[abs(xbm) < aposfrac * L] = aconst
-    else:
-        a.dat.data[:] = aconst
-    s.dat.data[:] = s_initial_np
-    newcoord = Function(Vcoord)
-    sRfake = Function(P1R)
-    sR = Function(P1R)
-    bR = Function(P1R)
-    bR.dat.data[:] = b.dat.data_ro
-    t = 0.0
+    # describe run
     printpar(f'using aconst = {aconst:.3e} m/s constant value of SMB ...')
     printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a and saving states ...')
     printpar(f'  solving 2D Stokes + SKE on {mx} x {mz} extruded mesh over {bed} bed')
     printpar(f'  dimensions: n_u = {se.V.dim()}, n_p = {se.W.dim()}')
+    # set up directory and open file (if wanted)
     afrag = 'aneg' if aconst < 0.0 else ('apos' if aconst > 0.0 else 'azero')
     if writepng:
         outdirname = dirroot + afrag + '/'
@@ -202,6 +197,14 @@ for aconst in [0.0, -2.0e-7, 1.0e-7]:
         pvdfilename = pvdroot + '_' + afrag + '.pvd'
         printpar(f'  opening {pvdfilename} ...')
         outfile = VTKFile(pvdfilename)
+    # reset for time-stepping
+    if aconst > 0.0:
+        a.dat.data[:] = 0.0
+        a.dat.data[abs(xbm) < aposfrac * L] = aconst
+    else:
+        a.dat.data[:] = aconst
+    s.dat.data[:] = s_initial_np
+    t = 0.0
     # inner time-stepping loop
     for n in range(Nsteps):
         # start with reporting
@@ -243,7 +246,7 @@ for aconst in [0.0, -2.0e-7, 1.0e-7]:
                        'us': ubm.copy(deepcopy=True),
                        'Phi': Phi.copy(deepcopy=True)})
 
-        # time step of SKE using truncation
+        # time step of VI problem (3.23)
         if explicit:
             # explicit time step, simply by pointwise operation (interpolate and truncate)
             snew = s + dt * (a - Phi)
