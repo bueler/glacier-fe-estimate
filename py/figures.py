@@ -34,7 +34,7 @@ def livefigure(basemesh, b, s, Phi, t, fname=None, writehalfar=False):
         plt.savefig(fname)
     plt.close()
 
-def badcoercivefigure(basemesh, b, r, s, Phir, Phis, tr, ts, Hth=100.0):
+def badcoercivefigure(basemesh, b, r, s, Phir, Phis, tr, ts, Hth):
     import numpy as np
     import matplotlib.pyplot as plt
     from matplotlib.gridspec import GridSpec

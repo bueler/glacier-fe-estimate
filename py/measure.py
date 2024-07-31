@@ -89,7 +89,7 @@ def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):
                                   slist[i2]['Phi'],
                                   slist[i1]['t'],
                                   slist[i2]['t'],
-                                  Hth=_Hth)
+                                  _Hth)
             _max_us_rat = max(_max_us_rat, usrat)
             _min_Phi_rat = min(_min_Phi_rat, Phirat)
             _n += 1
