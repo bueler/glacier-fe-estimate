@@ -52,11 +52,11 @@ writepvd = (len(sys.argv) > 8)
 if writepvd:
     pvdroot = sys.argv[8]
 
-# fixed major parameters
-L = 100.0e3             # domain is [-L,L]
+# experiment parameters
+L = 100.0e3             # domain is (-L,L)
+SMBlist = [0.0, -2.5e-7, 1.0e-7]  # m s-1; values of aconst used in experiments
 aposfrac = 0.75         # fraction of domain on which positive SMB is applied
 Nsamples = 500          # number of samples when evaluating minimal ratios
-qcoercive = 2.0         # try this?  justified by scaling argument?
 
 # solution method
 Hmin = 20.0             # insert fake ice for Stokes solve
@@ -64,10 +64,10 @@ fssa = True             # use Lofgren et al (2022) FSSA technique in Stokes solv
 theta_fssa = 1.0        #   with this theta value
 explicit = False        # defaults to semi-implicit steps
 
-# Stokes regularization
-eps = 0.01
-Dtyp = 1.0 / secpera    # 1 a-1
+# Stokes parameters
 qq = 1.0 / nglen - 1.0
+Dtyp = 1.0 / secpera      # = 1 a-1; strain rate scale
+eps = 0.0001 * Dtyp**2.0  # viscosity regularization
 
 # set up basemesh once
 basemesh = IntervalMesh(mx, -L, L)
@@ -113,7 +113,7 @@ def _D(w):
 def _form_stokes(mesh, se, sR):
     u, p = split(se.up)
     v, q = TestFunctions(se.Z)
-    Du2 = 0.5 * inner(_D(u), _D(u)) + (eps * Dtyp)**2.0
+    Du2 = 0.5 * inner(_D(u), _D(u)) + eps
     F = inner(B3 * Du2**(qq / 2.0) * _D(u), _D(v)) * dx(degree=4)
     F -= (p * div(v) + div(u) * q) * dx
     source = inner(se.f_body, v) * dx
@@ -183,7 +183,7 @@ sR = Function(P1R)
 if writepng:
     printpar(f'creating root directory {dirroot} for image files ...')
     mkdir(dirroot)
-for aconst in [0.0, -2.5e-7, 1.0e-7]:
+for aconst in SMBlist:
     # describe run
     printpar(f'using aconst = {aconst:.3e} m/s constant value of SMB ...')
     printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a and saving states ...')
