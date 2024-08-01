@@ -102,6 +102,7 @@ def histogramPhirat(dirname, ratlist):
         hn, edgesn = np.histogram(rln, bins=binsn)
         fig.gca().stairs(hn, edgesn, color='C1')
     plt.xlabel('Phi ratios')
+    plt.gca().set_xlim([-1.5e-12, 1.0e-11])
     fname = dirname + 'Phiratios.png'
     plt.savefig(fname)
     plt.close()
