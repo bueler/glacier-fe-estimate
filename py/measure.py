@@ -2,9 +2,8 @@
 The list is a list of dictionaries, built by
     slist.append({'t': t,
                   's': s,
-                  'us': us,
-                  'Phi': Phi})
-where s, us, Phi are Firedrake Functions on the basemesh.
+                  'us': us})
+where s and us are Firedrake Functions on the basemesh.
 '''
 
 import numpy as np
@@ -41,8 +40,8 @@ def _us_ratio(slist, k, l, Lsc):
     ds = norm_h1sc(slist[k]['s'] - slist[l]['s'], Lsc)
     return dus / ds
 
-def _Phi_ratio(slist, k, l, Lsc, b, q):
-    # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_H1^q
+def _Phi_ratio(slist, k, l, Lsc, b):
+    # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_H1^2
     assert k != l
     r, s = slist[k]['s'], slist[l]['s']
     nr, ns = as_vector([-r.dx(0), Constant(1.0)]), as_vector([-s.dx(0), Constant(1.0)])
@@ -50,9 +49,9 @@ def _Phi_ratio(slist, k, l, Lsc, b, q):
     ig = - (dot(ur, nr) - dot(us, ns)) * (r - s)
     dPhi = assemble(ig * dx)
     ds = norm_h1sc(r - s, Lsc)
-    return dPhi / ds**q
+    return dPhi / ds**2.0
 
-def sampleratios(dirroot, slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):
+def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
     printpar(f'computing ratios from {N} pair samples from state list ...')
     assert N >= 2
     from random import randrange
@@ -77,7 +76,7 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0
         pairs.append(ipair)
         i1, i2 = ipair
         usrat = _us_ratio(slist, i1, i2, Lsc)
-        Phirat = _Phi_ratio(slist, i1, i2, Lsc, b, q)
+        Phirat = _Phi_ratio(slist, i1, i2, Lsc, b)
         if Phirat == np.inf:
             print(RED % '*', end='')
             continue
