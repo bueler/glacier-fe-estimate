@@ -10,10 +10,8 @@ where s, us, Phi are Firedrake Functions on the basemesh.
 import numpy as np
 from firedrake import *
 from stokesextruded import printpar
-from figures import badcoercivefigure
+from figures import histogramPhirat, badcoercivefigure
 from geometry import secpera
-
-_Hth = 100.0   # thickness threshold when computing coercivity (Phi) ratios
 
 def norm_h1sc(v, Lsc):
     '''Scaled H^1 = W^{1,2} norm as in paper, using a characteristic length
@@ -44,60 +42,69 @@ def _us_ratio(slist, k, l, Lsc):
     return dus / ds
 
 def _Phi_ratio(slist, k, l, Lsc, b, q):
-    # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_H1^q,  but chop
-    # integrand ig where either thickness (i.e. r-b or s-b) is below threshold
+    # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_H1^q
     assert k != l
     r, s = slist[k]['s'], slist[l]['s']
     nr, ns = as_vector([-r.dx(0), Constant(1.0)]), as_vector([-s.dx(0), Constant(1.0)])
     ur, us = slist[k]['us'], slist[l]['us']
     ig = - (dot(ur, nr) - dot(us, ns)) * (r - s)
-    igcrop = conditional(r - b > _Hth, conditional(s - b > _Hth, ig, 0.0), 0.0)
-    # because of threshhold, igcrop can end up identically zero if rr==b or ss==b
-    if norm(igcrop) == 0.0:
-        return np.inf  # won't affect min
-    dPhi = assemble(igcrop * dx)
+    dPhi = assemble(ig * dx)
     ds = norm_h1sc(r - s, Lsc)
     return dPhi / ds**q
 
-def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):
+def sampleratios(dirroot, slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):
     printpar(f'computing ratios from {N} pair samples from state list ...')
     assert N >= 2
     from random import randrange
     _max_us_rat = -np.inf
     _min_Phi_rat = np.inf
+    pairs = []
+    Phiratlist = []
     _n = 0
     while _n < N:
         i1 = randrange(0, len(slist))
         i2 = randrange(0, len(slist))
-        imatch = (i1 == i2)
-        if imatch:
+        if i1 == i2:
+            continue
+        if norm_h1sc(slist[i1]['s'] - slist[i2]['s'], Lsc) == 0.0:
+            print(RED % '!', end='')
+            continue
+        ipair = [i1, i2]
+        ipair.sort()
+        if ipair in pairs:
             print('#', end='')
+            continue
+        pairs.append(ipair)
+        i1, i2 = ipair
+        usrat = _us_ratio(slist, i1, i2, Lsc)
+        Phirat = _Phi_ratio(slist, i1, i2, Lsc, b, q)
+        if Phirat == np.inf:
+            print(RED % '*', end='')
+            continue
+        if Phirat < 0.0:
+            print(RED % '.', end='')  # color provided by firedrake logging.py
+            printpar(RED % f'{i1},{i2}')
+        elif Phirat == 0.0:
+            print(BLUE % '.', end='')
+            printpar(BLUE % f'{i1},{i2}')
         else:
-            smatch = (norm_h1sc(slist[i1]['s'] - slist[i2]['s'], Lsc) == 0.0)
-            if smatch:
-                print(RED % '!', end='')
-        if (not imatch) and (not smatch):
-            usrat = _us_ratio(slist, i1, i2, Lsc)
-            Phirat = _Phi_ratio(slist, i1, i2, Lsc, b, q)
-            if Phirat <= 0.0:
-                print(RED % '.', end='')
-            else:
-                print('.', end='')
-            if Phirat <= 0.0:
-                printpar(RED % f'{i1},{i2}')  # color provided by firedrake logging.py
-                badcoercivefigure(basemesh,
-                                  b,
-                                  slist[i1]['s'],
-                                  slist[i2]['s'],
-                                  slist[i1]['us'],
-                                  slist[i2]['us'],
-                                  slist[i1]['t'],
-                                  slist[i2]['t'],
-                                  _Hth)
-            _max_us_rat = max(_max_us_rat, usrat)
-            _min_Phi_rat = min(_min_Phi_rat, Phirat)
-            _n += 1
+            print('.', end='')
+        if Phirat <= 0.0:
+            badcoercivefigure(basemesh,
+                              b,
+                              slist[i1]['s'],
+                              slist[i2]['s'],
+                              slist[i1]['us'],
+                              slist[i2]['us'],
+                              slist[i1]['t'],
+                              slist[i2]['t'],
+                              _Hth)
+        _max_us_rat = max(_max_us_rat, usrat)
+        _min_Phi_rat = min(_min_Phi_rat, Phirat)
+        Phiratlist.append(Phirat)
+        _n += 1
     print()
     printpar(f'  max continuity ratio:  {_max_us_rat:.3e}')
     printpar(f'  min coercivity ratio:  {_min_Phi_rat:.3e}')
+    histogramPhirat(dirroot, Phiratlist)
     return _max_us_rat, _min_Phi_rat

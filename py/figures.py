@@ -85,3 +85,23 @@ def badcoercivefigure(basemesh, b, r, s, ur, us, tr, ts, Hth):
     fname = f'badcoercive-{tr / _secpera:.3f}-{ts / _secpera:.3f}.png'
     plt.savefig(fname)
     plt.close()
+
+def histogramPhirat(dirname, ratlist):
+    import numpy as np
+    import matplotlib.pyplot as plt
+    binsp = 40
+    binsn = 5
+    rl = np.array(ratlist)
+    rlp = rl[rl > 0.0]
+    rln = rl[rl <= 0.0]  # may be empty list
+    assert len(rlp) > 0
+    h, edges = np.histogram(rlp, bins=binsp)
+    fig = plt.figure(figsize=(6.0, 4.0))
+    fig.gca().stairs(h, edges, color='C0')
+    if len(rln) > 0:
+        hn, edgesn = np.histogram(rln, bins=binsn)
+        fig.gca().stairs(hn, edgesn, color='C1')
+    plt.xlabel('Phi ratios')
+    fname = dirname + 'Phiratios.png'
+    plt.savefig(fname)
+    plt.close()
