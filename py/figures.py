@@ -29,7 +29,7 @@ def livefigure(basemesh, b, s, t, fname=None, writehalfar=False):
         plt.savefig(fname)
     plt.close()
 
-def badcoercivefigure(basemesh, b, r, s, ur, us, tr, ts):
+def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
     import numpy as np
     import matplotlib.pyplot as plt
     from matplotlib.gridspec import GridSpec
@@ -82,7 +82,7 @@ def badcoercivefigure(basemesh, b, r, s, ur, us, tr, ts):
             ymax = 1.0
     ax[2].set_ylim([ymax * 1.0e-5, 1.5 * ymax])
     plt.xlabel('x (km)')
-    fname = f'badcoercive-{tr / _secpera:.3f}-{ts / _secpera:.3f}.png'
+    fname = dirroot + f'badcoercive-{tr / _secpera:.3f}-{ts / _secpera:.3f}.png'
     plt.savefig(fname)
     plt.close()
 

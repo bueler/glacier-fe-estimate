@@ -89,7 +89,8 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
         else:
             print('.', end='')
         if Phirat <= 0.0:
-            badcoercivefigure(basemesh,
+            badcoercivefigure(dirroot,
+                              basemesh,
                               b,
                               slist[i1]['s'],
                               slist[i2]['s'],
