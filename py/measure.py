@@ -87,8 +87,8 @@ def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):
                                   b,
                                   slist[i1]['s'],
                                   slist[i2]['s'],
-                                  slist[i1]['Phi'],
-                                  slist[i2]['Phi'],
+                                  slist[i1]['us'],
+                                  slist[i2]['us'],
                                   slist[i1]['t'],
                                   slist[i2]['t'],
                                   _Hth)

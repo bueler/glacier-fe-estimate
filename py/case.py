@@ -35,7 +35,7 @@ from firedrake import *
 from firedrake.output import VTKFile
 from stokesextruded import StokesExtruded, SolverParams, extend_p1_from_basemesh, trace_vector_to_p2, printpar
 from geometry import secpera, bedtypes, g, rho, nglen, A3, B3, t0, halfargeometry
-from figures import mkdir, livefigure, badcoercivefigure
+from figures import mkdir, livefigure
 from measure import geometryreport, sampleratios
 
 # parameters set at runtime
