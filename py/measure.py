@@ -47,14 +47,16 @@ def _Phi_ratio(slist, k, l, Lsc, b, q):
     # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_H1^q,  but chop
     # integrand ig where either thickness (i.e. r-b or s-b) is below threshold
     assert k != l
-    rr, ss = slist[k]['s'], slist[l]['s']
-    ig = (slist[k]['Phi'] - slist[l]['Phi']) * (rr - ss)
-    igcrop = conditional(rr - b > _Hth, conditional(ss - b > _Hth, ig, 0.0), 0.0)
+    r, s = slist[k]['s'], slist[l]['s']
+    nr, ns = as_vector([-r.dx(0), Constant(1.0)]), as_vector([-s.dx(0), Constant(1.0)])
+    ur, us = slist[k]['us'], slist[l]['us']
+    ig = - (dot(ur, nr) - dot(us, ns)) * (r - s)
+    igcrop = conditional(r - b > _Hth, conditional(s - b > _Hth, ig, 0.0), 0.0)
     # because of threshhold, igcrop can end up identically zero if rr==b or ss==b
     if norm(igcrop) == 0.0:
         return np.inf  # won't affect min
     dPhi = assemble(igcrop * dx)
-    ds = norm_h1sc(rr - ss, Lsc)
+    ds = norm_h1sc(r - s, Lsc)
     return dPhi / ds**q
 
 def sampleratios(slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0.0):

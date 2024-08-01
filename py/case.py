@@ -225,6 +225,7 @@ for aconst in [0.0, -2.0e-7, 1.0e-7]:
         # solve Stokes on extruded mesh and extract surface trace
         #   this uses fake ice, and se.up as initial iterate
         u, p = se.solve(par=params, F=_form_stokes(mesh, se, sRfake))
+        ubm = trace_vector_to_p2(basemesh, mesh, u)  # surface velocity (m s-1)
         #printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
 
         # optionally write t-dependent .pvd with 2D fields
@@ -243,7 +244,6 @@ for aconst in [0.0, -2.0e-7, 1.0e-7]:
                        'us': ubm.copy(deepcopy=True)})
 
         # time step of VI problem (3.23)
-        ubm = trace_vector_to_p2(basemesh, mesh, u)  # surface velocity (m s-1)
         if explicit:
             # explicit time step, mostly pointwise operation (interpolate and truncate)
             Phi = Function(P1bm).project(- dot(ubm, ns))  # interpolate() would be bad here (P2 nodes)
