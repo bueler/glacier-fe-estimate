@@ -183,7 +183,7 @@ sR = Function(P1R)
 if writepng:
     printpar(f'creating root directory {dirroot} for image files ...')
     mkdir(dirroot)
-for aconst in [0.0, -2.0e-7, 1.0e-7]:
+for aconst in [0.0, -2.5e-7, 1.0e-7]:
     # describe run
     printpar(f'using aconst = {aconst:.3e} m/s constant value of SMB ...')
     printpar(f'doing N = {Nsteps} steps of dt = {dt/secpera:.3f} a and saving states ...')
