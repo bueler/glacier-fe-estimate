@@ -97,8 +97,7 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, q=2.0, Lsc=100.0e3, aconst=0
                               slist[i1]['us'],
                               slist[i2]['us'],
                               slist[i1]['t'],
-                              slist[i2]['t'],
-                              _Hth)
+                              slist[i2]['t'])
         _max_us_rat = max(_max_us_rat, usrat)
         _min_Phi_rat = min(_min_Phi_rat, Phirat)
         Phiratlist.append(Phirat)
