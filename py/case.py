@@ -166,6 +166,7 @@ if not explicit:
                 "ksp_type": "preonly",
                 "pc_type": "lu",
                 "pc_factor_mat_solver_type": "mumps"}
+    # the main weak form for (3.23)
     siF = inner(s - dt * dot(siubm, ns) - (sisold + dt * a), siv) * dx
     siproblem = NonlinearVariationalProblem(siF, s, sibcs)
     sisolver = NonlinearVariationalSolver(siproblem, solver_parameters=siparams,
@@ -221,12 +222,12 @@ for aconst in [0.0, -2.0e-7, 1.0e-7]:
         newcoord.interpolate(as_vector([x, bR + (sRfake - bR) * ztmp]))
         mesh.coordinates.assign(newcoord)
 
-        # solve Stokes on extruded mesh
-        # this uses fake ice, and se.up as initial iterate
+        # solve Stokes on extruded mesh and extract surface trace
+        #   this uses fake ice, and se.up as initial iterate
         u, p = se.solve(par=params, F=_form_stokes(mesh, se, sRfake))
         #printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
 
-        # optionally write t-dependent .pvd
+        # optionally write t-dependent .pvd with 2D fields
         if writepvd:
             u.rename('velocity (m s-1)')
             p.rename('pressure (Pa)')
@@ -236,20 +237,16 @@ for aconst in [0.0, -2.0e-7, 1.0e-7]:
             pdiff.rename('pdiff = phydro - p (Pa)')
             outfile.write(u, p, nu, nueps, pdiff, time=t)
 
-        # diagnostically compute surface motion map  Phi(s) = - u|_s . n_s   (m s-1)
-        # this uses true surface elevation s
-        ubm = trace_vector_to_p2(basemesh, mesh, u)  # surface velocity (m s-1)
-        Phi = Function(P1bm).project(- dot(ubm, ns))  # interpolate() would be bad here (P2 nodes)
-
         # save surface elevation and velocity into list for ratio evals
         _slist.append({'t': t,
                        's': s.copy(deepcopy=True),
-                       'us': ubm.copy(deepcopy=True),
-                       'Phi': Phi.copy(deepcopy=True)})
+                       'us': ubm.copy(deepcopy=True)})
 
         # time step of VI problem (3.23)
+        ubm = trace_vector_to_p2(basemesh, mesh, u)  # surface velocity (m s-1)
         if explicit:
-            # explicit time step, simply by pointwise operation (interpolate and truncate)
+            # explicit time step, mostly pointwise operation (interpolate and truncate)
+            Phi = Function(P1bm).project(- dot(ubm, ns))  # interpolate() would be bad here (P2 nodes)
             snew = s + dt * (a - Phi)
             s.interpolate(conditional(snew < b, b, snew))
         else:
