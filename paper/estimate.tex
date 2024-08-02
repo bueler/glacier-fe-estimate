@@ -178,7 +178,7 @@ The continuum models considered in this paper conserve mass and momentum.   The 
 
 To state the shear-thinning (Glen's) flow law, let $D\bu=(\grad \bu + \grad \bu^{\top})/2$ denote the strain rate tensor, with Frobenius norm $|D\bu| = (D\bu:D\bu)^{1/2} = \left((D\bu)_{ij} (D\bu)_{ij}\right)^{1/2}$.  The effective ice (dynamic) viscosity \cite{GreveBlatter2009} is given by a regularized formula
 \begin{equation}
-\nu(D\bu) = \nu_\pp \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} \label{eq:glen}
+\nu(D\bu) = \nu_\pp \left(\tfrac{1}{2} |D\bu|^2 + \eps\right)^{(\pp-2)/2} \label{eq:glen}
 \end{equation}
 The exponent $1 < \pp \le 2$, often written $\pp=(1/\nn)+1$, is approximately 4/3 in practice because $\nn\approx 3$ \cite{GreveBlatter2009}.  The coefficient $\nu_\pp>0$ has $\pp$-dependent units, but $\nu(D\bu)$ has SI units $\text{kg}\,\text{m}^{-1}\,\text{s}^{-1}$.  The values of $\nn$ and $\nu_\pp$ can be determined from measured properties of ice \cite{GoldsbyKohlstedt2001,GreveBlatter2009}, including temperature, but both are assumed to be constant (isothermal) here.  Note that $\pp=2$ yields a Newtonian fluid with constant viscosity, while for $\pp < 2$ the $\eps>0$ regularization implies that $\nu(D\bu)$ is bounded above.
 
@@ -591,7 +591,7 @@ FIXME physically, thin ice does not flow much regardless of surface slope, which
 
 \subsection{Margin/terminus shape obscures the choice of Sobolev space} \label{subsec:margin}  The theoretically-predicted shape of the grounded margin of a glacier is not so clear (Figure \ref{fig:margins}), and this makes it difficult to speculate on which Sobolev spaces might allow well-posedness.  The SIA theory suggests root-type (fractional-power) shapes \cite{Bueleretal2005} for the marginal surface elevation, with unbounded gradients.  By contrast, a ``wedge'' margin shape with a bounded gradient has been hypothesized \cite[for example]{EchelmeyerKamb1986}, which would allow $s\in W^{1,\rr}(\Omega)$.  However, reality is more complicated.  In the vicinity of any steep ice margin, especially on steep bedrock features, real glacier ice can generate overhangs which violate the assumption that a surface elevation function is meaningful, and similarly the bedrock can overhang.  Fractures, crevasses, and cliffs are commonly found in glacier margins, but modeling such features escapes from the viscous fluid paradigm considered here.
 
-\begin{figure}
+\begin{figure}[ht]
 \begin{center}
 \includegraphics[width=0.8\textwidth]{figs/margins.jpg}
 \end{center}
@@ -638,17 +638,34 @@ It would seem that those modeling practitioners who use Stokes dynamics expect C
 The computation of $\bu|_s$ and $\Phi(s)=-\bu|_s\cdot \bn_s$, or equivalent expressions, would seem to be necessary in any evolving-geometry Stokes framework, and only these expressions are addressed in the Conjectures.  By contrast, the backward Euler scheme used here is merely the simplest A-stable \cite{AscherPetzold1998} scheme which can be applied.  (Note that for finite dimensional DAE problems, implicit and A-stable schemes are standard \cite{AscherPetzold1998}.)  In any case, the geometry error bounds and results in the next two Sections only require the conclusion of Theorem \ref{thm:stepwellposed}.
 
 
-\section{Numerical exploration of Conjectures \ref{conj:a} and \ref{conj:b}} \label{sec:numerical}
+\section{Numerical evaluation of coercivity} \label{sec:numerical}
 
-FIXME using Firedrake \cite{Hametal2023}
-
-FIXME study 2D glaciers with Halfar-ish surfaces and 3 bed cases: flat, smooth, rough
-
-FIXME for pairs of states generated in this study also compute ratios
+We may explore the validity of Conjecture \ref{conj:b} by sampling from numerical simulations.  The experiment here,\footnote{The Python source code is at \href{https://github.com/bueler/glacier-fe-estimate}{\texttt{github.com/bueler/glacier-fe-estimate}}, and it should be consulted for all details not addressed here.} performed using the Firedrake FE library \cite{Hametal2023}, is not intended to demonstrate implicit time-stepping, but only to generate admissible surface elevation pairs $r,s\in\cK$ to use as samples.  For a given pair we evaluate the coercivity ratio
 \begin{equation}
-\frac{\big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}}}{\|r-s\|_{W^{1,\rr}}} \qquad \text{and} \qquad \frac{\left(\Phi(r) - \Phi(s)\right)[r-s]}{\|r-s\|_{W^{1,\rr}}^\qq}
+\rho(r,s) = \frac{\left(\Phi(r) - \Phi(s)\right)[r-s]}{\|r-s\|_{\cX}^2}. \label{eq:Phiratio}
 \end{equation}
-to evaluate Conjectures \ref{conj:a} and \ref{conj:b}; presumably use $\rr=\rr'=\qq=2$
+If, for all $r,s$ in some $\cK$, the set of ratios $\{\rho(r,s)\}$ were bounded below by a positive constant $\alpha>0$, then this would confirm the $\qq=2$ case of coercivity inequality \eqref{eq:conj:b} for that $\cK$.  Of course, a numerical experiment allows only finite sampling, and furthermore a finite discretization must be used.
+
+The domain for our experiment is the 1D interval $\Omega=(-L,L)$, $L=100$ km, with $\cX = W_b^{1,2}(\Omega)$.  Three bed profiles  (Figure \ref{fig:cases}) were considered, \emph{flat} with $b=0$, \emph{smooth} with a superposition of several wavelengths down to 10 km, and \emph{rough} with an additional 4 km wavelength mode.  The beds generate corresponding constraint sets $\cK_i \subset \cX$, $i=1,2,3$.
+
+\begin{figure}[ht]
+\mbox{\includegraphics[width=0.325\textwidth]{figs/snapsrough.png} \, \includegraphics[width=0.325\textwidth]{figs/snapsrough.png} \, \includegraphics[width=0.325\textwidth]{figs/snapsrough.png}}
+
+\caption{Three bed cases (left-to-right: FIXME flat, smooth, rough) define constraint sets $\cK_i\subset\cX$ in the numerical experiment.  Three time-dependent runs of $T=200$ years, starting from the same initial state (dotted), but using different constant values of the SMB (see text), generated many admissible states in a given $\cK_i$.  Later states ($t=170$ years) in these runs are shown (solid).  Ratios \eqref{eq:Phiratio} were then computed for 1000 sample pairs $r,s$ from each set $\cK_i$.}
+\label{fig:cases}
+\end{figure}
+
+The interval $\Omega$ was uniformly-meshed into equal intervals, at resolutions which are addressed below.  A $P_1$ piecewise-linear FE space $\cX_h\subset \cX$ was used for the bed $b$ and the surface $s$, giving polygonal domains $\Lambda$ defined by $b,s$ (equation \eqref{eq:icydomain}).  The Stokes problem \eqref{eq:glenstokes:weak}, with viscosity regularization value $\eps=10^{-19}\, \text{s}^{-2}$ in \eqref{eq:glen}, was solved on each domain $\Lambda$ using a vertically-extruded mesh (Figure \ref{fig:fe:operatorvisualization}).  The mixed FE method used the $P_2\times P_1$ (Taylor-Hood) stable pair \cite{Elmanetal2014} and a Newton solver, with direct solution of the linear step equations.
+
+For each bed and constraint set $\cK_i$, three constant SMB values were considered: $a=0,-2.5\times 10^{-7},10^{-7}$ $\text{m}\,\text{s}^{-1}$.  For each value a time-dependent run of duration $T=200$ years started from the same initial surface elevation, a Halfar\footnote{In the case of a flat bed and $a=0$, the exact time-dependent solution under SIA dynamics is known by Halfar's result \cite{Halfar1981}.  The initial state used here has characteristic time $t_0=29$ years.  The final ($t=T$) surface elevation, computed using Stokes dynamics in the experiment, agrees closely with the SIA exact solution; compare comments in \cite{LofgrenAhlkronaHelanow2022}.} profile \cite{Halfar1981}.  Time-stepping of the surface was based on the ``FSSA'' stabilization technique from \cite[equation (23)]{LofgrenAhlkronaHelanow2022}.  Each time-step VI \eqref{eq:be:vi} was semi-implicit, modifying definition \eqref{eq:be:Fdefine} by using the prior surface velocity $\bu|_{s^{n-1}}$, and numerically solved by a reduced-space Newton method with line search \cite{BensonMunson2006}.  The resulting time-dependent numerical method is only conditionally stable, but adequate for the experimental purposes.
+
+FIXME Table \ref{tab:histograms}
+
+FIXME also compute ratios
+\begin{equation}
+\frac{\big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}}}{\|r-s\|_{W^{1,\rr}}}
+\end{equation}
+to evaluate Conjecture \ref{conj:a}
 
 
 \section{Abstract error estimate for a finite element approximation} \label{sec:abstractestimate}
