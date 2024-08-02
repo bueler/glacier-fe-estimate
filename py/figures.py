@@ -104,20 +104,25 @@ def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
 def histogramPhirat(dirname, ratlist):
     import numpy as np
     import matplotlib.pyplot as plt
-    binsp = 40
-    binsn = 5
+    # bin width is 0.25e-12 on both sides of zero
+    binsp = 24
+    binsn = 4
     rl = np.array(ratlist)
     rlp = rl[rl > 0.0]
-    rln = rl[rl <= 0.0]  # may be empty list
     assert len(rlp) > 0
-    h, edges = np.histogram(rlp, bins=binsp)
+    rln = rl[rl <= 0.0]  # may be empty list
+    h, edges = np.histogram(rlp, bins=binsp, range=(0.0, 6.0e-12))
     fig = plt.figure(figsize=(6.0, 4.0))
-    fig.gca().stairs(h, edges, color='C0')
+    ax = plt.gca()
+    ax.stairs(h, edges, color='k')
     if len(rln) > 0:
-        hn, edgesn = np.histogram(rln, bins=binsn)
-        fig.gca().stairs(hn, edgesn, color='C1')
-    plt.xlabel('Phi ratios')
-    plt.gca().set_xlim([-1.5e-12, 1.0e-11])
+        hn, edgesn = np.histogram(rln, bins=binsn, range=(-1.0e-12, 0.0))
+        ax.stairs(hn, edgesn, color='k', fill=True)
+    plt.xlabel(r'$\Phi$ ratios ($\times 10^{-12}$)')
+    ax.set_xlim([-1.0e-12, 6.0e-12])
+    ax.set_xticks(np.linspace(-1.0e-12, 6.0e-12, 8))
+    ax.set_xticklabels(['-1', '0', '1', '2', '3', '4', '5', '6'])
+    ax.set_ylim([0, 350])
     fname = dirname + 'Phiratios.png'
     plt.savefig(fname)
     plt.close()
