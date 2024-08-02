@@ -35,7 +35,7 @@ from firedrake import *
 from firedrake.output import VTKFile
 from stokesextruded import StokesExtruded, SolverParams, extend_p1_from_basemesh, trace_vector_to_p2, printpar
 from geometry import secpera, bedtypes, g, rho, nglen, A3, B3, t0, halfargeometry
-from figures import mkdir, livefigure
+from figures import mkdir, livefigure, snapsfigure
 from measure import geometryreport, sampleratios
 
 # parameters set at runtime
@@ -76,7 +76,7 @@ xbm = basemesh.coordinates.dat.data_ro
 
 # bed and initial geometry
 assert bed in bedtypes
-#print(f"Halfar t0 = {t0 / secpera:.3f} a")
+print(f"Halfar t0 = {t0 / secpera:.3f} a")
 b_np, s_initial_np = halfargeometry(xbm, t=t0, bed=bed)  # get numpy arrays
 b = Function(P1bm, name='bed elevation (m)')
 b.dat.data[:] = b_np
@@ -180,9 +180,12 @@ bR = Function(P1R)
 bR.dat.data[:] = b.dat.data_ro  # fixed bed during whole case
 sRfake = Function(P1R)
 sR = Function(P1R)
+# set up for livefigure() and snapsfigure()
 if writepng:
     printpar(f'creating root directory {dirroot} for image files ...')
     mkdir(dirroot)
+    s.dat.data[:] = s_initial_np
+    snaps = [s.copy(deepcopy=True),]
 for aconst in SMBlist:
     # describe run
     printpar(f'using aconst = {aconst:.3e} m/s constant value of SMB ...')
@@ -261,11 +264,18 @@ for aconst in SMBlist:
         if writepng:
             livefigure(basemesh, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png',
                     writehalfar=(bed == 'flat' and aconst == 0.0 and n + 1 == Nsteps))
+            if n + 1 == int(round(0.7 * Nsteps)): # reliable if Nsteps is divisible by 10
+                snaps.append(s.copy(deepcopy=True))
 
     if writepng:
         printpar(f'  finished writing to {outdirname}')
     if writepvd:
         printpar(f'  finished writing to {pvdfilename}')
+
+if writepng:
+    snapsname = dirroot + 'snaps.png'
+    snapsfigure(basemesh, b, snaps, fname=snapsname)
+    printpar(f'  finished writing to {snapsname}')
 
 # process giant _slist from all three SMB cases
 max_cont, min_coer = sampleratios(dirroot, _slist, basemesh, b, N=Nsamples, Lsc=L)

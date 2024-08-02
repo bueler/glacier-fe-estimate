@@ -29,6 +29,21 @@ def livefigure(basemesh, b, s, t, fname=None, writehalfar=False):
         plt.savefig(fname)
     plt.close()
 
+def snapsfigure(basemesh, b, snaps, fname=None):
+    import matplotlib.pyplot as plt
+    xx = basemesh.coordinates.dat.data
+    plt.figure(figsize=(6.0, 3.0))
+    plt.plot(xx / 1.0e3, b.dat.data, 'k--')
+    plt.plot(xx / 1.0e3, snaps[0].dat.data, 'k:')
+    for j in range(len(snaps) - 1):
+        plt.plot(xx / 1.0e3, snaps[j+1].dat.data, 'k')
+    plt.axis('off')
+    if fname == None:
+        plt.show()
+    else:
+        plt.savefig(fname)
+    plt.close()
+
 def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
     import numpy as np
     import matplotlib.pyplot as plt
