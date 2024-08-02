@@ -60,6 +60,7 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
     pairs = []
     Phiratlist = []
     _n = 0
+    _nonpos = 0
     while _n < N:
         i1 = randrange(0, len(slist))
         i2 = randrange(0, len(slist))
@@ -89,6 +90,7 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
         else:
             print('.', end='')
         if Phirat <= 0.0:
+            _nonpos += 1
             badcoercivefigure(dirroot,
                               basemesh,
                               b,
@@ -106,4 +108,4 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
     printpar(f'  max continuity ratio:  {_max_us_rat:.3e}')
     printpar(f'  min coercivity ratio:  {_min_Phi_rat:.3e}')
     histogramPhirat(dirroot, Phiratlist)
-    return _max_us_rat, _min_Phi_rat
+    return _max_us_rat, _min_Phi_rat, _nonpos / N
