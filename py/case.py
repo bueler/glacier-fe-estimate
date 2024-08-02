@@ -278,7 +278,10 @@ if writepng:
     printpar(f'  finished writing to {snapsname}')
 
 # process giant _slist from all three SMB cases
-max_cont, min_coer, nonposfrac = sampleratios(dirroot, _slist, basemesh, b, N=Nsamples, Lsc=L)
+maxcont, mincoer, nonposfrac = sampleratios(dirroot, _slist, basemesh, b, N=Nsamples, Lsc=L)
+printpar(f'  max continuity ratio:   {maxcont:.3e}')
+printpar(f'  min coercivity ratio:   {mincoer:.3e}')
+printpar(f'  non-positive fraction:  {nonposfrac:.4f}')
 rfile = open(ratiosfile, 'a')
 with open(ratiosfile, 'a') as rfile:
-    rfile.write(f'{max_cont:.3e}, {min_coer:.3e}, {nonposfrac:.4f}\n')
+    rfile.write(f'{maxcont:.3e}, {mincoer:.3e}, {nonposfrac:.4f}\n')

@@ -105,7 +105,5 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
         Phiratlist.append(Phirat)
         _n += 1
     print()
-    printpar(f'  max continuity ratio:  {_max_us_rat:.3e}')
-    printpar(f'  min coercivity ratio:  {_min_Phi_rat:.3e}')
     histogramPhirat(dirroot, Phiratlist)
     return _max_us_rat, _min_Phi_rat, _nonpos / N
