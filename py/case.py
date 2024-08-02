@@ -56,7 +56,7 @@ if writepvd:
 L = 100.0e3             # domain is (-L,L)
 SMBlist = [0.0, -2.5e-7, 1.0e-7]  # m s-1; values of aconst used in experiments
 aposfrac = 0.75         # fraction of domain on which positive SMB is applied
-Nsamples = 500          # number of samples when evaluating minimal ratios
+Nsamples = 1000         # number of samples when evaluating minimal ratios
 
 # solution method
 Hmin = 20.0             # insert fake ice for Stokes solve
