@@ -9,7 +9,7 @@ where s and us are Firedrake Functions on the basemesh.
 import numpy as np
 from firedrake import *
 from stokesextruded import printpar
-from figures import histogramPhirat, badcoercivefigure
+from figures import badcoercivefigure
 from geometry import secpera
 
 def norm_h1sc(v, Lsc):
@@ -56,11 +56,9 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
     assert N >= 2
     from random import randrange
     _max_us_rat = -np.inf
-    _min_Phi_rat = np.inf
     pairs = []
     Phiratlist = []
     _n = 0
-    _nonpos = 0
     while _n < N:
         i1 = randrange(0, len(slist))
         i2 = randrange(0, len(slist))
@@ -90,7 +88,6 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
         else:
             print('.', end='')
         if Phirat <= 0.0:
-            _nonpos += 1
             badcoercivefigure(dirroot,
                               basemesh,
                               b,
@@ -101,9 +98,7 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
                               slist[i1]['t'],
                               slist[i2]['t'])
         _max_us_rat = max(_max_us_rat, usrat)
-        _min_Phi_rat = min(_min_Phi_rat, Phirat)
         Phiratlist.append(Phirat)
         _n += 1
     print()
-    histogramPhirat(dirroot, Phiratlist)
-    return _max_us_rat, _min_Phi_rat, _nonpos / N
+    return _max_us_rat, np.array(Phiratlist)

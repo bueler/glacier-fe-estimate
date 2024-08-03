@@ -35,7 +35,7 @@ from firedrake import *
 from firedrake.output import VTKFile
 from stokesextruded import StokesExtruded, SolverParams, extend_p1_from_basemesh, trace_vector_to_p2, printpar
 from geometry import secpera, bedtypes, g, rho, nglen, A3, B3, t0, halfargeometry
-from figures import mkdir, livefigure, snapsfigure
+from figures import mkdir, livefigure, snapsfigure, histogramPhirat
 from measure import geometryreport, sampleratios
 
 # parameters set at runtime
@@ -277,11 +277,19 @@ if writepng:
     snapsfigure(basemesh, b, snaps, fname=snapsname)
     printpar(f'  finished writing to {snapsname}')
 
-# process giant _slist from all three SMB cases
-maxcont, mincoer, nonposfrac = sampleratios(dirroot, _slist, basemesh, b, N=Nsamples, Lsc=L)
-printpar(f'  max continuity ratio:   {maxcont:.3e}')
-printpar(f'  min coercivity ratio:   {mincoer:.3e}')
-printpar(f'  non-positive fraction:  {nonposfrac:.4f}')
-rfile = open(ratiosfile, 'a')
-with open(ratiosfile, 'a') as rfile:
-    rfile.write(f'{maxcont:.3e}, {mincoer:.3e}, {nonposfrac:.4f}\n')
+# process _slist from all three SMB cases
+maxcont, rats = sampleratios(dirroot, _slist, basemesh, b, N=Nsamples, Lsc=L)
+printpar(f'  max continuity ratio:               {maxcont:.3e}')
+histogramPhirat(dirroot, rats)
+nonpos = rats[rats <= 0.0]
+if len(nonpos) > 0:
+    npmin, npmed, npf = min(nonpos), np.median(nonpos), len(nonpos) / len(rats)
+    printpar(f'  non-pos coercivity ratio min:       {npmin:.3e}')
+    printpar(f'                           median:    {npmed:.3e}')
+    printpar(f'                           fraction:  {npf:.4f}')
+    with open(ratiosfile, 'a') as rfile:
+        rfile.write(f'{maxcont:.3e}, {npmin:.3e}, {npmed:.3e}, {npf:.4f}, N/A\n')
+else:
+    printpar(f'  positive coercivity ratio min:      {min(rats):.3e}')
+    with open(ratiosfile, 'a') as rfile:
+        rfile.write(f'{maxcont:.3e}, {0.0:.3e}, {0.0:.3e}, {0.0:.4f}, {min(rats):.3e}\n')

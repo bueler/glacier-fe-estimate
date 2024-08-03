@@ -107,10 +107,9 @@ def histogramPhirat(dirname, ratlist):
     # bin width is 0.25e-12 on both sides of zero
     binsp = 24
     binsn = 4
-    rl = np.array(ratlist)
-    rlp = rl[rl > 0.0]
+    rlp = ratlist[ratlist > 0.0]
     assert len(rlp) > 0
-    rln = rl[rl <= 0.0]  # may be empty list
+    rln = ratlist[ratlist <= 0.0]  # may be empty list
     h, edges = np.histogram(rlp, bins=binsp, range=(0.0, 6.0e-12))
     fig = plt.figure(figsize=(6.0, 4.0))
     ax = plt.gca()
