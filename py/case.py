@@ -281,6 +281,12 @@ if writepng:
 maxcont, rats = sampleratios(dirroot, _slist, basemesh, b, N=Nsamples, Lsc=L)
 printpar(f'  max continuity ratio:               {maxcont:.3e}')
 histogramPhirat(dirroot, rats)
+pos = rats[rats > 0.0]
+assert len(pos) > 0
+pmin = min(pos)
+pmed = np.median(pos)
+printpar(f'  pos coercivity ratio min:           {pmed:.3e}')
+printpar(f'                       median:        {pmin:.3e}')
 nonpos = rats[rats <= 0.0]
 if len(nonpos) > 0:
     npmin, npmed, npf = min(nonpos), np.median(nonpos), len(nonpos) / len(rats)
@@ -288,8 +294,7 @@ if len(nonpos) > 0:
     printpar(f'                           median:    {npmed:.3e}')
     printpar(f'                           fraction:  {npf:.4f}')
     with open(ratiosfile, 'a') as rfile:
-        rfile.write(f'{maxcont:.3e}, {npmin:.3e}, {npmed:.3e}, {npf:.4f}, N/A\n')
+        rfile.write(f'{maxcont:.3e}, {pmin:.3e}, {pmed:.3e}, {npmin:.3e}, {npmed:.3e}, {npf:.4f}\n')
 else:
-    printpar(f'  positive coercivity ratio min:      {min(rats):.3e}')
     with open(ratiosfile, 'a') as rfile:
-        rfile.write(f'{maxcont:.3e}, {0.0:.3e}, {0.0:.3e}, {0.0:.4f}, {min(rats):.3e}\n')
+        rfile.write(f'{maxcont:.3e}, {pmin:.3e}, {pmed:.3e}, N/A, N/A, {0.0:.4f}\n')
