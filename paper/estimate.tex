@@ -100,9 +100,9 @@
 \newcommand{\CA}{C_\text{\textnormal{A}}}
 
 % running headers and PDF metadata
-\headers{FEM errors in Stokes-dynamics glacier evolution}{E. Bueler}
+\headers{FEM errors in Stokes models of glacier evolution}{E. Bueler}
 
-\title{Finite element method errors in Stokes-dynamics glacier evolution}
+\title{Finite element method errors in Stokes models \\ of glacier evolution}
 
 \author{Ed Bueler\thanks{Department of Mathematics and Statistics, University of Alaska Fairbanks, USA (\email{elbueler@alaska.edu}).}}
 
@@ -628,32 +628,43 @@ The computation of $\bu|_s$ and $\Phi(s)=-\bu|_s\cdot \bn_s$, or equivalent expr
 
 \section{Numerical evaluation of coercivity} \label{sec:numerical}
 
-We may explore the validity of Conjecture \ref{conj:b} by sampling from numerical simulations.  The experiment here,\footnote{The Python source code is at \href{https://github.com/bueler/glacier-fe-estimate}{\texttt{github.com/bueler/glacier-fe-estimate}}, and it should be consulted for all details not addressed here.} performed using the Firedrake FE library \cite{Hametal2023}, is not intended to demonstrate implicit time-stepping, but only to generate admissible surface elevation pairs $r,s\in\cK$ to use as samples.  For a given pair we evaluate the coercivity ratio
+We may explore the validity of Conjecture \ref{conj:b} by sampling from numerical simulations.  The experiment here,\footnote{The source code at \href{https://github.com/bueler/glacier-fe-estimate}{\texttt{github.com/bueler/glacier-fe-estimate}} addresses all remaining details.} performed using Python and the Firedrake FE library \cite{Hametal2023}, is not intended to demonstrate implicit time-stepping, but only to generate admissible surface elevation pairs $r,s\in\cK$ to use as samples.  For a given sample pair we evaluate the coercivity ratio
 \begin{equation}
 \rho(r,s) = \frac{\left(\Phi(r) - \Phi(s)\right)[r-s]}{\|r-s\|_{\cX}^2}. \label{eq:Phiratio}
 \end{equation}
-If, for all $r,s$ in some $\cK$, the set of ratios $\{\rho(r,s)\}$ were bounded below by a positive constant $\alpha>0$, then this would confirm the $\qq=2$ case of coercivity inequality \eqref{eq:conj:b} for that $\cK$.  Of course, a numerical experiment allows only finite sampling, and furthermore a finite discretization must be used.
+If, for all pairs in some $\cK$, the set of ratios $\{\rho(r,s)\}$ were bounded below by a positive constant $\alpha>0$, then this would confirm the $\qq=2$ coercivity inequality \eqref{eq:conj:b} for that $\cK$.  Of course, a numerical experiment allows only finite sampling, and furthermore a finite discretization must be used so we cannot directly address the continuum set $\cK$.
 
-The domain for our experiment is the 1D interval $\Omega=(-L,L)$, $L=100$ km, with $\cX = W_b^{1,2}(\Omega)$.  Three bed profiles  (Figure \ref{fig:cases}) were considered, \emph{flat} with $b=0$, \emph{smooth} with a superposition of several wavelengths down to 10 km, and \emph{rough} with an additional 4 km wavelength mode.  The beds generate corresponding constraint sets $\cK_i \subset \cX$, $i=1,2,3$.
+The domain for our experiment is the 1D interval $\Omega=(-L,L)$, $L=100$ km, with $\cX = W_b^{1,2}(\Omega)$.  Three bed profiles  (Figure \ref{fig:cases}) were considered, \emph{flat} with $b=0$, \emph{smooth} with a superposition of several wavelengths down to 10 km, and \emph{rough} with an additional 4 km wavelength mode.  These beds generate corresponding constraint sets $\cK_i \subset \cX$, $i=1,2,3$.
 
 \begin{figure}[ht]
 \mbox{\includegraphics[width=0.31\textwidth]{figs/snapsflat.png} \, \includegraphics[width=0.335\textwidth]{figs/snapssmooth.png} \, \includegraphics[width=0.335\textwidth]{figs/snapsrough.png}}
 
-\caption{Three bed cases (left-to-right: flat, smooth, rough) define constraint sets $\cK_i\subset\cX$ in the numerical experiment.  Three time-dependent runs of $T=200$ years, starting from the same initial state (dotted), but using different constant values of the SMB (see text), generated many admissible states in a given $\cK_i$.  Later states ($t=170$ years) in these runs are shown (solid).  Ratios \eqref{eq:Phiratio} were then computed for 1000 sample pairs $r,s$ from each set $\cK_i$.}
+\caption{Three bed cases (flat, smooth, rough) define constraint sets $\cK_i\subset\cX$ in the numerical experiment.  For each $\cK_i$, three time-dependent runs of $T=200$ years, starting from the same initial state (dotted), but using different constant values of the SMB (see text), generated a large number of admissible states.  Example states at $t=170$ years are shown (solid).  Ratios \eqref{eq:Phiratio} were computed for 1000 sample pairs $r,s$ from each set $\cK_i$.}
 \label{fig:cases}
 \end{figure}
 
-The interval $\Omega$ was uniformly-meshed into equal intervals, at resolutions which are addressed below.  A $P_1$ piecewise-linear FE space $\cX_h\subset \cX$ was used for the bed $b$ and the surface $s$, giving polygonal domains $\Lambda$ defined by $b,s$ (equation \eqref{eq:icydomain}).  The Stokes problem \eqref{eq:glenstokes:weak}, with viscosity regularization value $\eps=10^{-19}\, \text{s}^{-2}$ in \eqref{eq:glen}, was solved on each domain $\Lambda$ using a vertically-extruded mesh (Figure \ref{fig:fe:operatorvisualization}).  The mixed FE method used the $P_2\times P_1$ (Taylor-Hood) stable pair \cite{Elmanetal2014} and a Newton solver, with direct solution of the linear step equations.
+The interval $\Omega$ was uniformly-meshed into equal intervals.  The $P_1$ piecewise-linear FE space $\cX_h\subset \cX$ was used for the bed $b$ and the surface $s$, giving polygonal domains $\Lambda$ defined by $b,s$; see equation \eqref{eq:icydomain}.  The Stokes problem \eqref{eq:glenstokes:weak}, with viscosity regularization $\eps=10^{-19}\, \text{s}^{-2}$ in \eqref{eq:glen}, was solved on each domain $\Lambda$ using a vertically-extruded mesh of quadrilaterals (Figure \ref{fig:fe:operatorvisualization}), mixed FE method for the $Q_2\times Q_1$ (Taylor-Hood) stable pair \cite{Elmanetal2014}, and a Newton solver, with direct solution of the linear step equations.
 
-For each bed and constraint set $\cK_i$, three constant SMB values were considered: $a=0,-2.5\times 10^{-7},10^{-7}$ $\text{m}\,\text{s}^{-1}$.  For each value a time-dependent run of duration $T=200$ years started from the same initial surface elevation, a Halfar\footnote{In the case of a flat bed and $a=0$, the exact time-dependent solution under SIA dynamics is known by Halfar's result \cite{Halfar1981}.  The initial state used here has characteristic time $t_0=29$ years.  The final ($t=T$) surface elevation, computed using Stokes dynamics in the experiment, agrees closely with the SIA exact solution; compare comments in \cite{LofgrenAhlkronaHelanow2022}.} profile \cite{Halfar1981}.  Time-stepping of the surface was based on the ``FSSA'' stabilization technique from \cite[equation (23)]{LofgrenAhlkronaHelanow2022}.  Each time-step VI \eqref{eq:be:vi} was semi-implicit, modifying definition \eqref{eq:be:Fdefine} by using the prior surface velocity $\bu|_{s^{n-1}}$, and numerically solved by a reduced-space Newton method with line search \cite{BensonMunson2006}.  The resulting time-dependent numerical method is only conditionally stable, but adequate for the experimental purposes.
+For each constraint set $\cK_i$, three constant SMB values were considered (units $\text{m}\,\text{s}^{-1}$): $a=\{-2.5,0.0,1.0\}\times 10^{-7}$.  For each SMB value a time-dependent run of duration $T=200$ years started from the same initial surface elevation profile.\footnote{A Halfar profile \cite{Halfar1981} with characteristic time $t_0=29$ years was used as the initial state.  Thus, in the case of a flat bed and $a=0$ the exact time-dependent solution under SIA dynamics is known by Halfar's result \cite{Halfar1981}.  The final ($t=200$ a) surface elevation, computed using Stokes dynamics in the actual experiment, agrees closely with the SIA exact solution; compare comments in \cite{LofgrenAhlkronaHelanow2022}.}  The positive SMB value was sufficient to advance the ice margins nearly to the domain boundary at $|x|=L$ by the final time $t=200$ a, while the negative SMB value caused the glacier to disappear entirely by the final time.
 
-FIXME Table \ref{tab:histograms}
+In these simulations each time-step VI \eqref{eq:be:vi} was semi-implicit.  That is, definition \eqref{eq:be:Fdefine} was modified by using the prior surface velocity $\bu|_{s^{n-1}}$.  The numerical solution was by a reduced-space Newton method with line search, modified for VI application \cite{BensonMunson2006}.  The ``FSSA'' stabilization technique from \cite{LofgrenAhlkronaHelanow2022} was applied, which generates a modified Stokes weak form compared to \eqref{eq:glenstokes:weak}; see equation (23) in \cite{LofgrenAhlkronaHelanow2022}.  The resulting time-dependent numerical method is only conditionally stable, but adequate for the experimental purposes of generating sample surfaces.
 
-FIXME also compute ratios
-\begin{equation}
-\frac{\big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}}}{\|r-s\|_{W^{1,\rr}}}
-\end{equation}
-to evaluate Conjecture \ref{conj:a}
+The basic result of this experiment is shown in Figure \ref{fig:ratios}.  These are sample ratio $\rho(r,s)$ histograms from the highest spatial resolution, namely $\Delta x=500$ m and 40 elements in each extruded column.  More than $87\%$ of all the ratios were positive, and of these the medians for the three $\cK_i$ were in $(FIXME,FIXME) \times 10^{-13}$.  For the remaining negative ratios, the medians were in the range $[-4.1,-2.8]\times 10^{-14}$, thus much smaller in magnitude.
+
+\begin{figure}[ht]
+\mbox{\includegraphics[width=0.33\textwidth]{figs/flatratios.png} \, \includegraphics[width=0.31\textwidth]{figs/smoothratios.png} \, \includegraphics[width=0.31\textwidth]{figs/roughratios.png}}
+
+\caption{Histograms of the equation \eqref{eq:Phiratio} ratios $\rho(r,s)$, for 1000 sample pairs from each of the same 3 sets $\cK_i$ in Figure \ref{fig:cases}.  The horizontal axis has  $\rho(r,s) \in [-1,6]\times 10^{-12}$, and the common vertical axis is for counts between 0 and 350.  About $10\%$ of these ratios are negative (solid).}
+\label{fig:ratios}
+\end{figure}
+
+Figure \ref{fig:ratios} does \emph{not} represent compelling evidence of $2$-coercivity by definition \eqref{eq:qcoercive}, but it does not exclude it.  The discretization of the ice margin seemed to cause the negative ratios.  Noting that ratio evaluation uses integral \eqref{eq:definePhi}, if that integrand is reset to zero where the ice is thinner than 100 m then the negative values disappear (not shown).  Even without such thresholding, at lower horizontal resolution ($\Delta x=2000$ m), while the fraction of negative ratios was the same their median magnitude was roughly twice as large.  Thus the disappearance of negative ratios under grid refinement cannot be excluded.  Margin approximation improvements, such as adaptive/local mesh refinement, might improve the numerical evidence for coercivity.
+
+It is theoretically possible that the operator $\Phi$ is monotone (inequality \ref{eq:monotone}) but not $\qq$-coercive for any $\qq$.  In that case a revised well-posedness argument could be attempted, for example by adding a small coercive form as in section III.2 of \cite{KinderlehrerStampacchia1980}.
+
+If a continuum pair $r,s$ with a negative ratio was actually found in some $\cK$, i.e.~with an exact continuum ratio $\rho(r,s)<0$ from \eqref{eq:Phiratio}, then the coercivity-based well-posedness framework of this paper would fail.  However, noting that real glaciers appear to evolve deterministically, and given that real glaciers experience substantial fracturing at margins (e.g.~Figure \ref{fig:margins}), it is possible that a more-complete physical model, perhaps including non-fluid processes like fractures, would permit coercivity of the corresponding $\Phi$ operator.
+
+Regarding Conjecture \ref{conj:a}, i.e.~Lipschitz continuity for surface velocity traces, the maximum ratio $\big\|\bu|_r - \bu|_s\big\|_{L^2}/\|r-s\|_{W^{1,2}}$ for the same sample pairs was also evaluated.  Over all three sets $\cK_i$, computed at the highest resolution ($500$ m), the maximum ratio was $3.5\times 10^{-9}$, providing a lower bound for $C_A$.  Again, numerical experiments obviously cannot prove the Conjecture.
 
 
 \section{Abstract error estimate for a finite element approximation} \label{sec:abstractestimate}
