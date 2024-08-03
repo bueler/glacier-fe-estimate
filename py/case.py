@@ -285,8 +285,8 @@ pos = rats[rats > 0.0]
 assert len(pos) > 0
 pmin = min(pos)
 pmed = np.median(pos)
-printpar(f'  pos coercivity ratio min:           {pmed:.3e}')
-printpar(f'                       median:        {pmin:.3e}')
+printpar(f'  pos coercivity ratio min:           {pmin:.3e}')
+printpar(f'                       median:        {pmed:.3e}')
 nonpos = rats[rats <= 0.0]
 if len(nonpos) > 0:
     npmin, npmed, npf = min(nonpos), np.median(nonpos), len(nonpos) / len(rats)
@@ -297,4 +297,4 @@ if len(nonpos) > 0:
         rfile.write(f'{maxcont:.3e}, {pmin:.3e}, {pmed:.3e}, {npmin:.3e}, {npmed:.3e}, {npf:.4f}\n')
 else:
     with open(ratiosfile, 'a') as rfile:
-        rfile.write(f'{maxcont:.3e}, {pmin:.3e}, {pmed:.3e}, N/A, N/A, {0.0:.4f}\n')
+        rfile.write(f'{maxcont:.3e}, {pmin:.3e}, {pmed:.3e}, N/A, N/A, 0.0000\n')
