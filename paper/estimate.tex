@@ -104,7 +104,7 @@
 
 \title{Finite element method errors in Stokes models \\ of glacier evolution}
 
-\author{Ed Bueler\thanks{Department of Mathematics and Statistics, University of Alaska Fairbanks, USA (\email{elbueler@alaska.edu}).}}
+\author{Ed Bueler\thanks{Dept.~Mathematics \& Statistics, University of Alaska Fairbanks, USA (\email{elbueler@alaska.edu}).}}
 
 
 \begin{document}
@@ -211,15 +211,26 @@ As already noted, one may choose to parameterize the glacier geometry by either 
 \label{fig:giscross}
 \end{figure}
 
-Glacier simulations are commonly formulated using a finite element (FE) method for the Stokes sub-problem \cite{IsaacStadlerGhattas2015,Jouvetetal2008,Pattynetal2008}, or for a shallow approximation thereof.  However, to the author's knowledge all existing non-shallow (Stokes) evolution models use a explicit time-stepping scheme for the geometry, for example as in \cite{Jouvetetal2008} or \cite{LofgrenAhlkronaHelanow2022}, with the one exception of the exploratory model in reference \cite{WirbelJarosch2020}.  In the current paper we consider implicit time steps, for the theoretical reasons which are addressed here.  One can also make a case for implicit time-stepping based on simulation performance concerns; see \cite{Bueler2023}.
+Glacier simulations are commonly formulated using a finite element (FE) method for the Stokes sub-problem \cite{IsaacStadlerGhattas2015,Jouvetetal2008,Pattynetal2008}, or for a shallow approximation thereof.  However, to the author's knowledge all existing non-shallow (Stokes) evolution models use a explicit time-stepping scheme for the geometry, for example as in \cite{Jouvetetal2008} or \cite{LofgrenAhlkronaHelanow2022}, with the one exception of the exploratory model in reference \cite{WirbelJarosch2020}.
 
-FIXME: state backward Euler step SKE \eqref{eq:be:ske} here, to commit to implicit; will put in weak form
+This work instead considers implicit time steps for the theoretical reasons addressed in Section \ref{sec:theory}.  For some time step $\Delta t > 0$, the implicit step solution $s\approx s(t_n,x)$, arising from applying the backward Euler scheme to NCP \eqref{eq:ncp}---and to SKE \eqref{eq:ske} in particular---satisfies the conditions of an NCP which is very similar to \eqref{eq:ncp}:
+\begin{subequations}
+\label{eq:be:ncp}
+\begin{align}
+s - b &\ge 0 \label{eq:be:ncp:constraint} \\
+s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n &\ge 0 \label{eq:be:ncp:residualpos} \\
+(s - b) \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right) &= 0 \label{eq:be:ncp:complementarity}
+\end{align}
+\end{subequations}
+For clarity we have collected-together a source term $\ell^n(x) = s^{n-1}(x) + \int_{t_{n-1}}^{t_n} a(t,x)\,dt$ which is assumed known.
 
-FIXME: WHAT WE ACCOMPLISH
+Observe that the backward Euler scheme chosen for problem \eqref{eq:be:ncp} is merely the simplest A-stable \cite{AscherPetzold1998} scheme which can be applied to the continuous time problem \eqref{eq:ncp}.  For finite-dimensional differential algebraic equation problems, such implicit and A-stable schemes are the standard choices \cite{AscherPetzold1998}, given the stiffness exhibited by such systems.  Applying the same strategy in the infinite-dimensional case here, i.e.~where the SKE \eqref{eq:ske} is constrained at any time by the ``algebraic'' Stokes problem \eqref{eq:glen}--\eqref{eq:stokes}, is therefore natural.  In fact one can make a case for implicit time-stepping based on simulation performance because of the reduced performance from the conditional stability of the explicit alternative \cite{Bueler2023}.
 
-In this paper we use only a few standard mathematical abbreviations: FE (finite element), NCP (nonlinear complementarity problem), PDE (partial differential equation), and VI (variational inequality).  In addition we use three glaciological abbreviations: SIA (shallow ice approximation), SKE (surface kinematical equation), and SMB (surface mass balance).
+Section \ref{sec:model} re-writes NCP \eqref{eq:be:ncp} as a weak form VI problem, and then considers its well-posedness.  Based on conjectured well-posedness for that problem (Section \ref{sec:theory}), our main results are in Sections \ref{sec:abstractestimate} and \ref{sec:application} where we prove new estimates on the numerical error which arises from solving each implicit time-step problem by finite element (FE) approximation.
 
-This paper is organized as follows.  Section \ref{sec:stokes} recalls the known theory of the Glen-law Stokes problem on a fixed domain, but we add an apparently-new bound on the surface trace of the velocity solution (Corollary \ref{cor:surfacetracebound}).  In Section \ref{sec:model} we discretize the time derivative and then reformulate the coupled problem \eqref{eq:icydomain}--\eqref{eq:stokes} as a VI weak form for an implicit (backward Euler) time step.  The key coupling term in this problem is the surface motion ($\bu|_s\cdot \bn_s$) from the SKE \eqref{eq:ske}, for which we provide a quantitative bound over a Sobolev space of surface elevation functions (Lemma \ref{lem:philipschitz}).  However, this bound is subject to Conjecture \ref{conj:a}, namely that the surface trace of velocity is Lipschitz continuous with respect to surface elevation.  Well-posedness for each implicit time-step problem is considered in Section \ref{sec:theory}, based upon a second conjecture, Conjecture \ref{conj:b}, on the coercivity of the surface motion term.  Certain physical and modeling ideas are discussed here, as context needed to understand Conjecture \ref{conj:b}.  Section \ref{sec:numerical} provides basic numerical evidence for the validity of the Conjectures, using Stokes glacier simulations in one dimension.  At this point we have in hand a mathematically-precise, time-discretized continuum model, though one with only conjectural well-posedness; see Theorem \ref{thm:stepwellposed}.  This continuum model, precisely stated here for what we believe is the first time, can be approximated by a finite element (FE) method.  In Section \ref{sec:abstractestimate} we prove an abstract FE error estimate, Theorem \ref{thm:abstractestimate}, and its several Corollaries, for general VI problems involving nonlinear operators on Banach spaces.  This new estimate, which makes coercive and Lipshitz assumptions on the operator, extends the classical case by Falk \cite{Falk1974} for bilinear forms.  In Section \ref{sec:application} we apply the estimate to the glacier model to show Theorem \ref{thm:glacierapp}, our final result.  We explain the physical significance of each term in this error estimate, and implications for how choices are made in FE-based evolving glacier simulations using Stokes dynamics.
+This paper is organized as follows.  Section \ref{sec:stokes} recalls the theory of the Glen-law Stokes problem on a fixed domain, but we add an apparently-new bound on the surface trace of the velocity solution (Corollary \ref{cor:surfacetracebound}).  In Section \ref{sec:model} we reformulate the coupled NCP problem \eqref{eq:glen}--\eqref{eq:be:ncp}, for a backward Euler time step, as a VI weak form.  The key coupling term in this problem is the surface motion ($\bu|_s\cdot \bn_s$) from the SKE \eqref{eq:ske}, for which we provide a quantitative bound over a Sobolev space of surface elevation functions (Lemma \ref{lem:philipschitz}).  However, this bound is subject to Conjecture \ref{conj:a}, that the surface velocity trace is Lipschitz continuous with respect to surface elevation.  Well-posedness for each implicit step VI problem is considered in Section \ref{sec:theory}, based upon a second conjecture, Conjecture \ref{conj:b}, on the coercivity of the same surface motion term.  Certain physical and modeling ideas are discussed in Section \ref{sec:theory}, as context needed to understand Conjecture \ref{conj:b}, followed by partial numerical evidence for the validity of the Conjecture \ref{conj:b} in Section \ref{sec:numerical}, via Stokes glacier simulations in 2D.  At this point we have in hand a mathematically-precise time-discretized model, though with only conjectural well-posedness; see Theorem \ref{thm:stepwellposed}.  This continuum model, perhaps stated here for the first time, can be approximated by an FE method.  In Section \ref{sec:abstractestimate} we prove an abstract FE error estimate, Theorem \ref{thm:abstractestimate} and its Corollaries, for general VI problems involving nonlinear operators on Banach spaces.  This new estimate, which makes coercivity and Lipshitz assumptions on the operator, extends the classical bilinear case by Falk \cite{Falk1974}.  In Section \ref{sec:application} we apply the abstract estimate to the glacier model, yielding our final result which is Theorem \ref{thm:glacierapp}.  The physical significance of each term in this error estimate, and how choices can be made in FE-based evolving glacier simulations using Stokes dynamics, are addressed at the end.
+
+We will use only a few mathematical and glaciological abbreviations: FE (finite element), NCP (nonlinear complementarity problem), PDE (partial differential equation), SIA (shallow ice approximation), SKE (surface kinematical equation), SMB (surface mass balance), and VI (variational inequality).
 
 
 \section{The surface velocity from a glacier Stokes problem} \label{sec:stokes}
@@ -334,9 +345,9 @@ Suppose $\bu\in\cV$ is the Stokes velocity solution from Theorem \ref{thm:stokes
 \end{corollary}
 
 
-\section{The implicit time-step model} \label{sec:model}
+\section{The weak-form implicit time-step model} \label{sec:model}
 
-Now we consider the simplest implicit time-stepping scheme based on \eqref{eq:icydomain}--\eqref{eq:stokes}.  Let $\{t_n\}$ be any increasing sequence of times in $[0,T]$, with $t_0=0$.  Let $\Delta t = t_n-t_{n-1}$ denote the generic step length.  Let $a^n(x)$ be the (temporal) average of the data $a(t,x)$ over $[t_{n-1},t_n]$.  Suppose that $s(x)=s^n(x)\approx s(t_n,x)$ approximates the surface elevation at time $t_n$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
+Now we return to the implicit time-stepping scheme for updating the surface elevation in a model based on Stokes dynamics, namely NCP \eqref{eq:be:ncp}.  Recall how this problem is derived.  Let $\{t_n\}$ be any increasing sequence of times in $[0,T]$, with $t_0=0$.  Let $\Delta t = t_n-t_{n-1}$ denote the generic step length.  Let $a^n(x)$ be the (temporal) average of the data $a(t,x)$ over $[t_{n-1},t_n]$.  Suppose that $s(x)=s^n(x)\approx s(t_n,x)$ approximates the surface elevation at time $t_n$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
 \begin{equation}
 \frac{s - s^{n-1}}{\Delta t} - \bu|_{s} \cdot \bn_{s} - a^n = 0. \label{eq:be:ske}
 \end{equation}
@@ -344,25 +355,13 @@ Now we consider the simplest implicit time-stepping scheme based on \eqref{eq:ic
 \begin{equation}
 \ell^n(x) = s^{n-1}(x)+\Delta t\,a^n(x) = s^{n-1}(x) + \int_{t_{n-1}}^{t_n} a(t,x)\,dt. \label{eq:be:source}
 \end{equation}
+As noted in the Introduction, $s=s^n$ in \eqref{eq:be:ske} actually solves a problem of free-boundary type, which is NCP \eqref{eq:be:ncp}.  In particular, complementarity equation \eqref{eq:be:ncp:complementarity} says that, at the solution time and almost everywhere over $\Omega$, either there is no ice ($s=b$) or equation \eqref{eq:be:ske} holds.  Notice that $s$ does not solve \eqref{eq:be:ske} over the bare ground part of $\Omega \subset \RR^2$ where $s=b$.
 
-As with \eqref{eq:ncp}, $s=s^n$ in \eqref{eq:be:ske} actually solves a problem of free-boundary type, which we again state as an NCP:
-\begin{subequations}
-\label{eq:be:ncp}
-\begin{align}
-s - b &\ge 0 \label{eq:be:ncp:constraint} \\
-s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n &\ge 0 \label{eq:be:ncp:residualpos} \\
-(s - b) \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right) &= 0 \label{eq:be:ncp:complementarity}
-\end{align}
-\end{subequations}
-Complementarity equation \eqref{eq:be:ncp:complementarity} says that, at the solution time and almost everywhere over $\Omega$, either there is no ice ($s=b$) or equation \eqref{eq:be:ske} holds.  Generally $s$ does not solve \eqref{eq:be:ske} over all of $\Omega \subset \RR^2$; it does not solve it on bare ground where $s=b$.
-
-The strong form NCP \eqref{eq:be:ncp} has a weak-form variational inequality (VI; \cite{Evans2010,KinderlehrerStampacchia1980}) version which is suited to both well-posedness theory and finite element (FE) analysis.  Let us regard the precise Banach space $\cX$ of surface elevations as unknown.  The admissible surface elevations come from a convex and closed subset
+The strong form NCP \eqref{eq:be:ncp} has a weak-form variational inequality (VI; \cite{Evans2010,KinderlehrerStampacchia1980}) version which is better-suited to both well-posedness theory and finite element (FE) analysis.  Let us regard the precise Banach space $\cX$ of surface elevations as unknown.  The admissible surface elevations come from a convex and closed subset
 \begin{equation}
 \cK = \left\{r \in\cX\,:\,r|_{\partial\Omega}=b|_{\partial\Omega} \text{ and } r \ge b\right\}.  \label{eq:be:admissible}
 \end{equation}
-While the fixed (Dirichlet) boundary condition is included into the definition of $\cK$, if the glacier does not reach $\partial\Omega$ then this condition is of little importance.
-
-The VI is derived as follows via the argument from \cite{Bueler2021conservation}.  Suppose that $s \in \cK$ is a sufficiently-regular solution of NCP \eqref{eq:be:ncp}.  Let $\Omega_I$ be the (measurable) subset of $\Omega$ on which constraint \eqref{eq:be:ncp:constraint} is inactive, where glacier ice is present: $\Omega_I = \{x\,:\,s(x)>b(x)\}$.  From \eqref{eq:be:ncp:complementarity}, integration over $\Omega_I$ shows that
+While the fixed (Dirichlet) boundary condition is included into the definition of $\cK$, if the glacier does not reach $\partial\Omega$ then this condition is of little importance.  The VI is then derived as follows via the argument from \cite{Bueler2021conservation}.  Suppose that $s \in \cK$ is a sufficiently-regular solution of NCP \eqref{eq:be:ncp}.  Let $\Omega_I$ be the (measurable) subset of $\Omega$ on which constraint \eqref{eq:be:ncp:constraint} is inactive, where glacier ice is present: $\Omega_I = \{x\,:\,s(x)>b(x)\}$.  From \eqref{eq:be:ncp:complementarity}, integration over $\Omega_I$ shows that
 \begin{equation}
 \int_{\Omega_I} \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = 0  \label{eq:inactivetruth}
 \end{equation}
@@ -570,8 +569,6 @@ for all $q \in \cX$.  Because $\|s^{n-1}\|_{L^{\rr'}}<\infty$ by Sobolev's inequ
 Observe that Theorem \ref{thm:stepwellposed} addresses only the well-posedness of a single time-step problem over $[t_{n-1},t_n]$.  Its conclusion is not sufficient to show well-posedness of the time-dependent problem parabolic VI problem, over $[0,T]$, corresponding to NCP \eqref{eq:ncp}.  If this problem were known to be well-posed then one might analyze whether implicit steps converge in the $\Delta t\to 0$ limit.
 
 The computation of $\bu|_s$ and $\Phi(s)=-\bu|_s\cdot \bn_s$, or equivalent expressions, would seem to be necessary in any evolving-geometry Stokes framework, and only these expressions are addressed in the Conjectures.  It would seem that those modeling practitioners who use Stokes dynamics expect Conjectures \ref{conj:a} and \ref{conj:b} to hold, or similar facts, but such may be difficult to prove despite some progress in Sections \ref{sec:stokes} and \ref{sec:model}.  Greater progress has been made in the SIA case \cite{Calvoetal2003,JouvetBueler2012,PiersantiTemam2023}, which might be helpful.  In any case, the geometry error bounds and results in the next two Sections only require the conclusion of Theorem \ref{thm:stepwellposed}, and not Conjectures \ref{conj:a} or \ref{conj:b} separately.
-
-Finally let us observe that the backward Euler scheme used in constructing VI problem \eqref{eq:be:vi} is merely the simplest A-stable \cite{AscherPetzold1998} scheme which can be applied.  For finite dimensional DAE problems, such implicit and A-stable schemes are standard \cite{AscherPetzold1998}.
 
 
 \section{Numerical evaluation of coercivity} \label{sec:numerical}
