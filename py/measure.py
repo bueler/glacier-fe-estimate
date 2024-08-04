@@ -72,21 +72,21 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
         i1, i2 = ipair
         # measure, and bail/report on freak cases
         if norm_h1sc(slist[i1]['s'] - slist[i2]['s'], Lsc) == 0.0:
-            print(RED % '!', end='')
+            print(RED % '!', end='')  # color provided by firedrake logging.py
             continue
         usrat = _us_ratio(slist, i1, i2, Lsc)
         Phirat = _Phi_ratio(slist, i1, i2, Lsc, b)
         if Phirat == np.inf:
             print(RED % '*', end='')
             continue
-        # at this point we are actually recording results for the sample pair
+        # at this point we are actually recording results for this sample pair
         pairs.append(ipair)
         _n += 1
         _max_us_rat = max(_max_us_rat, usrat)
         Phiratlist.append(Phirat)
         # stdout and figure for this pair
         if Phirat < 0.0:
-            print(RED % '.', end='')  # color provided by firedrake logging.py
+            print(RED % '.', end='')
             printpar(RED % f'{i1},{i2}')
         elif Phirat == 0.0:
             print(BLUE % '.', end='')
