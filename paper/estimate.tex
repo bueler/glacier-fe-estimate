@@ -573,37 +573,6 @@ The computation of $\bu|_s$ and $\Phi(s)=-\bu|_s\cdot \bn_s$, or equivalent expr
 
 Finally let us observe that the backward Euler scheme used in constructing VI problem \eqref{eq:be:vi} is merely the simplest A-stable \cite{AscherPetzold1998} scheme which can be applied.  For finite dimensional DAE problems, such implicit and A-stable schemes are standard \cite{AscherPetzold1998}.
 
-\subsection{Local consequences of well-posedness} \label{subsec:viconsequences}  We may derive certain consequences from VI \eqref{eq:be:vi}, now assumed to well-posed as in Theorem \ref{thm:stepwellposed}, using admissible functions of the form $r=s+\phi$.  Here $s \in \cK$ is the unique solution to \eqref{eq:be:vi} and $\phi$ is supported in certain portions of $\Omega$.  We show three illustrations.
-
-\smallskip
-\emph{Interior condition.}  Suppose $\phi(x) \in C(\Omega)$ is supported in the open (inactive) set $\Omega_I=\{x\in\Omega\,:\,s(x)>b(x)\}$, and let $r=s+\eps\phi$ for $\eps$ real.  By the compactness of the support of $\phi$, and the continuity of $b$ and $s$, if $\eps$ is sufficiently close to zero then $r\in\cK$.  Substitution into \eqref{eq:be:vi} gives
-\begin{equation}
-\eps\left(F_{\Delta t}(s) - \ell^n\right)[\phi] \ge 0 \qquad \text{for $\phi$ supported in $\Omega_I$.}
-\end{equation}
-Because this holds for all $\eps$ close to zero, of either sign, it follows by considering all such $\phi$ that
-\begin{equation}
-s - \Delta t\, \bu|_s \cdot \bn_s - s^{n-1} - \Delta t\,a^n = 0 \qquad \text{a.e.~within } \Omega_I.
-\end{equation}
-Thus the backward Euler step SKE \eqref{eq:be:ske} holds where there is ice.
-
-\smallskip
-\emph{Ice-free condition.}  Suppose $\phi(x) \in C(\Omega)$ is nonnegative and supported in the interior of the active set $\Omega_A=\{x\in\Omega\,:\,s(x)=b(x)\}$, if any.  Let $r=s+\phi$, so $r\in\cK$.  Substitution into \eqref{eq:be:vi} gives
-\begin{equation}
-\left(F_{\Delta t}(s) - \ell^n\right)[\phi] \ge 0.
-\end{equation}
-By considering all such $\phi$,
-\begin{equation}
-b-\ell^n = b - s^{n-1} - \Delta t\,a^n \ge 0 \qquad \text{a.e.~within } \operatorname{Int}\Omega_A.
-\end{equation}
-The same fact is also a non-positive upper bound on the SMB:
-\begin{equation}
-a^n \le \frac{b - s^{n-1}}{\Delta t} \qquad \text{a.e.~within } \operatorname{Int}\Omega_A. \label{eq:viconsequence:icefree}
-\end{equation}
-Thus ablation must occur in ice-free areas.  Inequality \eqref{eq:viconsequence:icefree} shows that where $s$ indicates no ice the SMB $a^n$ is sufficiently negative to remove any ice present at the start of the time step \cite{Bueler2021conservation}.
-
-\smallskip
-\emph{Margin gradient bound.}  FIXME start over in 2D from notes
-
 
 \section{Numerical evaluation of coercivity} \label{sec:numerical}
 
