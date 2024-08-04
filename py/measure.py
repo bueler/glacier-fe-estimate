@@ -60,25 +60,31 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
     Phiratlist = []
     _n = 0
     while _n < N:
+        # generate a pair of indices; test if it is new
         i1 = randrange(0, len(slist))
         i2 = randrange(0, len(slist))
         if i1 == i2:
             continue
-        if norm_h1sc(slist[i1]['s'] - slist[i2]['s'], Lsc) == 0.0:
-            print(RED % '!', end='')
-            continue
         ipair = [i1, i2]
         ipair.sort()
         if ipair in pairs:
-            print('#', end='')
             continue
-        pairs.append(ipair)
         i1, i2 = ipair
+        # measure, and bail/report on freak cases
+        if norm_h1sc(slist[i1]['s'] - slist[i2]['s'], Lsc) == 0.0:
+            print(RED % '!', end='')
+            continue
         usrat = _us_ratio(slist, i1, i2, Lsc)
         Phirat = _Phi_ratio(slist, i1, i2, Lsc, b)
         if Phirat == np.inf:
             print(RED % '*', end='')
             continue
+        # at this point we are actually recording results for the sample pair
+        pairs.append(ipair)
+        _n += 1
+        _max_us_rat = max(_max_us_rat, usrat)
+        Phiratlist.append(Phirat)
+        # stdout and figure for this pair
         if Phirat < 0.0:
             print(RED % '.', end='')  # color provided by firedrake logging.py
             printpar(RED % f'{i1},{i2}')
@@ -97,8 +103,5 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
                               slist[i2]['us'],
                               slist[i1]['t'],
                               slist[i2]['t'])
-        _max_us_rat = max(_max_us_rat, usrat)
-        Phiratlist.append(Phirat)
-        _n += 1
     print()
     return _max_us_rat, np.array(Phiratlist)
