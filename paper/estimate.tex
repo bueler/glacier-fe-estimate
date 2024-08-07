@@ -877,7 +877,12 @@ Recalling equation \eqref{eq:norm:Omega}, we have term 2.
 Term 3 follows by substituting $r_h=\Pi_h(s)$ into the third term in \eqref{eq:preglacierestimate}.
 \end{proof}
 
-FIXME FROM BELIEVABLE ASSUMPTIONS ON $\bu$, namely error estimates for FE Stokes velocity solutions \cite{Elmanetal2014}, WE CAN get a more specific form for term 2
+The Stokes velocity error norm $\|\bu_h - \bu\|_{\cV}$ in term 2 of \eqref{eq:glacierestimate} only evaluates the error in solving problem \eqref{eq:glenstokes:weak} on the ``fixed'' 3D domain $\Lambda_{s_h}$.  One may use reasonable assumptions and existing techniques to derive a convergence rate for this term, for example as follows from \cite[Theorem 4.9]{JouvetRappaz2011}; see also the linear Stokes theory in \cite{Elmanetal2014} for example.  One assumes solution regularity for the Stokes problem \eqref{eq:glenstokes:weak}, namely that $\bu\in W^{2,\kappa}(\Lambda_{s_h};\RR^3)$ and $p \in W^{1,\kappa'}(\Lambda_{s_h})$ for some $\kappa \in [\pp,2]$.  The mixed FE method for \eqref{eq:glenstokes:weak} is assumed to satisfy a Bramble-Hilbert type bound on $\|\bu - \pi_h(\bu)\|_{W^{1,\kappa}}$ and $\|p - \rho_h(p)\|_{L^{\kappa'}}$, where $\pi_h$, $\rho_h$ are interpolation operators for the discrete velocity and pressure spaces, respectively; see \cite[inequalities (4.26), (4.27)]{JouvetRappaz2011}.  Finally one assumes that the mixed FE method satisfies a discrete inf-sup condition \cite[equation (4.1)]{JouvetRappaz2011}.  Then one may then conclude that
+\begin{equation}
+\|\bu_h - \bu\|_{\cV} \le C h^{\kappa/2}
+\label{eq:stokesrate}
+\end{equation}
+for a constant which depends on the regularity norms of $\bu,p$ and the inf-sup constant.  The only novelty in applying this technique will lie in establishing the regularity of the solution of \eqref{eq:glenstokes:weak} over the domain $\Lambda_{s_h}$ when $s_h \in \cX_h \subset W^{1,\rr}(\Omega)$.  It must be established that the continuum solution $\bu,p$ of \eqref{eq:glenstokes:weak}, over a polygonal domain like $\Lambda_{s_h}$, actually lies in the given regularity spaces $W^{2,\kappa}(\Lambda_{s_h};\RR^3) \times W^{1,\kappa'}(\Lambda_{s_h})$.
 
 FIXME FROM A SUSPICIOUSLY STRONG REGULARITY ASSUMPTIONS ON $s$, namely $s\in W^{2,\bar \rr}(\Omega)$ for $\bar \rr \in [\rr,+\infty]$, WE CAN get a more specific form for terms 3; USE RESULT IN \cite{JouvetBueler2012}, namely \cite[Theorem 3.1.6]{Ciarlet2002}
 
