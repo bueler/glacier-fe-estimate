@@ -44,8 +44,7 @@
 \usepackage{pifont}
 
 \usepackage{tikz}
-\usetikzlibrary{decorations.pathreplacing}
-\usetikzlibrary{graphs,quotes}
+%\usetikzlibrary{math}
 
 \newcommand{\eps}{\epsilon}
 \newcommand{\RR}{\mathbb{R}}
@@ -725,17 +724,25 @@ Observe that $\cB' \subset \cX'$.  A standard example is $\cX=W^{1,\rr}(\Omega)$
 
 The result by Falk \cite{Falk1974} combines the above two Corollaries, under the further assumption that $f$ is linear.  To say this precisely, suppose $f(v)[w]=a(v,w)$ is bilinear, uniformly elliptic, and continuous on a Hilbert space $\cX$.  (The definition of uniformly elliptic coincides with definition \eqref{eq:qcoercive} of $2$-coercive, and continuity of $a(v,w)$ implies \eqref{eq:liponbounded}.)  Suppose that $\cX\hookrightarrow \cH$ and $\bar{\cX} = \cH$ for some Hilbert space $\cH$, and that $\|f(u)-\ell\|_{\cH'} < \infty$ so that, up to isomorphism, $f(u)-\ell \in \cH$.  Finally, suppose that $f(u_h)=f_h(u_h)$.  Then case \emph{ii)} of Corollary \ref{cor:abstractestimate:nohull} combines with Corollary \ref{cor:abstractestimate:Bnorm} to yield Theorem 1 in \cite{Falk1974}.
 
-The $\inf_{v\in\cK}$ term in estimates \eqref{eq:abstractestimate} and \eqref{eq:abstractestimate:Bnorm} is generally nonzero in obstacle problems where $\cK_h \nsubseteq \cK$ \cite{Ciarlet2002}.  In fact, consider a unilateral obstacle problem where $\cK=\{v \in \cX\,:\,v\ge \psi\}$.  Suppose $\psi_h$ is an FE interpolant of $\psi$, and define $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge \psi_h\}$.  While $\psi_h(x_j)=\psi(x_j)$ for interpolation nodes $x_j$, generally $\psi_h(x) \ge \psi(x)$ does not hold for all $x\in\Omega$ even if $\psi$ is arbitrarily smooth.  Thus nodal admissiblity does not generally imply admissibility if interpolation is applied to the obstacle (Figure \ref{fig:nonadmissible}).  While this concern is relevant for glacier models which track the surface elevation, in Section \ref{sec:application} we bypass it using a one-sided interpolation process.  Models which solve for ice thickness avoid it intrinsically because for $\cK = \{v\in\cX\,:\,v\ge 0\}$ we have $\cK_h=\cK\cap\cX_h \subset \cK$, at least for $P_1$ elements.
+The $\inf_{v\in\cK}$ term in estimates \eqref{eq:abstractestimate} and \eqref{eq:abstractestimate:Bnorm} is generally nonzero in obstacle problems where $\cK_h \not\subset \cK$.  In fact, consider a unilateral obstacle problem where $\cK=\{v \in \cX\,:\,v\ge \psi\}$.  Suppose $\psi_h=\pi_h \psi$ is the FE interpolant of $\psi$, and define $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge \psi_h\}$.  While $\psi_h(x_j)=\psi(x_j)$ for interpolation nodes $x_j$, generally $\psi_h(x) \ge \psi(x)$ may not hold for $x\in\Omega$ even if $\psi$ is arbitrarily smooth, nor $\psi_h(x) \le \psi(x)$.  Thus nodal admissiblity does not generally imply admissibility if interpolation is applied to the obstacle (Figure \ref{fig:nonadmissible}, left; see also \cite[Figure 5.1.3]{Ciarlet2002}).
 
 \begin{figure}[ht]
 \begin{center}
-FIXME figure like Ciarlet Figure 5.1.3 %\includegraphics[width=0.8\textwidth]{figs/xxx.jpg}
+\input{tikz/nonadmissible.tex} \quad \input{tikz/monoadmissible.tex}
 \end{center}
-\caption{Nodal admissibility generally does not imply admissibility when $\psi_h$ is the FE interpolant of the obstacle $\psi$.}
+\caption{Left: If $\psi_h=\pi_h\psi$ is the interpolant of $\psi$ then generally $\cK_h\subset\cK$ will not hold.  (Nodal admissibility does not imply admissibility.)  Right: Generating the FE obstacle by $\psi_h=R^{\oplus} \psi \ge \psi$, using monotone nodal operator \eqref{eq:monotoneop}, implies $\cK_h\subset\cK$.}
 \label{fig:nonadmissible}
 \end{figure}
 
-The following Corollary collects various conclusions one might draw from assuming $\cK_h \subset \cK$ and then making stronger assumptions, especially that $f_h=f$.
+For glacier models which track the surface elevation, in Section \ref{sec:application} we propose to bypass the above issue using a one-sided interpolation process using a monotone nodal operator (Figure \ref{fig:nonadmissible}, right), defined as follows.  Assume $P_1$ elements and a continuous obstacle $\psi$.  For a given triangulation $\cT_h$ and node $x_i$ let
+\begin{equation}
+(R^{\oplus}\psi)(x_i) = \max_{x \in N_i} \psi(x), \label{eq:monotoneop}
+\end{equation}
+where $N_i$ is the closure of the union of the elements adjacent to $x_i$ \cite{BuelerFarrell2024}.  Let $\psi_h$ be the unique $P_1$ function with nodal values $(R^{\oplus}\psi)(x_i)$.
+
+Observe that models which solve for ice thickness using $P_1$ elements intrinsically bypass the issue because then $\cK = \{v\in\cX\,:\,v\ge 0\}$ and $\cK_h=\cK\cap\cX_h \subset \cK$.
+
+The following Corollary collects some conclusions one might draw from assuming $\cK_h \subset \cK$ and further assumptions, especially that $f_h=f$.  Note that \eqref{eq:abstractestimate:subset:Cea} is Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002} in a Banach space, though with a constant which depends on $R_h=\max\{\|u\|,\|u_h\|\}$.  This is the PDE case with no active set or free boundary, which applies in the glacier context only when the entire domain $\Omega$ is covered in ice.
 
 \begin{corollary}  \label{cor:abstractestimate:various}  Make the assumptions of case i) of Corollary \ref{cor:abstractestimate:nohull}.  Also assume that $f_h(u_h)[u_h] = f(u_h)[u_h]$.  Then
 \begin{equation}
@@ -750,8 +757,6 @@ If $f(u)=\ell$, for example if $u$ is in the interior of $\cK$, then
 \|u-u_h\|^\qq \le c \inf_{v_h\in\cK_h} \|v_h-u\|^{\qq'} \label{eq:abstractestimate:subset:Cea}
 \end{equation}
 \end{corollary}
-
-Note that \eqref{eq:abstractestimate:subset:Cea} is Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002} in a Banach space, though with a constant which depends on $R_h=\max\{\|u\|,\|u_h\|\}$.  This case is a reduction to the PDE case with no active set or free boundary.  In the glacier context it applies when the entire domain $\Omega$ is covered in ice.
 
 
 \section{Application of the theory to numerical glacier models} \label{sec:application}
@@ -774,13 +779,15 @@ Evaluation of $F^h_{\Delta t}(s_h)$ in the FE VI problem \eqref{eq:fe:be:vi} req
 \label{fig:fe:operatorvisualization}
 \end{figure}
 
-A key concern in applying abstract Theorem \ref{thm:abstractestimate} or its Corollaries to a glaciological context is the choice of the numerical bed elevation $b_h \approx b$, which defines the constraint set $\cK_h$.  We will assume $b$ is continuous on the closed domain $\bar\Omega$.  An abstract $b\in C(\bar\Omega) \cap \cX$ can then be considered, but in practice $b$ is provided via a high resolution map derived from ice-penetrating radar \cite{Morlighemetal2017}.  Thus $b$ may in fact be in an FE space, but often on a (much) finer mesh.  We assert that, because of what we prove in this Section, it is better to choose $b_h \in \cX_h$ to satisfy $b_h\ge b$.  Maximum monotone restriction \cite{BuelerFarrell2024} or similar can be applied to achieve this, i.e.~$b_h = R^\oplus b$ if $\cX_h$ is generated from a submesh of the fine mesh on which $b$ is provided.  Also, as one would in ``conforming'' FE methods for classical PDE problems \cite{Elmanetal2014}, we assume $b_h=b$ along $\partial\Omega$.
+A key concern in applying abstract Theorem \ref{thm:abstractestimate} or its Corollaries in a glaciological context is the choice of the numerical bed elevation $b_h \approx b$, which defines the constraint set $\cK_h$.  We will assume $b$ is continuous on the closed domain $\bar\Omega$.  An abstract $b\in C(\bar\Omega) \cap \cX$ can be considered, but in practice $b$ is provided via a high resolution map derived from ice-penetrating radar \cite{Morlighemetal2017}.  It may already be in an FE space, but often on a (much) finer mesh.
+
+Because of what we prove below, we assert that it is better to choose $b_h \in \cX_h$ to satisfy $b_h\ge b$.  A monotone nodal operator \eqref{eq:monotoneop}, or similar, can be applied, $b_h = R^\oplus b$.  As one would in ``conforming'' FE methods for PDE problems \cite{Elmanetal2014}, we assume $b_h=b$ along the fixed boundary $\partial\Omega$.
 
 We define an interpolation and truncation operation $\Pi_h : \cX \to \cK_h$ as follows.  For $r\in\cX$ this gives the unique FE function $\Pi_h(r) \in \cX_h$ so that
 \begin{equation}
 \Pi_h(r)(x_j) = \max \,\{b_h(x_j), r(x_j)\} \label{eq:definePi}
 \end{equation}
-for every interior node $x_j \in \cT_h$, with $\Pi_h(x_j)=b(x_j)$ if $x_j\in\partial\Omega$.  Observe that definition \eqref{eq:definePi} only yields nodal admissibility.  The FE space must be such that this implies admissibility \emph{per se}, namely that $\Pi_h(r)(x) \ge b_h(x)$ for all $x \in \Omega$, so that $\Pi_h(r) \in \cK_h$.  This condition is satisfied by the continuous and piecewise-linear FE space $P_1$, but not, for example, by $P_2$ \cite{BuelerFarrell2024}.
+for every interior node $x_j \in \cT_h$, with $\Pi_h(x_j)=b(x_j)$ if $x_j\in\partial\Omega$.  Observe that definition \eqref{eq:definePi} only yields nodal admissibility.  The FE space must be such that this implies admissibility \emph{per se}, namely that $\Pi_h(r)(x) \ge b_h(x)$ for all $x \in \Omega$, so that $\Pi_h(r) \in \cK_h$.  This condition is satisfied by the continuous and piecewise-linear FE space $P_1$, but not, for example, by $P_2$ \cite{BuelerFarrell2024}, but compare the higher-order approach taken in \cite{KeithSurowiec2023}.
 
 To summarize, from now on we make certain standard assumptions for solving VI problem \eqref{eq:be:vi} using numerical scheme \eqref{eq:fe:be:vi}.
 
@@ -819,7 +826,7 @@ We also assume and define:
 \medskip
 The conforming condition $\cK_h\subset \cK$ follows from assumptions \ref{item:goodbh} and \ref{item:defineKh}, with advantages to be exposed.  As seen in the proof of Theorem \ref{thm:stepwellposed}, assumptions \ref{item:conj:a} and \ref{item:conj:b} show that $F_{\Delta t}$ is $\qq$-coercive and Lipschitz on bounded subsets of $\cK$.  By Theorem \ref{thm:stepwellposed} and case \emph{i)} of Corollary \ref{cor:abstractestimate:nohull} we have the following Lemma.
 
-\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  Let $s\in\cK$ be the unique surface elevation satisfying the implicit time-step VI problem \eqref{eq:be:vi}.  Assume that $F^h_{\Delta t}$ represents a numerical scheme for, and that $s_h\in\cK_h$ is a solution of, problem \eqref{eq:fe:be:vi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $c_0>0$, depending on $R_h$ (and not otherwise depending on $s$ or $s_h$), and independent of $\Delta t>0$, so that % FIXME is c_0 indep of Delta t?
+\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  Let $s\in\cK$ be the unique surface elevation satisfying the implicit time-step VI problem \eqref{eq:be:vi}.  Assume that $F^h_{\Delta t}$ represents a numerical scheme for, and that $s_h\in\cK_h$ is a solution of, problem \eqref{eq:fe:be:vi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $c_0>0$, depending on $R_h$ (and not otherwise depending on $s$ or $s_h$), and independent of $\Delta t>0$, so that
 \begin{align}
 \|s-s_h\|_\cX^\rr &\le \quad \frac{2}{\alpha} \inf_{r_h\in\cK_h} \left(F_{\Delta t}(s)-\ell^n\right)[r_h-s] \label{eq:preglacierestimate} \\
    &\quad\, + \frac{2}{\alpha} \left(F_{\Delta t}(s_h)-F^h_{\Delta t}(s_h)\right)[s_h] \notag \\
@@ -908,7 +915,6 @@ However, we are very far from an FE convergence proof for the main time-dependen
 Even worse, we do not have a proof of the well-posedness of the continuous-space problem \eqref{eq:be:vi} itself.  Much of the current paper is devoted to conjecturing such well-posedness (Sections \ref{sec:model}--\ref{sec:numerical}).  The abstract FE bound in Theorem \ref{thm:abstractestimate} applies to problem \eqref{eq:be:vi} because we have the result of Theorem \ref{thm:stepwellposed}, itself an immediate consequence of Conjectures \ref{conj:a} and \ref{conj:b}.  Our attempt at well-posedness at least seems to clarify which properties of the surface motion map, defined in Section \ref{sec:model}, are needed to have well-posed implicit time steps of a non-shallow glacier model.
 
 The root of the matter is coercivity, Conjecture \ref{conj:b}.  A strategy for proving it is not clear to this author.  A weaker version of the Conjecture comes from setting $r=s + \phi$, for $\phi$ supported where $s>b$, thus over perturbations of the glacier surface which do not move the glacier margin, and this may be easier to prove.  However, this weaker version is not sufficient for Theorem \ref{thm:stepwellposed}, and it does not address the marginal shape and overhang issues discussed in Section \ref{sec:theory}.  Our numerical evidence for coercivity is from a basic numerical approach, and it is quite weak (Section \ref{sec:numerical}).  One might modify or regularize the operator definition \eqref{eq:be:Fdefine} in some manner, e.g.~adding an elliptic regularization as in \cite[section III.2]{KinderlehrerStampacchia1980} for example, under the weaker condition of monotonicity.  In a regularized model the near-margin numerical approximation should be less problematic.
-
 
 
 \bibliographystyle{siamplain}

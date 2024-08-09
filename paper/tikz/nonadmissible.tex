@@ -1,0 +1,13 @@
+\begin{tikzpicture}[scale=1.1, domain=0.0:4.0, samples=200]
+  \draw[black,thin,->] (-0.3,0.0) -- (4.5,0.0) node [xshift=2mm] {$x$};
+  \draw plot (\x, {1.5 + 0.8 * cos(1.8*\x r)});
+  \node[yshift=-2mm] at (2.0, 0.7) {$\psi$};
+  \newcommand{\xlist}{0.0, 1.0, 1.4, 2.4, 3.0, 4.0}
+  \foreach \x [remember=\x as \lastx] in \xlist {
+      \draw (\x, 0.0) circle (1.5pt);
+      \filldraw (\x, {1.5 + 0.8 * cos(1.8*\x r)}) circle (1.5pt);
+      \draw[dashed] (\lastx, {1.5 + 0.8 * cos(1.8*\lastx r)}) -- (\x, {1.5 + 0.8 * cos(1.8*\x r)});
+  }
+  \node[yshift=3mm] at (3.0, 0.0) {$x_i$};
+  \node[xshift=3mm, yshift=-7mm] at (0.0, 2.3) {$\psi_h$};
+\end{tikzpicture}

@@ -1,0 +1,14 @@
+\begin{tikzpicture}[scale=1.1, domain=0.0:4.0, samples=200]
+  \draw[black,thin,->] (-0.3,0.0) -- (4.5,0.0) node [xshift=2mm] {$x$};
+  \draw plot (\x, {1.5 + 0.8 * cos(1.8*\x r)});
+  \newcommand{\xlist}{0.0, 1.0, 1.4, 2.4, 3.0, 4.0}
+  \newcommand{\xymaxlist}{0.0/2.3, 1.0/2.3, 1.4/1.3182, 2.4/2.0078, 3.0/2.3, 4.0/2.3}
+  \foreach \x/\y in \xymaxlist {
+      \draw (\x, 0.0) circle (1.5pt);
+      \filldraw (\x, \y) circle (1.5pt);
+  }
+  \node[yshift=3mm] at (3.0, 0.0) {$x_i$};
+  \draw[dashed] (0.0,2.3) -- (1.0,2.3) -- (1.4,1.3182) -- (2.4,2.0078) -- (3.0,2.3) -- (4.0,2.3);
+  \node[yshift=-2mm] at (2.0, 0.7) {$\psi$};
+  \node[xshift=5mm, yshift=-3mm] at (1.0, 2.3) {$\psi_h$};
+\end{tikzpicture}
