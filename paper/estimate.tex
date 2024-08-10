@@ -44,7 +44,7 @@
 \usepackage{pifont}
 
 \usepackage{tikz}
-%\usetikzlibrary{math}
+\usetikzlibrary{math, positioning}
 
 \newcommand{\eps}{\epsilon}
 \newcommand{\RR}{\mathbb{R}}
@@ -521,19 +521,26 @@ The strong regularity and smoothness exhibited by solutions to \eqref{eq:ske:sia
 
 In addition to not being an advection, VI problem \eqref{eq:be:vi} is also not of optimization type.  Again this is directly clear in the SIA model \eqref{eq:ske:sia}, where the problem has porous medium character, that is, the diffusivity scales with a power of the ice thickness.  To illustrate the essential idea, it can be shown that the simple elliptic, quasilinear, and steady porous medium equation $(u(x) u'(x))' = f(x)$ does not have the symmetry of an optimization problem, that is, there is no objective function of which this equation is the first-order condition.  Similarly, the flow of ice under Stokes dynamics scales in some manner with the ice thickness.  (Said another way, thin ice which is frozen to the bed has slow velocity regardless of surface slope.)  While this sketch is not a proof that a particular symmetry does not exist, there is no reason to believe \eqref{eq:be:vi}, or any similar problem, is actually an inequality-constrained minimization problem.
 
-\subsection{Margin/terminus shape, and the choice of Sobolev space} \label{subsec:margin}  The theoretically-predicted shape of the grounded margin of a glacier is not so clear (Figure \ref{fig:margins}), which makes it difficult to determine a Sobolev space in which VI problem \eqref{eq:be:vi} might be well-posed.  The SIA theory suggests root-type (fractional-power) shapes \cite{Bueleretal2005} for the marginal surface elevation, with unbounded gradients.  By contrast, a ``wedge'' margin shape with a bounded gradient has been hypothesized \cite[for example]{EchelmeyerKamb1986}, which would allow $s\in W^{1,\rr}(\Omega)$.
+\subsection{Margin shape, and the surface elevation space} \label{subsec:margin}  Within a Stokes-based theory the shape that should be predicted for a glacier's grounded margin is not so clear (Figure \ref{fig:margins}).  This situation makes it difficult to determine a Sobolev space in which VI problem \eqref{eq:be:vi} might be well-posed.  The SIA theory suggests root-type (fractional-power) shapes for the marginal surface elevation, with different shapes for advance and retreat, but with unbounded gradients in all known cases \cite{Bueleretal2005,JouvetBueler2012}.  By contrast, a ``wedge'' margin shape with a bounded gradient has been hypothesized \cite[for example]{EchelmeyerKamb1986}, which would allow $s\in W^{1,\rr}(\Omega)$.
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=0.8\textwidth]{figs/margins.jpg}
+\begin{tikzpicture}[scale=1.0]
+  \node (unbounded) {\includegraphics[width=30mm]{figs/unbounded.png}} node[xshift=-2mm, yshift=1mm] at (unbounded.center) {{\small \emph{ice}}};
+  \node[right=of unbounded] (wedge) {\includegraphics[width=30mm]{figs/wedge.png}} node[xshift=-4mm, yshift=1mm] at (wedge.center) {{\small \emph{ice}}};
+  \node[right=of wedge] (realistic) {\includegraphics[width=30mm]{figs/realistic.png}} node[xshift=-6mm, yshift=4mm] at (realistic.center) {{\small \emph{ice}}};
+\end{tikzpicture}
 \end{center}
-\caption{FIXME REDRAW.  In which Sobolev space should we seek the surface elevation function?  This question relates to the theoretically-expected shape of the ice margin.  The shallow ice theory yields a fractional power shape (left).  Other glacier models hypothesize a ``wedge'' shape (center).  On the other hand, actual glacier margins often have overhangs, crevasses, and cliffs (right).}
+
+\vspace{-2mm}
+
+\caption{In which Sobolev space should we seek the surface elevation function?  This question relates to the expected shapes of ice margins.  The shallow ice theory yields fractional power shapes (left), but other models suggest a ``wedge'' shape (center).  Actual glacier margins often have overhangs, crevasses, and cliffs (right).}
 \label{fig:margins}
 \end{figure}
 
-Reality is of course more complicated.  In the vicinity of a steep ice margin, especially on steep bedrock features, real glacier ice can generate overhangs which violate the assumption of a single-valued surface elevation function.  Similarly, real bedrock can overhang.  Fractures, crevasses, and cliffs are commonly found in glacier margins, but modeling such features requires a departure from the viscous fluid paradigm considered here.
+Reality is of course more complicated.  In the vicinity of an ice margin, especially on steep bedrock features, real glacier ice can generate overhangs which violate the assumption of a single-valued surface elevation function.  Similarly, real bedrock can overhang.  Fractures, crevasses, and cliffs are commonly found in glacier margins, but modeling such features requires a departure from the viscous fluid paradigm considered here.
   
-Because margins are small features compared to the overall scale of glaciers and ice sheets, most modeling literature ignores overhangs and assumes instead that surface and bed elevation functions are well-defined; see \cite{IsaacStadlerGhattas2015,Jouvetetal2008,LofgrenAhlkronaHelanow2022,WirbelJarosch2020} among many examples.  Extending Stokes-based viscous models by allowing overhangs, for example by supplementing momentum conservation with an additional advected damage variable \cite{PralongFunk2005}, so that ice-cliff calving can occur via a stress-failure criterion, might suggest mechanisms which explain how well-defined, integrable-gradient surface elevation functions arise as solutions to the kind of models considered in this paper.
+Because margins are small features compared to the overall scale of glaciers and ice sheets, most modeling literature ignores overhangs and assumes instead that surface and bed elevation functions are well-defined; see \cite{IsaacStadlerGhattas2015,Jouvetetal2008,LofgrenAhlkronaHelanow2022,WirbelJarosch2020} among many examples.  Extending Stokes-based viscous models by allowing fractures, for example by supplementing momentum conservation with an additional advected damage variable \cite{PralongFunk2005} so that ice-cliff calving can occur via a stress-failure criterion, might one day suggest a preferred margin regularity assumption for a viscous-only theory like the one here.
 
 \subsection{Conjectural well-posedness for the continuum problem} \label{subsec:conjecture} Subsections \ref{subsec:explicit}--\ref{subsec:margin} have deployed various imperfect arguments to explain why the backward Euler VI problem \eqref{eq:be:vi} could be well-posed, or why other approaches are less promising.  We now state a mathematically-precise conjectural framework for well-posedness of this problem based upon the idea that the surface motion map $\Phi(s) = -\bu|_s\cdot \bn_s$ assigns different results to inputs which differ in Sobolev norm, and indeed that it does so in a consistently and appropriately signed manner.
 
