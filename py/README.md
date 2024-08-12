@@ -12,7 +12,7 @@ The codes here explore the coercivity of the surface evolution of glaciers using
     $ cd stokes-extrude/
     $ pip install -e .`
 
-## basic usage
+## basic usage on short single case
 
 Activate the [Firedrake](https://www.firedrakeproject.org/) venv and then run a shortened single case:
 
@@ -27,7 +27,7 @@ There is also a file `ratios.txt` which includes the basic statistics for the co
 
 ## reproduce the results shown in the paper
 
-The full study takes something like 10 hours, and produces subdirectories and files similar to those described above:
+The full study takes something like 10 hours.  It does many bed/SMB cases and several resolutions.  It produces subdirectories and files similar to those described above:
 
     $ cd reproduce/
     $ bash study.sh
