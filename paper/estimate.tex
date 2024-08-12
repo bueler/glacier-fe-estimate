@@ -579,7 +579,7 @@ The computation of $\bu|_s$ and $\Phi(s)=-\bu|_s\cdot \bn_s$, or equivalent expr
 
 \section{Numerical exploration of coercivity} \label{sec:numerical}
 
-We may explore the validity of Conjecture \ref{conj:b} by sampling from numerical simulations.  The experiments here,\footnote{Source code is at \href{https://github.com/bueler/glacier-fe-estimate}{\texttt{github.com/bueler/glacier-fe-estimate}}.} performed using Python and the Firedrake FE library \cite{Hametal2023}, are not intended to demonstrate implicit time-stepping, but only to generate admissible surface elevation pairs $r,s\in\cK$ to use as samples.  For a given sample pair we evaluated the $2$-coercivity ratio
+We may explore the validity of Conjecture \ref{conj:b} by sampling from numerical simulations.  The experiments here,\footnote{Source code is at the public repository \href{https://github.com/bueler/glacier-fe-estimate}{\texttt{github.com/bueler/glacier-fe-estimate}}, in the \texttt{py/} directory.  The codes call the library at \href{https://github.com/bueler/stokes-extrude}{\texttt{github.com/bueler/stokes-extrude}}.} performed using Python and the Firedrake FE library \cite{Hametal2023}, are not intended to demonstrate implicit time-stepping, but only to generate admissible surface elevation pairs $r,s\in\cK$ to use as samples.  For a given sample pair we evaluated the $2$-coercivity ratio
 \begin{equation}
 \rho(r,s) = \frac{\left(\Phi(r) - \Phi(s)\right)[r-s]}{\|r-s\|_{\cX}^2}. \label{eq:Phiratio}
 \end{equation}
