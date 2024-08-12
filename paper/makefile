@@ -28,8 +28,24 @@ estimate.aux: estimate.tex cropfigures
 estimate.bbl: estimate.aux estimate.bib
 	bibtex estimate
 
+# generate .zip of source files suitable for submitting to arxiv
+publish.zip: estimate.pdf estimate.bbl
+	rm -rf publish/
+	mkdir publish/
+	mkdir publish/figs/
+	cp -f figs/*.png publish/figs/
+	mkdir publish/genfigs/
+	cp -f genfigs/*.pdf publish/genfigs/
+	mkdir publish/genfigs/gis/
+	cp -f genfigs/gis/*.png publish/genfigs/gis/
+	mkdir publish/tikz/
+	cp -f tikz/*.tex publish/tikz/
+	cp -f siamart220329.cls siamplain.bst estimate.bib estimate.bbl estimate.tex publish/
+	zip -r publish publish
+
 .PHONY: clean cropfigures _figures
 
 clean:
 	@rm -f *~ *.out *.aux *.log *.blg *.snm *.toc *.nav *.vrb *.bbl *.synctex.gz *.thm *.dvi
 	@rm -rf genfigs/*.pdf genfigs/__pycache__/
+	@rm -rf publish*
