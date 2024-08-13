@@ -96,6 +96,7 @@ z_flat = mesh.coordinates.dat.data_ro[:,1].copy()  # z coord before assignment
 # set up the Stokes solver on the extruded mesh
 se = StokesExtruded(mesh)
 se.mixed_TaylorHood()
+#se.mixed_PkDG(kp=0) # = P2xDG0; seems to NOT be better; not sure about P2xDG1
 se.body_force(Constant((0.0, - rho * g)))
 se.dirichlet((1,2), Constant((0.0, 0.0)))      # problematic if ice advances to margin
 se.dirichlet(('bottom',), Constant((0.0, 0.0)))
