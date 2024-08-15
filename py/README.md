@@ -1,16 +1,16 @@
 # glacier-fe-estimate/py/
 
-The codes here explore the coercivity of the surface evolution of glaciers using Stokes dynamics.  They call the [`stokesextrude`](https://github.com/bueler/stokes-extrude) library package.
+The codes here explore the coercivity of the surface evolution of glaciers using Stokes dynamics.  They call the [`stokes-extrude`](https://github.com/bueler/stokes-extrude) library package.
 
 ## requirements
 
 1. Python3 is required.  Then [download and install Firedrake.](https://www.firedrakeproject.org/download.html)
 
-2. Clone and install `stokesextrude` using [pip](https://pypi.org/project/pip/):
+2. Clone and install `stokes-extrude` using [pip](https://pypi.org/project/pip/):
 
     $ git clone https://github.com/bueler/stokes-extrude.git
     $ cd stokes-extrude/
-    $ pip install -e .`
+    $ pip install -e .
 
 ## basic usage on short single case
 

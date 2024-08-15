@@ -33,7 +33,7 @@ import sys
 import numpy as np
 from firedrake import *
 from firedrake.output import VTKFile
-from stokesextruded import StokesExtruded, SolverParams, extend_p1_from_basemesh, trace_vector_to_p2, printpar
+from stokesextrude import StokesExtrude, SolverParams, extend_p1_from_basemesh, trace_vector_to_p2, printpar
 from geometry import secpera, bedtypes, g, rho, nglen, A3, B3, t0, halfargeometry
 from figures import mkdir, livefigure, snapsfigure, histogramPhirat
 from measure import geometryreport, sampleratios
@@ -94,7 +94,7 @@ x, _ = SpatialCoordinate(mesh)
 z_flat = mesh.coordinates.dat.data_ro[:,1].copy()  # z coord before assignment
 
 # set up the Stokes solver on the extruded mesh
-se = StokesExtruded(mesh)
+se = StokesExtrude(mesh)
 se.mixed_TaylorHood()
 #se.mixed_PkDG(kp=0) # = P2xDG0; seems to NOT be better; not sure about P2xDG1
 se.body_force(Constant((0.0, - rho * g)))

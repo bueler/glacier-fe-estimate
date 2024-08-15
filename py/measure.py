@@ -8,7 +8,7 @@ where s and us are Firedrake Functions on the basemesh.
 
 import numpy as np
 from firedrake import *
-from stokesextruded import printpar
+from stokesextrude import printpar
 from figures import badcoercivefigure
 from geometry import secpera
 
