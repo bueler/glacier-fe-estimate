@@ -14,7 +14,7 @@ The codes here explore the coercivity of the surface evolution of glaciers using
 
 ## basic usage on short single case
 
-Activate the [Firedrake](https://www.firedrakeproject.org/) venv and then run a shortened single case:
+Return to the current directory `glacier-fe-estimate/py/`.  Activate the [Firedrake](https://www.firedrakeproject.org/) venv and then run a shortened single case:
 
     $ source firedrake/bin/activate
     $ bash show.sh
@@ -31,3 +31,16 @@ The full study takes something like 10 hours.  It does many bed/SMB cases and se
 
     $ cd reproduce/
     $ bash study.sh
+
+## how it works
+
+  * The code in `case.py` runs one case as specified by runtime options.  One case fixes the bed type (i.e. flat, smooth, or rough) and fixes the resolution, but it includes three restarts with different values of SMB.  In all cases the 2D glacier has initial Halfar profile over a chosen bed.
+  * Running a case does time-steps using the free-surface stabilization algorithm (FSSA) from Lofgren et al 2022.  (This is a change in the Stokes solve.)  The time-stepping does semi-implicit solves for the VI problem arising from the backward Euler time step for the surface kinematical equation NCP.
+  * Optional explicit steps are available.
+  * Each time step computes and saves the surface elevation s, surface velocity u|_s, and the surface motion map Phi(s) = - u|_s . n_s for evaluation.
+  * The evaluation stage at the end, `sampleratios()`, computes ratios between random state pairs to evaluate Conjectures A and B.
+  * This runs only in serial.
+  * The details are documented in the paper.
+  * See `show.sh` and `reproduce/study.sh` for how to run one case.
+  * To write optional t-dependent image files into directory do: `python3 case.py 201 15 20 1.0 flat ratios.txt result/` or similar.  This writes `result/azero/*.png`, `result/aneg/*.png`, `result/apos/*.png`
+  * To write an optional t-dependent `.pvd` file with Stokes results and diagnostics, also append a filename root: `python3 case.py 201 15 20 1.0 flat ratios.txt result/ result` or similar.  This writes `result_azero.pvd`, `result_aneg.pvd`, `result_apos.pvd`.

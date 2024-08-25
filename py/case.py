@@ -1,34 +1,3 @@
-# Run one case as specified by runtime options.  One case fixes the bed
-# type (i.e. flat, smooth, or rough) and fixes the resolution, but
-# it includes three restarts with different values of SMB.
-
-# The 2D glacier has initial Halfar profile over a chosen bed.
-# Then does time-steps using
-# the free-surface stabilization algorithm (FSSA) from Lofgren et al 2022,
-# in the Stokes solve, and semi-implicit solves for the VI problem
-# arising from the backward Euler time step.  (Optional explicit steps
-# are available.)  Each step computes and saves the surface elevation s,
-# surface velocit u|_s, and the surface motion map Phi(s) = - u|_s . n_s
-# for evaluation.
-
-# The evaluation stage at the end, computed by sampleratios(), computes
-# ratios between random state pairs to evaluate Conjectures A and B.
-# Note this runs only in serial.  The details are documented in the paper.
-
-# After activating the Firedrake venv, run as
-#   $ python3 study.py MX MZ NSTEPS DT BED FILE
-# For example:
-#   $ python3 study.py 201 15 20 1.0 flat ratios.txt
-
-# To write an optional t-dependent image files into directory do:
-#   $ python3 study.py 201 15 20 1.0 flat ratios.txt result/
-# This writes result/azero/*.png, result/aneg/*.png, result/apos/*.png.
-
-# To write an optional t-dependent .pvd files with Stokes results and
-# diagnostics, also append a filename root:
-#   $ python3 study.py 201 15 20 1.0 flat ratios.txt result/ result
-# This writes result_azero.pvd, result_aneg.pvd, result_apos.pvd.
-
 import sys
 import numpy as np
 from firedrake import *
