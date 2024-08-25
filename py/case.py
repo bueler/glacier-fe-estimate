@@ -1,4 +1,4 @@
-import sys
+from sys import argv
 import numpy as np
 from firedrake import *
 from firedrake.output import VTKFile
@@ -8,24 +8,24 @@ from figures import mkdir, livefigure, snapsfigure, histogramPhirat
 from measure import geometryreport, sampleratios
 
 # parameters set at runtime
-mx = int(sys.argv[1])              # number of elements in x direction
-mz = int(sys.argv[2])              # number of elements in z (vertical) direction
-Nsteps = int(sys.argv[3])          # number of time steps
-dt = float(sys.argv[4]) * secpera  # dt in years
-bed = sys.argv[5]                  # 'flat', 'smooth', 'rough'
-ratiosfile = sys.argv[6]           # at the end, append a pair of ratios into this file
-writepng = (len(sys.argv) > 7)
+mx = int(argv[1])              # number of elements in x direction
+mz = int(argv[2])              # number of elements in z (vertical) direction
+Nsteps = int(argv[3])          # number of time steps
+dt = float(argv[4]) * secpera  # dt in years
+bed = argv[5]                  # 'flat', 'smooth', 'rough'
+ratiosfile = argv[6]           # at the end, append a pair of ratios into this file
+writepng = (len(argv) > 7)
 if writepng:
-    dirroot = sys.argv[7]
-writepvd = (len(sys.argv) > 8)
+    dirroot = argv[7]
+writepvd = (len(argv) > 8)
 if writepvd:
-    pvdroot = sys.argv[8]
+    pvdroot = argv[8]
 
 # experiment parameters
-L = 100.0e3             # domain is (-L,L)
+L = 100.0e3                       # domain is (-L,L)
 SMBlist = [0.0, -2.5e-7, 1.0e-7]  # m s-1; values of aconst used in experiments
-aposfrac = 0.75         # fraction of domain on which positive SMB is applied
-Nsamples = 1000         # number of samples when evaluating minimal ratios
+aposfrac = 0.75                   # fraction of domain on which positive SMB is applied
+Nsamples = 1000                   # number of samples when evaluating minimal ratios
 
 # solution method
 fssa = True             # use Lofgren et al (2022) FSSA technique in Stokes solve
@@ -37,10 +37,10 @@ qq = 1.0 / nglen - 1.0
 Dtyp = 1.0 / secpera      # = 1 a-1; strain rate scale
 eps = 0.0001 * Dtyp**2.0  # viscosity regularization
 
-# set up basemesh once
-basemesh = IntervalMesh(mx, -L, L)
-P1bm = FunctionSpace(basemesh, 'P', 1)
-xbm = basemesh.coordinates.dat.data_ro
+# set up bm = basemesh once
+bm = IntervalMesh(mx, -L, L)
+P1bm = FunctionSpace(bm, 'P', 1)
+xbm = bm.coordinates.dat.data_ro
 
 # bed and initial geometry
 assert bed in bedtypes
@@ -48,13 +48,14 @@ print(f"Halfar t0 = {t0 / secpera:.3f} a")
 b_np, s_initial_np = halfargeometry(xbm, t=t0, bed=bed)  # get numpy arrays
 b = Function(P1bm, name='bed elevation (m)')
 b.dat.data[:] = b_np
-s = Function(P1bm, name='surface elevation (m)')  # this is the state variable
+s_initial = Function(P1bm)
+s_initial.dat.data[:] = s_initial_np
 
 # surface mass balance (SMB) function
 a = Function(P1bm, name='surface mass balance (m s-1)')
 
-# set up the extruded mesh, but leave z coordinate at default
-se = StokesExtrude(basemesh, mz=mz)
+# create the extruded mesh, but leave z coordinate at default
+se = StokesExtrude(bm, mz=mz)
 P1 = FunctionSpace(se.mesh, 'P', 1)
 x, _ = SpatialCoordinate(se.mesh)
 
@@ -62,7 +63,7 @@ x, _ = SpatialCoordinate(se.mesh)
 se.mixed_TaylorHood()
 #se.mixed_PkDG(kp=0) # = P2xDG0; seems to NOT be better; not sure about P2xDG1
 se.body_force(Constant((0.0, - rho * g)))
-se.dirichlet((1,2), Constant((0.0, 0.0)))      # problematic if ice advances to margin
+se.dirichlet((1,2), Constant((0.0, 0.0)))      # consequences if ice advances to margin
 se.dirichlet(('bottom',), Constant((0.0, 0.0)))
 params = SolverParams['newton']
 params.update(SolverParams['mumps'])
@@ -74,7 +75,7 @@ params.update({'snes_linesearch_type': 'bt'})  # helps with non-flat beds, it se
 def _D(w):
     return 0.5 * (grad(w) + grad(w).T)
 
-# the weak form for the Stokes problem
+# weak form for the Stokes problem
 def _form_stokes(se, sR):
     u, p = split(se.up)
     v, q = TestFunctions(se.Z)
@@ -93,7 +94,7 @@ def _form_stokes(se, sR):
     F -= source
     return F
 
-# generate effective viscosity nu from the velocity solution
+# diagnostic: effective viscosity nu from the velocity solution
 def _effective_viscosity(u):
     Du2 = 0.5 * inner(_D(u), _D(u))
     nu = Function(P1).interpolate(0.5 * B3 * Du2**(qq/2.0))
@@ -102,22 +103,26 @@ def _effective_viscosity(u):
     nueps.rename(f'nu (eps={eps:.3f}; Pa s)')
     return nu, nueps
 
-# generate hydrostatic pressure (as diagnostic)
+# diagnostic: hydrostatic pressure
 def _p_hydrostatic(se, sR):
     _, z = SpatialCoordinate(se.mesh)
     phydro = Function(P1).interpolate(rho * g * (sR - z))
     phydro.rename('p_hydro (Pa)')
     return phydro
 
+# initialize surface elevation state variable
+s = Function(P1bm, name='surface elevation (m)')
+s.interpolate(conditional(s_initial < b, b, s_initial))
+ns = as_vector([-s.dx(0), Constant(1.0)])
+
 # set up for *semi-implicit*: implement equation (3.7) and (3.23) in paper,
 #     but use old velocity in weak form
-ns = as_vector([-s.dx(0), Constant(1.0)])
 if not explicit:
     sibcs = [DirichletBC(P1bm, b.dat.data_ro[0], 1),
              DirichletBC(P1bm, b.dat.data_ro[-1], 2)]
     siv = TestFunction(P1bm)
     sisold = Function(P1bm)
-    siP2Vbm = VectorFunctionSpace(basemesh, 'CG', 2, dim=2)
+    siP2Vbm = VectorFunctionSpace(bm, 'CG', 2, dim=2)
     siubm = Function(siP2Vbm)
     siparams = {#"snes_monitor": None,
                 "snes_converged_reason": None,
@@ -131,7 +136,7 @@ if not explicit:
                 "ksp_type": "preonly",
                 "pc_type": "lu",
                 "pc_factor_mat_solver_type": "mumps"}
-    # the main weak form for (3.23)
+    # weak form for (3.23), made semi-implicit
     siF = inner(s - dt * dot(siubm, ns) - (sisold + dt * a), siv) * dx
     siproblem = NonlinearVariationalProblem(siF, s, sibcs)
     sisolver = NonlinearVariationalSolver(siproblem, solver_parameters=siparams,
@@ -142,7 +147,6 @@ if not explicit:
 if writepng:
     printpar(f'creating root directory {dirroot} for image files ...')
     mkdir(dirroot)
-    s.dat.data[:] = s_initial_np
     snaps = [s.copy(deepcopy=True),]
 
 # outer surface mass balance (SMB) loop
@@ -169,15 +173,15 @@ for aconst in SMBlist:
         a.dat.data[abs(xbm) < aposfrac * L] = aconst
     else:
         a.dat.data[:] = aconst
-    s.dat.data[:] = s_initial_np
+    s.interpolate(conditional(s_initial < b, b, s_initial))
     t = 0.0
     # inner time-stepping loop
     for n in range(Nsteps):
         # start with reporting
         if n == 0:
-            geometryreport(basemesh, 0, t, s, b, L)
+            geometryreport(bm, 0, t, s, b, L)
             if writepng:
-                livefigure(basemesh, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png')
+                livefigure(bm, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png')
 
         # set geometry (z coordinate) of extruded mesh
         se.reset_elevations(b, s)
@@ -188,7 +192,7 @@ for aconst in SMBlist:
 
         # solve Stokes on extruded mesh and extract surface trace
         u, p = se.solve(par=params, F=_form_stokes(se, sR))
-        ubm = trace_vector_to_p2(basemesh, se.mesh, u)  # surface velocity (m s-1)
+        ubm = trace_vector_to_p2(bm, se.mesh, u)  # surface velocity (m s-1)
         #printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
 
         # optionally write t-dependent .pvd with 2D fields
@@ -221,9 +225,9 @@ for aconst in SMBlist:
         t += dt
 
         # end of step reporting
-        geometryreport(basemesh, n + 1, t, s, b, L)
+        geometryreport(bm, n + 1, t, s, b, L)
         if writepng:
-            livefigure(basemesh, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png',
+            livefigure(bm, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png',
                     writehalfar=(bed == 'flat' and aconst == 0.0 and n + 1 == Nsteps))
             if n + 1 == int(round(0.7 * Nsteps)): # reliable if Nsteps is divisible by 10
                 snaps.append(s.copy(deepcopy=True))
@@ -235,11 +239,11 @@ for aconst in SMBlist:
 
 if writepng:
     snapsname = dirroot + 'snaps.png'
-    snapsfigure(basemesh, b, snaps, fname=snapsname)
+    snapsfigure(bm, b, snaps, fname=snapsname)
     printpar(f'  finished writing to {snapsname}')
 
 # process _slist from all three SMB cases
-maxcont, rats = sampleratios(dirroot, _slist, basemesh, b, N=Nsamples, Lsc=L)
+maxcont, rats = sampleratios(dirroot, _slist, bm, b, N=Nsamples, Lsc=L)
 printpar(f'  max continuity ratio:               {maxcont:.3e}')
 histogramPhirat(dirroot, rats)
 pos = rats[rats > 0.0]
