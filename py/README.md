@@ -8,16 +8,20 @@ The codes here explore the coercivity of the surface evolution of glaciers using
 
 2. Clone and install `stokes-extrude` using [pip](https://pypi.org/project/pip/):
 
-    $ git clone https://github.com/bueler/stokes-extrude.git
-    $ cd stokes-extrude/
-    $ pip install -e .
+```bash
+$ git clone https://github.com/bueler/stokes-extrude.git
+$ cd stokes-extrude/
+$ pip install -e .
+```
 
 ## basic usage on short single case
 
 Return to the current directory `glacier-fe-estimate/py/`.  Activate the [Firedrake](https://www.firedrakeproject.org/) venv and then run a shortened single case:
 
-    $ source firedrake/bin/activate
-    $ bash show.sh
+```bash
+$ source firedrake/bin/activate
+$ bash show.sh
+```
 
 This run takes several minutes.  It produces a directory `result/` with subdirectories `azero/`, `aneg/`, and `apos/` for the three SMB cases.  Within these subdirectories are time-dependent `.png` states which can be regarded as movies for the SMB cases.
 
@@ -29,8 +33,10 @@ There is also a file `ratios.txt` which includes the basic statistics for the co
 
 The full study takes something like 10 hours.  It does many bed/SMB cases and several resolutions.  It produces subdirectories and files similar to those described above:
 
-    $ cd reproduce/
-    $ bash study.sh
+```bash
+$ cd reproduce/
+$ bash study.sh
+```
 
 ## how it works
 
