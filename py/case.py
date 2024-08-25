@@ -28,7 +28,6 @@ aposfrac = 0.75         # fraction of domain on which positive SMB is applied
 Nsamples = 1000         # number of samples when evaluating minimal ratios
 
 # solution method
-Hmin = 20.0             # insert fake ice for Stokes solve
 fssa = True             # use Lofgren et al (2022) FSSA technique in Stokes solve
 theta_fssa = 1.0        #   with this theta value
 explicit = False        # defaults to semi-implicit steps
@@ -54,16 +53,12 @@ s = Function(P1bm, name='surface elevation (m)')  # this is the state variable
 # surface mass balance (SMB) function
 a = Function(P1bm, name='surface mass balance (m s-1)')
 
-# set up extruded mesh, but leave z coordinate unassigned
-mesh = ExtrudedMesh(basemesh, layers=mz, layer_height=1.0/mz)
-P1 = FunctionSpace(mesh, 'P', 1)
-P1R = FunctionSpace(mesh, 'P', 1, vfamily='R', vdegree=0)
-Vcoord = mesh.coordinates.function_space()
-x, _ = SpatialCoordinate(mesh)
-z_flat = mesh.coordinates.dat.data_ro[:,1].copy()  # z coord before assignment
+# set up the extruded mesh, but leave z coordinate at default
+se = StokesExtrude(basemesh, mz=mz)
+P1 = FunctionSpace(se.mesh, 'P', 1)
+x, _ = SpatialCoordinate(se.mesh)
 
-# set up the Stokes solver on the extruded mesh
-se = StokesExtrude(mesh)
+# set up Stokes problem
 se.mixed_TaylorHood()
 #se.mixed_PkDG(kp=0) # = P2xDG0; seems to NOT be better; not sure about P2xDG1
 se.body_force(Constant((0.0, - rho * g)))
@@ -80,7 +75,7 @@ def _D(w):
     return 0.5 * (grad(w) + grad(w).T)
 
 # the weak form for the Stokes problem
-def _form_stokes(mesh, se, sR):
+def _form_stokes(se, sR):
     u, p = split(se.up)
     v, q = TestFunctions(se.Z)
     Du2 = 0.5 * inner(_D(u), _D(u)) + eps
@@ -92,14 +87,14 @@ def _form_stokes(mesh, se, sR):
         nsR = as_vector([-sR.dx(0), Constant(1.0)])
         nunit = nsR / sqrt(sR.dx(0)**2 + 1.0)
         F -= theta_fssa * dt * inner(u, nunit) * inner(se.f_body, v) * ds_t
-        aR = extend_p1_from_basemesh(mesh, a)
+        aR = extend_p1_from_basemesh(se.mesh, a)
         zvec = Constant(as_vector([0.0, 1.0]))
         source += theta_fssa * dt * aR * inner(zvec, nunit) * inner(se.f_body, v) * ds_t
     F -= source
     return F
 
 # generate effective viscosity nu from the velocity solution
-def _effective_viscosity(mesh, u):
+def _effective_viscosity(u):
     Du2 = 0.5 * inner(_D(u), _D(u))
     nu = Function(P1).interpolate(0.5 * B3 * Du2**(qq/2.0))
     nu.rename('nu (unregularized; Pa s)')
@@ -108,8 +103,8 @@ def _effective_viscosity(mesh, u):
     return nu, nueps
 
 # generate hydrostatic pressure (as diagnostic)
-def _p_hydrostatic(mesh, sR):
-    _, z = SpatialCoordinate(mesh)
+def _p_hydrostatic(se, sR):
+    _, z = SpatialCoordinate(se.mesh)
     phydro = Function(P1).interpolate(rho * g * (sR - z))
     phydro.rename('p_hydro (Pa)')
     return phydro
@@ -143,19 +138,15 @@ if not explicit:
                                           options_prefix="step")
     siub = Function(P1bm).interpolate(Constant(PETSc.INFINITY))
 
-# outer surface mass balance (SMB) loop
-_slist = []
-newcoord = Function(Vcoord)
-bR = Function(P1R)
-bR.dat.data[:] = b.dat.data_ro  # fixed bed during whole case
-sRfake = Function(P1R)
-sR = Function(P1R)
 # set up for livefigure() and snapsfigure()
 if writepng:
     printpar(f'creating root directory {dirroot} for image files ...')
     mkdir(dirroot)
     s.dat.data[:] = s_initial_np
     snaps = [s.copy(deepcopy=True),]
+
+# outer surface mass balance (SMB) loop
+_slist = []
 for aconst in SMBlist:
     # describe run
     printpar(f'using aconst = {aconst:.3e} m/s constant value of SMB ...')
@@ -189,24 +180,23 @@ for aconst in SMBlist:
                 livefigure(basemesh, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png')
 
         # set geometry (z coordinate) of extruded mesh
-        sRfake.dat.data[:] = np.maximum(s.dat.data_ro, Hmin + b.dat.data_ro)  # *here* is the fake ice
-        ztmp = Function(P1)
-        ztmp.dat.data[:] = z_flat
-        newcoord.interpolate(as_vector([x, bR + (sRfake - bR) * ztmp]))
-        mesh.coordinates.assign(newcoord)
+        se.reset_elevations(b, s)
+        se.trivializepinchcolumns()
+        P1R = FunctionSpace(se.mesh, 'P', 1, vfamily='R', vdegree=0)
+        sR = Function(P1R)
+        sR.dat.data[:] = s.dat.data_ro
 
         # solve Stokes on extruded mesh and extract surface trace
-        #   this uses fake ice, and se.up as initial iterate
-        u, p = se.solve(par=params, F=_form_stokes(mesh, se, sRfake))
-        ubm = trace_vector_to_p2(basemesh, mesh, u)  # surface velocity (m s-1)
+        u, p = se.solve(par=params, F=_form_stokes(se, sR))
+        ubm = trace_vector_to_p2(basemesh, se.mesh, u)  # surface velocity (m s-1)
         #printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
 
         # optionally write t-dependent .pvd with 2D fields
         if writepvd:
             u.rename('velocity (m s-1)')
             p.rename('pressure (Pa)')
-            nu, nueps = _effective_viscosity(mesh, u)
-            phydro = _p_hydrostatic(mesh, sRfake)
+            nu, nueps = _effective_viscosity(u)
+            phydro = _p_hydrostatic(se, sR)
             pdiff = Function(P1).interpolate(p - phydro)
             pdiff.rename('pdiff = phydro - p (Pa)')
             outfile.write(u, p, nu, nueps, pdiff, time=t)
@@ -222,6 +212,7 @@ for aconst in SMBlist:
             Phi = Function(P1bm).project(- dot(ubm, ns))  # interpolate() would be bad here (P2 nodes)
             snew = s + dt * (a - Phi)
             s.interpolate(conditional(snew < b, b, snew))
+            # FIXME consider project() in above line?
         else:
             # semi-implicit: solve VI problem with surface velocity from old surface elevation
             sisold.dat.data[:] = s.dat.data_ro
