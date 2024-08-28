@@ -28,9 +28,11 @@ aposfrac = 0.75                   # fraction of domain on which positive SMB is 
 Nsamples = 1000                   # number of samples when evaluating minimal ratios
 
 # solution method
+explicit = False        # defaults to semi-implicit steps
+zeroheight = 'indices'  # how should StokesExtrude handle zero-height columns;
+                        #   alternative is 'bounds', but it seems to do poorly?
 fssa = True             # use Lofgren et al (2022) FSSA technique in Stokes solve
 theta_fssa = 1.0        #   with this theta value
-explicit = False        # defaults to semi-implicit steps
 
 # Stokes parameters
 qq = 1.0 / nglen - 1.0
@@ -69,7 +71,7 @@ params = SolverParams['newton']
 params.update(SolverParams['mumps'])
 #params.update({'snes_monitor': None})
 params.update({'snes_converged_reason': None})
-params.update({'snes_atol': 5.0e-2})
+params.update({'snes_atol': 1.0e-2})
 params.update({'snes_linesearch_type': 'bt'})  # helps with non-flat beds, it seems
 
 def _D(w):
@@ -185,13 +187,14 @@ for aconst in SMBlist:
 
         # set geometry (z coordinate) of extruded mesh
         se.reset_elevations(b, s)
-        se.trivializepinchcolumns()
         P1R = FunctionSpace(se.mesh, 'P', 1, vfamily='R', vdegree=0)
         sR = Function(P1R)
         sR.dat.data[:] = s.dat.data_ro
 
         # solve Stokes on extruded mesh and extract surface trace
-        u, p = se.solve(par=params, F=_form_stokes(se, sR))
+        u, p = se.solve(F=_form_stokes(se, sR),
+                        par=params,
+                        zeroheight=zeroheight)
         ubm = trace_vector_to_p2(bm, se.mesh, u)  # surface velocity (m s-1)
         #printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
 
