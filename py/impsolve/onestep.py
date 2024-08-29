@@ -93,23 +93,31 @@ Z = P1R * P0VR * P2V * P1    # product space
 soup = Function(Z)
 printpar(f'dimensions: n_s = {P1R.dim()}, n_omega = {P0VR.dim()}, n_u = {P2V.dim()}, n_p = {P1.dim()}')
 
-# make sure initial s is admissible
+# initialize s; note sold is admissible
 soup.subfunctions[0].interpolate(sold)
+
+# helper UFL expressions for weak form
+def _D(u):
+    # strain rate tensor
+    return 0.5 * (grad(u) + grad(u).T)
+def _n(s):
+    # upward surface normal vector
+    return as_vector([-s.dx(0), Constant(1.0)])
+def _S(s):
+    # inverse of surface area density
+    # note for base mesh:  dx_bm = _S(s) ds_t
+    return (1.0 + s.dx(0) * s.dx(0))**(-0.5)
 
 # weak form for the coupled (SKE+Stokes) problem
 s, omega, u, p = split(soup)
 r, zeta, v, q = TestFunctions(Z)
-def _D(u):
-    return 0.5 * (grad(u) + grad(u).T)
 Du2 = 0.5 * inner(_D(u), _D(u)) + eps
 ell = sold + dt * a
-def _n(s):
-    return as_vector([-s.dx(0), Constant(1.0)])
-F = inner(s - dt * dot(omega, _n(s)) - ell, r) * ds_t           # term 1 with r
-F += inner(omega - u, zeta) * ds_t                              # term 2 with zeta
-F += inner(B3 * Du2**(qq / 2.0) * _D(u), _D(v)) * dx(degree=4)  # term 3 with v
+F = inner(s - dt * dot(omega, _n(s)) - ell, r) * _S(s) * ds_t(degree=2)  # term 1 with r
+F += inner(omega - u, zeta) * ds_t                                       # term 2 with zeta
+F += inner(B3 * Du2**(qq / 2.0) * _D(u), _D(v)) * dx(degree=3)           # term 3 with v
 F -= (p * div(v) + inner(f_body, v)) * dx
-F -= div(u) * q * dx                                            # term 4 with q
+F -= div(u) * q * dx                                                     # term 4 with q
 
 # conditions; the pinch conditions should be updated in coupled problem
 conditions = [ DirichletBC(Z.sub(0), b, (1,2)),                         # s=b at ends
