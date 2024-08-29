@@ -1,6 +1,6 @@
 *.pvsm
 *.pvd
-*.txt
+ratios.txt
 
 badcoercive*.png
 result*

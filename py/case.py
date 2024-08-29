@@ -57,7 +57,7 @@ s_initial.dat.data[:] = s_initial_np
 a = Function(P1bm, name='surface mass balance (m s-1)')
 
 # create the extruded mesh, but leave z coordinate at default
-se = StokesExtrude(bm, mz=mz)
+se = StokesExtrude(bm, mz=mz, htol=1.0)
 P1 = FunctionSpace(se.mesh, 'P', 1)
 x, _ = SpatialCoordinate(se.mesh)
 
