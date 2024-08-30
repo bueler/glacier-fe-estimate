@@ -96,6 +96,13 @@ printpar(f'dimensions: n_s = {P1R.dim()}, n_omega = {P0VR.dim()}, n_u = {P2V.dim
 # initialize s; note sold is admissible
 soup.subfunctions[0].interpolate(sold)
 
+# for reference: these seem to be how "grad()" and "div()" are implemented
+#   by UFL, because replacing in the weak form F below does not change values
+#def mygrad(u):
+#    return as_matrix([[u[0].dx(0), u[0].dx(1)], [u[1].dx(0), u[1].dx(1)]])
+#def mydiv(u):
+#    return u[0].dx(0) + u[1].dx(1)
+
 # helper UFL expressions for weak form
 def _D(u):
     # strain rate tensor
