@@ -40,7 +40,7 @@ def drawclimate(x,s):
 # domain notation figure
 plt.figure(figsize=(10,5.5))
 x, s, b = genbasicfig()
-plt.text(x[550] - 1.0, b[600] + 0.4 * s[600], r'$\Lambda(t)$',
+plt.text(x[550] - 1.0, b[600] + 0.4 * s[600], r'$\Lambda(s)$',
          fontsize=bigfsize, color='k')
 drawclimate(x,s)
 # mark top surface
