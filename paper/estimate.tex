@@ -530,7 +530,7 @@ is again well-posed, and again it can be solved for $s \in \cK_{L^2}$ by truncat
 s = \max\{b, s^{n-1} + \Delta t\, \bu|_{s^{n-1}} \cdot \bn_{s^{n-1}} + \Delta t\,a^n\} \qquad (\text{\emph{explicit step}}). \label{eq:explicit:solution}
 \end{equation}
 
-Now consider a fully-discrete forward Euler scheme wherein an FE approximation of VI problem \eqref{eq:explicit:vi} is computed at each time step.  Such a scheme\footnote{Explicit schemes like this have practical value, of course.  Equation \eqref{eq:explicit:solution} is precisely the approach in \cite{Lengetal2012}, for example, and \cite{Jouvetetal2008} is likewise explicit.  Various semi-implicit modifications have also been used \cite{Chengetal2020,Durandetal2009,LofgrenAhlkronaHelanow2022,WirbelJarosch2020}.} computes an FE approximation of the exact solution \eqref{eq:explicit:solution}.  However, in formula \eqref{eq:explicit:solution} the derivatives in $\bn_{s^{n-1}}$, the trace evaluation $\bu|_{s^{n-1}}$, and the truncation itself all (generally) reduce regularity of $s$  relative to $s^{n-1}$.  From what we know about well-posed Stokes problems, the function $s$ defined by \eqref{eq:explicit:solution} generally will not be regular enough, i.e.~sufficiently differentiable in space, to serve as the surface elevation at the start of the next time step.  That is, it is not clear that $s$ from \eqref{eq:explicit:solution} defines a sufficiently-smooth domain $\Lambda_s$ so that the (weak) Stokes problem \eqref{eq:glenstokes:weak} is well-posed, that is, when we seek the next surface elevation $s^{n+1}$ after $s=s^n$.  In this sense there is no reason to expect the \emph{explicitly} time semi-discretized problems to be well-posed (after the first time step).
+Now consider a fully-discrete forward Euler scheme wherein an FE approximation of VI problem \eqref{eq:explicit:vi} is computed at each time step.  Such a scheme\footnote{Explicit schemes like this have practical value.  For example, Equation \eqref{eq:explicit:solution} is precisely the approach in \cite{Lengetal2012}, for example, and \cite{Jouvetetal2008} is likewise explicit.  Various semi-implicit modifications have also been used \cite{Chengetal2020,Durandetal2009,LofgrenAhlkronaHelanow2022,WirbelJarosch2020}.} computes an FE approximation of the exact solution \eqref{eq:explicit:solution}.  However, in formula \eqref{eq:explicit:solution} the derivatives in $\bn_{s^{n-1}}$, the trace evaluation $\bu|_{s^{n-1}}$, and the truncation itself all (generally) reduce regularity of $s$  relative to $s^{n-1}$.  From what we know about well-posed Stokes problems, the function $s$ defined by \eqref{eq:explicit:solution} generally will not be regular enough, i.e.~sufficiently differentiable in space, to serve as the surface elevation at the start of the next time step.  That is, it is not clear that $s$ from \eqref{eq:explicit:solution} defines a sufficiently-smooth domain $\Lambda_s$ so that the (weak) Stokes problem \eqref{eq:glenstokes:weak} is well-posed, that is, when we seek the next surface elevation $s^{n+1}$ after $s=s^n$.  In this sense there is no reason to expect the \emph{explicitly} time semi-discretized problems to be well-posed (after the first time step).
 
 The regularity of the surface elevation solution might be improved by use of semi-implicit time-stepping, for example using $s$ in the surface normal in \eqref{eq:explicitFdefine}, $\bn_{s^{n-1}} \to \bn_s$, but leaving the old velocity in place.  However, \cite{LofgrenAhlkronaHelanow2022} demonstrate that this change, by itself, has small effect on stability, and it is not clear why it would suffice to address the regularity and well-posedness concerns.
 
@@ -820,7 +820,7 @@ We also assume and define:
 \setcounter{enumi}{9}
 \item $b_h\in\cX_h$ is given, with $b_h\ge b$ on $\bar\Omega$ and $b_h=b$ along $\partial \Omega$. \label{item:goodbh}
 \item $\cK_h = \{r_h\in\cX_h\,:\,r_h|_{\partial \Omega} = b_h|_{\partial \Omega} \text{ and } r_h \ge b_h\}$. \label{item:defineKh}
-\item Interpolation/truncation $\Pi_h$ yields admissible elements in $\cK_h$.  \label{item:Pi}
+\item An interpolation/truncation operator $\Pi_h$ yielding admissible elements in $\cK_h$.  \label{item:Pi}
 \end{enumerate}
 \end{assumptions}
 
@@ -921,7 +921,7 @@ The root of the matter is coercivity of this surface motion, namely Conjecture \
 
 \section{Acknowledgements} \label{sec:acknowledgements}
 
-Thanks to J.~Ahlkrona and P.~Piersnati for thoughtful comments on an earlier version.
+Thanks to J.~Ahlkrona and P.~Piersanti for thoughtful comments on an earlier version.
 
 %\clearpage\newpage
 \bibliographystyle{siamplain}
