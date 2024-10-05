@@ -1,0 +1,111 @@
+\documentclass[10pt,dvipsnames]{beamer}
+
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usetheme{metropolis}
+\metroset{block=fill}
+%\setmonofont{Ubuntu Mono}
+
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs,empheq,bbold,bm}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+% for python listings; inspired by https://gist.github.com/YidongQIN/a10dd4f72381362aff4257e7a5541d86 
+\usepackage{listings}
+\usepackage{color}
+\definecolor{darkred}{rgb}{0.6,0.0,0.0}
+\definecolor{darkgreen}{rgb}{0,0.50,0}
+\definecolor{lightblue}{rgb}{0.0,0.42,0.91}
+\definecolor{orange}{rgb}{0.99,0.48,0.13}
+\definecolor{grass}{rgb}{0.18,0.80,0.18}
+\definecolor{pink}{rgb}{0.97,0.15,0.45}
+\lstdefinelanguage{PythonPlus}[]{Python}{
+  morekeywords=[1]{,as,assert,nonlocal,with,yield,self,True,False,None,} % Python builtin
+  morekeywords=[2]{,__init__,__add__,__mul__,__div__,__sub__,__call__,__getitem__,__setitem__,__eq__,__ne__,__nonzero__,__rmul__,__radd__,__repr__,__str__,__get__,__truediv__,__pow__,__name__,__future__,__all__,}, % magic methods
+  morekeywords=[3]{,object,type,isinstance,copy,deepcopy,zip,enumerate,reversed,list,set,len,dict,tuple,range,xrange,append,execfile,real,imag,reduce,str,repr,}, % common functions
+  morekeywords=[4]{,Exception,NameError,IndexError,SyntaxError,TypeError,ValueError,OverflowError,ZeroDivisionError,}, % errors
+  morekeywords=[5]{,ode,fsolve,sqrt,exp,sin,cos,arctan,arctan2,arccos,pi, array,norm,solve,dot,arange,isscalar,max,sum,flatten,shape,reshape,find,any,all,abs,plot,linspace,legend,quad,polyval,polyfit,hstack,concatenate,vstack,column_stack,empty,zeros,ones,rand,vander,grid,pcolor,eig,eigs,eigvals,svd,qr,tan,det,logspace,roll,min,mean,cumsum,cumprod,diff,vectorize,lstsq,cla,eye,xlabel,ylabel,squeeze,}, % numpy / math
+}
+\lstdefinestyle{colorEX}{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{white},
+  commentstyle=\color{darkgreen}\slshape,
+  keywordstyle=\color{blue}\bfseries\itshape,
+  keywordstyle=[2]\color{blue}\bfseries,
+  keywordstyle=[3]\color{grass},
+  keywordstyle=[4]\color{red},
+  keywordstyle=[5]\color{orange},
+  stringstyle=\color{darkred},
+  emphstyle=\color{pink}\underbar,
+}
+\lstset{style=colorEX,
+        basewidth = {.49em}}
+
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\bu}{\mathbf{u}}
+
+\newcommand{\hbn}{\hat{\mathbf{n}}}
+\newcommand{\hbx}{\hat{\mathbf{x}}}
+\newcommand{\hbz}{\hat{\mathbf{z}}}
+
+\newcommand{\bU}{\mathbf{U}}
+
+\newcommand{\bpsi}{\bm{\psi}}
+\newcommand{\bzero}{\bm{0}}
+
+\newcommand{\eps}{\epsilon}
+\newcommand{\grad}{\nabla}
+\newcommand{\Div}{\nabla\cdot}
+
+\newcommand{\rhoi}{\rho_{\text{i}}}
+\newcommand{\snew}{s^{\text{new}}}
+
+\newcommand{\comm}[1]{{\footnotesize \hfill \emph{#1}}}
+
+\title{A space-time view of good glacier models}
+%\subtitle{version 1.0}
+\date{NWG 2024}
+\author{Ed Bueler}
+\institute{University of Alaska Fairbanks}
+%\titlegraphic{\vspace{-1cm}\par\hspace{-1cm}\includegraphics[width=1.5\textwidth]{polaris-overexposed.png}}
+
+\begin{document}
+\graphicspath{{figs/}}
+
+\maketitle
+
+\begin{frame}{Outline}
+  %\setbeamertemplate{section in toc}[sections numbered]
+  %\tableofcontents[hideallsubsections]
+  \tableofcontents
+\end{frame}
+
+
+\section[how does the glacier surface move?]{\textbf{how does the glacier surface move?} (hour 1)}
+
+\subsection{basic mathematics}
+
+
+\begin{frame}{how does the glacier surface move?}
+
+\bigskip
+\begin{center}
+FIXME%\includegraphics<3>[width=\textwidth]{boatplus}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{references}
+
+{\footnotesize \input{references.tex}}
+\end{frame}
+\end{document}
