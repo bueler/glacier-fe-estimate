@@ -49,17 +49,13 @@
 \lstset{style=colorEX,
         basewidth = {.49em}}
 
+\newcommand{\bg}{\mathbf{g}}
 \newcommand{\bn}{\mathbf{n}}
 \newcommand{\bq}{\mathbf{q}}
 \newcommand{\bu}{\mathbf{u}}
 
-\newcommand{\hbn}{\hat{\mathbf{n}}}
-\newcommand{\hbx}{\hat{\mathbf{x}}}
-\newcommand{\hbz}{\hat{\mathbf{z}}}
-
 \newcommand{\bU}{\mathbf{U}}
 
-\newcommand{\bpsi}{\bm{\psi}}
 \newcommand{\bzero}{\bm{0}}
 
 \newcommand{\eps}{\epsilon}
@@ -70,6 +66,7 @@
 \newcommand{\snew}{s^{\text{new}}}
 
 \newcommand{\comm}[1]{{\footnotesize \hfill \emph{#1}}}
+
 
 \title{A space-time view of good glacier models}
 %\subtitle{version 1.0}
@@ -83,26 +80,114 @@
 
 \maketitle
 
-\begin{frame}{Outline}
+%\begin{frame}{Outline}
   %\setbeamertemplate{section in toc}[sections numbered]
   %\tableofcontents[hideallsubsections]
-  \tableofcontents
+  %\tableofcontents
+%\end{frame}
+
+
+%\section[how does the glacier surface move?]{\textbf{how does the glacier surface move?} (hour 1)}
+%\subsection{basic mathematics}
+
+
+\begin{frame}{not many slides}
+
+\begin{itemize}
+\item this is an informal view-point talk
+\item<2> not a results talk \hfill \dots but see last slide
+\item<2> yes, it is, somehow, about my recent work
+\end{itemize}
 \end{frame}
 
 
-\section[how does the glacier surface move?]{\textbf{how does the glacier surface move?} (hour 1)}
+\begin{frame}{common goals}
 
-\subsection{basic mathematics}
+I am assuming some goals/attitudes in common with this audience:
+\begin{enumerate}
+\item we care about how the glaciated area evolves
+\item good glacier models need to balance membrane/longitudinal stresses
+\item simulation speed at a given spatial resolution is what matters
+\end{enumerate}
+\end{frame}
 
 
-\begin{frame}{how does the glacier surface move?}
+\begin{frame}{space-time picture}
 
-\bigskip
 \begin{center}
-FIXME%\includegraphics<3>[width=\textwidth]{boatplus}
+FIXME%\includegraphics[width=\textwidth]{xtcartoon}
 \end{center}
 \end{frame}
 
+
+\newcommand{\where}[1]{\text{\footnotesize #1}}
+
+\begin{frame}{\underline{the} mathematical model}
+
+\begin{align*}
+s - b &\ge 0 & &\where{on $\Omega$} \\
+\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 & &\where{on $\Omega$} \\
+(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 & &\where{on $\Omega$} \\
+- \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(s)$} \\
+\nabla \cdot \bu &= 0 && \where{in $\Lambda(s)$} \\
+\nu(D\bu) &= \nu_n \left(|D\bu|^2 + \eps\right)^{q_n} && \where{in $\Lambda(s)$} \\
+\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
+\bu  &= \bzero && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
+\end{align*}
+
+\bigskip
+
+\begin{columns}
+\begin{column}{0.45\textwidth}
+xx
+\end{column}
+\begin{column}{0.45\textwidth}
+\hfill \includegraphics[width=0.8\textwidth]{stokesdomain.png}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{3 points, from the space-time view}
+
+\begin{columns}
+\begin{column}{0.7\textwidth}
+\begin{enumerate}
+\item \alert{(conceptual)}
+    \begin{itemize}
+    \item[a)] what is \emph{true} in the ice?
+    \item[b)] what is \emph{true} on bare land?
+    \item[c)] what is \emph{true} at the free boundary?
+    \end{itemize}
+\item \alert{(mathematical)} xxx
+\item \alert{(practical)} xxx
+\end{enumerate}
+\end{column}
+\begin{column}{0.3\textwidth}
+xxx % repeat xtcartoon
+\end{column}
+\end{columns}
+
+\end{frame}
+
+
+\begin{frame}{discretize time}
+
+\begin{itemize}
+\item xxx
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{results}
+
+\begin{itemize}
+\item I don't know how to show that an implicit step is well-posed, but we can conjecture it
+\item subject to that conjecture, one can give an upper bound on the glacier geometry errors in terms of:
+
+xxx
+\end{itemize}
+\end{frame}
 
 \begin{frame}{references}
 
