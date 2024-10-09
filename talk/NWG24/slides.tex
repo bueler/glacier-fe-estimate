@@ -91,12 +91,12 @@
 %\subsection{basic mathematics}
 
 
-\begin{frame}{not many slides}
+\begin{frame}{only a view point}
 
 \begin{itemize}
 \item this is an informal view-point talk
 \item it is, somehow, about my recent work
-\item<2> not a results talk \hfill \dots but see last slide
+\item<2> not a results talk
 \end{itemize}
 \end{frame}
 
@@ -107,87 +107,141 @@ assuming goals/attitudes in common with this audience:
 \begin{enumerate}
 \item we care about how the glaciated area evolves in a numerical model
 \item good glacier models need to balance membrane/longitudinal stresses
-\item simulation speed at a given spatial resolution is what matters
+%\item simulation speed at a given spatial resolution is what matters
 \end{enumerate}
 \end{frame}
 
 
-\begin{frame}{space-time picture}
+\begin{frame}{the life of a glacier in space-time}
 
-\begin{center}
-FIXME%\includegraphics[width=\textwidth]{xtcartoon}
-\end{center}
+\bigskip
+\hfill \includegraphics[width=\textwidth]{xtcartoon}
 \end{frame}
 
 
 \newcommand{\where}[1]{\text{\footnotesize #1}}
 
-\begin{frame}{\underline{the} mathematical model}
+\begin{frame}{\underline{the} (viscous) mathematical model}
 
 \begin{align*}
-s - b &\ge 0 & &\where{on $\Omega$} \\
-\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 & &\where{on $\Omega$} \\
-(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 & &\where{on $\Omega$} \\
+s - b &\ge 0 & &\where{in $\Omega$} \\
+\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 & &\where{in $\Omega$} \\
+(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 & &\where{in $\Omega$} \\
 - \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(s)$} \\
 \nabla \cdot \bu &= 0 && \where{in $\Lambda(s)$} \\
 \nu(D\bu) &= \nu_n \left(|D\bu|^2 + \eps\right)^{q_n} && \where{in $\Lambda(s)$} \\
 \left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
-\bu  &= \bzero && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
+\bu  = \bzero \text{ } &\text{or } f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
 \end{align*}
+\end{frame}
+
+
+\begin{frame}{\underline{the} 3 views}
+
+\begin{center}
+\mbox{\phantom{foisdfjs} \includegraphics[width=0.58\textwidth]{xtcrop}}
+\end{center}
+
+\begin{columns}
+\begin{column}{0.4\textwidth}
+\includegraphics[width=0.8\textwidth]{mapplane}
+\end{column}
+\begin{column}{0.5\textwidth}
+\hfill \includegraphics[width=\textwidth]{stokesdomain}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{4 benefits of the space-time view}
+
+\begin{enumerate}
+\item \alert{(conceptual)} you can address \emph{what is true} at different points $(t,x)$
+\item \alert{(mathematical)} you can see \emph{what determines the evolution of the free boundary}
+\item \alert{(numerical)} you can see \emph{what ``fully-implicit'' must mean}
+\item \alert{(practical)} you can see \emph{why modeled surface mass balance must be available on space \& time adjacent ice-free land}
+\end{enumerate}
+
+\end{frame}
+
+
+\newcommand{\viewin}[1]{{\color{blue} {\footnotesize \emph{view appears in} #1}}}
+
+\begin{frame}{benefit 1: conceptual}
+
+what is true at different points $(t,x)$?
+
+\bigskip \bigskip
+
+\begin{columns}
+\begin{column}{0.3\textwidth}
+\begin{itemize}
+\item[a)] what is \emph{true} in the ice?
+\item[b)] what is \emph{true} on bare land?
+\item[c)] what is \emph{true} at the free boundary?
+\end{itemize}\end{column}
+\begin{column}{0.7\textwidth}
+\hfill \includegraphics[width=\textwidth]{xtcrop}
+\end{column}
+\end{columns}
 
 \bigskip
-
-\begin{columns}
-\begin{column}{0.45\textwidth}
-xx
-\end{column}
-\begin{column}{0.45\textwidth}
-\hfill \includegraphics[width=0.8\textwidth]{stokesdomain.png}
-\end{column}
-\end{columns}
+\viewin{(Calvo et al 2003) \emph{for SIA}}
 \end{frame}
 
 
-\begin{frame}{3 points, from the space-time view}
+\begin{frame}{benefit 2: mathematical}
 
-\begin{columns}
-\begin{column}{0.7\textwidth}
-\begin{enumerate}
-\item \alert{(conceptual)}
-    \begin{itemize}
-    \item[a)] what is \emph{true} in the ice?
-    \item[b)] what is \emph{true} on bare land?
-    \item[c)] what is \emph{true} at the free boundary?
-    \end{itemize}
-\item \alert{(mathematical)} xxx
-\item \alert{(practical)} xxx
-\end{enumerate}
-\end{column}
-\begin{column}{0.3\textwidth}
-xxx % repeat xtcartoon
-\end{column}
-\end{columns}
+what determines the evolution of the free boundary?
 
+\bigskip \bigskip
+
+FIXME
+
+\bigskip
+\viewin{(Calvo et al 2003, Jouvet \& Bueler 2012); \emph{fixed-domain Stokes well-posedness in} (Jouvet \& Rappaz 2011)}
 \end{frame}
 
 
-\begin{frame}{discretize time}
+\begin{frame}{benefit 3: numerical}
 
-\begin{itemize}
-\item xxx
-\end{itemize}
+what does ``fully-implicit'' mean?
+
+\bigskip \bigskip
+
+FIXME
+
+for now we don't have fully-implicit methods
+
+\bigskip
+\viewin{(Bueler, 2022); \emph{good semi-implicit idea in} (L\"ofgren et al 2022)}
+\end{frame}
+
+
+\begin{frame}{benefit 4: practical}
+
+why must modeled surface mass balance be available on space \& time adjacent ice-free land?
+
+\bigskip \bigskip
+
+FIXME
 \end{frame}
 
 
 \begin{frame}{results}
 
 \begin{itemize}
-\item I don't know how to show that an implicit step is well-posed, but we can conjecture it
-\item subject to that conjecture, one can give an upper bound on the glacier geometry errors in terms of:
-
-xxx
+\item you will be disappointed here: ``result'' means a theorem
 \end{itemize}
+
+\emph{Theorem (Bueler, 2024).}  Make reasonable assumptions for a fully-implicit, geometry-evolving, Stokes model for glaciers.  Suppose $s$ is the unique solution of the implicit-step, continuous space problem at time $t_k$, with step $\Delta t$.  Suppose $s_h$ is an FE solution of that problem.  Let $\Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$ be the active set for $s$, the ice-free region for the exact solution.  Suppose $\bu$ is the exact Stokes solution velocity and $\bu_h$ the FE approximation.  Then
+\begin{align*}
+\|s_h-s\|^r &\le \quad \frac{2}{\alpha \Delta t} \int_{\Omega_A(s)} (b - \ell^n) (b_h - b) \\
+   &\quad\, + \Gamma_{s_h} \big\|\bu_h - \bu\big\| \\
+   &\quad\, + c_0 \|\Pi_h(s) - s\|^q
+\end{align*}
 \end{frame}
+
 
 \begin{frame}{references}
 
