@@ -95,8 +95,8 @@
 
 \begin{itemize}
 \item this is an informal view-point talk
-\item it is, somehow, about my recent work
-\item<2> not a results talk
+\item not a results talk
+%\item vaguely about my recent work
 \end{itemize}
 \end{frame}
 
@@ -139,15 +139,15 @@ s - b &\ge 0 & &\where{in $\Omega$} \\
 \begin{frame}{\underline{the} 3 views}
 
 \begin{center}
-\mbox{\phantom{foisdfjs} \includegraphics[width=0.58\textwidth]{xtcrop}}
+\includegraphics[width=0.5\textwidth]{xtcrop}
 \end{center}
 
 \begin{columns}
-\begin{column}{0.4\textwidth}
+\begin{column}{0.45\textwidth}
 \includegraphics[width=0.8\textwidth]{mapplane}
 \end{column}
-\begin{column}{0.5\textwidth}
-\hfill \includegraphics[width=\textwidth]{stokesdomain}
+\begin{column}{0.55\textwidth}
+\hfill \includegraphics[width=\textwidth]{stokesdomainpink}
 \end{column}
 \end{columns}
 \end{frame}
@@ -156,10 +156,10 @@ s - b &\ge 0 & &\where{in $\Omega$} \\
 \begin{frame}{4 benefits of the space-time view}
 
 \begin{enumerate}
-\item \alert{(conceptual)} you can address \emph{what is true} at different points $(t,x)$
-\item \alert{(mathematical)} you can see \emph{what determines the evolution of the free boundary}
+\item \alert{(conceptual)} you can address \emph{what is true} at $(t,x)$
+\item \alert{(mathematical)} you can discuss \emph{what determines the evolution of the glaciated area}
 \item \alert{(numerical)} you can see \emph{what ``fully-implicit'' must mean}
-\item \alert{(practical)} you can see \emph{why modeled surface mass balance must be available on space \& time adjacent ice-free land}
+\item \alert{(practical modeling)} you can see \emph{why modeled surface mass balance must be available on space \& time adjacent ice-free land}
 \end{enumerate}
 
 \end{frame}
@@ -192,54 +192,78 @@ what is true at different points $(t,x)$?
 
 \begin{frame}{benefit 2: mathematical}
 
-what determines the evolution of the free boundary?
-
-\bigskip \bigskip
-
-FIXME
+what, \emph{precisely and mathematically}, determines the evolution of the glaciated area?
 
 \bigskip
-\viewin{(Calvo et al 2003, Jouvet \& Bueler 2012); \emph{fixed-domain Stokes well-posedness in} (Jouvet \& Rappaz 2011)}
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{fixme2042}
+\end{center}
+
+\bigskip
+\viewin{(Calvo et al 2003) \emph{and} (Jouvet \& Bueler 2012) \emph{for SIA}}
+
+{\color{blue} {\footnotesize \emph{needs fixed-domain Stokes well-posedness from e.g.} (Jouvet \& Rappaz 2011)}}
+
+{\color{blue} {\footnotesize \emph{see conjectures in} (Bueler 2024)}}
 \end{frame}
 
 
 \begin{frame}{benefit 3: numerical}
 
-what does ``fully-implicit'' mean?
+what does ``fully-implicit'' time-stepping mean?
 
-\bigskip \bigskip
+\medskip
 
-FIXME
+\begin{center}
+\includegraphics[width=0.8\textwidth]{implicitstep}
+\end{center}
 
-for now we don't have fully-implicit methods
+\medskip
+\viewin{(Bueler, 2022)}
+
+{\color{blue} {\footnotesize \emph{note appealing semi-implicit idea in} (L\"ofgren et al 2022)}}
+\end{frame}
+
+
+\begin{frame}{benefit 4: practical modeling}
+
+why must modeled surface mass balance be available on \emph{space \& time} adjacent ice-free land?
 
 \bigskip
-\viewin{(Bueler, 2022); \emph{good semi-implicit idea in} (L\"ofgren et al 2022)}
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{smbcells}
+\end{center}
+
+\bigskip
+{\color{blue} {\footnotesize \emph{see finite element considerations in} (Bueler 2024)}}
 \end{frame}
 
 
-\begin{frame}{benefit 4: practical}
-
-why must modeled surface mass balance be available on space \& time adjacent ice-free land?
-
-\bigskip \bigskip
-
-FIXME
-\end{frame}
-
-
-\begin{frame}{results}
+\begin{frame}{last slide: a result}
 
 \begin{itemize}
-\item you will be disappointed here: ``result'' means a theorem
+\item you will be disappointed: ``result'' means a theorem about how finite element (FE) methods converge
+\item needs ``reasonable'' assumptions for a (continuum) geometry- evolving, Stokes model for glaciers
+\item \dots including \textbf{conjectured} well-posedness
 \end{itemize}
 
-\emph{Theorem (Bueler, 2024).}  Make reasonable assumptions for a fully-implicit, geometry-evolving, Stokes model for glaciers.  Suppose $s$ is the unique solution of the implicit-step, continuous space problem at time $t_k$, with step $\Delta t$.  Suppose $s_h$ is an FE solution of that problem.  Let $\Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$ be the active set for $s$, the ice-free region for the exact solution.  Suppose $\bu$ is the exact Stokes solution velocity and $\bu_h$ the FE approximation.  Then
+\emph{Theorem (Bueler, 2024).}  Suppose $s$ is the unique solution of the (fully) implicit time-step, continuous-space problem  with step $\Delta t$.  Suppose $s_h$ is an FE solution of that implicit-step problem.  Let $\Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$ be the active set for $s$ (ice-free for the exact solution).  Suppose $b_h$ is the discretized bed elevation.  Suppose $\bu$ is the exact Stokes solution velocity and $\bu_h$ the FE approximation.  Then
 \begin{align*}
-\|s_h-s\|^r &\le \quad \frac{2}{\alpha \Delta t} \int_{\Omega_A(s)} (b - \ell^n) (b_h - b) \\
-   &\quad\, + \Gamma_{s_h} \big\|\bu_h - \bu\big\| \\
+\|s_h-s\|^r &\le \quad \frac{c_1}{\Delta t} \int_{\Omega_A(s)} (b - \ell) (b_h - b) \\
+   &\quad\, + \Gamma \big\|\bu_h - \bu\big\| \\
    &\quad\, + c_0 \|\Pi_h(s) - s\|^q
 \end{align*}
+\end{frame}
+
+
+\begin{frame}{conclusion}
+
+\begin{itemize}
+\item thank you for listening!
+\item I'll appreciate any help I can get \dots
+\end{itemize}
 \end{frame}
 
 
