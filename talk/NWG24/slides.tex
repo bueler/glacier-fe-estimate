@@ -103,7 +103,7 @@
 
 \begin{frame}{common goals}
 
-assuming goals/attitudes in common with this audience:
+I am assuming certain goals/attitudes in common with this audience:
 \begin{enumerate}
 \item we care about how the glaciated area evolves in a numerical model
 \item good glacier models need to balance membrane/longitudinal stresses
@@ -116,23 +116,6 @@ assuming goals/attitudes in common with this audience:
 
 \bigskip
 \hfill \includegraphics[width=\textwidth]{xtcartoon}
-\end{frame}
-
-
-\newcommand{\where}[1]{\text{\footnotesize #1}}
-
-\begin{frame}{\underline{the} (viscous) mathematical model}
-
-\begin{align*}
-s - b &\ge 0 & &\where{in $\Omega$} \\
-\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 & &\where{in $\Omega$} \\
-(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 & &\where{in $\Omega$} \\
-- \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(s)$} \\
-\nabla \cdot \bu &= 0 && \where{in $\Lambda(s)$} \\
-\nu(D\bu) &= \nu_n \left(|D\bu|^2 + \eps\right)^{q_n} && \where{in $\Lambda(s)$} \\
-\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
-\bu  = \bzero \text{ } &\text{or } f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
-\end{align*}
 \end{frame}
 
 
@@ -153,108 +136,79 @@ s - b &\ge 0 & &\where{in $\Omega$} \\
 \end{frame}
 
 
-\begin{frame}{4 benefits of the space-time view}
+\newcommand{\where}[1]{\text{\footnotesize #1}}
 
-\begin{enumerate}
-\item \alert{(conceptual)} you can address \emph{what is true} at $(t,x)$
-\item \alert{(mathematical)} you can discuss \emph{what determines the evolution of the glaciated area}
-\item \alert{(numerical)} you can see \emph{what ``fully-implicit'' must mean}
-\item \alert{(practical modeling)} you can see \emph{why modeled surface mass balance must be available on space \& time adjacent ice-free land}
-\end{enumerate}
+\begin{frame}{\underline{the} (viscous) mathematical model}
 
+\begin{align*}
+s - b &\ge 0 & &\where{in $\Omega$} \\
+\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 & &\where{in $\Omega$} \\
+(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 & &\where{in $\Omega$} \\
+- \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(s)$} \\
+\nabla \cdot \bu &= 0 && \where{in $\Lambda(s)$} \\
+\nu(D\bu) &= \nu_n \left(|D\bu|^2 + \eps\right)^{q_n} && \where{in $\Lambda(s)$} \\
+\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
+\bu  = \bzero \text{ } &\text{or } f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
+\end{align*}
 \end{frame}
 
 
-\newcommand{\viewin}[1]{{\color{blue} {\footnotesize \emph{view appears in} #1}}}
+\newcommand{\viewin}[1]{{\footnotesize \emph{this view appears in} #1}}
 
-\begin{frame}{benefit 1: conceptual}
-
-what is true at different points $(t,x)$?
+\begin{frame}{what is true at different points $(t,x)$?}
 
 \bigskip \bigskip
 
 \begin{columns}
-\begin{column}{0.3\textwidth}
+\begin{column}{0.26\textwidth}
 \begin{itemize}
 \item[a)] what is \emph{true} in the ice?
 \item[b)] what is \emph{true} on bare land?
 \item[c)] what is \emph{true} at the free boundary?
 \end{itemize}\end{column}
-\begin{column}{0.7\textwidth}
+\begin{column}{0.74\textwidth}
 \hfill \includegraphics[width=\textwidth]{xtcrop}
 \end{column}
 \end{columns}
-
-\bigskip
-\viewin{(Calvo et al 2003) \emph{for SIA}}
 \end{frame}
 
 
-\begin{frame}{benefit 2: mathematical}
+\begin{frame}{what is true \alert{everywhere} in $\Omega$?}
 
-what, \emph{precisely and mathematically}, determines the evolution of the glaciated area?
+\hfill \includegraphics[width=0.35\textwidth]{mapplane}
 
-\bigskip
+\begin{align*}
+s - b &\ge 0 & &\where{in $\Omega$} \\
+\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 & &\where{in $\Omega$} \\
+(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 & &\where{in $\Omega$}
+\end{align*}
 
-\begin{center}
-\includegraphics[width=0.5\textwidth]{fixme2042}
-\end{center}
-
-\bigskip
-\viewin{(Calvo et al 2003) \emph{and} (Jouvet \& Bueler 2012) \emph{for SIA}}
-
-{\color{blue} {\footnotesize \emph{needs fixed-domain Stokes well-posedness from e.g.} (Jouvet \& Rappaz 2011)}}
-
-{\color{blue} {\footnotesize \emph{see conjectures in} (Bueler 2024)}}
+\vspace{10mm}
+{\footnotesize \emph{this nonlinear complementarity problem first appears in (Calvo et al 2003), \emph{for SIA}}}
 \end{frame}
 
 
-\begin{frame}{benefit 3: numerical}
-
-what does ``fully-implicit'' time-stepping mean?
-
-\medskip
-
-\begin{center}
-\includegraphics[width=0.8\textwidth]{implicitstep}
-\end{center}
-
-\medskip
-\viewin{(Bueler, 2022)}
-
-{\color{blue} {\footnotesize \emph{note appealing semi-implicit idea in} (L\"ofgren et al 2022)}}
-\end{frame}
-
-
-\begin{frame}{benefit 4: practical modeling}
-
-why must modeled surface mass balance be available on \emph{space \& time} adjacent ice-free land?
-
-\bigskip
-
-\begin{center}
-\includegraphics[width=0.75\textwidth]{smbcells}
-\end{center}
-
-\bigskip
-{\color{blue} {\footnotesize \emph{see finite element considerations in} (Bueler 2024)}}
-\end{frame}
-
-
-\begin{frame}{last slide: a result}
+\begin{frame}{result (and last slide): an FE error theorem}
 
 \begin{itemize}
-\item you will be disappointed: ``result'' means a theorem about how finite element (FE) methods converge
-\item needs ``reasonable'' assumptions for a (continuum) geometry- evolving, Stokes model for glaciers
-\item \dots including \textbf{conjectured} well-posedness
-\end{itemize}
-
-\emph{Theorem (Bueler, 2024).}  Suppose $s$ is the unique solution of the (fully) implicit time-step, continuous-space problem  with step $\Delta t$.  Suppose $s_h$ is an FE solution of that implicit-step problem.  Let $\Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$ be the active set for $s$ (ice-free for the exact solution).  Suppose $b_h$ is the discretized bed elevation.  Suppose $\bu$ is the exact Stokes solution velocity and $\bu_h$ the FE approximation.  Then
+\item you will be disappointed: ``result'' here means a theorem about size of finite element (FE) errors
+\item this theorem needs ``reasonable'' assumptions for a (continuum) geometry- evolving, Stokes model for glaciers \dots including \textbf{conjectured} well-posedness
+\item \emph{Theorem (Bueler, 2024).}  the FE error in computing an updated surface elevation, using an implicit time step, comes from 3 terms:
 \begin{align*}
 \|s_h-s\|^r &\le \quad \frac{c_1}{\Delta t} \int_{\Omega_A(s)} (b - \ell) (b_h - b) \\
    &\quad\, + \Gamma \big\|\bu_h - \bu\big\| \\
    &\quad\, + c_0 \|\Pi_h(s) - s\|^q
 \end{align*}
+\item this separates the causes of surface elevation errors:
+    \begin{enumerate}
+    \item discretizing the bed elevation ($b_h$ versus exact $b$)
+    \item numerically solving the Stokes equations ($\bu_h$ versus exact $\bu$)
+    \item Cea's lemma for the surface elevation ($s_h$ versus exact $s$) \strut
+        \begin{itemize}
+        \item[$\circ$] $s$ necessarily projected to be admissible with respect to $b_h$
+        \end{itemize}
+    \end{enumerate}
+\end{itemize}
 \end{frame}
 
 
@@ -271,4 +225,74 @@ why must modeled surface mass balance be available on \emph{space \& time} adjac
 
 {\footnotesize \input{references.tex}}
 \end{frame}
+
+
+\begin{frame}[standout]
+
+extra slides
+\end{frame}
+
+
+\begin{frame}{3 benefits of the space-time view}
+
+\begin{enumerate}
+\item \alert{(numerical time-stepping)} you can see \emph{what ``fully-implicit'' must mean}
+\item \alert{(practical modeling)} you can see \emph{why modeled surface mass balance must be available on space \& time adjacent ice-free land}
+\item \alert{(mathematical ignorance)} you can consider \emph{what determines the evolution of the glaciated area}, and how unclear that is at present
+\end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{benefit 1: numerical time-stepping}
+
+what does ``fully-implicit'' time-stepping mean?
+
+\medskip
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{implicitstep}
+\end{center}
+
+\medskip
+\viewin{(Bueler, 2022)}
+
+{\footnotesize \emph{note appealing semi-implicit idea in} (L\"ofgren et al 2022)}
+\end{frame}
+
+
+\begin{frame}{benefit 2: practical modeling}
+
+why must modeled surface mass balance be available on \emph{space \& time} adjacent ice-free land?
+
+\bigskip
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{smbcells}
+\end{center}
+
+\bigskip
+{\footnotesize \emph{see finite element considerations in} (Bueler 2024)}
+\end{frame}
+
+
+\begin{frame}{benefit 3: mathematical ignorance}
+
+what equations and inequalities, \emph{precisely and mathematically}, determine the evolution of the glaciated area, when using Stokes dynamics?
+
+\bigskip
+
+\begin{center}
+\includegraphics[width=0.5\textwidth]{fixme2042}
+\end{center}
+
+\bigskip
+\viewin{(Calvo et al 2003) \emph{and} (Jouvet \& Bueler 2012), \emph{but for SIA}}
+
+{\footnotesize \emph{needs fixed-domain Stokes well-posedness from e.g.} (Jouvet \& Rappaz 2011)}
+
+{\footnotesize \emph{see conjectures in} (Bueler 2024)}
+\end{frame}
+
+
 \end{document}
