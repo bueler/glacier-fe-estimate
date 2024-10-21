@@ -1,4 +1,5 @@
-\documentclass{m2an}
+\documentclass[hidelinks,onefignum,onetabnum,final]{siamart220329}  % for arxiv
+%\documentclass[review,hidelinks,onefignum,onetabnum,final]{siamart220329}  % for submission
 
 \usepackage{amsfonts,yhmath}
 \usepackage{graphicx}
@@ -9,15 +10,19 @@
   \DeclareGraphicsExtensions{.eps}
 \fi
 
-% my theorem environments for M2AN
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[thrm]{Lemma}
-\newtheorem{corollary}[thrm]{Corollary}
-\theoremstyle{definition}
-\newtheorem{definition}[thrm]{Definition}
-\newtheorem{conjecture}[thrm]{Conjecture}
-\newtheorem{assumptions}[thrm]{Assumptions}
+% Used for creating new theorem and remark environments
+\newsiamthm{conjecture}{Conjecture}
+\newsiamremark{example}{Example}
+
+\newcommand{\newindthmstar}[2]{
+  \theoremstyle{plain}
+  \theoremheaderfont{\normalfont\sc}
+  \theorembodyfont{\normalfont\itshape}
+  \theoremseparator{.}
+  \theoremsymbol{}
+  \newtheorem*{#1}{#2}
+}
+\newindthmstar{assumptions}{Standard Assumptions}
 
 \usepackage{amsopn}
 \DeclareMathOperator{\diag}{diag}
@@ -28,8 +33,6 @@
 
 \usepackage{tikz}
 \usetikzlibrary{math, positioning}
-
-\usepackage[pdftex, colorlinks=true, plainpages=false, linkcolor=blue, citecolor=red, urlcolor=blue]{hyperref}
 
 \newcommand{\eps}{\epsilon}
 \newcommand{\RR}{\mathbb{R}}
@@ -83,36 +86,30 @@
 
 \newcommand{\CA}{C_\text{\textnormal{A}}}
 
-
-\begin{document}
+% running headers and PDF metadata
+\headers{Surface elevation errors in glacier Stokes models}{E. Bueler}
 
 \title{Surface elevation errors in finite element \\ Stokes models for glacier evolution}
-%suggestion: \runningtitle{Surface elevation errors in glacier Stokes models}
 
-\author{Ed Bueler}
-%suggestion: \runningauthors{Ed Bueler}
+\author{Ed Bueler\thanks{Dept.~Mathematics \& Statistics, University of Alaska Fairbanks, USA (\email{elbueler@alaska.edu}).}}
 
-\address{Dept.~Mathematics \& Statistics, University of Alaska Fairbanks, USA (elbueler\@@alaska.edu).}
 
-\date{\today}
-
-\subjclass{76D27, 76D07, 49J40, 65N30, 65N15}
-
-\keywords{error bounds, finite element methods, glaciers, ice flow, variational inequalities}
+\begin{document}
+\maketitle
 
 \begin{abstract}
 The primary data which determine the evolution of glaciation are the bedrock elevation and the surface mass balance.  From this data, which we assume is defined over a fixed land region, the glacier's geometry solves a free boundary problem which balances the time derivative of the surface elevation, the surface velocity from the Stokes flow, and the surface mass balance.  A surface elevation function for this problem is admissible if it is above the bedrock topography, equivalently if the ice thickness is nonnegative.  This free boundary problem can be posed in weak form as a variational inequality.  After some preparatory theory for the glaciological Stokes problem, we conjecture that the continuous space, implicit time step variational inequality problem for the surface elevation is well-posed.  This conjecture is supported both by physical arguments and numerical evidence.  We then prove a general theorem which bounds the numerical error made by a finite element approximation of a nonlinear variational inequality in a Banach space.  The bound is a sum of error terms of different types, essentially special to variational inequalities.  In the case of the implicit step glacier problem these terms are of three types: errors from discretizing the bed elevation, errors from numerically solving for the Stokes velocity, and finally an expected quasi-optimal finite element error in the surface elevation itself.
 \end{abstract}
 
-% straight from google translate
-\begin{resume}
-Les principales données qui déterminent l'évolution de la glaciation sont l'élévation du substrat rocheux et le bilan de masse en surface.  À partir de ces données, que nous supposons définies sur une région terrestre fixe, la géométrie du glacier résout un problème de frontière libre qui équilibre la dérivée temporelle de l'élévation de la surface, la vitesse de surface de l'écoulement de Stokes et le bilan de masse en surface.  Une fonction d'élévation de la surface pour ce problème est admissible si elle est au-dessus de la topographie du substrat rocheux, de manière équivalente si l'épaisseur de la glace est non négative.  Ce problème de frontière libre peut être posé sous forme faible comme une inégalité variationnelle.  Après quelques théories préparatoires au problème glaciologique de Stokes, nous conjecturons que le problème d'inégalité variationnelle implicite à pas de temps dans l'espace continu pour l'élévation de la surface est bien posé.  Cette conjecture est étayée à la fois par des arguments physiques et des preuves numériques.  Nous prouvons ensuite un théorème général qui limite l'erreur numérique commise par une approximation par éléments finis d'une inégalité variationnelle non linéaire dans un espace de Banach.  La borne est une somme de termes d’erreur de différents types, essentiellement spécifiques aux inégalités variationnelles.  Dans le cas du problème implicite du glacier à marches, ces termes sont de trois types : les erreurs liées à la discrétisation de l'élévation du lit, les erreurs liées à la résolution numérique de la vitesse de Stokes, et enfin une erreur par éléments finis quasi optimale attendue dans l'élévation de la surface elle-même.
-\end{resume}
+\begin{keywords}
+error bounds, finite element methods, glaciers, ice flow, variational inequalities
+\end{keywords}
 
-\maketitle
+\begin{MSCcodes}
+76D27, 76D07, 49J40, 65N30, 65N15
+\end{MSCcodes}
 
-
-\section*{Introduction} \label{sec:intro}
+\section{Introduction} \label{sec:intro}
 
 Glacier and ice sheet simulations model the ice as a free-surface layer of very-viscous, incompressible, and non-Newtonian fluid \cite{GreveBlatter2009,SchoofHewitt2013}.  For simplicity we will only consider simulations of land-based glaciers, without floating portions, and we note that an ``ice sheet'' is simply a continent-scale glacier.
 
@@ -126,7 +123,7 @@ Our notation is sketched in Figure \ref{fig:stokesdomain}.  Let $\Omega \subset 
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.55\textwidth]{genfigs/stokesdomain.pdf}
+\includegraphics[width=0.65\textwidth]{genfigs/stokesdomain.pdf}
 \caption{Glacier notation used in this paper.  In fact $\Omega$ is 2D and $\Lambda(t)$ is 3D.}
 \label{fig:stokesdomain}
 \end{figure}
@@ -190,7 +187,7 @@ Note that the NCP \eqref{eq:ncp} is the only place where a time derivative appea
 While essentially equivalent in the continuum problem, formulations using thickness functions to parameterize geometry have a slightly different character from those using surface elevation as here.  Suppose the bedrock is realistically rough.  Surface elevation $s$ is subject to the flow-caused smoothing effect illustrated in Figure \ref{fig:giscross}.  That is, for land-based glaciers $s(t,x)$ is generally smoother in $x$ than the thickness $H(t,x) = s(t,x)-b(x)$, because it ``inherits'' the lower regularity of the (typically) eroded and faulted bedrock topography $b$.  This is one reason we formulate the model using the surface elevation.
 
 \begin{figure}
-\begin{minipage}[t]{0.75\textwidth}
+\begin{minipage}[t]{0.85\textwidth}
 \vspace{0pt}
 \includegraphics[width=\textwidth]{genfigs/giscross.pdf}
 \end{minipage}
@@ -589,7 +586,7 @@ If, for all pairs in some $\cK$, the set of ratios $\{\rho(r,s)\}$ were bounded 
 The domain for our experiments is the 1D interval $\Omega=(-L,L)$, $L=100$ km, with $\cX = W_b^{1,2}(\Omega)$.  The interval $\Omega$ was uniformly-meshed into equal intervals.  The $P_1$ piecewise-linear FE space $\cX_h\subset \cX$ was used for the bed $b$ and the surface $s$, giving polygonal domains $\Lambda$ defined by $b,s$; see equation \eqref{eq:icydomain}.  Three bed profiles  (Figure \ref{fig:cases}) were considered, \emph{flat} with $b=0$, \emph{smooth} with a superposition of several wavelengths down to 10 km, and \emph{rough} with an additional 4 km wavelength mode.  These beds generate corresponding constraint sets $\cK_i \subset \cX$, $i=1,2,3$.
 
 \begin{figure}[ht]
-\mbox{\includegraphics[width=0.30\textwidth]{figs/snapsflat.png} \, \includegraphics[width=0.32\textwidth]{figs/snapssmooth.png} \, \includegraphics[width=0.32\textwidth]{figs/snapsrough.png}}
+\mbox{\includegraphics[width=0.31\textwidth]{figs/snapsflat.png} \, \includegraphics[width=0.335\textwidth]{figs/snapssmooth.png} \, \includegraphics[width=0.335\textwidth]{figs/snapsrough.png}}
 
 \caption{Three bed cases (flat, smooth, rough) define constraint sets $\cK_i\subset\cX$ in the numerical experiment.  For each $\cK_i$, three time-dependent runs of $T=200$ years, starting from the same initial state (dotted), but using different constant values of the SMB (see text), generated a large number of admissible states.  Example states at $t=170$ years are shown (solid).  Ratios \eqref{eq:Phiratio} were computed for 1000 sample pairs $r,s$ from each set $\cK_i$.}
 \label{fig:cases}
@@ -602,7 +599,7 @@ In these simulations each time-step VI \eqref{eq:be:vi} was done semi-implicitly
 The basic result of these experiments is shown in Figure \ref{fig:ratios}.  These are sample ratio $\rho(r,s)$ histograms from the highest spatial resolution, namely $\Delta x=500$ m and 40 elements in each extruded column.  More than $87\%$ of all the ratios were positive, and of these the medians for the three $\cK_i$ were in the range $[4.5,5.2] \times 10^{-13}$.  For the remaining negative ratios, the medians were in the range $[-4.1,-2.8]\times 10^{-14}$, much smaller in magnitude.
 
 \begin{figure}[ht]
-\mbox{\includegraphics[width=0.32\textwidth]{figs/flatratios.png} \, \includegraphics[width=0.30\textwidth]{figs/smoothratios.png} \, \includegraphics[width=0.30\textwidth]{figs/roughratios.png}}
+\mbox{\includegraphics[width=0.33\textwidth]{figs/flatratios.png} \, \includegraphics[width=0.31\textwidth]{figs/smoothratios.png} \, \includegraphics[width=0.31\textwidth]{figs/roughratios.png}}
 
 \caption{Histograms of ratios $\rho(r,s)$ for 1000 sample pairs from each of the three sets $\cK_i$ (Figure \ref{fig:cases}).  The horizontal axis has  $\rho(r,s) \in [-1,6]\times 10^{-12}$, and the common vertical axis is for counts between 0 and 350.  About $10\%$ of these ratios are negative (solid).}
 \label{fig:ratios}
@@ -781,7 +778,7 @@ for $q\in\cX_h$.  This is a different operator from $F_{\Delta t}(s_h)$, defined
 
 \begin{figure}[ht]
 \begin{center}
-\includegraphics[width=0.7\textwidth]{genfigs/extruded.pdf}
+\includegraphics[width=0.75\textwidth]{genfigs/extruded.pdf}
 \end{center}
 \caption{Evaluating $F^h_{\Delta t}(s_h)$ in \eqref{eq:fe:be:vi} requires numerically (approximately) solving a Stokes problem on a mesh between $b_h$ and $s_h$, and then evaluating its upper surface trace: $\bu_h|_{s_h}$.}
 \label{fig:fe:operatorvisualization}
@@ -802,7 +799,6 @@ Collecting the above assumptions and context, from now on we make the following 
 \smallskip
 \begin{assumptions}
 The following data are given:
-\renewcommand{\labelenumi}{\arabic{enumi}.}
 \begin{enumerate}
 \item A bounded, convex polygon $\Omega\subset\RR^2$.
 \item An exponent $\rr > 2$, with conjugate exponent $\rr' = \rr/(\rr-1)$. \label{item:rr}
@@ -925,9 +921,10 @@ Neither do we have a proof of the well-posedness of the continuous-space, implic
 
 The root of the matter is coercivity of this surface motion, namely Conjecture \ref{conj:b}.  A strategy for proving this Conjecture is not clear to this author.  A weaker version comes from setting $r=s + \eps\phi$ for $\phi$ supported where $s>b$.  That is, one could consider admissible perturbations of the glacier surface which do not move the glacier margin.  This may be easier to prove, but it is not sufficient for Theorem \ref{thm:stepwellposed}, and it does not address the marginal shape and overhang concerns in Subsection \ref{subsec:margin}.  Also, one might modify or regularize the operator definition \eqref{eq:be:Fdefine} in some manner, e.g.~by adding an elliptic regularization term.  Our numerical evidence for coercivity of the existing operator, from a very basic numerical approach, is weak (Section \ref{sec:numerical}), but in a regularized model the near-margin numerical approximation might be easier.
 
-\begin{acknowledgement}
+
+\section{Acknowledgements} \label{sec:acknowledgements}
+
 Thanks to J.~Ahlkrona and P.~Piersanti for thoughtful comments on an earlier version.
-\end{acknowledgement}
 
 %\clearpage\newpage
 \bibliographystyle{siamplain}
