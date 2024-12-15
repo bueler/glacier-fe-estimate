@@ -1,0 +1,244 @@
+\documentclass[10pt,dvipsnames]{beamer}
+
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usetheme{metropolis}
+\metroset{block=fill}
+%\setmonofont{Ubuntu Mono}
+
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs,empheq,bbold,bm}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+% for python listings; inspired by https://gist.github.com/YidongQIN/a10dd4f72381362aff4257e7a5541d86 
+\usepackage{listings}
+\usepackage{color}
+\definecolor{darkred}{rgb}{0.6,0.0,0.0}
+\definecolor{darkgreen}{rgb}{0,0.50,0}
+\definecolor{lightblue}{rgb}{0.0,0.42,0.91}
+\definecolor{orange}{rgb}{0.99,0.48,0.13}
+\definecolor{grass}{rgb}{0.18,0.80,0.18}
+\definecolor{pink}{rgb}{0.97,0.15,0.45}
+\lstdefinelanguage{PythonPlus}[]{Python}{
+  morekeywords=[1]{,as,assert,nonlocal,with,yield,self,True,False,None,} % Python builtin
+  morekeywords=[2]{,__init__,__add__,__mul__,__div__,__sub__,__call__,__getitem__,__setitem__,__eq__,__ne__,__nonzero__,__rmul__,__radd__,__repr__,__str__,__get__,__truediv__,__pow__,__name__,__future__,__all__,}, % magic methods
+  morekeywords=[3]{,object,type,isinstance,copy,deepcopy,zip,enumerate,reversed,list,set,len,dict,tuple,range,xrange,append,execfile,real,imag,reduce,str,repr,}, % common functions
+  morekeywords=[4]{,Exception,NameError,IndexError,SyntaxError,TypeError,ValueError,OverflowError,ZeroDivisionError,}, % errors
+  morekeywords=[5]{,ode,fsolve,sqrt,exp,sin,cos,arctan,arctan2,arccos,pi, array,norm,solve,dot,arange,isscalar,max,sum,flatten,shape,reshape,find,any,all,abs,plot,linspace,legend,quad,polyval,polyfit,hstack,concatenate,vstack,column_stack,empty,zeros,ones,rand,vander,grid,pcolor,eig,eigs,eigvals,svd,qr,tan,det,logspace,roll,min,mean,cumsum,cumprod,diff,vectorize,lstsq,cla,eye,xlabel,ylabel,squeeze,}, % numpy / math
+}
+\lstdefinestyle{colorEX}{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{white},
+  commentstyle=\color{darkgreen}\slshape,
+  keywordstyle=\color{blue}\bfseries\itshape,
+  keywordstyle=[2]\color{blue}\bfseries,
+  keywordstyle=[3]\color{grass},
+  keywordstyle=[4]\color{red},
+  keywordstyle=[5]\color{orange},
+  stringstyle=\color{darkred},
+  emphstyle=\color{pink}\underbar,
+}
+\lstset{style=colorEX,
+        basewidth = {.49em}}
+
+\newcommand{\bg}{\mathbf{g}}
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\bu}{\mathbf{u}}
+
+\newcommand{\bU}{\mathbf{U}}
+
+\newcommand{\bzero}{\bm{0}}
+
+\newcommand{\eps}{\epsilon}
+\newcommand{\grad}{\nabla}
+\newcommand{\Div}{\nabla\cdot}
+
+\newcommand{\rhoi}{\rho_{\text{i}}}
+\newcommand{\snew}{s^{\text{new}}}
+
+\newcommand{\comm}[1]{{\footnotesize \hfill \emph{#1}}}
+\newcommand{\where}[1]{\text{\footnotesize #1}}
+\newcommand{\viewin}[1]{{\footnotesize \emph{this view appears in} #1}}
+
+
+\title{Finite element method errors in Stokes models of glacier evolution}
+\date{JMM, Seattle, January 2025}
+\author{Ed Bueler, University of Alaska Fairbanks}
+\titlegraphic{\vspace{-1cm}\par\hspace{-1cm}\includegraphics[width=1.5\textwidth]{figs/polaris-overexposed.png}}
+
+\begin{document}
+\graphicspath{{../NWG24/figs/}}
+
+\maketitle
+
+\begin{frame}{quiz: glacier evolution in space time}
+
+\bigskip \bigskip
+
+\begin{columns}
+\begin{column}{0.26\textwidth}
+\begin{itemize}
+\item[a)] what is \emph{true} in/on the ice?
+\item[b)] what is \emph{true} on bare land?
+\item[c)] what is \emph{true} at the free boundary?
+\end{itemize}\end{column}
+\begin{column}{0.74\textwidth}
+\hfill \includegraphics[width=\textwidth]{xtcrop}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Outline}
+  \setbeamertemplate{section in toc}[sections numbered]
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+\AtBeginSection[]
+{% nothing
+}
+
+\section{introduction}
+
+\begin{frame}{the 3 views}
+
+\vspace{-2mm}
+\begin{center}
+\includegraphics[width=0.55\textwidth]{xtcrop}
+\end{center}
+
+\vspace{-2mm}
+\begin{columns}
+\begin{column}{0.43\textwidth}
+\includegraphics[width=0.9\textwidth]{mapplane}
+\end{column}
+\begin{column}{0.57\textwidth}
+\hfill \includegraphics[width=\textwidth]{stokesdomainpink}
+\end{column}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{\underline{the} mathematical model}
+
+\begin{align*}
+s - b &\ge 0 & &\where{in $\Omega$} \\
+\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 & &\where{in $\Omega$} \\
+(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 & &\where{in $\Omega$} \\
+- \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(s)$} \\
+\nabla \cdot \bu &= 0 && \where{in $\Lambda(s)$} \\
+\nu(D\bu) &= \nu_n \left(|D\bu|^2 + \eps\right)^{q_n} && \where{in $\Lambda(s)$} \\
+\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
+\bu  = \bzero \text{ } &\text{or } f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
+\end{align*}
+\end{frame}
+
+
+\begin{frame}{what is true \alert{everywhere} in $\Omega$?}
+
+\hfill \includegraphics[width=0.35\textwidth]{mapplane}
+
+\begin{align*}
+s - b &\ge 0 & &\where{in $\Omega$} \\
+\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 & &\where{in $\Omega$} \\
+(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 & &\where{in $\Omega$}
+\end{align*}
+
+\vspace{10mm}
+{\footnotesize \emph{this nonlinear complementarity problem first appears in (Calvo et al 2003), \emph{for SIA}}}
+\end{frame}
+
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,hideallsubsections]
+  \end{frame}
+}
+
+
+\section{well-posed implicit steps?}
+
+\begin{frame}{what does ``fully-implicit'' time-stepping mean?}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{implicitstep}
+\end{center}
+
+\medskip
+FIXME all facts need to be true at $t_k$
+%FIXME separate slide regarding performance scaling?:  \viewin{(Bueler, 2022)}
+%{\footnotesize \emph{note appealing semi-implicit idea in} (L\"ofgren et al 2022)}
+\end{frame}
+
+
+\begin{frame}{FIXME sketch well-posedness}
+
+foo
+\end{frame}
+
+
+\section{finite element approximation}
+
+\begin{frame}{FIXME a FE error theorem}
+
+\begin{itemize}
+\item this theorem needs ``reasonable'' assumptions for a (continuum) geometry-evolving, Stokes model for glaciers \dots including \textbf{conjectured} well-posedness
+\item \emph{Theorem (Bueler, 2024).}  the FE error in computing an updated surface elevation, using an implicit time step, comes from 3 terms:
+\begin{align*}
+\|s_h-s\|^r &\le \quad \frac{c_1}{\Delta t} \int_{\Omega_A(s)} (b - \ell) (b_h - b) \\
+   &\quad\, + \Gamma \big\|\bu_h - \bu\big\| \\
+   &\quad\, + c_0 \|\Pi_h(s) - s\|^q
+\end{align*}
+\item this separates the causes of surface elevation errors:
+    \begin{enumerate}
+    \item discretizing the bed elevation ($b_h$ versus exact $b$)
+    \item numerically solving the Stokes equations ($\bu_h$ versus exact $\bu$)
+    \item Cea's lemma for the surface elevation ($s_h$ versus exact $s$) \strut
+        \begin{itemize}
+        \item[$\circ$] $s$ necessarily projected to be admissible with respect to $b_h$
+        \end{itemize}
+    \end{enumerate}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{conclusion}
+
+\begin{itemize}
+\item FIXME
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{references}
+
+{\footnotesize \input{references.tex}}
+\end{frame}
+
+
+\begin{frame}[standout]
+
+extra slides
+\end{frame}
+
+
+\begin{frame}{why is $s$ better than $H=s-b$?}
+
+\begin{center}
+\includegraphics[height=0.84\textheight]{giscross}
+\end{center}
+\end{frame}
+
+
+\end{document}
