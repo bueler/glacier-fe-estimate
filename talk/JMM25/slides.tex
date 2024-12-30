@@ -3,7 +3,7 @@
 \definecolor{links}{HTML}{2A1B81}
 \hypersetup{colorlinks,linkcolor=,urlcolor=links}
 
-\usetheme{metropolis}
+\usetheme[numbering=fraction]{metropolis}
 \metroset{block=fill}
 %\setmonofont{Ubuntu Mono}
 
@@ -49,6 +49,9 @@
 \lstset{style=colorEX,
         basewidth = {.49em}}
 
+\theoremstyle{theorem}
+\newtheorem*{conjecture}{Conjecture}
+
 \newcommand{\bg}{\mathbf{g}}
 \newcommand{\bn}{\mathbf{n}}
 \newcommand{\bq}{\mathbf{q}}
@@ -58,7 +61,14 @@
 
 \newcommand{\bzero}{\bm{0}}
 
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cX}{\mathcal{X}}
+
 \newcommand{\RR}{\mathbb{R}}
+
+\newcommand{\nn}{\mathrm{n}}
+\newcommand{\pp}{\mathrm{p}}
+\newcommand{\rr}{\mathrm{r}}
 
 \newcommand{\eps}{\epsilon}
 \newcommand{\grad}{\nabla}
@@ -73,8 +83,11 @@
 
 
 \title{Finite element errors in Stokes models \\ of glacier evolution}
+
 \date{JMM 2025, Seattle}
+
 \author{Ed Bueler, University of Alaska Fairbanks}
+
 \titlegraphic{\vspace{-1cm}\par\hspace{-1cm}\includegraphics[width=1.5\textwidth]{figs/polaris-overexposed.png}}
 
 \begin{document}
@@ -106,7 +119,7 @@
 \end{frame}
 
 \AtBeginSection[]
-{% nothing
+{% nothing here
 }
 
 \section{introduction}
@@ -134,31 +147,33 @@
 
 \hfill \includegraphics[width=0.37\textwidth]{mapplane}
 
-\vspace{-37mm}
+\vspace{-40mm}
 
 \begin{minipage}[t]{60mm}
+{\small
 \begin{itemize}
 \item $\Omega \subset \RR^2$ fixed simulation domain
 \item $x = (x_1,x_2) \in \Omega$
 \item $a(t,x)$ surface mass balance (SMB)
 \item $b(x)$ bed elevation
 \item $s(t,x)$ surface elevation
-\item $\bu|_s(t,x)$ surface value of ice velocity
+\item $\bu|_s(t,x)$ surface value of ice velocity, extended by zero to bare land
 \end{itemize}
+}
 \end{minipage}
 
 
 \begin{itemize}
 \item nonlinear complementarity problem (NCP) true in $[0,T] \times \Omega$:
 \begin{align*}
-s - b &\ge 0 \\
+s - b &\ge 0 &&\phantom{x} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0
 \end{align*}
 
 \smallskip
 
-\item {\footnotesize NCP first appears in (Calvo et al 2003), only for SIA}
+\item {\footnotesize this NCP first appears in (Calvo et al 2003), but only for SIA}
 \item {\footnotesize surface kinematical equation: $\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0$}
 \end{itemize}
 \end{frame}
@@ -166,26 +181,24 @@ s - b &\ge 0 \\
 
 \begin{frame}{what is true within the ice?}
 
-\hfill \includegraphics[width=0.5\textwidth]{stokesdomainpink}
+\hfill \includegraphics[width=0.55\textwidth]{stokesdomainpink}
 
-\vspace{-25mm}
+\vspace{-15mm}
 
-\begin{minipage}[t]{50mm}
+\begin{minipage}[t]{45mm}
 \begin{itemize}
 \item a more familiar question in glaciology!
-\item assume $s(t,x) \ge b(x)$
-\item fix $t$
 \end{itemize}
 \end{minipage}
 
 \begin{itemize}
-\item define
-    $$\Lambda(s) = \{(x_1,x_2,z)\,:\,b(x)<z<s(t,x)\} \subset \RR^3$$
-\item Glen-Stokes equations in $\Lambda(s)$:
+\item fix $t$ and define
+    $$\Lambda(s) = \{(x,z)\,:\,b(x)<z<s(t,x)\} \subset \RR^3$$
+\item Glen-Stokes equations in $\Lambda(s)$ with $\pp = \nn + 1 \approx 4$:
 \begin{align*}
 - \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg &&  \\
 \nabla \cdot \bu &= 0 &&  \\
-\nu(D\bu) &= \nu_n \left(|D\bu|^2 + \eps\right)^{q_n} &&  \\
+\nu(D\bu) &= \nu_0 |D\bu|^{\pp-2} &&  \\
 \left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
 \bu  = \bzero \text{ } &\,\text{or } \,f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
 \end{align*}
@@ -193,7 +206,7 @@ s - b &\ge 0 \\
 \end{frame}
 
 
-\begin{frame}{\underline{the} mathematical model}
+\begin{frame}{\underline{the} mathematical model for glacier evolution}
 
 \begin{align*}
 s - b &\ge 0 & &\where{in $\Omega$} \\
@@ -205,6 +218,11 @@ s - b &\ge 0 & &\where{in $\Omega$} \\
 \left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
 \bu  = \bzero \text{ } &\text{or } f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
 \end{align*}
+
+\bigskip
+\begin{itemize}
+\item NCP in $\Omega \subset \RR^2$, coupled to Glen-Stokes system within the ice
+\end{itemize}
 \end{frame}
 
 
@@ -221,14 +239,61 @@ s - b &\ge 0 & &\where{in $\Omega$} \\
 
 \begin{frame}{what does ``fully-implicit'' time-stepping mean?}
 
-\begin{center}
-\includegraphics[width=0.8\textwidth]{implicitstep}
-\end{center}
+\bigskip
 
-\medskip
-FIXME all facts need to be true at $t_k$
-%FIXME separate slide regarding performance scaling?:  \viewin{(Bueler, 2022)}
-%{\footnotesize \emph{note appealing semi-implicit idea in} (L\"ofgren et al 2022)}
+\qquad \includegraphics[width=0.85\textwidth]{implicitstep}
+\end{frame}
+
+
+\begin{frame}{weak form implicit step problem}
+
+\begin{itemize}
+\item details from (Bueler, 2024) suppressed here \dots
+\item $\cX$ denotes Banach space of elevation functions on $\Omega$; $b\in\cX$
+\item for $t_k \in [0,T]$, surface elevation solution denoted $s(x)=s(t_k,x)$
+\item define:
+
+\vspace{-10mm}
+\begin{align*}
+\cK &= \{r \in \cX\,:\, r(x) \ge b(x) \text{ a.e. } x\in\Omega\} \\
+\ell^k(x) &= s(t_{k-1},x) + \int_{t_k - \Delta t}^{t_k} a(t,x)\,dt \\
+F(s)[q] &= \int_\Omega (s - \Delta t\,\bu|_s \cdot \bn_s) q 
+\end{align*}
+\item observe $\ell^k, F(s) \in \cX'$
+\item weak form of the implicit step problem, for $s \in \cK$, is the variational inequality (VI)
+$$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{well-posedness is only conjectural}
+
+\hfill \includegraphics[width=0.35\textwidth]{mapplane}
+
+\begin{conjecture}
+for some $\rho>2$, the continuous-space implicit step VI problem
+$$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
+is well-posed for $s\in\cK$, over admissible surface elevations 
+$$\cK = \{r \ge b\} \subset \cX = W^{1,\rho}(\Omega)$$
+\end{conjecture}
+\end{frame}
+
+
+\begin{frame}{what's behind the conjecture? 1}
+
+FIXME the Glen-Stokes problem for a fixed domain \textbf{is} well-posed
+\end{frame}
+
+
+\begin{frame}{what's behind the conjecture? 2}
+
+FIXME the margin shape of glaciers is a hard modeling problem
+\end{frame}
+
+
+\begin{frame}{what's behind the conjecture? 3}
+
+FIXME $\Phi(s)$ is $q$-coercive? numerical evidence
 \end{frame}
 
 
