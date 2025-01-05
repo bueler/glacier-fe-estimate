@@ -13,6 +13,9 @@
 \usepackage[scale=2]{ccicons}
 
 \usepackage{pgfplots}
+\usepackage{tikz}
+\usetikzlibrary{math, positioning}
+
 \usepgfplotslibrary{dateplot}
 
 \usepackage{xspace}
@@ -68,6 +71,7 @@
 
 \newcommand{\nn}{\mathrm{n}}
 \newcommand{\pp}{\mathrm{p}}
+\newcommand{\qq}{\mathrm{q}}
 \newcommand{\rr}{\mathrm{r}}
 
 \newcommand{\eps}{\epsilon}
@@ -91,22 +95,22 @@
 \titlegraphic{\vspace{-1cm}\par\hspace{-1cm}\includegraphics[width=1.5\textwidth]{figs/polaris-overexposed.png}}
 
 \begin{document}
-\graphicspath{{figs/}{../NWG24/figs/}}
+\graphicspath{{figs/}{../NWG24/figs/}{../../paper/figs/}}
 
 \maketitle
 
-\begin{frame}{quiz: glacier evolution in space time}
+\begin{frame}{quiz: glacier evolution in space-time \only<2>{ \dots implicitly?}}
 
 \bigskip \bigskip
 
 \begin{columns}
-\begin{column}{0.26\textwidth}
+\begin{column}{0.28\textwidth}
 \begin{itemize}
-\item[a)] what is true in/on the ice?
-\item[b)] what is true on bare land?
-\item[c)] what is true at the free boundary?
+\item[a)] what is true within the {\color{RoyalBlue} ice}?
+\item[b)] what is true on {\color{OliveGreen} bare land}?
+\item[c)] what is true at {\color{Salmon} free boundary}?
 \end{itemize}\end{column}
-\begin{column}{0.74\textwidth}
+\begin{column}{0.72\textwidth}
 \only<1>{\includegraphics[height=65mm]{xtcrop}}\only<2>{\includegraphics[height=65mm]{implicitstep}}
 \end{column}
 \end{columns}
@@ -122,7 +126,7 @@
 {% nothing here
 }
 
-\section{introduction}
+\section{introduction to the standard glacier model}
 
 \begin{frame}{the 3 views}
 
@@ -137,13 +141,13 @@
 \includegraphics[width=0.9\textwidth]{mapplane}
 \end{column}
 \begin{column}{0.57\textwidth}
-\hfill \includegraphics[width=\textwidth]{stokesdomainpink}
+\hfill \includegraphics[width=\textwidth]{stokesdomainOmega}
 \end{column}
 \end{columns}
 \end{frame}
 
 
-\begin{frame}{what is true everywhere in the simulation domain?}
+\begin{frame}{what is true everywhere in $\Omega$?}
 
 \hfill \includegraphics[width=0.37\textwidth]{mapplane}
 
@@ -156,73 +160,90 @@
 \item $x = (x_1,x_2) \in \Omega$
 \item $a(t,x)$ surface mass balance (SMB)
 \item $b(x)$ bed elevation
-\item $s(t,x)$ surface elevation
+\item $s(t,x)$ \emph{solution} surface elevation
+\item $\bn_s = (- \grad s,1)$ is upward normal vector
 \item $\bu|_s(t,x)$ surface value of ice velocity, extended by zero to bare land
 \end{itemize}
 }
 \end{minipage}
 
-
 \begin{itemize}
-\item nonlinear complementarity problem (NCP) true in $[0,T] \times \Omega$:
+\item nonlinear complementarity problem (NCP) in $[0,T] \times \Omega$:
 \begin{align*}
 s - b &\ge 0 &&\phantom{x} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0
 \end{align*}
-
-\smallskip
-
-\item {\footnotesize this NCP first appears in (Calvo et al 2003), but only for SIA}
-\item {\footnotesize surface kinematical equation: $\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0$}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{what is true within the ice?}
+\begin{frame}{the free-boundary problem for surface elevation}
 
-\hfill \includegraphics[width=0.55\textwidth]{stokesdomainpink}
-
-\vspace{-15mm}
-
-\begin{minipage}[t]{45mm}
 \begin{itemize}
-\item a more familiar question in glaciology!
+\item in glaciology,
+   $$\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0$$
+is the surface kinematical equation (SKE)
+\item the time-dependent nonlinear complementarity problem (NCP),
+\begin{align*}
+s - b &\ge 0 &&\phantom{x} \\
+\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
+(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0
+\end{align*}
+is the underlying \emph{free-boundary} meaning of the SKE, whatever the dynamical model within the ice
+\item this NCP first appears in (Calvo et al 2003), but only for the shallow ice approximation
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{what is true within $\Lambda(s)$?}
+
+\hfill \includegraphics[width=0.58\textwidth]{stokesdomain}
+
+\vspace{-18mm}
+
+\begin{minipage}[t]{42mm}
+\begin{itemize}
+\item more familiar question in glaciology
 \end{itemize}
 \end{minipage}
 
 \begin{itemize}
-\item fix $t$ and define
-    $$\Lambda(s) = \{(x,z)\,:\,b(x)<z<s(t,x)\} \subset \RR^3$$
-\item Glen-Stokes equations in $\Lambda(s)$ with $\pp = \nn + 1 \approx 4$:
+\item fix $t$ and define:
+    $$\Lambda(s) = \{(x,z)\,:\,b(x)<z<s(t,x)\} \qquad \subset \RR^3$$
+\item Glen-Stokes equations in $\Lambda(s)$ with $\pp = (\nn + 1)/\nn \approx 4/3$:
 \begin{align*}
-- \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg &&  \\
-\nabla \cdot \bu &= 0 &&  \\
-\nu(D\bu) &= \nu_0 |D\bu|^{\pp-2} &&  \\
-\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
-\bu  = \bzero \text{ } &\,\text{or } \,f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
+- \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg  \\
+\nabla \cdot \bu &= 0  \\
+\nu(D\bu) &= \nu_0 |D\bu|^{\pp-2} && \quad {\scriptsize \leftarrow \text{needs regularization}}
+\end{align*}
+
+\vspace{-1mm}
+\item boundary conditions:
+\begin{align*}
+&\left(2 \nu(D\bu) D\bu - pI\right) \bn_s = \bzero   && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
+&\bu  = \bzero \text{ } \,\text{or } \,f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
 \end{align*}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{\underline{the} mathematical model for glacier evolution}
+\begin{frame}{\underline{the} standard model for glacier evolution}
 
 \begin{align*}
 s - b &\ge 0 & &\where{in $\Omega$} \\
-\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 & &\where{in $\Omega$} \\
-(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 & &\where{in $\Omega$} \\
-- \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(s)$} \\
-\nabla \cdot \bu &= 0 && \where{in $\Lambda(s)$} \\
-\nu(D\bu) &= \nu_n \left(|D\bu|^2 + \eps\right)^{q_n} && \where{in $\Lambda(s)$} \\
+\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
+(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 \\
+- \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(s)$} \\
+\nabla \cdot \bu &= 0 \\
 \left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
-\bu  = \bzero \text{ } &\text{or } f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
+\bu  = \bzero \quad \text{or} \quad f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
 \end{align*}
 
 \bigskip
-\begin{itemize}
-\item NCP in $\Omega \subset \RR^2$, coupled to Glen-Stokes system within the ice
-\end{itemize}
+\begin{definition}
+the above \emph{standard model} is an NCP in $\Omega \subset \RR^2$, coupled to the Glen-Stokes system within the ice, in $\Lambda(s) \subset \RR^3$
+\end{definition}
 \end{frame}
 
 
@@ -239,30 +260,37 @@ s - b &\ge 0 & &\where{in $\Omega$} \\
 
 \begin{frame}{what does ``fully-implicit'' time-stepping mean?}
 
-\bigskip
+\qquad\quad \includegraphics[width=0.75\textwidth]{implicitstep}
 
-\qquad \includegraphics[width=0.85\textwidth]{implicitstep}
+\bigskip
+\begin{block}{standard model as a dynamical system}
+an inequality-constrained differential algebraic equation in $\infty$ dimensions
+\end{block}
 \end{frame}
 
 
-\begin{frame}{weak form implicit step problem}
+\begin{frame}{implicit time-step problem}
 
 \begin{itemize}
-\item details from (Bueler, 2024) suppressed here \dots
+\item time-discretized NCP, but in weak form; details found in preprint\footnote{E.~Bueler (2024). \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv 2408.06470}}
 \item $\cX$ denotes Banach space of elevation functions on $\Omega$; $b\in\cX$
-\item for $t_k \in [0,T]$, surface elevation solution denoted $s(x)=s(t_k,x)$
 \item define:
 
-\vspace{-10mm}
+\vspace{-5mm}
 \begin{align*}
-\cK &= \{r \in \cX\,:\, r(x) \ge b(x) \text{ a.e. } x\in\Omega\} \\
+\cK &= \{r \in \cX\,:\, r \ge b \,\text{ a.e. } \Omega\} \\
 \ell^k(x) &= s(t_{k-1},x) + \int_{t_k - \Delta t}^{t_k} a(t,x)\,dt \\
 F(s)[q] &= \int_\Omega (s - \Delta t\,\bu|_s \cdot \bn_s) q 
 \end{align*}
-\item observe $\ell^k, F(s) \in \cX'$
-\item weak form of the implicit step problem, for $s \in \cK$, is the variational inequality (VI)
-$$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
 \end{itemize}
+
+\medskip
+\begin{definition}
+the \emph{backward Euler time-step problem}, for $t_k \in [0,T]$, is to find the surface elevation $s = s(t_k,x) \in \cK$ solving the variational inequality (VI)
+$$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
+\end{definition}
+
+\bigskip
 \end{frame}
 
 
@@ -270,36 +298,69 @@ $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
 
 \hfill \includegraphics[width=0.35\textwidth]{mapplane}
 
-\begin{conjecture}
-for some $\rho>2$, the continuous-space implicit step VI problem
-$$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
-is well-posed for $s\in\cK$, over admissible surface elevations 
-$$\cK = \{r \ge b\} \subset \cX = W^{1,\rho}(\Omega)$$
+\begin{conjecture}[B, 2024]
+for some $\qq>2$, with $\cX = W^{1,\qq}(\Omega)$, and defining the admissible surface elevation subset
+    $$\cK = \{r \ge b\} \subset \cX,$$
+the backward Euler time-step VI problem,
+    $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK,$$
+is well-posed for $s\in\cK$
 \end{conjecture}
 \end{frame}
 
 
 \begin{frame}{what's behind the conjecture? 1}
 
-FIXME the Glen-Stokes problem for a fixed domain \textbf{is} well-posed
+\begin{center}
+\includegraphics[width=0.6\textwidth]{stokesdomain}
+\end{center}
+
+\begin{theorem}[Jouvet \& Rappaz, 2011]
+over a fixed domain $\Lambda$, the Glen-Stokes problem
+\begin{align*}
+- \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda$} \\
+\nabla \cdot \bu &= 0 \\
+\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda$} \\
+\bu  = \bzero \quad \text{or} \quad f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda$}
+\end{align*}
+is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)$
+\end{theorem}
 \end{frame}
 
 
 \begin{frame}{what's behind the conjecture? 2}
 
-FIXME the margin shape of glaciers is a hard modeling problem
+\bigskip
+\begin{center}
+\includegraphics[width=0.75\textwidth]{giscross}
+\end{center}
+
+\begin{itemize}
+\item question: use ice surface elevation $s$ or thickness $H = s - b$ for geometry in the standard model?
+\item answer: prefer $s$ for smoothness reasons
+\end{itemize}
 \end{frame}
 
 
 \begin{frame}{what's behind the conjecture? 3}
 
-FIXME $\Phi(s)$ is $q$-coercive? numerical evidence
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  \node (wedge) {\includegraphics[width=30mm]{wedge.png}} node[xshift=-4mm, yshift=1mm] at (wedge.center) {{\small \emph{ice}}};
+  \node[right= 5mm of wedge] (unbounded) {\includegraphics[width=30mm]{unbounded.png}} node[xshift=-2mm, yshift=1mm] at (unbounded.center) {{\small \emph{ice}}};
+  \node[right= 5mm of unbounded] (realistic) {\includegraphics[width=30mm]{realistic.png}} node[xshift=-6mm, yshift=4mm] at (realistic.center) {{\small \emph{ice}}};
+\end{tikzpicture}
+\end{center}
+
+\begin{itemize}
+\item the conjecture is that $s\ge b$ exists in $\cX = W^{1,\qq}(\Omega)$ for some $\qq>2$
+\item the macroscopic margin shape of glaciers is a hard modeling problem
+\end{itemize}
 \end{frame}
 
 
-\begin{frame}{FIXME sketch well-posedness}
+\begin{frame}{what's behind the conjecture? 4}
 
-foo
+FIXME $\Phi(s)$ is $q$-coercive? numerical evidence
 \end{frame}
 
 
@@ -342,18 +403,17 @@ foo
 \end{frame}
 
 
-\begin{frame}[standout]
+%\begin{frame}[standout]
+%extra slides
+%\end{frame}
 
-extra slides
-\end{frame}
 
-
-\begin{frame}{why is $s$ better than $H=s-b$?}
-
-\begin{center}
-\includegraphics[height=0.84\textheight]{giscross}
-\end{center}
-\end{frame}
+%\begin{frame}{why is $s$ better than $H=s-b$?}
+%
+%\begin{center}
+%\includegraphics[height=0.84\textheight]{giscross}
+%\end{center}
+%\end{frame}
 
 
 \end{document}
