@@ -181,17 +181,19 @@ s - b &\ge 0 &&\phantom{x} \\
 \begin{frame}{the free-boundary problem for surface elevation}
 
 \begin{itemize}
-\item in glaciology,
+\item surface kinematical equation (SKE) in glaciology:
    $$\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0$$
-is the surface kinematical equation (SKE)
-\item the time-dependent nonlinear complementarity problem (NCP),
+\item the time-dependent nonlinear complementarity problem (NCP) is the underlying \emph{free-boundary} meaning of the SKE:
 \begin{align*}
 s - b &\ge 0 &&\phantom{x} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0
 \end{align*}
-is the underlying \emph{free-boundary} meaning of the SKE, whatever the dynamical model within the ice
-\item this NCP first appears in (Calvo et al 2003), but only for the shallow ice approximation
+    \begin{itemize}
+    \item[$\circ$] regardless of dynamical model within the ice
+    \item[$\circ$] this NCP appears in (Calvo et al 2003), but only for shallow ice
+    \end{itemize}
+\item state-of-the-art numerically: first-order explicit time-stepping
 \end{itemize}
 \end{frame}
 
@@ -360,7 +362,24 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 
 \begin{frame}{what's behind the conjecture? 4}
 
-FIXME $\Phi(s)$ is $q$-coercive? numerical evidence
+\bigskip
+\begin{conjecture}[sufficient to prove well-posedness]
+For $s \in \cK = \{r \ge b\} \subset \cX = W^{1,\qq}(\Omega)$, let $\Lambda(s) = \{b<z<s\} \subset \RR^3$, and suppose $\bu$ solves Glen-Stokes over $\Lambda(s)$.  Define
+	$$\Phi(s) = - \bu|_s \cdot \bn_s,$$
+a map $\Phi:\cK \to \cX'$.  Then $\Phi$ is $\qq$-coercive: there is $\alpha>0$ so that
+	$$\left(\Phi(s) - \Phi(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq$$
+for all $r,s\in\cK$.
+\end{conjecture}
+
+\bigskip
+\footnotesize
+\begin{itemize}
+\item from numerical solutions $r,s$, compute ratios
+    $$\rho(r,s) = \frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq} \hspace{50mm}$$
+\end{itemize}
+
+\vspace{-15mm}
+\hfill \includegraphics[width=0.3\textwidth]{smoothratios} \qquad
 \end{frame}
 
 
