@@ -161,7 +161,7 @@
 \item $a(t,x)$ surface mass balance (SMB)
 \item $b(x)$ bed elevation
 \item $s(t,x)$ \emph{solution} surface elevation
-\item $\bn_s = (- \grad s,1)$ is upward normal vector
+\item $\bn_s = (- \grad s,1)$ surface-normal vector
 \item $\bu|_s(t,x)$ surface value of ice velocity, extended by zero to bare land
 \end{itemize}
 }
@@ -178,7 +178,7 @@ s - b &\ge 0 &&\phantom{x} \\
 \end{frame}
 
 
-\begin{frame}{the free-boundary problem for surface elevation}
+\begin{frame}{the free-boundary problem for glacier surface elevation}
 
 \begin{itemize}
 \item surface kinematical equation (SKE) in glaciology:
@@ -189,6 +189,7 @@ s - b &\ge 0 &&\phantom{x} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0
 \end{align*}
+
     \begin{itemize}
     \item[$\circ$] regardless of dynamical model within the ice
     \item[$\circ$] this NCP appears in (Calvo et al 2003), but only for shallow ice
@@ -198,17 +199,11 @@ s - b &\ge 0 &&\phantom{x} \\
 \end{frame}
 
 
-\begin{frame}{what is true within $\Lambda(s)$?}
+\begin{frame}{what is true within the ice?}
 
-\hfill \includegraphics[width=0.58\textwidth]{stokesdomain}
+\hfill \includegraphics[width=0.55\textwidth]{stokesdomain}
 
-\vspace{-18mm}
-
-\begin{minipage}[t]{42mm}
-\begin{itemize}
-\item more familiar question in glaciology
-\end{itemize}
-\end{minipage}
+\vspace{-5mm}
 
 \begin{itemize}
 \item fix $t$ and define:
@@ -260,35 +255,35 @@ the above \emph{standard model} is an NCP in $\Omega \subset \RR^2$, coupled to 
 
 \section{well-posed implicit steps?}
 
-\begin{frame}{what does ``fully-implicit'' time-stepping mean?}
+\begin{frame}{standard model wants ``fully-implicit'' time-stepping}
 
 \qquad\quad \includegraphics[width=0.75\textwidth]{implicitstep}
 
 \bigskip
 \begin{block}{standard model as a dynamical system}
-an inequality-constrained differential algebraic equation in $\infty$ dimensions
+an inequality-constrained differential algebraic system in $\infty$ dimensions
 \end{block}
 \end{frame}
 
 
-\begin{frame}{implicit time-step problem}
+\begin{frame}{implicit time-step problem is a VI}
 
 \begin{itemize}
-\item time-discretized NCP, but in weak form; details found in preprint\footnote{E.~Bueler (2024). \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv 2408.06470}}
+\item time-discretized NCP, but in weak form; details found in preprint\footnote{Bueler (2024). \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv 2408.06470}}
 \item $\cX$ denotes Banach space of elevation functions on $\Omega$; $b\in\cX$
-\item define:
+\item for $\Delta t > 0$ define:
 
-\vspace{-5mm}
+\vspace{-7mm}
 \begin{align*}
 \cK &= \{r \in \cX\,:\, r \ge b \,\text{ a.e. } \Omega\} \\
-\ell^k(x) &= s(t_{k-1},x) + \int_{t_k - \Delta t}^{t_k} a(t,x)\,dt \\
+\ell^k(x) &= s(t_{k-1},x) + \int_{t_{k-1}}^{t_k} a(t,x)\,dt \\
 F(s)[q] &= \int_\Omega (s - \Delta t\,\bu|_s \cdot \bn_s) q 
 \end{align*}
 \end{itemize}
 
 \medskip
 \begin{definition}
-the \emph{backward Euler time-step problem}, for $t_k \in [0,T]$, is to find the surface elevation $s = s(t_k,x) \in \cK$ solving the variational inequality (VI)
+the \emph{backward Euler time-step problem}, for $t_k \in [0,T]$, is to find the surface elevation $s \approx s(t_k,x) \in \cK$ solving the variational inequality (VI)
 $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
 \end{definition}
 
@@ -300,8 +295,8 @@ $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
 
 \hfill \includegraphics[width=0.35\textwidth]{mapplane}
 
-\begin{conjecture}[B, 2024]
-for some $\qq>2$, with $\cX = W^{1,\qq}(\Omega)$, and defining the admissible surface elevation subset
+\begin{conjecture}[Bueler, 2024]
+for some $\rr>2$, with $\cX = W^{1,\rr}(\Omega)$, and defining the admissible surface elevation subset
     $$\cK = \{r \ge b\} \subset \cX,$$
 the backward Euler time-step VI problem,
     $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK,$$
@@ -324,7 +319,7 @@ over a fixed domain $\Lambda$, the Glen-Stokes problem
 \left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda$} \\
 \bu  = \bzero \quad \text{or} \quad f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda$}
 \end{align*}
-is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)$
+is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)$, $\pp=(\nn+1)/\nn\approx 4/3$
 \end{theorem}
 \end{frame}
 
@@ -354,8 +349,8 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 \end{center}
 
 \begin{itemize}
-\item the conjecture is that $s\ge b$ exists in $\cX = W^{1,\qq}(\Omega)$ for some $\qq>2$
-\item the macroscopic margin shape of glaciers is a hard modeling problem
+\item the conjecture is that $s\ge b$ exists in $\cX = W^{1,\rr}(\Omega)$ for some $\rr>2$
+\item however, margin shape of glaciers is a hard modeling problem
 \end{itemize}
 \end{frame}
 
@@ -364,7 +359,7 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 
 \bigskip
 \begin{conjecture}[sufficient to prove well-posedness]
-For $s \in \cK = \{r \ge b\} \subset \cX = W^{1,\qq}(\Omega)$, let $\Lambda(s) = \{b<z<s\} \subset \RR^3$, and suppose $\bu$ solves Glen-Stokes over $\Lambda(s)$.  Define
+For $s \in \cK = \{r \ge b\} \subset \cX = W^{1,\rr}(\Omega)$, let $\Lambda(s) = \{b<z<s\} \subset \RR^3$, and suppose $\bu$ solves Glen-Stokes over $\Lambda(s)$.  Define
 	$$\Phi(s) = - \bu|_s \cdot \bn_s,$$
 a map $\Phi:\cK \to \cX'$.  Then $\Phi$ is $\qq$-coercive: there is $\alpha>0$ so that
 	$$\left(\Phi(s) - \Phi(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq$$
@@ -373,45 +368,92 @@ for all $r,s\in\cK$.
 
 \bigskip
 \footnotesize
+\noindent \textbf{numerical evidence?}
+
 \begin{itemize}
 \item from numerical solutions $r,s$, compute ratios
     $$\rho(r,s) = \frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq} \hspace{50mm}$$
 \end{itemize}
 
-\vspace{-15mm}
+\vspace{-20mm}
 \hfill \includegraphics[width=0.3\textwidth]{smoothratios} \qquad
 \end{frame}
 
 
 \section{finite element approximation}
 
-\begin{frame}{FIXME a FE error theorem}
+\begin{frame}{FE method}
+
+\begin{center}
+\includegraphics[width=0.8\textwidth]{extruded}
+\end{center}
 
 \begin{itemize}
-\item this theorem needs ``reasonable'' assumptions for a (continuum) geometry-evolving, Stokes model for glaciers \dots including \textbf{conjectured} well-posedness
-\item \emph{Theorem (Bueler, 2024).}  the FE error in computing an updated surface elevation, using an implicit time step, comes from 3 terms:
+\item continuum problem is to find $s\in\cK = \{r \ge b\}$ solving a backward-Euler step:
+   $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
+\item proposed FE spaces:
+   \begin{itemize}
+   \item[$\circ$] $b_h,s_h \in P_1$
+   \item[$\circ$] $\bu_h,p_h \in P_2 \times P_1$ (for example), on an extruded mesh
+   \end{itemize}
+\item FE method for $s_h\in\cK_h = \{r_h \ge b_h\}$:
+   $$F_h(s_h)[r_h-s_h] \ge \ell^k[r_h-s_h] \quad \text{for all } r_h \in \cK_h$$
+
+   \begin{itemize}
+   \item[$\circ$] mostly conforming if $b_h=b$
+   \end{itemize}
+\end{itemize}
+
+\phantom{x}
+\end{frame}
+
+
+\begin{frame}{implementation in progress}
+
+\begin{itemize}
+\item solver in Firedrake/PETSc (\href{https://www.firedrakeproject.org/}{firedrakeproject.org}):
+    \begin{itemize}
+    \item[$\circ$] VI-adapted, reduced-space Newton method, with iterates $s_h^{(j)} \ge b_h$
+    \item[$\circ$] each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$
+    \item[$\circ$] accelerate using new FASCD nonlinear multigrid scheme (Bueler \& Farrell, 2024)
+    \end{itemize}
+\item extruded-mesh Stokes solver infrastructure: \href{https://github.com/bueler/stokes-extrude}{github.com/bueler/stokes-extrude}
+\end{itemize}
+
+\bigskip
+\end{frame}
+
+
+\begin{frame}{error theorem for a backward Euler step}
+
+\noindent \mbox{\includegraphics[width=0.6\textwidth]{extruded} \qquad \includegraphics[width=0.35\textwidth]{mapplane}}
+
+\medskip
+\begin{theorem}[Bueler, 2024]
+Make assumptions sufficient for well-posedness conjecture.  Then FE error in computing the new surface elevation is bounded by 3 terms:
 \begin{align*}
-\|s_h-s\|^r &\le \quad \frac{c_1}{\Delta t} \int_{\Omega_A(s)} (b - \ell) (b_h - b) \\
-   &\quad\, + \Gamma \big\|\bu_h - \bu\big\| \\
-   &\quad\, + c_0 \|\Pi_h(s) - s\|^q
+\|s_h-s\|_{W^{1,\rr}}^\rr &\le \, \frac{c_1}{\Delta t} \int_{\Omega_A(s)} (b - \ell) (b_h - b) \\
+   &\quad\, + C(s_h) \big\|\bu_h - \bu\big\| + c_0 \|\Pi_h(s) - s\|_{W^{1,\rr}}^{\rr'}
 \end{align*}
-\item this separates the causes of surface elevation errors:
+where $\Omega_A(s) = \{x\in\Omega\,:\, s(x)=b(x)\}$ is continuum active set and $\Pi_h(s)$ interpolates/trucates $s$ into $\cK_h$
+\end{theorem}
+\end{frame}
+
+
+\begin{frame}{summary}
+\begin{itemize}
+\item topic: implicit time-stepping for geometry-evolving, Stokes models for glaciers
+    \begin{itemize}
+    \item[$\circ$] problem is an inequality-constrained differential-algebraic system
+    \item[$\circ$] current explicit time-stepping schemes do not make much sense?
+    \end{itemize}
+\item however, each time-step problem has only conjectured well-posedness
+\item FE error theorem (Bueler, 2024) separates causes of surface elevation errors:
     \begin{enumerate}
     \item discretizing the bed elevation ($b_h$ versus exact $b$)
     \item numerically solving the Stokes equations ($\bu_h$ versus exact $\bu$)
     \item Cea's lemma for the surface elevation ($s_h$ versus exact $s$) \strut
-        \begin{itemize}
-        \item[$\circ$] $s$ necessarily projected to be admissible with respect to $b_h$
-        \end{itemize}
     \end{enumerate}
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{conclusion}
-
-\begin{itemize}
-\item FIXME
 \end{itemize}
 \end{frame}
 
