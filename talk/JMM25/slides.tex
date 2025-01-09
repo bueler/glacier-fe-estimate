@@ -312,8 +312,8 @@ $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
 
 \hfill \includegraphics[width=0.35\textwidth]{mapplane}
 
-\begin{conjecture}[Bueler, 2024]
-for some $\rr>2$, with $\cX = W^{1,\rr}(\Omega)$, and defining the admissible surface elevation subset
+\begin{conjecture}[B '24]
+for some $\qq>2$, with $\cX = W^{1,\qq}(\Omega)$, and defining the admissible surface elevation subset
     $$\cK = \{r \ge b\} \subset \cX,$$
 the backward Euler time-step VI problem,
     $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK,$$
@@ -336,7 +336,7 @@ over a fixed domain $\Lambda$, the Glen-Stokes problem
 \left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda$} \\
 \bu  = \bzero \quad \text{or} \quad f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda$}
 \end{align*}
-is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)$, $\pp=(\nn+1)/\nn\approx 4/3$
+is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)$
 \end{theorem}
 \end{frame}
 
@@ -366,7 +366,7 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 \end{center}
 
 \begin{itemize}
-\item the conjecture is that $s\ge b$ exists in $\cX = W^{1,\rr}(\Omega)$ for some $\rr>2$
+\item the conjecture is that $s\ge b$ exists in $\cX = W^{1,\qq}(\Omega)$ for some $\qq>2$
 \item however, margin shape of glaciers is a hard modeling problem
 \end{itemize}
 \end{frame}
@@ -375,12 +375,11 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 \begin{frame}{what's behind the conjecture? 4}
 
 \bigskip
-\begin{conjecture}[actual conjecture in Bueler, 2024]
-For $s \in \cK = \{r \ge b\} \subset \cX = W^{1,\rr}(\Omega)$, let $\Lambda(s) = \{b<z<s\} \subset \RR^3$, and suppose $\bu$ solves Glen-Stokes over $\Lambda(s)$.  Define
+\begin{conjecture}[actual]
+For $s \in \cK = \{r \ge b\} \subset \cX = W^{1,\qq}(\Omega)$, let $\Lambda(s) = \{b<z<s\} \subset \RR^3$, and suppose $\bu$ solves Glen-Stokes over $\Lambda(s)$.  Define
 	$$\Phi(s) = - \bu|_s \cdot \bn_s,$$
-a map $\Phi:\cK \to \cX'$.  Then $\Phi$ is $\qq$-coercive: there is $\alpha>0$ so that
-	$$\left(\Phi(s) - \Phi(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq$$
-for all $r,s\in\cK$.
+a map $\Phi:\cK \to \cX'$.  Then $\Phi$ is $\qq$-coercive for some $\qq>2$: there is $\alpha>0$ so that
+	$$\left(\Phi(s) - \Phi(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq \qquad \text{for all } r,s\in\cK$$
 \end{conjecture}
 
 \bigskip
@@ -388,11 +387,12 @@ for all $r,s\in\cK$.
 \noindent \textbf{numerical evidence?}
 
 \begin{itemize}
-\item from numerical solutions $r,s$, compute ratios
-    $$\rho(r,s) = \frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq} \hspace{50mm}$$
+\item from surface elevation samples $r,s$, compute
+
+numerical ratios $\displaystyle \frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq}$
 \end{itemize}
 
-\vspace{-20mm}
+\vspace{-22mm}
 \hfill \includegraphics[width=0.3\textwidth]{smoothratios} \qquad
 \end{frame}
 
@@ -428,14 +428,14 @@ find $s\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
 \end{frame}
 
 
-\begin{frame}{implementation \only<2>{\alert{\dots in progress}}}
+\begin{frame}{implementation \alert{\dots in progress}}
 
 \begin{itemize}
 \item extruded-mesh Stokes solver infrastructure: \href{https://github.com/bueler/stokes-extrude}{github.com/bueler/stokes-extrude}
 \item solver in Firedrake/PETSc:
     \begin{itemize}
     \item[$\circ$] VI-adapted, reduced-space Newton method
-    \item[$\circ$] for admissible surface elevation iterates $s_h^{(j)} \ge b_h$, \alert<2>{each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$}
+    \item[$\circ$] for admissible surface elevation iterates $s_h^{(j)} \ge b_h$, \alert{each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$}
     \end{itemize}
 \item accelerate using new FASCD nonlinear multigrid scheme (Bueler \& Farrell, 2024), using above solver as the smoother
 \end{itemize}
@@ -446,15 +446,15 @@ find $s\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
 
 \begin{frame}{error theorem for a backward Euler step}
 
-\noindent \includegraphics[width=0.6\textwidth]{extruded} \hfill \includegraphics[width=0.25\textwidth]{mapplane}
+\noindent \includegraphics[width=0.6\textwidth]{extruded} \hfill \includegraphics[width=0.23\textwidth]{mapplane}
 
 \medskip
-\begin{theorem}[Bueler, 2024]
+\begin{theorem}[B '24]
 Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact active set, and $\Pi_h$ the interpolation into $\cK_h = \{r_h \ge b_h\}$.  Then the FE error in the new ($t_k$) surface elevation is bounded by 3 terms:
 \begin{align*}
-\|s_h-s\|_{W^{1,\rr}}^\rr &\le \, \frac{c_1}{\Delta t} \int_{\Omega_A(s)} (b - \ell^k) (b_h - b) \\
+\|s_h-s\|_{W^{1,\qq}}^\qq &\le \, \frac{c_1}{\Delta t} \int_{\Omega_A(s)} (b - \ell^k) (b_h - b) \\
    &\quad\, + C(s_h) \big\|\bu_h - \bu\big\|_{W^{1,\pp}} \\
-   &\quad\, + c_0 \|\Pi_h(s) - s\|_{W^{1,\rr}}^{\rr'}
+   &\quad\, + c_0 \|\Pi_h(s) - s\|_{W^{1,\qq}}^{\qq'}
 \end{align*}
 \end{theorem}
 
