@@ -52,7 +52,6 @@
 \lstset{style=colorEX,
         basewidth = {.49em}}
 
-\theoremstyle{theorem}
 \newtheorem*{conjecture}{Conjecture}
 \newtheorem*{cproblem}{continuum problem}
 
@@ -273,16 +272,18 @@ the above \emph{standard model} is an NCP in $\Omega \subset \RR^2$, coupled to 
 
 \begin{frame}{standard model wants ``fully-implicit'' time-stepping}
 
-\qquad\quad \includegraphics[width=0.75\textwidth]{implicitstep}
+\begin{center}
+\includegraphics[width=0.6\textwidth]{implicitstep}
+\end{center}
 
 \bigskip
 \begin{block}{standard model as a dynamical system}
-an inequality-constrained differential algebraic system in $\infty$ dimensions
+an inequality-constrained \textbf{differential algebraic system} in $\infty$ dimensions
 \end{block}
 \end{frame}
 
 
-\begin{frame}{implicit time-step problem is a VI}
+\begin{frame}{implicit time-step problem is a variational inequality}
 
 \begin{itemize}
 \item time-discretized NCP, but in weak form; details found in preprint\footnote{Bueler (2024). \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv 2408.06470}}
@@ -419,7 +420,7 @@ find $s\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
    $$F_h(s_h)[r_h-s_h] \ge \ell^k[r_h-s_h] \quad \text{for all } r_h \in \cK_h$$
 
    \begin{itemize}
-   \item[$\circ$] mostly conforming, especially if we pretend $b_h=b$
+   \item[$\circ$] mostly conforming, especially if one pretends $b_h=b$
    \end{itemize}
 \end{itemize}
 
@@ -427,16 +428,16 @@ find $s\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
 \end{frame}
 
 
-\begin{frame}{implementation in progress}
+\begin{frame}{implementation \only<2>{\alert{\dots in progress}}}
 
 \begin{itemize}
+\item extruded-mesh Stokes solver infrastructure: \href{https://github.com/bueler/stokes-extrude}{github.com/bueler/stokes-extrude}
 \item solver in Firedrake/PETSc:
     \begin{itemize}
     \item[$\circ$] VI-adapted, reduced-space Newton method
-    \item[$\circ$] for admissible surface elevation iterates $s_h^{(j)} \ge b_h$, each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$
+    \item[$\circ$] for admissible surface elevation iterates $s_h^{(j)} \ge b_h$, \alert<2>{each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$}
     \end{itemize}
 \item accelerate using new FASCD nonlinear multigrid scheme (Bueler \& Farrell, 2024), using above solver as the smoother
-\item extruded-mesh Stokes solver infrastructure: \href{https://github.com/bueler/stokes-extrude}{github.com/bueler/stokes-extrude}
 \end{itemize}
 
 \bigskip
@@ -445,38 +446,54 @@ find $s\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
 
 \begin{frame}{error theorem for a backward Euler step}
 
-\noindent \mbox{\includegraphics[width=0.6\textwidth]{extruded} \qquad \includegraphics[width=0.35\textwidth]{mapplane}}
+\noindent \includegraphics[width=0.6\textwidth]{extruded} \hfill \includegraphics[width=0.25\textwidth]{mapplane}
 
 \medskip
 \begin{theorem}[Bueler, 2024]
-Make assumptions sufficient for well-posedness conjecture.  Then the FE error in the new surface elevation is bounded by 3 terms:
+Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact active set, and $\Pi_h$ the interpolation into $\cK_h = \{r_h \ge b_h\}$.  Then the FE error in the new ($t_k$) surface elevation is bounded by 3 terms:
 \begin{align*}
-\|s_h-s\|_{W^{1,\rr}}^\rr &\le \, \frac{c_1}{\Delta t} \int_{\Omega_A(s)} (b - \ell) (b_h - b) \\
-   &\quad\, + C(s_h) \big\|\bu_h - \bu\big\| + c_0 \|\Pi_h(s) - s\|_{W^{1,\rr}}^{\rr'}
+\|s_h-s\|_{W^{1,\rr}}^\rr &\le \, \frac{c_1}{\Delta t} \int_{\Omega_A(s)} (b - \ell^k) (b_h - b) \\
+   &\quad\, + C(s_h) \big\|\bu_h - \bu\big\|_{W^{1,\pp}} \\
+   &\quad\, + c_0 \|\Pi_h(s) - s\|_{W^{1,\rr}}^{\rr'}
 \end{align*}
-where $\Omega_A(s) = \{x\in\Omega\,:\, s(x)=b(x)\}$ is the continuum active set, and $\Pi_h(s)$ interpolates/trucates $s$ into $\cK_h = \{r_h \ge b_h\}$.
 \end{theorem}
+
+\noindent \emph{Proof.} Make the Falk (1974) technique for VIs fully nonlinear. \qed
 \end{frame}
 
+
+\newcommand{\sdoi}[1]{\,{\scriptsize \href{https://doi.org/#1}{doi:#1}}}
+\newcommand{\surl}[2]{\,{\scriptsize \href{#1}{#2}}}
 
 
 \begin{frame}{summary}
 \begin{itemize}
-\item implicit time-stepping is appropriate for geometry-evolving, Stokes models for glaciers
+\item implicit time-stepping makes sense for geometry-evolving, Stokes models for glaciers
     \begin{itemize}
-    \item[$\circ$] problem is a differential-algebraic system
-    \item[$\circ$] \dots but a free-boundary problem too
-    \item[$\circ$] \dots and implementation is a work in progress
-    \item[$\circ$] explicit time-stepping schemes are embarrassing?
+    \item[$\circ$] the problem is a differential-algebraic system \dots
+    \item[$\circ$] but it is a free-boundary problem too
     \end{itemize}
-\item \textbf{conjecture.$^{\bm{*}}$} each time-step, continuous-space problem is well-posedness
-\item \textbf{theorem.}\footnote[1]{Bueler (2024). \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv 2408.06470}} supposing well-posedness, surface elevation FE error is sum of 3 terms:
+\item \textbf{conjecture.} each continuous-space implicit time step problem is well-posed
+\item \textbf{theorem.} supposing well-posedness, the surface elevation FE error is bounded by a sum of 3 terms:
     \begin{enumerate}
-    \item discretizing the bed elevation ($b_h$ versus exact $b$)
-    \item numerically solving the Stokes equations ($\bu_h$ versus exact $\bu$)
-    \item Cea's lemma for the surface elevation ($s_h$ versus exact $s$) \strut
+    \item discretizing the bed elevation ($b_h$ versus $b$)
+    \item numerically solving the Stokes equations ($\bu_h$ versus $\bu$)
+    \item Cea's lemma for the surface elevation ($s_h$ versus $\Pi_h(s)$) \strut
     \end{enumerate}
 \end{itemize}
+
+\noindent \hrulefill
+\begin{columns}
+\begin{column}{0.22\textwidth}
+\includegraphics[width=\textwidth]{qrpreprint.png}
+\end{column}
+\begin{column}{0.78\textwidth}
+{\small
+E.~Bueler (2024). \emph{Surface elevation errors in finite element {S}tokes models for glacier evolution}, \surl{https://arxiv.org/abs/2408.06470}{arxiv:2408.06470}
+}
+\end{column}
+\end{columns}
+
 \end{frame}
 
 
@@ -484,19 +501,5 @@ where $\Omega_A(s) = \{x\in\Omega\,:\, s(x)=b(x)\}$ is the continuum active set,
 
 {\footnotesize \input{references.tex}}
 \end{frame}
-
-
-%\begin{frame}[standout]
-%extra slides
-%\end{frame}
-
-
-%\begin{frame}{why is $s$ better than $H=s-b$?}
-%
-%\begin{center}
-%\includegraphics[height=0.84\textheight]{giscross}
-%\end{center}
-%\end{frame}
-
 
 \end{document}
