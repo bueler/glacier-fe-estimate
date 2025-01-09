@@ -54,6 +54,7 @@
 
 \theoremstyle{theorem}
 \newtheorem*{conjecture}{Conjecture}
+\newtheorem*{cproblem}{continuum problem}
 
 \newcommand{\bg}{\mathbf{g}}
 \newcommand{\bn}{\mathbf{n}}
@@ -84,6 +85,8 @@
 \newcommand{\comm}[1]{{\footnotesize \hfill \emph{#1}}}
 \newcommand{\where}[1]{\text{\footnotesize #1}}
 \newcommand{\viewin}[1]{{\footnotesize \emph{this view appears in} #1}}
+
+\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
 
 
 \title{Finite element errors in Stokes models \\ of glacier evolution}
@@ -341,7 +344,7 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 
 \bigskip
 \begin{center}
-\includegraphics[width=0.75\textwidth]{giscross}
+\includegraphics[width=0.75\textwidth]{giscrossALPHA}
 \end{center}
 
 \begin{itemize}
@@ -371,7 +374,7 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 \begin{frame}{what's behind the conjecture? 4}
 
 \bigskip
-\begin{conjecture}[sufficient to prove well-posedness]
+\begin{conjecture}[actual conjecture in Bueler, 2024]
 For $s \in \cK = \{r \ge b\} \subset \cX = W^{1,\rr}(\Omega)$, let $\Lambda(s) = \{b<z<s\} \subset \RR^3$, and suppose $\bu$ solves Glen-Stokes over $\Lambda(s)$.  Define
 	$$\Phi(s) = - \bu|_s \cdot \bn_s,$$
 a map $\Phi:\cK \to \cX'$.  Then $\Phi$ is $\qq$-coercive: there is $\alpha>0$ so that
@@ -398,22 +401,25 @@ for all $r,s\in\cK$.
 \begin{frame}{FE method}
 
 \begin{center}
-\includegraphics[width=0.8\textwidth]{extruded}
+\includegraphics[width=0.7\textwidth]{extruded}
 \end{center}
 
-\begin{itemize}
-\item continuum problem is to find $s\in\cK = \{r \ge b\}$ solving a backward-Euler step:
+\begin{cproblem}
+find $s\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
    $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
+\end{cproblem}
+
+\begin{itemize}
 \item proposed FE spaces:
    \begin{itemize}
    \item[$\circ$] $b_h,s_h \in P_1$
-   \item[$\circ$] $\bu_h,p_h \in P_2 \times P_1$ (for example), on an extruded mesh
+   \item[$\circ$] $\bu_h,p_h \in P_2 \times P_1$, on an extruded mesh \hfill {\scriptsize $\leftarrow$ one possibility}
    \end{itemize}
 \item FE method for $s_h\in\cK_h = \{r_h \ge b_h\}$:
    $$F_h(s_h)[r_h-s_h] \ge \ell^k[r_h-s_h] \quad \text{for all } r_h \in \cK_h$$
 
    \begin{itemize}
-   \item[$\circ$] mostly conforming if $b_h=b$
+   \item[$\circ$] mostly conforming, especially if we pretend $b_h=b$
    \end{itemize}
 \end{itemize}
 
@@ -424,12 +430,12 @@ for all $r,s\in\cK$.
 \begin{frame}{implementation in progress}
 
 \begin{itemize}
-\item solver in Firedrake/PETSc (\href{https://www.firedrakeproject.org/}{firedrakeproject.org}):
+\item solver in Firedrake/PETSc:
     \begin{itemize}
-    \item[$\circ$] VI-adapted, reduced-space Newton method, with iterates $s_h^{(j)} \ge b_h$
-    \item[$\circ$] each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$
-    \item[$\circ$] accelerate using new FASCD nonlinear multigrid scheme (Bueler \& Farrell, 2024)
+    \item[$\circ$] VI-adapted, reduced-space Newton method
+    \item[$\circ$] for admissible surface elevation iterates $s_h^{(j)} \ge b_h$, each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$
     \end{itemize}
+\item accelerate using new FASCD nonlinear multigrid scheme (Bueler \& Farrell, 2024), using above solver as the smoother
 \item extruded-mesh Stokes solver infrastructure: \href{https://github.com/bueler/stokes-extrude}{github.com/bueler/stokes-extrude}
 \end{itemize}
 
@@ -443,25 +449,28 @@ for all $r,s\in\cK$.
 
 \medskip
 \begin{theorem}[Bueler, 2024]
-Make assumptions sufficient for well-posedness conjecture.  Then FE error in computing the new surface elevation is bounded by 3 terms:
+Make assumptions sufficient for well-posedness conjecture.  Then the FE error in the new surface elevation is bounded by 3 terms:
 \begin{align*}
 \|s_h-s\|_{W^{1,\rr}}^\rr &\le \, \frac{c_1}{\Delta t} \int_{\Omega_A(s)} (b - \ell) (b_h - b) \\
    &\quad\, + C(s_h) \big\|\bu_h - \bu\big\| + c_0 \|\Pi_h(s) - s\|_{W^{1,\rr}}^{\rr'}
 \end{align*}
-where $\Omega_A(s) = \{x\in\Omega\,:\, s(x)=b(x)\}$ is continuum active set and $\Pi_h(s)$ interpolates/trucates $s$ into $\cK_h$
+where $\Omega_A(s) = \{x\in\Omega\,:\, s(x)=b(x)\}$ is the continuum active set, and $\Pi_h(s)$ interpolates/trucates $s$ into $\cK_h = \{r_h \ge b_h\}$.
 \end{theorem}
 \end{frame}
 
 
+
 \begin{frame}{summary}
 \begin{itemize}
-\item topic: implicit time-stepping for geometry-evolving, Stokes models for glaciers
+\item implicit time-stepping is appropriate for geometry-evolving, Stokes models for glaciers
     \begin{itemize}
-    \item[$\circ$] problem is an inequality-constrained differential-algebraic system
-    \item[$\circ$] current explicit time-stepping schemes do not make much sense?
+    \item[$\circ$] problem is a differential-algebraic system
+    \item[$\circ$] \dots but a free-boundary problem too
+    \item[$\circ$] \dots and implementation is a work in progress
+    \item[$\circ$] explicit time-stepping schemes are embarrassing?
     \end{itemize}
-\item however, each time-step problem has only conjectured well-posedness
-\item FE error theorem (Bueler, 2024) separates causes of surface elevation errors:
+\item \textbf{conjecture.$^{\bm{*}}$} each time-step, continuous-space problem is well-posedness
+\item \textbf{theorem.}\footnote[1]{Bueler (2024). \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv 2408.06470}} supposing well-posedness, surface elevation FE error is sum of 3 terms:
     \begin{enumerate}
     \item discretizing the bed elevation ($b_h$ versus exact $b$)
     \item numerically solving the Stokes equations ($\bu_h$ versus exact $\bu$)
