@@ -123,7 +123,7 @@
 \begin{itemize}
 \item[a)] what is true within the {\color{RoyalBlue} ice}?
 \item[b)] what is true on {\color{OliveGreen} bare land}?
-\item[c)] what is true at {\color{Salmon} free boundary}?
+\item[c)] what is true on {\color{Salmon} free boundary}?
 \end{itemize}\end{column}
 \begin{column}{0.72\textwidth}
 \only<1>{\includegraphics[height=65mm]{xtcrop}}\only<2>{\includegraphics[height=65mm]{implicitstep}}
@@ -198,7 +198,7 @@ s - b &\ge 0 &&\phantom{x} \\
 \begin{itemize}
 \item surface kinematical equation (SKE) in glaciology:
    $$\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0$$
-\item the time-dependent nonlinear complementarity problem (NCP) is the underlying \emph{free-boundary} meaning of the SKE:
+\item our time-dependent, nonlinear complementarity problem (NCP) is the underlying \emph{free-boundary} meaning of the SKE:
 \begin{align*}
 s - b &\ge 0 &&\phantom{x} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
@@ -206,7 +206,7 @@ s - b &\ge 0 &&\phantom{x} \\
 \end{align*}
 
     \begin{itemize}
-    \item[$\circ$] regardless of dynamical model within the ice
+    \item[$\circ$] applies regardless of dynamical model within the ice
     \item[$\circ$] this NCP appears in (Calvo et al 2003), but only for shallow ice
     \end{itemize}
 \item state-of-the-art numerically: first-order explicit time-stepping
@@ -259,18 +259,7 @@ the above \emph{standard model} is an NCP in $\Omega \subset \RR^2$, coupled to 
 \end{frame}
 
 
-\AtBeginSection[]
-{
-  \begin{frame}<beamer>
-    \frametitle{Outline}
-    \tableofcontents[currentsection,hideallsubsections]
-  \end{frame}
-}
-
-
-\section{well-posed implicit steps?}
-
-\begin{frame}{standard model wants ``fully-implicit'' time-stepping}
+\begin{frame}{the standard model wants ``fully-implicit'' time-stepping}
 
 \begin{center}
 \includegraphics[width=0.6\textwidth]{implicitstep}
@@ -283,10 +272,21 @@ an inequality-constrained \textbf{differential algebraic system} in $\infty$ dim
 \end{frame}
 
 
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,hideallsubsections]
+  \end{frame}
+}
+
+
+\section{well-posed implicit steps?}
+
 \begin{frame}{implicit time-step problem is a variational inequality}
 
 \begin{itemize}
-\item time-discretized NCP, but in weak form; details found in preprint\footnote{Bueler (2024). \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv 2408.06470}}
+\item weak form of time-discretized NCP; details found in preprint\footnote{Bueler (2024). \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv 2408.06470}}
 \item $\cX$ denotes Banach space of elevation functions on $\Omega$; $b\in\cX$
 \item for $\Delta t > 0$ define:
 
