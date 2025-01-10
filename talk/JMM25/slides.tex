@@ -162,7 +162,7 @@
 \end{frame}
 
 
-\begin{frame}{what is true everywhere in $\Omega$?}
+\begin{frame}{what is true everywhere in $[0,T]\times\Omega$?}
 
 \hfill \includegraphics[width=0.37\textwidth]{mapplane}
 
@@ -253,9 +253,11 @@ s - b &\ge 0 & &\where{in $\Omega$} \\
 \end{align*}
 
 \bigskip
-\begin{definition}
-the above \emph{standard model} is an NCP in $\Omega \subset \RR^2$, coupled to the Glen-Stokes system within the ice, in $\Lambda(s) \subset \RR^3$
-\end{definition}
+\newtheorem*{smodel}{standard model}
+
+\begin{smodel}
+an NCP in $[0,T]\times \Omega$, for fixed $\Omega \subset \RR^2$, coupled to a Glen-Stokes problem within the ice, in $\Lambda(s) \subset \RR^3$
+\end{smodel}
 \end{frame}
 
 
@@ -366,7 +368,7 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 \end{center}
 
 \begin{itemize}
-\item the conjecture is that $s\ge b$ exists in $\cX = W^{1,\qq}(\Omega)$ for some $\qq>2$
+\item the conjecture is that $s$ exists in $\cX = W^{1,\qq}(\Omega)$ for some $\qq>2$
 \item however, margin shape of glaciers is a hard modeling problem
 \end{itemize}
 \end{frame}
@@ -375,10 +377,10 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 \begin{frame}{what's behind the conjecture? 4}
 
 \bigskip
-\begin{conjecture}[actual]
-For $s \in \cK = \{r \ge b\} \subset \cX = W^{1,\qq}(\Omega)$, let $\Lambda(s) = \{b<z<s\} \subset \RR^3$, and suppose $\bu$ solves Glen-Stokes over $\Lambda(s)$.  Define
+\begin{conjecture}[actual; B '24]
+For $s \in \cK = \{r \ge b\} \subset \cX = W^{1,\qq}(\Omega)$, for some $\qq>2$, let $\Lambda(s) = \{b<z<s\} \subset \RR^3$, and suppose $\bu$ solves Glen-Stokes over $\Lambda(s)$.  Define
 	$$\Phi(s) = - \bu|_s \cdot \bn_s,$$
-a map $\Phi:\cK \to \cX'$.  Then $\Phi$ is $\qq$-coercive for some $\qq>2$: there is $\alpha>0$ so that
+a map $\Phi:\cK \to \cX'$.  Then $\Phi$ is $\qq$-coercive: there is $\alpha>0$ so that
 	$$\left(\Phi(s) - \Phi(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq \qquad \text{for all } r,s\in\cK$$
 \end{conjecture}
 
@@ -470,10 +472,10 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
 \begin{itemize}
 \item implicit time-stepping makes sense for geometry-evolving, Stokes models for glaciers
     \begin{itemize}
-    \item[$\circ$] the problem is a differential-algebraic system \dots
-    \item[$\circ$] but it is a free-boundary problem too
+    \item[$\circ$] both a differential-algebraic system and a free-boundary problem
     \end{itemize}
-\item \textbf{conjecture.} each continuous-space implicit time step problem is well-posed
+\item \textbf{conjecture.} for some $\qq>2$, the surface motion $-\bu|_s\cdot \bn_s$ from the Glen-Stokes problem is $\qq$-coercive over admissible $s\in W^{1,\qq}(\Omega)$
+\item \textbf{theorem.} supposing $\qq$-coercivity, each continuous-space, backward Euler time step problem is well-posed
 \item \textbf{theorem.} supposing well-posedness, the surface elevation FE error is bounded by a sum of 3 terms:
     \begin{enumerate}
     \item discretizing the bed elevation ($b_h$ versus $b$)
@@ -482,9 +484,10 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
     \end{enumerate}
 \end{itemize}
 
+\vspace{-1mm}
 \noindent \hrulefill
 \begin{columns}
-\begin{column}{0.22\textwidth}
+\begin{column}{0.2\textwidth}
 \includegraphics[width=\textwidth]{qrpreprint.png}
 \end{column}
 \begin{column}{0.78\textwidth}
