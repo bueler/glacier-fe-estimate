@@ -1,0 +1,129 @@
+\documentclass[10pt,dvipsnames]{beamer}
+
+\definecolor{links}{HTML}{2A1B81}
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}
+
+\usetheme[numbering=fraction]{metropolis}
+\metroset{block=fill}
+%\setmonofont{Ubuntu Mono}
+
+\usepackage{appendixnumberbeamer}
+
+\usepackage{booktabs,empheq,bbold,bm}
+\usepackage[scale=2]{ccicons}
+
+\usepackage{pgfplots}
+\usepackage{tikz}
+\usetikzlibrary{math, positioning}
+
+\usepgfplotslibrary{dateplot}
+
+\usepackage{xspace}
+\newcommand{\themename}{\textbf{\textsc{metropolis}}\xspace}
+
+% for python listings; inspired by https://gist.github.com/YidongQIN/a10dd4f72381362aff4257e7a5541d86 
+\usepackage{listings}
+\usepackage{color}
+\definecolor{darkred}{rgb}{0.6,0.0,0.0}
+\definecolor{darkgreen}{rgb}{0,0.50,0}
+\definecolor{lightblue}{rgb}{0.0,0.42,0.91}
+\definecolor{orange}{rgb}{0.99,0.48,0.13}
+\definecolor{grass}{rgb}{0.18,0.80,0.18}
+\definecolor{pink}{rgb}{0.97,0.15,0.45}
+\lstdefinelanguage{PythonPlus}[]{Python}{
+  morekeywords=[1]{,as,assert,nonlocal,with,yield,self,True,False,None,} % Python builtin
+  morekeywords=[2]{,__init__,__add__,__mul__,__div__,__sub__,__call__,__getitem__,__setitem__,__eq__,__ne__,__nonzero__,__rmul__,__radd__,__repr__,__str__,__get__,__truediv__,__pow__,__name__,__future__,__all__,}, % magic methods
+  morekeywords=[3]{,object,type,isinstance,copy,deepcopy,zip,enumerate,reversed,list,set,len,dict,tuple,range,xrange,append,execfile,real,imag,reduce,str,repr,}, % common functions
+  morekeywords=[4]{,Exception,NameError,IndexError,SyntaxError,TypeError,ValueError,OverflowError,ZeroDivisionError,}, % errors
+  morekeywords=[5]{,ode,fsolve,sqrt,exp,sin,cos,arctan,arctan2,arccos,pi, array,norm,solve,dot,arange,isscalar,max,sum,flatten,shape,reshape,find,any,all,abs,plot,linspace,legend,quad,polyval,polyfit,hstack,concatenate,vstack,column_stack,empty,zeros,ones,rand,vander,grid,pcolor,eig,eigs,eigvals,svd,qr,tan,det,logspace,roll,min,mean,cumsum,cumprod,diff,vectorize,lstsq,cla,eye,xlabel,ylabel,squeeze,}, % numpy / math
+}
+\lstdefinestyle{colorEX}{
+  basicstyle=\ttfamily\small,
+  backgroundcolor=\color{white},
+  commentstyle=\color{darkgreen}\slshape,
+  keywordstyle=\color{blue}\bfseries\itshape,
+  keywordstyle=[2]\color{blue}\bfseries,
+  keywordstyle=[3]\color{grass},
+  keywordstyle=[4]\color{red},
+  keywordstyle=[5]\color{orange},
+  stringstyle=\color{darkred},
+  emphstyle=\color{pink}\underbar,
+}
+\lstset{style=colorEX,
+        basewidth = {.49em}}
+
+\newtheorem*{conjecture}{Conjecture}
+\newtheorem*{cproblem}{continuum problem}
+
+\newcommand{\bg}{\mathbf{g}}
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\bu}{\mathbf{u}}
+
+\newcommand{\bU}{\mathbf{U}}
+
+\newcommand{\bzero}{\bm{0}}
+
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cX}{\mathcal{X}}
+
+\newcommand{\RR}{\mathbb{R}}
+
+\newcommand{\nn}{\mathrm{n}}
+\newcommand{\pp}{\mathrm{p}}
+\newcommand{\qq}{\mathrm{q}}
+\newcommand{\rr}{\mathrm{r}}
+
+\newcommand{\eps}{\epsilon}
+\newcommand{\grad}{\nabla}
+\newcommand{\Div}{\nabla\cdot}
+
+\newcommand{\rhoi}{\rho_{\text{i}}}
+\newcommand{\snew}{s^{\text{new}}}
+
+\newcommand{\comm}[1]{{\footnotesize \hfill \emph{#1}}}
+\newcommand{\where}[1]{\text{\footnotesize #1}}
+\newcommand{\viewin}[1]{{\footnotesize \emph{this view appears in} #1}}
+
+\renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\sdoi}[1]{\,{\scriptsize \href{https://doi.org/#1}{doi:#1}}}
+\newcommand{\surl}[2]{\,{\scriptsize \href{#1}{#2}}}
+
+
+\title{References}
+
+\date{}
+
+\author{Ed Bueler}
+
+
+\begin{document}
+\graphicspath{{figs/}{../NWG24/figs/}{../../paper/figs/}}
+
+% empty footline with no numbering
+\setbeamertemplate{footline}{}
+
+\begin{frame}[noframenumbering]{references}
+
+\scriptsize
+
+\begin{itemize}
+%\item E.~Bueler (2021). \emph{Conservation laws for free-boundary fluid layers}, SIAM J.~Appl.~Math.~81 (5), 2007--2032 \sdoi{10.1137/20M135217X}
+%\item E.~Bueler (2022). \emph{Performance analysis of high-resolution ice-sheet simulations}, J.~Glaciol.~69 (276), 930--935 \sdoi{10.1017/jog.2022.113}
+\item D.~J.~Brinkerhoff (2023). \emph{Compatible finite elements for glacier modeling}, Computing in Science \& Engineering, 25(3), 18--28. \sdoi{10.1109/MCSE.2023.3305864}
+\item E.~Bueler (2024). \emph{Surface elevation errors in finite element {S}tokes models for glacier evolution}, \surl{https://arxiv.org/abs/2408.06470}{arxiv:2408.06470}
+%\item E.~Bueler \& P.~Farrell (2024).  \emph{A full approximation scheme multilevel method for nonlinear variational inequalities}, SIAM J.~Sci.~Comput.~46 (4), \sdoi{10.1137/23M1594200}
+\item N.~Calvo and others (2003). \emph{On a doubly nonlinear parabolic obstacle problem modelling ice sheet dynamics}, SIAM J.~Appl.~Math.~63 (2), 683--707 \sdoi{10.1137/S0036139901385345}
+%\item R.~Falk (1974).  \emph{Error estimates for the approximation of a class of variational inequalities}, Mathematics of Computation 28 (128), 963--971
+\item T.~Isaac, G.~Stadler, \& O.~Ghattas (2015). \emph{Solution of nonlinear Stokes equations \dots ice sheet dynamics}, SIAM J.~Sci.~Comput., 37 (6), B804--B833 \sdoi{10.1137/140974407}
+\item A.~H.~Jarosch, C.~G.~Schoof \& F.~S.~Anslow (2013). \emph{Restoring mass conservation to shallow ice flow models over complex terrain}, The Cryosphere, 7(1), 229--240 \sdoi{10.5194/tc-7-229-2013}
+\item G.~Jouvet \& E.~Bueler (2012). \emph{Steady, shallow ice sheets as obstacle problems: well-posedness and finite element approximation}, SIAM J.~Appl.~Math.~72 (4), 1292--1314 \sdoi{10.1137/110856654}
+\item G.~Jouvet \& J.~Rappaz (2011). \emph{Analysis and finite element approximation of a nonlinear stationary {S}tokes problem arising in glaciology}, Adv.~Numer.~Analysis 2011 (164581) \sdoi{10.1155/2011/164581}
+%\item A.~L{\"o}fgren, J.~Ahlkrona \& C. Helanow (2022). \emph{Increasing stable time-step sizes of the free-surface problem arising in ice-sheet simulations},~J. Comput. Phys.: X 16 (100114) \sdoi={10.1016/j.jcpx.2022.100114}
+\item P.~Piersanti \& R.~Temam (2023). \emph{On the dynamics of grounded shallow ice sheets: Modeling and analysis}, Advances in Nonlinear Analysis, 12(1) \sdoi{10.1515/anona-2022-0280}
+\end{itemize}
+
+\end{frame}
+
+\end{document}
