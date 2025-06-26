@@ -1,68 +1,29 @@
-%\documentclass[review,hidelinks,onefignum,onetabnum]{siamart250211}
 \documentclass[final,hidelinks,onefignum,onetabnum]{siamart250211}
+%\documentclass[review,hidelinks,onefignum,onetabnum]{siamart250211}
 
-% Packages and macros go here
-\usepackage{amsfonts}
+\usepackage{amsfonts,amssymb}
+%\usepackage{amsopn}
 \usepackage{graphicx}
 \ifpdf
   \DeclareGraphicsExtensions{.eps,.pdf,.png,.jpg}
 \else
   \DeclareGraphicsExtensions{.eps}
 \fi
-\usepackage{bm,bbm,empheq,verbatim,fancyvrb,amssymb}
-\usepackage{booktabs,multirow,xspace}
-\usepackage{pifont}
+\usepackage{bm}
+%\usepackage{empheq}
+%\usepackage{fancyvrb}
 \usepackage{tikz}
-\usetikzlibrary{math, positioning}
-%\usepackage[pdftex, colorlinks=true, plainpages=false, linkcolor=blue, citecolor=red, urlcolor=blue]{hyperref}
+\usetikzlibrary{math,positioning}
 
 % Add a serial/Oxford comma by default.
 \newcommand{\creflastconjunction}{, and~}
 
 % Used for creating new theorem and remark environments
 \newsiamremark{remark}{Remark}
-\newsiamremark{hypothesis}{Hypothesis}
 \newsiamremark{stdass}{Standard Assumptions}
-\crefname{hypothesis}{Hypothesis}{Hypotheses}
-\newsiamthm{claim}{Claim}
 \newsiamthm{conjecture}{Conjecture}
-\newsiamremark{fact}{Fact}
-\crefname{fact}{Fact}{Facts}
-
-\usepackage{amsopn}
 
 \DeclareMathOperator{\diag}{diag}
-
-% Optional PDF information
-\ifpdf
-\hypersetup{
-  pdftitle={Surface elevation errors in finite element Stokes models for glacier evolution},
-  pdfauthor={E. Bueler}
-}
-\fi
-
-% FundRef data to be entered by SIAM
-%<funding-group specific-use="FundRef">
-%<award-group>
-%<funding-source>
-%<named-content content-type="funder-name"> 
-%</named-content> 
-%<named-content content-type="funder-identifier"> 
-%</named-content>
-%</funding-source>
-%<award-id> </award-id>
-%</award-group>
-%</funding-group>
-
-% Sets running headers as well as PDF title and authors
-\headers{Surface elevation errors glacier Stokes modelsn}{E. Bueler}
-
-% Title.
-\title{Surface elevation errors in finite element Stokes models for glacier evolution\thanks{Submitted to the editors DATE (draft \today).  Thanks to J.~Ahlkrona and P.~Piersanti for thoughtful comments on an earlier version.}}
-
-% Authors: full names plus addresses.
-\author{Ed Bueler\thanks{Dept.~Mathematics \& Statistics, University of Alaska Fairbanks, USA (\email{elbueler@alaska.edu}, \url{https://bueler.github.io/}).}}
-
 
 \newcommand{\eps}{\epsilon}
 \newcommand{\RR}{\mathbb{R}}
@@ -117,12 +78,43 @@
 \newcommand{\CA}{C_\text{\textnormal{A}}}
 
 
+% Optional PDF information
+\ifpdf
+\hypersetup{
+  pdftitle={Surface elevation errors in finite element Stokes models for glacier evolution},
+  pdfauthor={E. Bueler}
+}
+\fi
+
+% Sets running headers as well as PDF title and authors
+\headers{Surface elevation errors in Stokes models for glaciers}{E. Bueler}
+
+% Title.
+\title{Surface elevation errors in finite element Stokes models for glacier evolution\thanks{Submitted to the editors DATE (draft \today).  Thanks to J.~Ahlkrona and P.~Piersanti for thoughtful comments on an earlier version.}}
+
+% Authors: full names plus addresses.
+\author{Ed Bueler\thanks{Dept.~Mathematics \& Statistics, University of Alaska Fairbanks, USA (\email{elbueler@alaska.edu}, \href{https://bueler.github.io/}{\texttt{bueler.github.io}}).}}
+
+% FundRef data to be entered by SIAM
+%<funding-group specific-use="FundRef">
+%<award-group>
+%<funding-source>
+%<named-content content-type="funder-name">
+%</named-content>
+%<named-content content-type="funder-identifier">
+%</named-content>
+%</funding-source>
+%<award-id> </award-id>
+%</award-group>
+%</funding-group>
+
+
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-The primary data which determine the evolution of glaciation are the bedrock elevation and the surface mass balance.  From this data, which we assume is defined over a fixed land region, the glacier's geometry solves a free boundary problem which balances the time derivative of the surface elevation, the surface velocity from the Stokes flow, and the surface mass balance.  A surface elevation function for this problem is admissible if it is above the bedrock topography, equivalently if the ice thickness is nonnegative.  This free boundary problem can be posed in weak form as a variational inequality.  After some preparatory theory for the glaciological Stokes problem, we conjecture that the continuous space, implicit time step variational inequality problem for the surface elevation is well-posed.  This conjecture is supported by physical arguments and (modest) numerical evidence.  We prove a general theorem which bounds the numerical error made by a finite element approximation of a nonlinear-operator variational inequality in a Banach space.  The bound is a sum of error terms of different types, essentially special to variational inequalities.  In the case of the implicit step glacier problem these terms are of three types: errors from discretizing the bed elevation, errors from numerically solving for the Stokes velocity, and finally an expected quasi-optimal finite element error in the surface elevation itself.
+The primary data which determine the evolution of glaciation are the bedrock elevation and the surface mass balance.  From this data, which we assume is defined over a fixed land region, the glacier's geometry solves a free boundary problem which balances the time derivative of the surface elevation, the surface velocity from the very-viscous (Stokes) flow of the ice, and the surface mass balance.  This free boundary problem can be posed in weak form as a variational inequality over a convex set of admissible surface elevation functions, i.e.~those which are above the bedrock topography.  After some preparatory theory for the glaciological Stokes problem, we conjecture that a continuous-space, implicit time-step variational inequality problem for this surface elevation is well-posed if the surface kinematical equation is appropriately regularized.  This conjecture is supported by physical arguments and numerical evidence.  We prove a general theorem which bounds the numerical error made by finite element approximations of nonlinear-operator variational inequalities in Banach spaces.  The bound is a sum of error terms of different types, special to variational inequalities.  In the case of our implicit time-step glacier problem these terms are of three types: errors from discretizing the bed elevation, errors from numerically solving for the Stokes velocity, and finally an expected error which is quasi-optimal in the finite element representation of the surface elevation.
 \end{abstract}
 
 \begin{keywords}
@@ -136,18 +128,18 @@ error bounds, finite element methods, glaciers, ice flow, variational inequaliti
 
 \section{Introduction} \label{sec:intro}
 
-Glacier and ice sheet simulations model the ice as a free-surface layer of very-viscous, incompressible, and non-Newtonian fluid \cite{GreveBlatter2009,SchoofHewitt2013}.  For simplicity, here we will only consider simulations of land-based glaciers, without floating portions, and we note that an ``ice sheet'' is simply a continent-scale glacier.  The two essential input data into such simulations are the bedrock elevation, which is assumed here to be independent of time, and the time-dependent surface mass balance rate (SMB; the climatic mass balance rate \cite{Cogleyetal2011}).  By definition, the SMB is the balance between accumulating snow and the loss of melt water, through runoff, at the upper surface of the glacier \cite{Cogleyetal2011}.  Note that elevations are measured in meters and SMB in ice-equivalent units of meters per second.
+Glacier and ice sheet simulations model the ice as a free-surface layer of very-viscous, incompressible, and non-Newtonian fluid \cite{GreveBlatter2009,SchoofHewitt2013}.  Here we will only consider such simulations of land-based glaciers, without floating portions, and note that an ``ice sheet'' is simply a continent-scale glacier.  The two essential input data into such simulations are the bedrock elevation, which is assumed to be independent of time, and the time- and space-dependent surface mass balance rate (SMB).  By definition, the SMB is the balance between accumulating snow and the loss of melt water, through runoff, at the upper surface of the glacier \cite{Cogleyetal2011}.  Note that elevations are measured in meters, while SMB is in (ice-equivalent) meters per second.
 
-Thus a glacier simulation takes, as inputs, the bedrock topography, a (generally) time-dependent climate, and an initial geometry.  The simulation produces the glacier's evolving geometry and flow velocity; these are the output fields of primary scientific value.  Of course, additional complications are common in comprehensive models \cite{SchoofHewitt2013,Winkelmannetal2011}.  For example, the internal energy \cite{Aschwandenetal2012} or temperature of the ice may be tracked, and/or there may be models of liquid water within the ice matrix or at ice surfaces.  However, for simplicity and concreteness, here we only consider conservation of mass and momentum, but not of energy, and liquid water will play no role.  Furthermore we will assume zero velocity at the base of the ice, i.e.~a non-sliding and non-penetrating condition.  On the other hand, we will not make any of the shallowness assumptions which are common in those comprehensive ice sheet models.
+Thus a glacier simulation takes, as inputs, the fixed bedrock topography, a variable SMB climate, and an initial glacier geometry.  The simulation produces the glacier's evolving geometry and flow velocity; these are the output fields of primary scientific value.  Comprehensive models  \cite{SchoofHewitt2013,Winkelmannetal2011}, however, have additional physics.  They might track the internal energy \cite{Aschwandenetal2012} or temperature of the ice, or liquid water at the top or bottom of the glacier.  For relative simplicity we only consider conservation of mass and momentum, but not energy, and liquid water plays no role.  Furthermore we will assume zero velocity at the base of the ice, a non-sliding and non-penetrating condition.  On the other hand, we will not make any shallowness assumptions \cite{SchoofHewitt2013}.
 
-One may parameterize the glacier's geometry using either the (upper) surface elevation or the ice thickness.  Clearly, at a time and map-plane location where a glacier exists the surface elevation must exceed the bedrock elevation, equivalently the ice thickness must be positive.  The computed flow velocity is only defined at those locations and times where ice is present, on an evolving 3D domain between the bedrock and surface elevations.  In other words, an admissibility inequality for the surface elevation is required merely to make the velocity (and pressure) problem meaningful.
+One may parameterize the glacier's geometry using either the (upper) surface elevation or the ice thickness.  Clearly, at a time and map-plane location where a glacier exists the surface elevation must exceed that of the bedrock, equivalently the ice thickness must be positive.  But then the computed flow velocity is only defined at those locations and times where ice is present, on the evolving 3D domain between the bedrock and surface elevations.  In other words, admissibility for the surface elevation is required merely to make the velocity and pressure Stokes problem meaningful.
 
-Our notation is sketched in Figure \ref{fig:stokesdomain}.  Let $\Omega \subset \RR^2$ be a fixed portion of land, an open and connected set, with map-plane coordinates $x=(x_1,x_2)\in\Omega$.  All time-dependent quantities are assumed to be defined on $t\in [0,T]$ for some $T>0$.  We assume that we are given, as data, a real and continuous bed elevation function $b(x)$ on $\Omega$, and a real, signed, and continuous SMB function $a(t,x)$ on $[0,T]\times \Omega$.  Where $a>0$ (accumulation; downward arrows in Figure \ref{fig:stokesdomain}), a glacier will exist.  If $a<0$ (upward arrows) then either ice flow from accumulation areas has permitted a glacier to exist, with an ablating surface, or no glacier exists.  Determining which situation applies at given coordinates $t,x$ requires solving free-boundary problems like those considered in this paper.
+Our notation is sketched in Figure \ref{fig:stokesdomain}.  Let $\Omega \subset \RR^2$ be a fixed portion of land, an open and connected set, with map-plane coordinates $x=(x_1,x_2)\in\Omega$.  All time-dependent quantities are assumed to be defined on $t\in [0,T]$ for some $T>0$.  We assume that we are given, as data, a real and continuous bed elevation function $b(x)$ on $\Omega$, and a real, signed, and continuous SMB function $a(t,x)$ on $[0,T]\times \Omega$.  Where $a>0$ (accumulation; downward arrows in Figure \ref{fig:stokesdomain}), a glacier will exist.  However, if $a<0$ (upward arrows) then either ice flow from accumulation areas has permitted a glacier to exist, with an ablating surface, or no glacier exists.  Determining which situation applies at some coordinates $t,x$ requires solving a free-boundary problems, as considered in this paper.
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.65\textwidth]{genfigs/stokesdomain.pdf}
-\caption{Glacier notation used in this paper.  In fact $\Omega$ is 2D and $\Lambda(t)$ is 3D.}
+\includegraphics[width=0.6\textwidth]{genfigs/stokesdomain.pdf}
+\caption{Glacier notation used in this paper; $x\in\Omega\subset\RR^2$ and $\Lambda(s)\subset\RR^3$.}
 \label{fig:stokesdomain}
 \end{figure}
 
@@ -157,14 +149,14 @@ Let $s(t,x)$ be the (solution) ice surface elevation.  We will regard this as de
 \end{equation}
 This aspect of glacier modeling deserves emphasis:  The time-dependent 3D domain $\Lambda(s)=\Lambda\big(s(t,x)\big)$, on which the velocity and pressure are meaningful, is determined by the evolving surface elevation $s$, which is itself part of the model solution.
 
-The surface trace of the ice velocity will be of importance; it is reconsidered in a precise Sobolev space context in Section \ref{sec:stokes}.  We extend it by zero so that it is defined everywhere in $\Omega$:
+The surface trace of the ice velocity will be of importance; a precise Sobolev space context is given in Section \ref{sec:stokes}.  We extend it by zero so that it is defined everywhere in $\Omega$:
 \begin{equation}
 \bu|_s(t,x) = \begin{cases} \bu(t,x,s(t,x)), & s(t,x)>b(t,x) \\
                             \bzero, & \text{otherwise} .\end{cases} \label{eq:defineus}
 \end{equation}
-(Compare flux extension by zero in \cite{SchoofHewitt2013}.)  Also let $\bn_s = \left<-\grad s,1\right>$ denote an un-normalized and upward surface normal vector, assumed well-defined for the purposes of this Introduction.  (Compare Section \ref{sec:model}.)
+(Compare flux extension by zero in \cite{SchoofHewitt2013}.)  Also let $\bn_s = \left<-\partial s/\partial x_1,-\partial s/\partial x_2,1\right>$ denote an un-normalized and upward surface normal vector, assumed well-defined for the purposes of this Introduction.  (Compare Section \ref{sec:model}.)
 
-An infinite-dimensional nonlinear complementarity problem (NCP) \cite{Bueler2021conservation,FacchineiPang2003,SchoofHewitt2013} then applies almost everywhere in $[0,T]\times \Omega$:
+An infinite-dimensional nonlinear complementarity problem (NCP) \cite{FacchineiPang2003}, an obstacle problem, then applies almost everywhere in $[0,T]\times \Omega$:
 \begin{subequations}
 \label{eq:ncp}
 \begin{align}
@@ -173,25 +165,23 @@ s - b &\ge 0 \label{eq:ncp:constraint} \\
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0
 \end{align}
 \end{subequations}
-While condition \eqref{eq:ncp:constraint} is sometimes mentioned in the glaciers literature \cite{Durandetal2009,Halfar1981,JouvetBueler2012,PiersantiTemam2023,WirbelJarosch2020}, the complementary fact \eqref{eq:ncp:residualpos}, first observed by \cite{Calvoetal2003}, which says that a residual is everywhere nonnegative, is rarely acknowledged \cite{SchoofHewitt2013}.
+While condition \eqref{eq:ncp:constraint} is sometimes mentioned in the glaciers literature \cite{Durandetal2009,Halfar1981,JouvetBueler2012,PiersantiTemam2023,WirbelJarosch2020}, the complementary fact \eqref{eq:ncp:residualpos}, which says that a residual is everywhere nonnegative, observed first by \cite{Calvoetal2003}, is rarely written \cite{SchoofHewitt2013}.
 
 System \eqref{eq:ncp} says that either a location is ice free ($s-b=0$), where the climate is locally ablating ($a\le 0$), or that the surface kinematical equation (SKE) holds:
 \begin{equation}
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0.  \label{eq:ske}
 \end{equation}
-This equation says that the (non-material) ice surface moves vertically according to the sum of the SMB and a component of the ice velocity at the surface \cite{SchoofHewitt2013}.  Equation \eqref{eq:ske} is a statement of mass conservation at the surface \cite{Aschwandenetal2012}, sometimes called the free-surface equation \cite{LofgrenAhlkronaHelanow2022} or the kinematic boundary condition\footnote{Note that equation \eqref{eq:ske} is not a boundary condition of any identifiable PDE problem.} \cite{GreveBlatter2009}.
+By \eqref{eq:ske} the (non-material) ice surface moves vertically according to the sum of the SMB and a component of the ice velocity at the surface \cite{SchoofHewitt2013}, which is a statement of mass conservation at the surface \cite{Aschwandenetal2012} called the free-surface equation \cite{LofgrenAhlkronaHelanow2022} or the kinematic boundary condition\footnote{Note that equation \eqref{eq:ske} is not a boundary condition of any identifiable PDE problem.} \cite{GreveBlatter2009}.  Glaciologists would agree with the conditions of NCP \eqref{eq:ncp} as a model for glaciers, though it may not be common to state it completely, as here.  In numerical ice sheet models the SKE \eqref{eq:ske} is a standard way for surface geometry to evolve \cite{GreveBlatter2009,SchoofHewitt2013}.  The idea that positive (continuous) SMB at a given location implies the existence of glacier ice is also not controversial, and ice-free conditions are well-understood to exist only where SMB is negative.
 
-We believe that glaciologists agree with the conditions of NCP \eqref{eq:ncp} as a model for glaciers, though it may not be common to state it this way.  For example, in numerical ice sheet models the SKE \eqref{eq:ske} is a standard way for surface geometry to evolve \cite{GreveBlatter2009,SchoofHewitt2013}.  The idea that positive (continuous) SMB at a given location implies the existence of glacier ice there is also not controversial.  Equivalently, ice-free conditions are understood to exist only where the SMB is negative, because any accumulation (positive SMB) would immediately become glacier ice (by definition).
+In the current paper the SMB $a$ is assumed to be defined everywhere in $\Omega$, regardless of whether a glacier is present or not.  Note that a simulated glacier needs to be able to advance, in a well-posed manner, into unglaciated locations.  In ice-free areas the input SMB should have the value which a glacier surface would experience at that time and location, which can be modeled using precipitation and an energy balance \cite{GreveBlatter2009}, for instance by hypothesizing an ice surface and computing the balance of snow accumulation minus ablation, using the energy available for melt.
 
-In the current paper the SMB $a$ is necessarily assumed to be defined everywhere in $\Omega$, regardless of whether a glacier is present or not.  This is because a simulated glacier needs to be able to advance, in a well-posed manner, into unglaciated locations.  In ice-free areas the SMB should have the value which a glacier surface would experience at that time and location.  This value can be modeled using precipitation and an energy balance \cite{GreveBlatter2009}, for instance by hypothesizing an ice surface and then computing the balance of snow accumulation minus ablation, using the energy available for melt.
-
-The non-shallow ice dynamics model considered in this paper, which conserves mass and momentum, is standard.  It is the non-sliding (e.g.~frozen) base, isothermal, shear-thinning (non-Newtonian), and incompressible Stokes model \cite{GreveBlatter2009,JouvetRappaz2011,SchoofHewitt2013} applied over the domain $\Lambda(s)$ defined in \eqref{eq:icydomain}.  Let $\Gamma_s \subset \partial \Lambda(s)$ be the upper surface $z=s$ and $\Gamma_b \subset \partial \Lambda(s)$ be the base $z=b$.  The possibility of cliffs at the ice margin is neglected, so $\partial \Lambda(s) = \overline{\Gamma_s} \cup \overline{\Gamma_b}$ is assumed to hold at any time.  (Section \ref{sec:theory} considers this aspect of the model.)
-
-To state the shear-thinning (Glen's) flow law, let $D\bu=(\grad \bu + \grad \bu^{\top})/2$ denote the strain rate tensor, with Frobenius norm $|D\bu| = \left((D\bu)_{ij} (D\bu)_{ij}\right)^{1/2}$ (summation convention).  The effective ice (dynamic) viscosity \cite{GreveBlatter2009} is then given by a regularized formula
+After the kinematical considerations above, we can address non-shallow ice dynamics model used in this paper.  It is a standard approach which conserves mass and momentum, namely the non-sliding (e.g.~frozen) base, isothermal, non-Newtonian, and incompressible Stokes model \cite{GreveBlatter2009,JouvetRappaz2011,SchoofHewitt2013}, applied over the domain $\Lambda(s)$ defined in \eqref{eq:icydomain}.  Let $\Gamma_s \subset \partial \Lambda(s)$ be the upper surface $z=s$ and $\Gamma_b \subset \partial \Lambda(s)$ be the base $z=b$.  The possibility of cliffs at the ice margin is neglected, so $\partial \Lambda(s) = \overline{\Gamma_s} \cup \overline{\Gamma_b}$ is assumed to hold at any time.  (Section \ref{sec:theory} considers this aspect of the model.)  To state the shear-thinning constitutive relationship in the model, called Glen's flow law \cite{GreveBlatter2009}, let $D\bu=(\grad \bu + \grad \bu^{\top})/2$ denote the strain rate tensor, with Frobenius norm $|D\bu| = \left((D\bu)_{ij} (D\bu)_{ij}\right)^{1/2}$.  The effective ice (dynamic) viscosity \cite{GreveBlatter2009} is then given by a regularized formula
 \begin{equation}
 \nu(D\bu) = \nu_\pp \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} \label{eq:glen}
 \end{equation}
-for some $\eps>0$.  The exponent $1 < \pp \le 2$, often written $\pp=(1/\nn)+1$, is approximately 4/3 in practice \cite{GreveBlatter2009}.  The coefficient $\nu_\pp>0$ has $\pp$-dependent units, while $\nu(D\bu)$ has SI units $\text{kg}\,\text{m}^{-1}\,\text{s}^{-1}$.  The values of $\nn$ and $\nu_\pp$ can be determined from measured properties of ice \cite{GoldsbyKohlstedt2001,GreveBlatter2009}, including temperature, but both are assumed to be constant here.  Note that $\pp=2$ yields a Newtonian fluid with constant viscosity, while for $\pp < 2$ the regularization implies that $\nu(D\bu)$ is bounded above.  The density of ice $\rhoi$ and the acceleration of gravity $\bg$ are assumed constant.  At each time $t$ the velocity and pressure solve the following 3D fluid equations:
+for some $\eps>0$.  The exponent $1 < \pp \le 2$, often written $\pp=(1/\nn)+1$ in terms of Glen's exponent $n$, is approximately 4/3 in practice \cite{GreveBlatter2009}.  The coefficient $\nu_\pp>0$ has $\pp$-dependent units, while $\nu(D\bu)$ has SI units $\text{kg}\,\text{m}^{-1}\,\text{s}^{-1}$.  The values of $\nn$ and $\nu_\pp$ can be determined from measured properties of ice \cite{GoldsbyKohlstedt2001,GreveBlatter2009} and its temperature, but they are assumed to be constant here.  Note that $\pp=2$ yields a Newtonian fluid with constant viscosity, while for $\pp < 2$ the regularization implies that $\nu(D\bu)$ is bounded above.  The density of ice $\rhoi$ and the acceleration of gravity $\bg$ are also assumed constant.
+
+In this Stokes model, at each time $t$ the velocity and pressure solve the following 3D fluid equations:
 \begin{subequations}
 \label{eq:stokes}
 \begin{align}
@@ -201,7 +191,7 @@ for some $\eps>0$.  The exponent $1 < \pp \le 2$, often written $\pp=(1/\nn)+1$,
 \bu  &= \bzero && \text{on $\Gamma_b$} \label{eq:stokes:noslide}
 \end{align}
 \end{subequations}
-Boundary condition \eqref{eq:stokes:stressfreesurface} says that the sub-aerial upper surface is stress free; this must not be confused with the SKE \eqref{eq:ske}.
+Boundary condition \eqref{eq:stokes:stressfreesurface} says that the sub-aerial upper surface is stress free; it must not be confused with the SKE \eqref{eq:ske}, though both apply on $\Gamma_s$.
 
 In summary at this point, we consider an evolving free-surface flow for a glacier, subject to a signed climate that can add or remove ice, simultaneously with a nonlinear Stokes problem which must be solved within an evolving, 3D domain.  This initial/boundary value problem consisting of \eqref{eq:icydomain}--\eqref{eq:stokes} requires data $b(x),a(t,x)$ plus an initial surface elevation $s(0,x)$.  The solution variables are $s(t,x)$, $\bu(t,x,z)$, and $p(t,x,z)$, with $s$ defined everywhere over $[0,T]\times \Omega$, but subject to $s \ge b$, and with $\bu,p$ defined on $\Lambda(s)$ for each $t$ (equation \eqref{eq:icydomain}).  The surface elevation $s$ and surface velocity trace $\bu|_s$ must satisfy the kinematical NCP \eqref{eq:ncp}.
 
@@ -565,7 +555,7 @@ The regularity of the surface elevation solution might be improved by use of sem
 None of this is to assert that a fully-discrete (space-time) scheme cannot converge to the continuum solution of the problem \eqref{eq:icydomain}--\eqref{eq:stokes}, or more precisely its
 parabolic VI weak form \cite{Glowinski1984}.  (A proof of the well-posedness of the parabolic VI associated to strong form \eqref{eq:icydomain}--\eqref{eq:stokes} would be of great value here.)  However, as is well-understood in outline, but not settled quantitatively \cite{Chengetal2017}, convergence of an explicit scheme will be subject to a restriction on the (space-time) refinement path.  Besides being currently unclear (i.e.~in theory) what precisely is this restriction, the restriction will be worse than that for purely-advective problems, for the reasons already stated in Subsection \ref{subsec:notadv}, with corresponding negative effects on numerical model performance \cite{Bueler2023}.
 
-\subsection{Conjectural well-posedness for VI problem \eqref{eq:be:vi}} \label{subsec:conjecture} Subsections \ref{subsec:notadv}--\ref{subsec:explicit} have deployed various imperfect arguments to explain why the backward Euler VI problem \eqref{eq:be:vi} could be well-posed, or at least why other approaches are less promising.  We now state a mathematically-precise conjectural framework for well-posedness of this problem based upon the idea that the surface motion map $\Phi(s) = -\bu|_s\cdot \bn_s$ assigns different values to inputs which differ in Sobolev norm, and that it does so in a controlled and positive-definite manner.
+\subsection{Conjectural well-posedness for the implicit time-step problem} \label{subsec:conjecture} Subsections \ref{subsec:notadv}--\ref{subsec:explicit} have deployed various imperfect arguments to explain why the backward Euler VI problem \eqref{eq:be:vi} could be well-posed, or at least why other approaches are less promising.  We now state a mathematically-precise conjectural framework for well-posedness of this problem based upon the idea that the surface motion map $\Phi(s) = -\bu|_s\cdot \bn_s$ assigns different values to inputs which differ in Sobolev norm, and that it does so in a controlled and positive-definite manner.
 
 \begin{conjecture}[Surface motion $\Phi(s)$ is $\qq$-coercive over admissible surface elevations] \label{conj:b}  For $\rr>2$ such that Conjecture \ref{conj:a} holds, let $\cX = W^{1,\rr}(\Omega)$.  Fix $b\in\cX$ and let $\cK=\{r\in\cX\,:\,r|_{\partial\Omega}=b|_{\partial\Omega} \text{ and } r\ge b\}$.  Recall that $\Phi:\cK\to\cX'$ is then well-defined by Lemma \ref{lem:philipschitz}.  Then there are constants $\alpha>0$ and $\qq>1$ so that
 \begin{equation}
@@ -600,7 +590,7 @@ Theorem \ref{thm:stepwellposed} addresses only the well-posedness of a single ti
 The two Conjectures may be difficult to prove despite some progress in Sections \ref{sec:stokes} and \ref{sec:model}.  Greater progress has been made in the SIA case \cite{Calvoetal2003,JouvetBueler2012,PiersantiTemam2023}, which could be helpful.  In any case, the computation of $\bu|_s$ and $\Phi(s)=-\bu|_s\cdot \bn_s$, or equivalent expressions, is necessary in any evolving-geometry Stokes framework, implicit or not, and modeling practitioners apparently expect such expressions to be well-behaved in some manner.
 
 
-\section{Numerical exploration of $2$-coercivity} \label{sec:numerical}
+\section{Numerical exploration of \texorpdfstring{$2$}{2}-coercivity} \label{sec:numerical}
 
 We may explore the validity of Conjecture \ref{conj:b} by sampling from numerical simulations.  The experiments here,\footnote{Source code is at the public repository \href{https://github.com/bueler/glacier-fe-estimate}{\texttt{github.com/bueler/glacier-fe-estimate}}, in the \texttt{py/} directory.  The codes call the library at \href{https://github.com/bueler/stokes-extrude}{\texttt{github.com/bueler/stokes-extrude}}.} performed using Python and the Firedrake FE library \cite{Hametal2023}, are not intended to demonstrate implicit time-stepping, but only to generate admissible surface elevation pairs $r,s\in\cK$ to use as samples.  For a given sample pair we evaluate the $2$-coercivity ratio
 \begin{equation}
