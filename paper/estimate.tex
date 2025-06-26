@@ -1,35 +1,68 @@
-\documentclass{m2an}
+%\documentclass[review,hidelinks,onefignum,onetabnum]{siamart250211}
+\documentclass[final,hidelinks,onefignum,onetabnum]{siamart250211}
 
-\usepackage{amsfonts,yhmath}
+% Packages and macros go here
+\usepackage{amsfonts}
 \usepackage{graphicx}
-\usepackage{epstopdf}
 \ifpdf
   \DeclareGraphicsExtensions{.eps,.pdf,.png,.jpg}
 \else
   \DeclareGraphicsExtensions{.eps}
 \fi
-
-% my theorem environments for M2AN
-\theoremstyle{plain}
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{lemma}[thrm]{Lemma}
-\newtheorem{corollary}[thrm]{Corollary}
-\theoremstyle{definition}
-\newtheorem{definition}[thrm]{Definition}
-\newtheorem{conjecture}[thrm]{Conjecture}
-\newtheorem*{stdass*}{Standard Assumptions}
-
-\usepackage{amsopn}
-\DeclareMathOperator{\diag}{diag}
-
 \usepackage{bm,bbm,empheq,verbatim,fancyvrb,amssymb}
 \usepackage{booktabs,multirow,xspace}
 \usepackage{pifont}
-
 \usepackage{tikz}
 \usetikzlibrary{math, positioning}
+%\usepackage[pdftex, colorlinks=true, plainpages=false, linkcolor=blue, citecolor=red, urlcolor=blue]{hyperref}
 
-\usepackage[pdftex, colorlinks=true, plainpages=false, linkcolor=blue, citecolor=red, urlcolor=blue]{hyperref}
+% Add a serial/Oxford comma by default.
+\newcommand{\creflastconjunction}{, and~}
+
+% Used for creating new theorem and remark environments
+\newsiamremark{remark}{Remark}
+\newsiamremark{hypothesis}{Hypothesis}
+\newsiamremark{stdass}{Standard Assumptions}
+\crefname{hypothesis}{Hypothesis}{Hypotheses}
+\newsiamthm{claim}{Claim}
+\newsiamthm{conjecture}{Conjecture}
+\newsiamremark{fact}{Fact}
+\crefname{fact}{Fact}{Facts}
+
+\usepackage{amsopn}
+
+\DeclareMathOperator{\diag}{diag}
+
+% Optional PDF information
+\ifpdf
+\hypersetup{
+  pdftitle={Surface elevation errors in finite element Stokes models for glacier evolution},
+  pdfauthor={E. Bueler}
+}
+\fi
+
+% FundRef data to be entered by SIAM
+%<funding-group specific-use="FundRef">
+%<award-group>
+%<funding-source>
+%<named-content content-type="funder-name"> 
+%</named-content> 
+%<named-content content-type="funder-identifier"> 
+%</named-content>
+%</funding-source>
+%<award-id> </award-id>
+%</award-group>
+%</funding-group>
+
+% Sets running headers as well as PDF title and authors
+\headers{Surface elevation errors glacier Stokes modelsn}{E. Bueler}
+
+% Title.
+\title{Surface elevation errors in finite element Stokes models for glacier evolution\thanks{Submitted to the editors DATE (draft \today).  Thanks to J.~Ahlkrona and P.~Piersanti for thoughtful comments on an earlier version.}}
+
+% Authors: full names plus addresses.
+\author{Ed Bueler\thanks{Dept.~Mathematics \& Statistics, University of Alaska Fairbanks, USA (\email{elbueler@alaska.edu}, \url{https://bueler.github.io/}).}}
+
 
 \newcommand{\eps}{\epsilon}
 \newcommand{\RR}{\mathbb{R}}
@@ -86,33 +119,22 @@
 
 \begin{document}
 
-\title{Surface elevation errors in finite element \\ Stokes models for glacier evolution}
-%suggestion: \runningtitle{Surface elevation errors in glacier Stokes models}
-
-\author{Ed Bueler}
-%suggestion: \runningauthors{Ed Bueler}
-
-\address{Dept.~Mathematics \& Statistics, University of Alaska Fairbanks, USA (elbueler\@@alaska.edu).}
-
-\date{\today}
-
-\subjclass{76D27, 76D07, 49J40, 65N30, 65N15}
-
-\keywords{error bounds, finite element methods, glaciers, ice flow, variational inequalities}
+\maketitle
 
 \begin{abstract}
 The primary data which determine the evolution of glaciation are the bedrock elevation and the surface mass balance.  From this data, which we assume is defined over a fixed land region, the glacier's geometry solves a free boundary problem which balances the time derivative of the surface elevation, the surface velocity from the Stokes flow, and the surface mass balance.  A surface elevation function for this problem is admissible if it is above the bedrock topography, equivalently if the ice thickness is nonnegative.  This free boundary problem can be posed in weak form as a variational inequality.  After some preparatory theory for the glaciological Stokes problem, we conjecture that the continuous space, implicit time step variational inequality problem for the surface elevation is well-posed.  This conjecture is supported by physical arguments and (modest) numerical evidence.  We prove a general theorem which bounds the numerical error made by a finite element approximation of a nonlinear-operator variational inequality in a Banach space.  The bound is a sum of error terms of different types, essentially special to variational inequalities.  In the case of the implicit step glacier problem these terms are of three types: errors from discretizing the bed elevation, errors from numerically solving for the Stokes velocity, and finally an expected quasi-optimal finite element error in the surface elevation itself.
 \end{abstract}
 
-% straight from google translate
-\begin{resume}
-Les principales données qui déterminent l'évolution de la glaciation sont l'élévation du substrat rocheux et le bilan de masse en surface.  À partir de ces données, que nous supposons définies sur une région terrestre fixe, la géométrie du glacier résout un problème de frontière libre qui équilibre la dérivée temporelle de l'élévation de la surface, la vitesse de surface de l'écoulement de Stokes et le bilan de masse en surface.  Une fonction d'élévation de la surface pour ce problème est admissible si elle est au-dessus de la topographie du substrat rocheux, de manière équivalente si l'épaisseur de la glace est non négative.  Ce problème de frontière libre peut être posé sous forme faible comme une inégalité variationnelle.  Après quelques théories préparatoires au problème glaciologique de Stokes, nous conjecturons que le problème d'inégalité variationnelle implicite à pas de temps dans l'espace continu pour l'élévation de la surface est bien posé.  Cette conjecture est étayée par des arguments physiques et des preuves numériques (modestes).  Nous prouvons un théorème général qui limite l'erreur numérique commise par une approximation par éléments finis d'une inégalité variationnelle par opérateur non linéaire dans un espace de Banach.  La borne est une somme de termes d’erreur de différents types, essentiellement spécifiques aux inégalités variationnelles.  Dans le cas du problème implicite du glacier à marches, ces termes sont de trois types : les erreurs liées à la discrétisation de l'élévation du lit, les erreurs liées à la résolution numérique de la vitesse de Stokes, et enfin une erreur par éléments finis quasi optimale attendue dans l'élévation de la surface elle-même.
-\end{resume}
+\begin{keywords}
+error bounds, finite element methods, glaciers, ice flow, variational inequalities
+\end{keywords}
 
-\maketitle
+\begin{MSCcodes}
+76D27, 76D07, 49J40, 65N30, 65N15
+\end{MSCcodes}
 
 
-\section*{Introduction} \label{sec:intro}
+\section{Introduction} \label{sec:intro}
 
 Glacier and ice sheet simulations model the ice as a free-surface layer of very-viscous, incompressible, and non-Newtonian fluid \cite{GreveBlatter2009,SchoofHewitt2013}.  For simplicity, here we will only consider simulations of land-based glaciers, without floating portions, and we note that an ``ice sheet'' is simply a continent-scale glacier.  The two essential input data into such simulations are the bedrock elevation, which is assumed here to be independent of time, and the time-dependent surface mass balance rate (SMB; the climatic mass balance rate \cite{Cogleyetal2011}).  By definition, the SMB is the balance between accumulating snow and the loss of melt water, through runoff, at the upper surface of the glacier \cite{Cogleyetal2011}.  Note that elevations are measured in meters and SMB in ice-equivalent units of meters per second.
 
@@ -124,7 +146,7 @@ Our notation is sketched in Figure \ref{fig:stokesdomain}.  Let $\Omega \subset 
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=0.55\textwidth]{genfigs/stokesdomain.pdf}
+\includegraphics[width=0.65\textwidth]{genfigs/stokesdomain.pdf}
 \caption{Glacier notation used in this paper.  In fact $\Omega$ is 2D and $\Lambda(t)$ is 3D.}
 \label{fig:stokesdomain}
 \end{figure}
@@ -188,16 +210,16 @@ Note that the NCP \eqref{eq:ncp} is the only place where a time derivative appea
 While essentially equivalent in the continuum problem, formulations using thickness functions to parameterize geometry have a slightly different character from those using surface elevation as here.  Suppose the bedrock is realistically rough.  Surface elevation $s$ is subject to the flow-caused smoothing effect illustrated in Figure \ref{fig:giscross}.  That is, for land-based glaciers $s(t,x)$ is generally smoother in $x$ than the thickness $H(t,x) = s(t,x)-b(x)$, because it ``inherits'' the lower regularity of the (typically) eroded and faulted bedrock topography $b$.  This is one reason we formulate the model using the surface elevation.
 
 \begin{figure}
-\begin{minipage}[t]{0.75\textwidth}
+\begin{minipage}[t]{0.8\textwidth}
 \vspace{0pt}
 \includegraphics[width=\textwidth]{genfigs/giscross.pdf}
 \end{minipage}
 \,
-\begin{minipage}[t]{0.13\textwidth}
+\begin{minipage}[t]{0.15\textwidth}
 \vspace{10pt}
 \includegraphics[width=\textwidth]{genfigs/gis/gris-profile-gray.png}
 \end{minipage}
-\caption{A cross-section of the Greenland ice sheet at $70^\circ$N latitude (see inset).  While the ice surface $s$ is relatively smooth because of ice flow (top), the bedrock elevation $b$ is much rougher.  The corresponding ice thickness $H = s-b$ (bottom), though a valid geometry parameterization, inherits the low regularity of $b$.  (Data from \cite{Morlighemetal2017} and A.~Aschwanden, personal communication.)}
+\caption{A cross-section of the Greenland ice sheet at $70^\circ$N latitude \cite{Morlighemetal2017}; see inset.  Top: While the ice surface $s$ is smoothed because of ice flow, the bedrock elevation $b$ is much rougher.  Bottom: The corresponding ice thickness $H = s-b$ inherits the low regularity of $b$.}
 \label{fig:giscross}
 \end{figure}
 
@@ -800,7 +822,7 @@ for every interior node $x_j \in \cT_h$, with $\Pi_h(r)(x_j)=b(x_j)$ if $x_j\in\
 Collecting the above assumptions and context, from now on we make the following standard assumptions for solving VI problem \eqref{eq:be:vi} using numerical scheme \eqref{eq:fe:be:vi}.
 
 \smallskip
-\begin{stdass*}
+\begin{stdass}
 The following data are given:
 \renewcommand{\labelenumi}{\arabic{enumi}.}
 \begin{enumerate}
@@ -829,7 +851,7 @@ We also assume and define:
 \item $\cK_h = \{r_h\in\cX_h\,:\,r_h|_{\partial \Omega} = b_h|_{\partial \Omega} \text{ and } r_h \ge b_h\}$. \label{item:defineKh}
 \item An interpolation/truncation operator $\Pi_h$ yielding admissible elements in $\cK_h$.  \label{item:Pi}
 \end{enumerate}
-\end{stdass*}
+\end{stdass}
 
 \medskip
 The conforming condition $\cK_h\subset \cK$ follows from assumptions \ref{item:goodbh} and \ref{item:defineKh}, with advantages to follow.  Note that defining $b_h=R^{\oplus} b$ implies assumption \ref{item:goodbh}, but we do not specifically assume this construction.  As seen in the proof of Theorem \ref{thm:stepwellposed}, assumptions \ref{item:conj:a} and \ref{item:conj:b} show that $F_{\Delta t}$ is $\qq$-coercive and Lipschitz on bounded subsets of $\cK$.  By Theorem \ref{thm:stepwellposed} and case \emph{i)} of Corollary \ref{cor:abstractestimate:nohull} we have the following Lemma.
@@ -926,10 +948,6 @@ Thus the results here leave us far from an FE convergence proof for the main tim
 Neither do we have a proof of the well-posedness of the continuous-space, implicit-step problem \eqref{eq:be:vi} itself.  Much of the current paper is devoted to conjecturing such well-posedness (Sections \ref{sec:model}--\ref{sec:numerical}).  The abstract FE bound in Theorem \ref{thm:abstractestimate} applies to problem \eqref{eq:be:vi} because of Theorem \ref{thm:stepwellposed}, an immediate consequence of Conjectures \ref{conj:a} and \ref{conj:b}.  On the other hand, our attempt here at least clarifies which properties of the surface motion, i.e.~as part of the surface kinematical equation free-boundary problem, need to hold to conclude well-posedness of the time step problems in a non-shallow glacier model.
 
 The heart of the matter is coercivity of the surface motion, namely Conjecture \ref{conj:b}.  A strategy for proving this Conjecture is not clear to this author.  A weaker version comes from setting $r=s + \eps\phi$ for $\phi$ supported where $s>b$.  That is, one could consider admissible perturbations of the glacier surface which do not move the glacier margin.  This may be easier to prove, but it is not sufficient for Theorem \ref{thm:stepwellposed}, and it does not address the marginal shape and overhang concerns in Subsection \ref{subsec:margin}.  On the other hand, one might modify or regularize the operator definition \eqref{eq:be:Fdefine} in some manner, e.g.~by adding an elliptic regularization term.  Our numerical evidence for coercivity of the existing operator, from a very basic numerical approach, is weak (Section \ref{sec:numerical}), but in a regularized model the near-margin numerical approximation might be easier and the coercivity more evident.
-
-\begin{acknowledgement}
-Thanks to J.~Ahlkrona and P.~Piersanti for thoughtful comments on an earlier version.
-\end{acknowledgement}
 
 %\clearpage\newpage
 \bibliographystyle{siamplain}
