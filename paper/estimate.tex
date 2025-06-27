@@ -258,81 +258,37 @@ Jouvet and Rappaz \cite{JouvetRappaz2011} have proven that problem \eqref{eq:gle
 \begin{theorem}[Theorem 3.10 in \cite{JouvetRappaz2011}] \label{thm:stokeswellposed}  Suppose $\Lambda$ is bounded, $\partial\Lambda$ is Lipschitz, $\Gamma_s$ is $C^1$, and $\Gamma_b$ has positive measure.  Let $1<\pp\le 2$ and $\eps>0$ in \eqref{eq:glen}.  Then there exists a unique pair $(\bu,p) \in \mathcal{M}$ solving \eqref{eq:glenstokes:weak}, and $\bu\in \Vdiv$.
 \end{theorem}
 
-Our primary purpose, resumed in the next Section, is to study the glacier geometry NCP \eqref{eq:ncp}, and its weak form.  However, for that analysis we first need to bound the surface trace $\bu|_s$ in terms of geometric properties of $\Lambda$.  This uses several inequalities.
-
-\begin{lemma}[Poincar\'e's inequality; (7.44) in \cite{GilbargTrudinger2001}] \label{lem:poincare}
-Under the assumptions of Theorem \ref{thm:stokeswellposed}, there exists a dimensionless constant $c_{\pp}(\Lambda)>0$ so that
-\begin{equation}
-\int_\Lambda |\bv|^\pp \le c_{\pp}(\Lambda) [H]^\pp \int_\Lambda |\grad\bv|^\pp \qquad \text{for all } \bv \in \cV, \label{eq:poincare}
-\end{equation}
-and thus $\|\bv\|_{\cV}^\pp \le (c_{\pp}(\Lambda) + 1) [H]^\pp \int_\Lambda |\grad\bv|^\pp$.
-\end{lemma}
- 
-\begin{lemma}[Korn's inequality; to prove this set $F(x)$ to the identity in Corollary 4.1 of \cite{Pompe2003}] \label{lem:korns}
-Under the same assumptions, there exists a dimensionless constant $k_{\pp}(\Lambda)>0$ so that
-\begin{equation}
-\int_\Lambda |\grad\bv|^\pp \le k_{\pp}(\Lambda) \int_\Lambda |D\bv|^\pp \qquad \text{for all } \bv \in \cV. \label{eq:korns}
-\end{equation}
-\end{lemma}
-
-The main idea of the following \emph{a priori} bound is that the velocity solution is controlled by geometric properties of $\Lambda$, including the above constants, certain physical constants, and the ice volume $|\Lambda|$.
+Our primary purpose is to study NCP \eqref{eq:be:ncp} for the glacier geometry, and its weak form, but for that we need to bound the surface trace $\bu|_s$.  The following \emph{a priori} bound, proven for completeness in Appendix \ref{app:provestokesapriori}, shows that the velocity solution is controlled by certain physical constants and the geometry of $\Lambda$.
 
 \begin{lemma} \label{lem:stokesapriori}
-Suppose $\bu\in\cV$ is the solution from Theorem \ref{thm:stokeswellposed}.  Then there is $C>0$ depending continuously on $\pp$, $\rhoi |\bg|$, $\nu_\pp$, $\eps$, $[H]$, $|\Lambda|$, $c_\pp(\Lambda)$, and $k_\pp(\Lambda)$ so that
+There is $C>0$ depending continuously on $\pp$, $\rhoi |\bg|$, $\nu_\pp$, $\eps$, $[H]$, and $\Lambda$ so that if $\bu\in\cV$ is the solution from Theorem \ref{thm:stokeswellposed} then
 \begin{equation}
 \|\bu\|_{\cV} \le C. \label{eq:stokesapriori}
 \end{equation}
 \end{lemma}
 
-\begin{proof}
-From \eqref{eq:glenstokes:weak} and $\bu \in\Vdiv$ it follows that
-\begin{equation}
-0= F_\Lambda(\bu,p)[\bu,p] = \int_\Lambda 2 \nu(D\bu) D\bu : D\bu - \rhoi \bg \cdot \bu.  \label{eq:stokes:substituteu}
-\end{equation}
-Apply Korn's inequality, the facts that $\pp>0$ and $(\pp-2)/2 \le 0$, and equation \eqref{eq:glen}:
-\begin{align}
-\int_\Lambda |\grad\bu|^\pp &\le k_{\pp}(\Lambda) \int_\Lambda |D\bu|^\pp \le k_{\pp}(\Lambda) \int_\Lambda \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} \left(D\bu:D\bu + \eps\right) \label{eq:stokes:startapriori} \\
-	&= k_{\pp}(\Lambda) \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \int_\Lambda 2\nu(D\bu) D\bu:D\bu\right]. \notag
-\end{align}
-By equation \eqref{eq:stokes:substituteu}, Cauchy-Schwarz, and H\"older's inequality we thus have
-\begin{align}
-\int_\Lambda |\grad\bu|^\pp &\le k_{\pp}(\Lambda) \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \int_\Lambda \rhoi \bg \cdot \bu\right] \label{eq:stokes:workapriori} \\
-	&\le k_{\pp}(\Lambda) \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \rhoi |\bg| |\Lambda|^{1/\pp'} \|\bu\|_\cV\right]. \notag
-\end{align}
-From Poincar\'e's inequality,
-\begin{equation}
-\|\bu\|_{\cV}^\pp \le (c_{\pp}(\Lambda) + 1) [H]^\pp k_{\pp}(\Lambda) \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \rhoi |\bg| |\Lambda|^{1/\pp'} \|\bu\|_\cV\right].
-\end{equation}
-
-Let $z=\|\bu\|_\cV$.  We have proved that
-\begin{equation}
-z^\pp \le c_0 + c_1 z
-\end{equation}
-for $\pp>1$ and constants $c_i>0$.  Furthermore $g(y) = y^\pp - c_1 y - c_0$ is smooth with $g(0)=-c_0<0$, and $g(y) \to +\infty$ as $y \to +\infty$ since $\pp>1$.  Thus there exists a right-most root $\tilde y>0$ with $\tilde y = f(\pp,c_0,c_1)$.  Since $g(z)\le 0$ we have $z \le \tilde y$.  This proves \eqref{eq:stokesapriori} with $C=\tilde y$.
-\end{proof}
-
 \begin{lemma}[Trace inequality] \label{lem:trace}
-Under the assumptions of Theorem \ref{thm:stokeswellposed}, there exists a dimensionless constant $\tau_{\pp}(\Lambda)>0$ so that for all $\bv \in \cV$,
+Under the assumptions of Theorem \ref{thm:stokeswellposed}, there exists a constant $C$, dependent only on $\pp$, $[H]$, and $\Lambda$, so that for all $\bv \in \cV$,
 \begin{equation}
-\int_{\Gamma_s} |\bv|^\pp \,dS \le \frac{\tau_{\pp}(\Lambda)}{[H]} \|\bv\|_{\cV}^\pp. \label{eq:trace}
+\int_{\Gamma_s} |\bv|^\pp \,dS \le C \|\bv\|_{\cV}^\pp. \label{eq:trace}
 \end{equation}
-On the left of \eqref{eq:trace}, $\bv$ denotes the trace on $\Gamma_s$ and $dS$ the area element over $\partial\Lambda$.
+On the left of \eqref{eq:trace}, $\bv$ denotes the trace on $\Gamma_s$ and $dS$ is the area element over $\partial\Lambda$.
 \end{lemma}
 
 \begin{proof}
-Theorem 5.5.1 in \cite{Evans2010} defines a trace operator $T:\cV\to L^\pp(\partial\Lambda)$, for which there exists a constant $c>0$, dependent only on $\pp$ and $\Lambda$, so that
+Theorem 5.5.1 in \cite{Evans2010} defines the trace operator $T:\cV\to L^\pp(\partial\Lambda)$, for which there exists a constant $c>0$ so that
 \begin{equation}
 \int_{\partial\Lambda} |T\bv|^p\,dS \le c \int_{\Lambda} |\bv|^\pp + |\grad\bv|^\pp \le c \int_{\Lambda} |\bv|^\pp + [H]^\pp |\grad\bv|^\pp \label{eq:tracework}
 \end{equation}
-for $\bv\in\cV$.  However, because $\bv=\bzero$ along $\Gamma_b$, the result follows with $\tau_{\pp}(\Lambda)=[H] c$.
+for $\bv\in\cV$.  However, because $\bv=\bzero$ along $\Gamma_b$, and by the Poincar\'e inequality \eqref{eq:poincare}, the result follows.
 \end{proof}
 
-Combining Lemmas \ref{lem:stokesapriori} and \ref{lem:trace} yields the following bound.  In using this result, recall that $\Lambda=\Lambda(s)$ and $\Gamma_s=\partial \Lambda\setminus \Gamma_b$ are defined, in terms of $s$ and $b$, by \eqref{eq:icydomain}.
+Combining Lemmas \ref{lem:stokesapriori} and \ref{lem:trace} yields the following bound on the surface trace of the velocity.  In using this result, recall that $\Lambda=\Lambda(s)$ and $\Gamma_s=\partial \Lambda\setminus \Gamma_b$ are defined, in terms of $s$ and $b$, by \eqref{eq:icydomain}.
 
 \begin{corollary}[Surface velocity bound] \label{cor:surfacetracebound}
-Suppose $\bu\in\cV$ is the Stokes velocity solution from Theorem \ref{thm:stokeswellposed}.  The norm of its trace over $\Gamma_s$ is controlled, \emph{a priori}, by $[H]$, $C$ in \eqref{eq:stokesapriori}, and $\tau_{\pp}(\Lambda)$ in \eqref{eq:trace}:
+There is a constant $C>0$, computable from physical constants and the geometry of $\Lambda$, so that if $\bu\in\cV$ is the Stokes velocity solution from Theorem \ref{thm:stokeswellposed} then
 \begin{equation}
-\int_{\Gamma_s} |\bu|^\pp \,dS \le \frac{\tau_{\pp}(\Lambda)}{[H]} C^\pp. \label{eq:surfacetracebound}
+\int_{\Gamma_s} |\bu|^\pp \,dS \le C. \label{eq:surfacetracebound}
 \end{equation}
 \end{corollary}
 
@@ -932,4 +888,41 @@ The heart of the matter is coercivity of the surface motion, namely Conjecture \
 \bibliographystyle{siamplain}
 \bibliography{estimate}
 
+\appendix
+\section{Proof of Lemma \ref{lem:stokesapriori}} \label{app:provestokesapriori}
+
+The proof of Lemma \ref{lem:stokesapriori} is hinted in \cite{JouvetRappaz2011}, and is standard.  It requires Poincar\'e's inequality, below as \eqref{eq:poincare}, which is (7.44) in \cite{GilbargTrudinger2001}, and Korn's inequality \eqref{eq:korns}, which can by proven by setting $F(x)$ to the identity in Corollary 4.1 of \cite{Pompe2003}.
+
+\begin{lemma} \label{lem:poincarekorns}
+Under the assumptions of Theorem \ref{thm:stokeswellposed}, there exist dimensionless constants $C$, depending on the geometry of $\Lambda$, so that for all $\bv \in \cV$,
+\begin{equation}
+\int_\Lambda |\bv|^\pp \le C [H]^\pp \int_\Lambda |\grad\bv|^\pp, \label{eq:poincare}
+\end{equation}
+thus $\|\bv\|_{\cV}^\pp \le (C + 1) [H]^\pp \int_\Lambda |\grad\bv|^\pp$, and
+\begin{equation}
+\int_\Lambda |\grad\bv|^\pp \le C \int_\Lambda |D\bv|^\pp. \label{eq:korns}
+\end{equation}
+\end{lemma}
+
+\begin{proof}[Proof of Lemma \ref{lem:stokesapriori}]
+From \eqref{eq:glenstokes:weak} and $\bu \in\Vdiv$ it follows that
+\begin{equation}
+0= F_\Lambda(\bu,p)[\bu,p] = \int_\Lambda 2 \nu(D\bu) D\bu : D\bu - \rhoi \bg \cdot \bu.  \label{eq:stokes:substituteu}
+\end{equation}
+Apply \eqref{eq:korns}, the facts that $\pp>0$ and $(\pp-2)/2 \le 0$, and equation \eqref{eq:glen}:
+\begin{align}
+\int_\Lambda |\grad\bu|^\pp &\le C \int_\Lambda |D\bu|^\pp \le C \int_\Lambda \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} \left(D\bu:D\bu + \eps\right) \label{eq:stokes:startapriori} \\
+	&= C \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \int_\Lambda 2\nu(D\bu) D\bu:D\bu\right]. \notag
+\end{align}
+By equation \eqref{eq:stokes:substituteu}, Cauchy-Schwarz, and H\"older's inequality we thus have
+\begin{align}
+\int_\Lambda |\grad\bu|^\pp &\le C \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \int_\Lambda \rhoi \bg \cdot \bu\right] \label{eq:stokes:workapriori} \\
+	&\le C \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \rhoi |\bg| |\Lambda|^{1/\pp'} \|\bu\|_\cV\right]. \notag
+\end{align}
+From \eqref{eq:poincare},
+\begin{equation}
+\|\bu\|_{\cV}^\pp \le C [H]^\pp \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \rhoi |\bg| |\Lambda|^{1/\pp'} \|\bu\|_\cV\right].
+\end{equation}
+Now let $z=\|\bu\|_\cV$.  We have proved that $z^\pp \le c_0 + c_1 z$ for $\pp>1$ and constants $c_i>0$.  Furthermore $g(y) = y^\pp - c_1 y - c_0$ is smooth with $g(0)=-c_0<0$, and $g(y) \to +\infty$ as $y \to +\infty$ since $\pp>1$.  Thus there exists a right-most root $\tilde y>0$ with $\tilde y = f(\pp,c_0,c_1)$.  Since $g(z)\le 0$ we have $z \le \tilde y$.  This proves \eqref{eq:stokesapriori} with $C=\tilde y$.
+\end{proof}
 \end{document}
