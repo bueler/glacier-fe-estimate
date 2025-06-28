@@ -353,7 +353,7 @@ In fact, we can bound the surface motion term $\bu|_s\cdot \bn_s$ for $s$ in the
 \end{equation}
 The key assumption in the following Lemma is that $s\in W^{1,\rr}(\Omega)$ implies that the domain $\Lambda(s)$ is nice enough so that Corollary \ref{cor:surfacetracebound} gives a finite bound.  The conclusion is that we have enough control on the measurable function $\bu|_s\cdot \bn_s$ to know that it is in the dual space of $W^{1,\rr}(\Omega)$.
 
-\begin{lemma}[Preliminary bound on surface motion] \label{lem:phibound:early}  Suppose $2 \le \rr \le \infty$, and assume $s\in W^{1,\rr}(\Omega)$ is admissible, $s\ge b$.  With $\Lambda(s)$ defined by \eqref{eq:icydomain}, assume the hypotheses of Theorem \ref{thm:stokeswellposed} and Corollary \ref{cor:surfacetracebound}.  Then there is $C>0$, depending on $s$ but not $q$, so that, for all  $q\in W^{1,\rr}(\Omega)$,
+\begin{lemma}[Preliminary bound on surface motion] \label{lem:phibound:early}  Suppose $2 \le \rr \le \infty$, and assume $s\in W^{1,\rr}(\Omega)$ is admissible ($s\ge b$ and $s=b$ on $\partial\Omega$).  With $\Lambda(s)$ defined by \eqref{eq:icydomain}, assume the hypotheses of Theorem \ref{thm:stokeswellposed} and Corollary \ref{cor:surfacetracebound}.  Then there is $C>0$, depending on $s$ but not $q$, so that, for all  $q\in W^{1,\rr}(\Omega)$,
 \begin{equation}
 \left|\int_\Omega \bu|_s\cdot \bn_s \,q\,dx\right| \le C\, \|q\|_{W^{1,\rr}}. \label{eq:phibound:early}
 \end{equation}
@@ -377,44 +377,49 @@ Note that if $\alpha\ge 0$ then $(1+\alpha)^{\rr/2} \le 2^{(\rr-2)/2} (1+\alpha^
 Since $2 \le \pp' \le \pp'\rr' < \infty$, by Sobolev's inequality, e.g.~Theorem 8.8 from \cite{LiebLoss1997} using $n=2$, $k=m=1$, $p=\rr$, and $q=\pp'\rr'$, we have $\|q\|_{L^{\pp'\rr'}} \le C \|q\|_{W^{1,\rr}}$, thus \eqref{eq:phibound:early}.
 \end{proof}
 
-FIXME The measurable function $\bu|_s$ may be discontinuous on $\Omega$, but, based on the above result, we now conjecture that for some $\rr>2$, the $L^{\rr'}$-norm of $\bu|_s$ is Lipschitz as a function of $s \in W^{1,\rr}(\Omega)$.  The reason for requiring $\rr>2$ will be seen in Lemma \ref{lem:philipschitz}; this would seem to be a technical requirement.
+Because $\Omega\subset \RR^2$, when $\rr>2$ we have $W^{1,\rr}(\Omega) \hookrightarrow C(\bar\Omega)$.  Nonetheless, by the hypotheses of Theorem \ref{thm:stokeswellposed}, $s\in W^{1,\rr}(\Omega)$ might be insufficient regularity to solve the Stokes problem on the domain $\Lambda(s)$.  We conjecture that it suffices.
 
-\begin{conjecture}[Surface velocity is a Lipschitz function of surface elevation] \label{conj:a}
+\begin{conjecture}[$W^{1,\rr}$ surface elevations allow Stokes solutions] \label{conj:a}
+There exists $2 < \rr \le \infty$ so that if $s\in W^{1,\rr}(\Omega)$ is admissible then the conclusion of Theorem \ref{thm:stokeswellposed} applies on $\Lambda(s)$, providing a unique pair $(\bu,p) \in \mathcal{M}$ solving \eqref{eq:glenstokes:weak}, with $\bu\in \Vdiv$.
+\end{conjecture}
 
-\noindent There exists $2 < \rr \le \infty$ with the following two properties:  \emph{(i)} If $s\in W^{1,\rr}(\Omega)$ is admissible ($s\ge b$ and $s=b$ on $\partial\Omega$) then the conclusion of Theorem \ref{thm:stokeswellposed} applies, giving a well-defined surface velocity $\bu|_s$.  \emph{(ii)} There exists $C>0$, independent of (admissible) $s,r\in W^{1,\rr}(\Omega)$, such that
+Now let
 \begin{equation}
-\big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \le C \|r-s\|_{W^{1,\rr}}. \label{eq:ulipschitz}
+\boxed{\cX = W^{1,\rr}(\Omega),} \label{eq:defineX}
+\end{equation}
+and define the closed and convex admissible subset $\cK \subset \cX$ by \eqref{eq:be:admissible}.  Assuming Conjecture \ref{conj:a}, the surface velocity $\bu|_s$ is well-defined as a measurable function (Corollary \ref{cor:surfacetracebound}).  Complementary to the above bound in Lemma \ref{lem:phibound:early}, we further conjecture that for some $\rr>2$, if $s \in \cX$ then a Lebesgue norm of $\bu|_s$ is well-behaved as a function of $s$, namely that it is \emph{Lipschitz on bounded subsets of $\cK$}.  Proving this might require more detailed knowledge about Stokes problem \eqref{eq:glenstokes:weak} than is currently available.
+
+\begin{conjecture}[Surface velocity is Lipschitz in the surface elevation] \label{conj:b}
+There exists $2 < \rr \le \infty$ so that if $R>0$ then there is $C(R)>0$ so that for $r,s\in B_R \cap \cK = \{t\in \cK\,:\,\|t\|_{\cX} \le R\}$ and $q\in\cX$,
+\begin{equation}
+\big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \le C(R) \|r-s\|_{W^{1,\rr}} \label{eq:ulipschitz}
 \end{equation}
 \end{conjecture}
 
-From now on we will assume that Conjecture \ref{conj:a} holds.  Define
-\begin{equation}
-\cX = W^{1,\rr}(\Omega). \label{eq:defineX}
-\end{equation}
-Since $\rr>2$ we have $\cX \hookrightarrow C(\bar\Omega)$.  Now the closed and convex admissible subset $\cK \subset \cX$ is defined by \eqref{eq:be:admissible}.
+From now on we will assume that Conjectures \ref{conj:a} and \ref{conj:b} holds for some $\rr>2$.
 
-From Lemma \ref{lem:phibound:early}, the surface motion $\Phi(s)$ is a linear functional on $q \in \cX$:
+\begin{definition}  Define the nonlinear \emph{surface motion} map $\Phi:\cK \to \cX'$ by
 \begin{equation}
-\Phi(s)[q] = -\int_\Omega \bu|_s\cdot\bn_s\,q\,dx. \label{eq:definePhi}
+\boxed{\Phi(s)[q] = -\int_\Omega \bu|_s\cdot\bn_s\,q\,dx.} \label{eq:definePhi}
 \end{equation}
-This redefines $\Phi$ as a map from $\cK$ to the (topological) dual space $\cX'$.  Note that $\Phi(s)[q]$ is nonlinear in $s$.  The next Lemma simply proves that $\Phi$ is Lipschitz-continuous in $s$ if we assume the Conjecture.
+\end{definition}
 
-\begin{lemma} \label{lem:philipschitz}  Suppose that Conjecture \ref{conj:a} holds.  Fix $b \in \cX$ so that \eqref{eq:be:admissible} defines $\cK$.  The map $\Phi:\cK\to\cX'$ is Lipschitz on bounded subsets of $\cK$, that is, for each $R>0$ there is $C(R)>0$ so that if $r,s\in B_R \cap \cK = \{t\in \cK\,:\,\|t\|_{\cX} \le R\}$ and $q\in\cX$ then
+\begin{lemma} \label{lem:philipschitz}  The map $\Phi$ is also Lipschitz on bounded subsets of $\cK$.  For $s$, $r$, $C(R)$, and $q$ as in Conjecture \ref{conj:b},
 \begin{equation}
-\Big|\Phi(r)[q] - \Phi(s)[q]\Big| \le C(R)\, \|r-s\|_{\cX} \|q\|_{\cX}  \label{eq:philipschitz}
+\Big|\Phi(r)[q] - \Phi(s)[q]\Big| \le C(R)\, \|r-s\|_{\cX} \|q\|_{\cX}.  \label{eq:philipschitz}
 \end{equation}
 \end{lemma}
 
-\begin{proof}  Suppose $s,r\in\cK$.  Add and subtract $\bu|_s \cdot \bn_r$, and apply triangle inequalities, including $|\bn_r|=\left(1+|\grad r|^2\right)^{1/2} \le 1 + |\grad r|$, as follows:
+\begin{proof}  Suppose $s,r\in\cK$.  Add and subtract $\bu|_s \cdot \bn_r$, and note the triangle inequality $|\bn_r|=\left(1+|\grad r|^2\right)^{1/2} \le 1 + |\grad r|$.  Thus:
 \begin{align}
-\big|\Phi(r)[q] - \Phi(s)[q]\big| &\le \int_\Omega \big|\bu|_r - \bu|_s\big| |\bn_r| |q|\,dx + \int_\Omega \big|\bu|_s\big| |\bn_r-\bn_s| |q|\,dx \\
-    &\le \int_\Omega \big|\bu|_r - \bu|_s\big| |q|\,dx + \int_\Omega \big|\bu|_r - \bu|_s\big| |\grad r| |q|\,dx \notag \\
+\Big|\Phi(r)[q] - \Phi(s)[q]\Big| &\le \int_\Omega \Big|\bu|_r - \bu|_s\Big| |\bn_r| |q|\,dx + \int_\Omega \big|\bu|_s\big| |\bn_r-\bn_s| |q|\,dx \\
+    &\le \int_\Omega \Big|\bu|_r - \bu|_s\Big| |q|\,dx + \int_\Omega \Big|\bu|_r - \bu|_s\Big| |\grad r| |q|\,dx \notag \\
     &\qquad\qquad + \int_\Omega \big|\bu|_s\big| |\grad r-\grad s| |q|\,dx \notag
 \end{align}
-By applying H\"older's inequality to each integral we have
+By applying H\"older's inequality to each integral in the last expression we have
 \begin{align}
-\int_\Omega \big|\bu|_r - \bu|_s\big| |q|\,dx &\le \big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \|q\|_{L^{\rr}} \le \|\bu|_r - \bu|_s\|_{L^{\rr'}} \|q\|_{\cX}, \label{eq:philipschitz:1} \\
-\int_\Omega \big|\bu|_r - \bu|_s\big| |\grad r| |q|\,dx &\le \left(\int_\Omega \big|\bu|_r - \bu|_s\big|^{\rr'} |q|^{\rr'}\, dx\right)^{1/\rr'} \|\grad r\|_{L^\rr} \label{eq:philipschitz:2} \\
+\int_\Omega \Big|\bu|_r - \bu|_s\Big| |q|\,dx &\le \big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \|q\|_{L^{\rr}} \le \|\bu|_r - \bu|_s\|_{L^{\rr'}} \|q\|_{\cX}, \label{eq:philipschitz:1} \\
+\int_\Omega \Big|\bu|_r - \bu|_s\Big| |\grad r| |q|\,dx &\le \left(\int_\Omega \Big|\bu|_r - \bu|_s\Big|^{\rr'} |q|^{\rr'}\, dx\right)^{1/\rr'} \|\grad r\|_{L^\rr} \label{eq:philipschitz:2} \\
     &\le [L]^{-1} \big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \|r\|_{\cX} \|q\|_{L^\infty}, \notag \\
 \int_\Omega \big|\bu|_s\big| |\grad r-\grad s| |q|\,dx &\le \left(\int_\Omega \big|\bu|_s\big|^{\rr'} |q|^{\rr'}\, dx\right)^{1/\rr'} \|\grad r- \grad s\|_{L^\rr}  \label{eq:philipschitz:3} \\
     &\le [L]^{-1} \big\|\bu|_s - \bzero\big\|_{L^{\rr'}} \|r-s\|_{\cX} \|q\|_{L^\infty}. \notag
@@ -426,7 +431,7 @@ Note that $\bu|_b=\bzero$; there is no glacier.  Because $\rr>2$, Sobolev's ineq
 Assume $s,r,b\in B_R\cap \cK$.  Then, by the triangle inequality, \eqref{eq:philipschitz} follows with $C(R) = C \left(1 + 3 c_\infty [L]^{-1} R\right)$.
 \end{proof}
 
-At this point we have the tools needed to define an operator which puts the backward Euler time step VI \eqref{eq:be:viearly} into a mathematically-precise weak form.  If $s\in\cK$ and $q\in\cX$ then we define $F_{\Delta t}:\cK\to\cX'$:
+At this point we have the tools needed to make the weak-form backward-Euler time step VI \eqref{eq:be:viearly} mathematically precise.  FIXME If $s\in\cK$ and $q\in\cX$ then we define $F_{\Delta t}:\cK\to\cX'$:
 \begin{equation}
 F_{\Delta t}(s)[q] = \Delta t\,\Phi(s)[q] + \int_\Omega s q = \int_\Omega \left(s - \Delta t\, \bu|_s \cdot \bn_s\right) q.  \label{eq:be:Fdefine}
 \end{equation}
@@ -456,9 +461,9 @@ In addition to not being an advection, VI problem \eqref{eq:be:vi} is also not o
 
 \subsection{Conjectural well-posedness for the implicit time-step problem} \label{subsec:conjecture} Subsections \ref{subsec:notadv}--\ref{subsec:explicit} have deployed various imperfect arguments to explain why the backward Euler VI problem \eqref{eq:be:vi} could be well-posed, or at least why other approaches are less promising.  We now state a mathematically-precise conjectural framework for well-posedness of this problem based upon the idea that the surface motion map $\Phi(s) = -\bu|_s\cdot \bn_s$ assigns different values to inputs which differ in Sobolev norm, and that it does so in a controlled and positive-definite manner.
 
-\begin{conjecture}[Surface motion $\Phi(s)$ is $\qq$-coercive over admissible surface elevations] \label{conj:b}  For $\rr>2$ such that Conjecture \ref{conj:a} holds, let $\cX = W^{1,\rr}(\Omega)$.  Fix $b\in\cX$ and let $\cK=\{r\in\cX\,:\,r|_{\partial\Omega}=b|_{\partial\Omega} \text{ and } r\ge b\}$.  Recall that $\Phi:\cK\to\cX'$ is then well-defined by Lemma \ref{lem:philipschitz}.  Then there are constants $\alpha>0$ and $\qq>1$ so that
+\begin{conjecture}[Surface motion $\Phi(s)$ is $\qq$-coercive over admissible surface elevations] \label{conj:c}  For $\rr>2$ such that Conjecture \ref{conj:a} holds, let $\cX = W^{1,\rr}(\Omega)$.  Fix $b\in\cX$ and let $\cK=\{r\in\cX\,:\,r|_{\partial\Omega}=b|_{\partial\Omega} \text{ and } r\ge b\}$.  Recall that $\Phi:\cK\to\cX'$ is then well-defined by Lemma \ref{lem:philipschitz}.  Then there are constants $\alpha>0$ and $\qq>1$ so that
 \begin{equation}
-\left(\Phi(r) - \Phi(s)\right)[r-s] \ge \alpha \|r-s\|_{\cX}^\qq \qquad \text{for all } r,s\in\cK. \label{eq:conj:b}
+\left(\Phi(r) - \Phi(s)\right)[r-s] \ge \alpha \|r-s\|_{\cX}^\qq \qquad \text{for all } r,s\in\cK. \label{eq:conj:c}
 \end{equation}
 \end{conjecture}
 
