@@ -421,14 +421,6 @@ If Conjecture \ref{conj:a} holds then by Lemma \ref{lem:philipschitz} this opera
 \end{equation}
 This VI, which merely rewrites \eqref{eq:be:viearly}, is the weak form of the implicit time-step problem.  The reader should keep in mind its strong-form NCP \eqref{eq:be:ncp} as well.
 
-Regarding the specific Lipschitz statement \eqref{eq:philipschitz}, suppose we knew instead that $\Big|\Phi(r)[q] - \Phi(s)[q]\Big| \le C(R)\, (\|r-s\|_{\cX})^\omega \|q\|_{\cX}$ for some exponent $\omega>0$.  This would provide sufficient continuity for the well-posedness Theorem \ref{thm:stepwellposed} below.  However, the finite element error theorem in Section \ref{sec:abstractestimate} needs \eqref{eq:philipschitz} as stated with $\omega=1$.
-
-If the horizontal components of the surface velocity are differentiable then one might revise operator definition \eqref{eq:be:Fdefine} as follows.  Write $\bu=(u,v,w)$ in cartesian coordinates, and define $\bU=(u,v)$.  Assuming $\bU|_s=\bzero$ along the fixed boundary $\partial\Omega$, integrate \eqref{eq:be:Fdefine} by parts to give
-\begin{equation}
-F_{\Delta t}(s)[q] = \int_\Omega \left(s - \Delta t\, w|_s\right) q - \Delta t\, \Div\left(\bU|_s\, q\right).  \label{eq:be:Fdefine:alt}
-\end{equation}
-However, form \eqref{eq:be:Fdefine:alt} seems not to represent a good regularity trade-off between $\bu|_s$ and $s$.  We have proven in Section \ref{sec:stokes} that $\bu|_s$ is an $L^\pp$ function over $\Gamma_s$ (Corollary \ref{cor:surfacetracebound}), but we have no proof that it is more regular than that.  On the other hand, we are indeed hypothesizing that $\grad s$ is a well-defined function in $L^\rr$, because $s\in\cX=W^{1,\rr}(\Omega)$.  Thus we will keep definition \eqref{eq:be:Fdefine}.  Observe that \eqref{eq:be:Fdefine:alt} looks more like the divergence-form operators written for thickness-based models, e.g.~\cite{Bueler2021conservation,JouvetBueler2012}.
-
 
 \section{Theoretical considerations for the surface elevation VI problem} \label{sec:theory}
 
@@ -468,37 +460,6 @@ Reality is of course more complicated.  In the vicinity of an ice margin, especi
 
 Making progress on this situation might require extending the Stokes-based viscous models considered here by allowing fractures, for example by supplementing momentum conservation with an additional advected damage variable \cite{PralongFunk2005}, such that ice-cliff calving occurs via a stress-failure criterion.  The resulting emergent margin shapes might suggest an appropriate regularity assumption, i.e.~Sobolev space, for surface elevations, within a viscous-only theory.
 
-\subsection{On the convergence of explicit time-stepping} \label{subsec:explicit}  This paper makes some progress toward a convergence theorem for a fully-discrete scheme applied to the space-time problem \eqref{eq:icydomain}--\eqref{eq:stokes}.  Our strategy considers the implicitly time-discretized, but spatially continuous, VI problem \eqref{eq:be:vi}.  Looking ahead, Theorem \ref{thm:glacierapp} will bound the numerical error in an FE scheme for that implicit-step problem.  However, we will neither address well-posedness of the continuous space-time problem, nor bound errors made by a fully-discrete scheme.
-
-To put this approach in context one might consider the explicit time-stepping alternative.  First consider a glacier that does not flow.  Time-step problem \eqref{eq:be:vi} then reduces to determining the geometry according only to the SMB and the prior geometry, a problem which turns out to be well-posed over $L^2(\Omega)$.  To see this precisely, let $F^{\bzero}_{\Delta t}(s)[q] = \int_\Omega sq$, which sets $\bu|_s=\bzero$ in \eqref{eq:be:Fdefine}.  Assuming that definition \eqref{eq:be:source} yields $\ell^n \in L^2(\Omega)$, there exists a unique solution $s \in \cK_{L^2} = \left\{r\in L^2(\Omega)\,:\,r \ge b\right\}$ of the no-flow VI problem
-\begin{equation}
-F^{\bzero}_{\Delta t}(s)[r-s] \ge \ell^n[r-s] \quad \text{for all } r \in \cK_{L^2}, \label{eq:explicit:noflow}
-\end{equation}
-which is given by truncation \cite[section II.3]{KinderlehrerStampacchia1980}:
-\begin{equation}
-s = \max\{b, \ell^n\} = \max\{b, s^{n-1} + \Delta t\,a^n\} \qquad (\text{\emph{no flow}}).
-\end{equation}
-Thus, in the absence of flow, the new surface can be (explicitly) raised or lowered according to the (pointwise) integral of the SMB rate, then truncated so that it does not go below the bed.  This is obvious, and not usually stated in such mathematical terms.
-
-However, an explicit time-step of the real glacier geometry problem has the same mathematical character as in the no-flow problem \eqref{eq:explicit:noflow}.  Suppose $s^{n-1}$ is admissible and sufficiently regular so that $\bn_{s^{n-1}}$ is well-defined, and so that the weak-form Stokes problem \eqref{eq:glenstokes:weak} is well-posed over the domain $\Lambda_{s^{n-1}}$.  The explicit operator
-\begin{equation}
-F^{\text{e}}_{\Delta t}(s)[q] = \int_\Omega \left(s - \Delta t\, \bu|_{s^{n-1}} \cdot \bn_{s^{n-1}}\right) q  \label{eq:explicitFdefine}
-\end{equation}
-then arises by applying forward Euler to SKE \eqref{eq:ske}; compare definition \eqref{eq:be:Fdefine}.  The explicit VI problem corresponding to \eqref{eq:be:vi}, namely
-\begin{equation}
-F^{\text{e}}_{\Delta t}(s)[r-s] \ge \ell^n[r-s] \quad \text{for all } r \in \cK_{L^2}, \label{eq:explicit:vi}
-\end{equation}
-is again well-posed, and again it can be solved for $s \in \cK_{L^2}$ by truncation:
-\begin{equation}
-s = \max\{b, s^{n-1} + \Delta t\, \bu|_{s^{n-1}} \cdot \bn_{s^{n-1}} + \Delta t\,a^n\} \qquad (\text{\emph{explicit step}}). \label{eq:explicit:solution}
-\end{equation}
-
-Now consider a fully-discrete forward Euler scheme wherein an FE approximation of VI problem \eqref{eq:explicit:vi} is computed at each time step.  Such a scheme\footnote{Explicit schemes like this have practical value.  For example, Equation \eqref{eq:explicit:solution} is precisely the approach in \cite{Lengetal2012}, for example, and \cite{Jouvetetal2008} is likewise explicit.  Various semi-implicit modifications have also been used \cite{Chengetal2020,Durandetal2009,LofgrenAhlkronaHelanow2022,WirbelJarosch2020}.} computes an FE approximation of the exact solution \eqref{eq:explicit:solution}.  However, in formula \eqref{eq:explicit:solution} the derivatives in $\bn_{s^{n-1}}$, the trace evaluation $\bu|_{s^{n-1}}$, and the truncation itself all (generally) reduce regularity of $s$  relative to $s^{n-1}$.  From what we know about well-posed Stokes problems, the function $s$ defined by \eqref{eq:explicit:solution} generally will not be regular enough, i.e.~sufficiently differentiable in space, to serve as the surface elevation at the start of the next time step.  That is, it is not clear that $s$ from \eqref{eq:explicit:solution} defines a sufficiently-smooth domain $\Lambda_s$ so that the (weak) Stokes problem \eqref{eq:glenstokes:weak} is well-posed, that is, when we seek the next surface elevation $s^{n+1}$ after $s=s^n$.  In this sense there is no reason to expect the \emph{explicitly} time semi-discretized problems to be well-posed (after the first time step).
-
-The regularity of the surface elevation solution might be improved by use of semi-implicit time-stepping, for example using $s$ in the surface normal in \eqref{eq:explicitFdefine}, $\bn_{s^{n-1}} \to \bn_s$, but leaving the old velocity in place.  However, \cite{LofgrenAhlkronaHelanow2022} demonstrate that this change, by itself, has small effect on stability, and it is not clear why it would suffice to address the regularity and well-posedness concerns.
-
-None of this is to assert that a fully-discrete (space-time) scheme cannot converge to the continuum solution of the problem \eqref{eq:icydomain}--\eqref{eq:stokes}, or more precisely its
-parabolic VI weak form \cite{Glowinski1984}.  (A proof of the well-posedness of the parabolic VI associated to strong form \eqref{eq:icydomain}--\eqref{eq:stokes} would be of great value here.)  However, as is well-understood in outline, but not settled quantitatively \cite{Chengetal2017}, convergence of an explicit scheme will be subject to a restriction on the (space-time) refinement path.  Besides being currently unclear (i.e.~in theory) what precisely is this restriction, the restriction will be worse than that for purely-advective problems, for the reasons already stated in Subsection \ref{subsec:notadv}, with corresponding negative effects on numerical model performance \cite{Bueler2023}.
 
 \subsection{Conjectural well-posedness for the implicit time-step problem} \label{subsec:conjecture} Subsections \ref{subsec:notadv}--\ref{subsec:explicit} have deployed various imperfect arguments to explain why the backward Euler VI problem \eqref{eq:be:vi} could be well-posed, or at least why other approaches are less promising.  We now state a mathematically-precise conjectural framework for well-posedness of this problem based upon the idea that the surface motion map $\Phi(s) = -\bu|_s\cdot \bn_s$ assigns different values to inputs which differ in Sobolev norm, and that it does so in a controlled and positive-definite manner.
 
