@@ -283,7 +283,7 @@ Theorem 5.5.1 in \cite{Evans2010} defines the trace operator $T:\cV\to L^\pp(\pa
 for $\bv\in\cV$.  However, because $\bv=\bzero$ along $\Gamma_b$, and by the Poincar\'e inequality \eqref{eq:poincare}, the result follows.
 \end{proof}
 
-Combining Lemmas \ref{lem:stokesapriori} and \ref{lem:trace} yields the following bound on the surface trace of the velocity.  In using this result, recall that $\Lambda=\Lambda(s)$ and $\Gamma_s=\partial \Lambda\setminus \Gamma_b$ are defined, in terms of $s$ and $b$, by \eqref{eq:icydomain}.
+Combining Lemmas \ref{lem:stokesapriori} and \ref{lem:trace} yields the following bound on the surface trace of the velocity, which justifies the use of notation ``$\bu|_{s}$'' when $\bu$ solves the glaciological Stokes model.  When applying this result, recall that $\Lambda=\Lambda(s)$ and $\Gamma_s=\partial \Lambda\setminus \Gamma_b$ are defined, in terms of $s$ and $b$, by \eqref{eq:icydomain}.
 
 \begin{corollary}[Surface velocity bound] \label{cor:surfacetracebound}
 There is a constant $C>0$, computable from physical constants and the geometry of $\Lambda$, so that if $\bu\in\cV$ is the Stokes velocity solution from Theorem \ref{thm:stokeswellposed} then
@@ -295,74 +295,89 @@ There is a constant $C>0$, computable from physical constants and the geometry o
 
 \section{The weak-form implicit time-step model} \label{sec:model}
 
-Now we return to implicit time steps for the surface elevation, in a model based on Stokes dynamics and NCP \eqref{eq:be:ncp}.  Let $\{t_n\}$ be any increasing sequence of times in $[0,T]$, with $t_0=0$.  Let $\Delta t = t_n-t_{n-1}$ denote a step length, and let $a^n(x)$ be the (temporal) average of the data $a(t,x)$ over $[t_{n-1},t_n]$.  Suppose that $s(x)=s^n(x)\approx s(t_n,x)$ approximates the surface elevation at time $t_n$.  Using a backward Euler implicit step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
+Now we return to implicit time steps for glacier evolution.  Let $\{t_n\}$ be any increasing sequence of times in $[0,T]$, with $t_0=0$.  Let $\Delta t = t_n-t_{n-1}$ denote a step duration, and let $a^n(x)$ be the (temporal) average of the data $a(t,x)$ over $[t_{n-1},t_n]$.  Suppose that $s^n(x)\approx s(t_n,x)$ approximates the surface elevation at time $t_n$.  Using a backward Euler step \cite{AscherPetzold1998}, SKE \eqref{eq:ske} becomes
 \begin{equation}
-\frac{s - s^{n-1}}{\Delta t} - \bu|_{s} \cdot \bn_{s} - a^n = 0; \label{eq:be:ske}
+\frac{s^n - s^{n-1}}{\Delta t} - \bu|_{s^n} \cdot \bn_{s^n} - a^n = 0. \label{eq:be:ske}
 \end{equation}
-this is the basis for NCP \eqref{eq:be:ncp}.  This scheme is fully implicit because the unknown $s=s^n$ appears both in the surface velocity $\bu|_s$ and the slope $\bn_s$.  For cleaner appearance we clear the denominator in \eqref{eq:be:ske} and collect a source term:
+This scheme is fully implicit because the unknown $s^n$ appears both in the surface velocity $\bu|_{s^n}$ and in the slope $\bn_{s^n}$.
+
+For cleaner appearance we write $s=s^n$.  Also, we collect a source term, defined over all of $\Omega$, which has units of elevation:
 \begin{equation}
-\ell^n(x) = s^{n-1}(x)+\Delta t\,a^n(x) = s^{n-1}(x) + \int_{t_{n-1}}^{t_n} a(t,x)\,dt. \label{eq:be:source}
+\boxed{\ell^n(x) = s^{n-1}(x)+\Delta t\,a^n(x) = s^{n-1}(x) + \int_{t_{n-1}}^{t_n} a(t,x)\,dt.} \label{eq:be:source}
 \end{equation}
 
-As noted in the Introduction, $s=s^n$ in \eqref{eq:be:ske} actually solves a problem of free-boundary type, NCP \eqref{eq:be:ncp}.  Complementarity condition \eqref{eq:be:ncp:complementarity} says that, at the solution time, and almost everywhere over $\Omega$, either there is no ice ($s=b$) or equation \eqref{eq:be:ske} holds.  Of course, $s$ does not solve \eqref{eq:be:ske} over the bare ground part of $\Omega \subset \RR^2$, where $s=b$, but it solves all parts of \eqref{eq:be:ncp}.
+As noted in the Introduction, $s=s^n$ in \eqref{eq:be:ske} actually solves a problem of free-boundary type, namely NCP \eqref{eq:be:ncp}, which says that, at the solution time $t_n$, either there is bare ground ($s=b$) or equation \eqref{eq:be:ske} holds; while $s$ does not solve \eqref{eq:be:ske} over the ice-free parts of $\Omega \subset \RR^2$, it solves \eqref{eq:be:ncp}.  However, the strong form \eqref{eq:be:ncp} has a weak-form variational inequality (VI; \cite{Evans2010,KinderlehrerStampacchia1980}) version, as follows, which is better-suited to both well-posedness theory and finite element (FE) analysis.
 
-The strong form NCP \eqref{eq:be:ncp} has a weak-form variational inequality (VI; \cite{Evans2010,KinderlehrerStampacchia1980}) version which is better-suited to both well-posedness theory and finite element (FE) analysis.  Let us regard the precise Banach space $\cX$ of surface elevations as unknown for now.  Admissible surface elevations for the weak formulation come from a convex and closed subset,
+Regarding the precise Banach space $\cX$ of surface elevations as momentarily undecided, admissible surface elevations for the weak formulation come from a convex and closed subset,
 \begin{equation}
-\cK = \left\{r \in\cX\,:\,r|_{\partial\Omega}=b|_{\partial\Omega} \text{ and } r \ge b\right\};  \label{eq:be:admissible}
+\boxed{\cK = \left\{r \in\cX\,:\,r|_{\partial\Omega}=b|_{\partial\Omega} \text{ and } r \ge b\right\};}  \label{eq:be:admissible}
 \end{equation}
-note this includes the fixed (Dirichlet) boundary condition.
-
-The VI is derived as follows; compare \cite{Bueler2021conservation}.  Suppose that $s \in \cK$ is a sufficiently-regular solution of NCP \eqref{eq:be:ncp}.  Let $\Omega_I$ be the (measurable) subset of $\Omega$ on which constraint \eqref{eq:be:ncp:constraint} is inactive, i.e.~where glacier ice is present: $\Omega_I = \{x\,:\,s(x)>b(x)\}$.  From \eqref{eq:be:ncp:complementarity}, integration over $\Omega_I$ shows that
+note this includes the fixed (Dirichlet) boundary condition.  The VI is then derived by assuming that $s \in \cK$ is a sufficiently-regular solution of \eqref{eq:be:ncp} \cite{Bueler2021conservation}.  Let $\Omega_I$ be the (measurable) subset of $\Omega$ on which the $s\ge b$ constraint is inactive, where glacier ice is present: $\Omega_I = \{x\,:\,s(x)>b(x)\}$.  Integration over $\Omega_I$ then shows that
 \begin{equation}
 \int_{\Omega_I} \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = 0  \label{eq:inactivetruth}
 \end{equation}
-for any $r\in\cK$.  On the other hand, let $\Omega_A = \{x \in \Omega \,:\,s(x)=b(x)\}$ be the complementary active (ice-free) region.  Observe that \eqref{eq:be:ncp:residualpos} says that $b-\ell^n = s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n \ge 0$ on $\Omega_A$,\footnote{Note the role of extension by zero \eqref{eq:defineus} here.} and that $r-s=r-b\ge 0$ on $\Omega_A$ if $r\in\cK$.  Therefore integration of the same quantity as in \eqref{eq:inactivetruth} now yields an inequality:
+for any $r\in\cK$.  On the other hand, let $\Omega_A = \{x \in \Omega \,:\,s(x)=b(x)\}$ be the complementary active (ice-free) region.  Using extension by zero \eqref{eq:defineus}, note that \eqref{eq:be:ncp:residualpos} implies $b-\ell^n = s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n \ge 0$ on $\Omega_A$.  Since also $r-s=r-b\ge 0$ on $\Omega_A$, if $r\in\cK$, integration yields an inequality:
 \begin{equation}
 \int_{\Omega_A} \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) = \int_{\Omega_A} \left(b - \ell^n\right)\,(r-b) \ge 0.  \label{eq:activetruth}
 \end{equation}
-Almost everywhere, either land is glacier covered (within $\Omega_I$) or ice-free ($\Omega_A$), so addition of \eqref{eq:inactivetruth} and \eqref{eq:activetruth} gives the following VI for $s \in \cK$:
+Almost everywhere, land is in $\Omega_I$ or in $\Omega_A$, so addition of \eqref{eq:inactivetruth} and \eqref{eq:activetruth} gives the following VI for $s \in \cK$:
 \begin{equation}
 \int_\Omega \left(s - \Delta t\,\bu|_s \cdot \bn_s - \ell^n\right)\,(r-s) \ge 0 \quad \text{for all } r \in \cK. \label{eq:be:viearly}
 \end{equation}
-This integral inequality is known to be true for $s\in\cK$, in advance of any knowledge about where is the ice-covered part of $\Omega$.
-	
-Well-posedness of the weak-form Stokes problem \eqref{eq:glenstokes:weak} over a 3D domain $\Lambda$, plus the surface trace bound in Corollary \ref{cor:surfacetracebound}, allows us to create a well-defined map from an admissible surface elevation $s$ to the corresponding surface velocity solution $\bu|_s$.  The map is defined via \eqref{eq:icydomain} for $\Lambda=\Lambda(s)$, followed by the solution of \eqref{eq:glenstokes:weak} over $\Lambda$, evaluation of the trace of $\bu$ along $\Gamma_s$ (Corollary \ref{cor:surfacetracebound}), and then definition \eqref{eq:defineus}, which includes extension by zero.  For this to be well-defined, $s$ must be admissible ($s\in\cK$) and sufficiently regular.  We call
-\begin{equation}
-\Phi(s) = - \bu|_s\cdot \bn_s \label{eq:definePhi:asfunction}
-\end{equation}
-the \emph{surface motion map}.  It maps a scalar surface elevation function $s$ to the dynamical term in the SKE \eqref{eq:be:ske} and the NCP \eqref{eq:be:ncp}.
+This is true for $s\in\cK$, in advance of knowing which part of $\Omega$ is the ice-covered.
 
-Constructing a bound for $\Phi$ will help to identify a Banach space $\cX$ in which to seek admissible solutions $s$.  As before, let $\Omega \subset \RR^2$ be a bounded domain.  Let $[L]>0$ be a representative \emph{horizontal} scale; compare \eqref{eq:vnorm}.  For $q\in W^{1,\rr}(\Omega)$ we define
+It remains to identify a Sobolev space $\cX$ suitable for the admissible set $\cK$ of surface elevations.  However, within a Stokes-based theory the shape that should be predicted for a glacier's grounded margin is not clear (Figure \ref{fig:margins}), and this situation makes it difficult to pin down $\cX$.  Shallow-ice theory suggests root-type (fractional-power) shapes for the marginal surface elevation, with different shapes for advance and retreat but unbounded gradients \cite{Bueleretal2005,JouvetBueler2012}.  ``Wedge'' shapes with bounded gradients have also been hypothesized \cite{EchelmeyerKamb1986}, which would allow $s\in W^{1,\rr}(\Omega)$.
+
+\begin{figure}[ht]
+\begin{center}
+\begin{tikzpicture}[scale=1.0]
+  \node (unbounded) {\includegraphics[width=30mm]{figs/unbounded.png}} node[xshift=-2mm, yshift=1mm] at (unbounded.center) {{\small \emph{ice}}};
+  \node[right=of unbounded] (wedge) {\includegraphics[width=30mm]{figs/wedge.png}} node[xshift=-4mm, yshift=1mm] at (wedge.center) {{\small \emph{ice}}};
+  \node[right=of wedge] (realistic) {\includegraphics[width=30mm]{figs/realistic.png}} node[xshift=-6mm, yshift=4mm] at (realistic.center) {{\small \emph{ice}}};
+\end{tikzpicture}
+\end{center}
+
+\vspace{-2mm}
+
+\caption{Surface elevation functions live in which Sobolev spaces?  This question relates to the shapes of ice margins.  Fractional power shapes (left) and a finite-slope ``wedge'' shapes (center) have been suggested, but actual glacier margins have overhangs, crevasses, and cliffs (right).}
+\label{fig:margins}
+\end{figure}
+
+Reality is more complicated.  In the vicinity of an ice margin, especially on steep bedrock features, real glacier ice can generate overhangs which violate the assumption of a single-valued surface elevation function, and the bedrock itself can overhang.  Fractures, crevasses, and cliffs are also commonly found in glacier margins, but modeling such features would depart from our viscous fluid paradigm.  However, because fractured margins are small compared to the overall scale of glaciers and ice sheets, modeling literature generally ignores overhangs, and it assumes instead that surface and bed elevation functions are well-defined  \cite{IsaacStadlerGhattas2015,Jouvetetal2008,LofgrenAhlkronaHelanow2022,WirbelJarosch2020}.  One might allow fractures, for example by supplementing momentum conservation with an additional advected damage variable \cite{PralongFunk2005}, so that ice-cliff calving occurs via a stress-failure criterion.  The resulting emergent, spatially-averaged margin shapes might then suggest an appropriate regularity assumption and or Sobolev space for surface elevations, within a viscous-only theory, but such a construction is well outside the scope of the current work.
+
+For now we attempt to choose $\cX$ based on mathematical considerations within the viscous theory.  Observe that well-posedness of the weak-form Stokes problem \eqref{eq:glenstokes:weak} over a 3D domain $\Lambda(s)$, plus the surface trace bound in Corollary \ref{cor:surfacetracebound}, allows us to create a well-defined map from an admissible surface elevation $s$ to the surface motion term $\bu|_s\cdot \bn_s$ in \eqref{eq:be:viearly}.  The map is defined via \eqref{eq:icydomain} for $\Lambda(s)$, followed by the solution of the Stokes model \eqref{eq:glenstokes:weak} over $\Lambda(s)$, then evaluation of the trace of $\bu$ along $\Gamma_s$ (Corollary \ref{cor:surfacetracebound}), definition \eqref{eq:defineus} which extends by zero, and finally multiplication by $\bn_s$.  Evidently, for this to be defined $s$ must be admissible ($s\ge b$) and sufficiently-regular, compatible with the choice of $\cX$.
+
+In fact, we can bound the surface motion term $\bu|_s\cdot \bn_s$ for $s$ in the candidate space $W^{1,\rr}(\Omega)$, as follows.  As before, let $\Omega \subset \RR^2$ be a bounded domain.  Let $[L]>0$ be a representative \emph{horizontal} scale; compare \eqref{eq:vnorm}.  For $q\in W^{1,\rr}(\Omega)$ we define
 \begin{equation}
 \|q\|_{W^{1,\rr}} = \left(\int_\Omega |q|^\rr\,dx + [L]^\rr \int_\Omega |\grad q|^\rr\,dx\right)^{1/\rr}. \label{eq:norm:Omega}
 \end{equation}
-The key assumption in the following Lemma is that $s\in W^{1,\rr}(\Omega)$ implies that the domain $\Lambda=\Lambda(s)$ is nice enough so that Corollary \ref{cor:surfacetracebound} gives a finite bound.  The key conclusion is that $\Phi(s) \in \left(W^{1,\rr}(\Omega)\right)'$, the dual space, which will be critical in analyzing the weak form of NCP \eqref{eq:be:ncp}.
+The key assumption in the following Lemma is that $s\in W^{1,\rr}(\Omega)$ implies that the domain $\Lambda(s)$ is nice enough so that Corollary \ref{cor:surfacetracebound} gives a finite bound.  The conclusion is that we have enough control on the measurable function $\bu|_s\cdot \bn_s$ to know that it is in the dual space of $W^{1,\rr}(\Omega)$.
 
-\begin{lemma}[Preliminary bound on $\Phi(s)$] \label{lem:phibound:early}  Suppose $2 \le \rr \le \infty$, and assume $s\in W^{1,\rr}(\Omega)$ is admissible, $s\ge b$.  With $\Lambda(s)$ defined by \eqref{eq:icydomain}, assume that the hypotheses of Theorem \ref{thm:stokeswellposed} and Corollary \ref{cor:surfacetracebound} apply, thus that $\Phi(s)$ is a well-defined measurable function.  Then there is $C>0$, depending on $s$ and $\bu|_s$ but not $q$, so that
+\begin{lemma}[Preliminary bound on surface motion] \label{lem:phibound:early}  Suppose $2 \le \rr \le \infty$, and assume $s\in W^{1,\rr}(\Omega)$ is admissible, $s\ge b$.  With $\Lambda(s)$ defined by \eqref{eq:icydomain}, assume the hypotheses of Theorem \ref{thm:stokeswellposed} and Corollary \ref{cor:surfacetracebound}.  Then there is $C>0$, depending on $s$ but not $q$, so that, for all  $q\in W^{1,\rr}(\Omega)$,
 \begin{equation}
-\left|\int_\Omega \Phi(s) q\,dx\right| = \left|\int_\Omega \bu|_s\cdot \bn_s q\,dx\right| \le C\, \|q\|_{W^{1,\rr}} \qquad \text{for all } q\in W^{1,\rr}(\Omega).  \label{eq:phibound:early}
+\left|\int_\Omega \bu|_s\cdot \bn_s \,q\,dx\right| \le C\, \|q\|_{W^{1,\rr}}. \label{eq:phibound:early}
 \end{equation}
 \end{lemma}
 
-\begin{proof}  Observe that $dS = |\bn_s|\,dx = \sqrt{1+|\grad s|^2}\,dx$ is the surface area element for $\Gamma_s \subset \partial \Lambda$.  Apply the triangle, Cauchy-Schwarz, and H\"older's inequalities (H\"older twice):
+\begin{proof}  Recall that $dS = |\bn_s|\,dx = \sqrt{1+|\grad s|^2}\,dx$ is the surface area element for $\Gamma_s \subset \partial \Lambda$.  Apply H\"older's inequalities:
 \begin{align}
-\left|\int_\Omega \Phi(s) q\,dx\right| &\le \int_\Omega \big|\bu|_s\big| |\bn_s| |q|\,dx = \int_\Omega \big|\bu|_s\big| |\bn_s|^{1/\pp} |\bn_s|^{1/\pp'} |q|\,dx \label{eq:phibound:zero} \\
+\Big|\int_\Omega \bu|_s\cdot \bn_s \, &q\,dx\Big| \le \int_\Omega \big|\bu|_s\big| |\bn_s|^{1/\pp} |\bn_s|^{1/\pp'} |q|\,dx \label{eq:phibound:zero} \\
     &\le \left(\int_\Omega \big|\bu|_s\big|^\pp |\bn_s|\,dx\right)^{1/\pp} \left(\int_\Omega |\bn_s| |q|^{\pp'} \,dx\right)^{1/\pp'} \notag \\
     &\le \left(\int_{\Gamma_s} |\bu|^\pp \,dS\right)^{1/\pp} \left(\int_\Omega |\bn_s|^\rr \,dx\right)^{1/(\pp'\rr)} \left(\int_\Omega |q|^{\pp'\rr'} \,dx\right)^{1/(\pp'\rr')}. \notag
 \end{align}
-If $C_1$ is the \emph{a priori} bound from \eqref{eq:surfacetracebound} then
+From bound \eqref{eq:surfacetracebound} we may write
 \begin{equation}
-\left|\int_\Omega \Phi(s) q\,dx\right| \le C_1^{1/\pp} \left(\int_\Omega \left(1+|\grad s|^2\right)^{\rr/2}\,dx\right)^{1/(\pp'\rr)} \|q\|_{L^{\pp'\rr'}}.
+\left|\int_\Omega \bu|_s\cdot \bn_s \, q\,dx\right| \le C \left(\int_\Omega \left(1+|\grad s|^2\right)^{\rr/2}\,dx\right)^{1/(\pp'\rr)} \|q\|_{L^{\pp'\rr'}}.
 \end{equation}
-Note that if $\alpha\ge 0$ then $(1+\alpha)^{\rr/2} \le 2^{(\rr-2)/2} (1+\alpha^{\rr/2})$, so
+Note that if $\alpha\ge 0$ then $(1+\alpha)^{\rr/2} \le 2^{(\rr-2)/2} (1+\alpha^{\rr/2})$, so, using generic constants,
 \begin{align}
-\left|\int_\Omega \Phi(s) q\,dx\right| &\le C_1^{1/\pp} \left(2^{(\rr-2)/2} \int_\Omega 1 + |\grad s|^\rr\,dx\right)^{1/(\pp'\rr)} \|q\|_{L^{\pp'\rr'}} \label{eq:phibound:one} \\
-  &\le C_2 \left(|\Omega| + [L]^{-\rr}\|s\|_{W^{1,\rr}}^\rr\right)^{1/(\pp'\rr)} \|q\|_{L^{\pp'\rr'}}. \notag
+\left|\int_\Omega \bu|_s\cdot \bn_s \, q\,dx\right| &\le C \left(2^{(\rr-2)/2} \int_\Omega 1 + |\grad s|^\rr\,dx\right)^{1/(\pp'\rr)} \|q\|_{L^{\pp'\rr'}} \label{eq:phibound:one} \\
+  &\le C \left(|\Omega| + [L]^{-\rr}\|s\|_{W^{1,\rr}}^\rr\right)^{1/(\pp'\rr)} \|q\|_{L^{\pp'\rr'}}. \notag
 \end{align}
-Since $2 \le \pp' \le \pp'\rr' < \infty$, by Sobolev's inequality\footnote{For example, apply Theorem 8.8 from \cite{LiebLoss1997} using $n=2$, $k=m=1$, $p=\rr$, and $q=\pp'\rr'$.} we also have $\|q\|_{L^{\pp'\rr'}} \le C_3 \|q\|_{W^{1,\rr}}$, which yields \eqref{eq:phibound:early}.
+Since $2 \le \pp' \le \pp'\rr' < \infty$, by Sobolev's inequality, e.g.~Theorem 8.8 from \cite{LiebLoss1997} using $n=2$, $k=m=1$, $p=\rr$, and $q=\pp'\rr'$, we have $\|q\|_{L^{\pp'\rr'}} \le C \|q\|_{W^{1,\rr}}$, thus \eqref{eq:phibound:early}.
 \end{proof}
 
-The measurable function $\bu|_s$ may be discontinuous on $\Omega$, but, based on the above result, we now conjecture that for some $\rr>2$, the $L^{\rr'}$-norm of $\bu|_s$ is Lipschitz as a function of $s \in W^{1,\rr}(\Omega)$.  The reason for requiring $\rr>2$ will be seen in Lemma \ref{lem:philipschitz}; this would seem to be a technical requirement.
+FIXME The measurable function $\bu|_s$ may be discontinuous on $\Omega$, but, based on the above result, we now conjecture that for some $\rr>2$, the $L^{\rr'}$-norm of $\bu|_s$ is Lipschitz as a function of $s \in W^{1,\rr}(\Omega)$.  The reason for requiring $\rr>2$ will be seen in Lemma \ref{lem:philipschitz}; this would seem to be a technical requirement.
 
 \begin{conjecture}[Surface velocity is a Lipschitz function of surface elevation] \label{conj:a}
 
@@ -438,28 +453,6 @@ Here $\nn\approx 3$ is Glen's exponent \cite{GreveBlatter2009} and $\Gamma>0$ is
 Well-posedness results are known for SIA models, usually parameterized using the ice thickness.  With $H=s-b \ge 0$, existence is known in steady SIA models, where $H^{2\qq/(\qq-1)} \in W^{1,\qq}(\Omega)$, with $\qq=\nn+1$ \cite{JouvetBueler2012}.  In time-dependent cases both existence and uniqueness hold when the bedrock is flat \cite{Calvoetal2003,PiersantiTemam2023}.  Furthermore, scalable and implicit FE methods for the VI problem behind \eqref{eq:ske:sia} are already available; numerical demonstrations are found in \cite{Bueler2016} and \cite[Example 8.4]{BuelerFarrell2024}.  However, the strong regularity and smoothness exhibited by solutions to \eqref{eq:ske:sia} probably does not persist for solutions to the Stokes-based SKE \eqref{eq:ske}.  The surface response in a Stokes model is known to have a significantly different small-wavelength limit relative to the SIA \cite{Pattynetal2008}, though longer wavelengths are handled correctly.
 
 In addition to not being an advection, VI problem \eqref{eq:be:vi} is also not of optimization type.  This is directly clear in SIA model \eqref{eq:ske:sia}, where the problem has porous medium character, that is, the diffusivity scales with a power of the ice thickness.  To illustrate the essential idea, it can be shown that the simplest elliptic, quasilinear, and steady porous medium equation $(u(x) u'(x))' = f(x)$ does not have the symmetry of an optimization problem, that is, there is no objective function of which this equation is the first-order condition.  Indeed, the flow of ice under Stokes dynamics scales in some manner with the ice thickness, and thin ice which is frozen to the bed has low velocity regardless of surface slope.  While the sketch in this paragraph does not prove non-existence of a particular symmetry, there is no reason to believe \eqref{eq:be:vi}, or any similar glacier problem, is actually an inequality-constrained minimization.
-
-\subsection{Margin shape, and the surface elevation space} \label{subsec:margin}  Within a Stokes-based theory the shape that should be predicted for a glacier's grounded margin is not clear (Figure \ref{fig:margins}).  This situation makes it difficult to propose a Sobolev space in which VI problem \eqref{eq:be:vi} might be well-posed.  The SIA theory suggests root-type (fractional-power) shapes for the marginal surface elevation, with different shapes for advance and retreat, but with unbounded gradients in all cases \cite{Bueleretal2005,JouvetBueler2012}.  By contrast, a ``wedge'' margin shape with a bounded gradient has been hypothesized \cite[for example]{EchelmeyerKamb1986}, which would allow $s\in W^{1,\rr}(\Omega)$.
-
-\begin{figure}[ht]
-\begin{center}
-\begin{tikzpicture}[scale=1.0]
-  \node (unbounded) {\includegraphics[width=30mm]{figs/unbounded.png}} node[xshift=-2mm, yshift=1mm] at (unbounded.center) {{\small \emph{ice}}};
-  \node[right=of unbounded] (wedge) {\includegraphics[width=30mm]{figs/wedge.png}} node[xshift=-4mm, yshift=1mm] at (wedge.center) {{\small \emph{ice}}};
-  \node[right=of wedge] (realistic) {\includegraphics[width=30mm]{figs/realistic.png}} node[xshift=-6mm, yshift=4mm] at (realistic.center) {{\small \emph{ice}}};
-\end{tikzpicture}
-\end{center}
-
-\vspace{-2mm}
-
-\caption{In which Sobolev space should we seek the surface elevation function?  This question relates to the expected shapes of ice margins.  The shallow ice theory yields fractional power shapes (left), but other models suggest a finite-slope ``wedge'' shape (center).  Actual glacier margins often have overhangs, crevasses, and cliffs (right).}
-\label{fig:margins}
-\end{figure}
-
-Reality is of course more complicated.  In the vicinity of an ice margin, especially on steep bedrock features, real glacier ice can generate overhangs which violate the assumption of a single-valued surface elevation function, and even the bedrock can overhang.  Fractures, crevasses, and cliffs are also commonly found in glacier margins, but modeling such features would depart from our viscous fluid paradigm.  In fact, because margins are small features compared to the overall scale of glaciers and ice sheets, most modeling literature ignores overhangs and assumes instead that surface and bed elevation functions are well-defined; see \cite{IsaacStadlerGhattas2015,Jouvetetal2008,LofgrenAhlkronaHelanow2022,WirbelJarosch2020} among many examples.
-
-Making progress on this situation might require extending the Stokes-based viscous models considered here by allowing fractures, for example by supplementing momentum conservation with an additional advected damage variable \cite{PralongFunk2005}, such that ice-cliff calving occurs via a stress-failure criterion.  The resulting emergent margin shapes might suggest an appropriate regularity assumption, i.e.~Sobolev space, for surface elevations, within a viscous-only theory.
-
 
 \subsection{Conjectural well-posedness for the implicit time-step problem} \label{subsec:conjecture} Subsections \ref{subsec:notadv}--\ref{subsec:explicit} have deployed various imperfect arguments to explain why the backward Euler VI problem \eqref{eq:be:vi} could be well-posed, or at least why other approaches are less promising.  We now state a mathematically-precise conjectural framework for well-posedness of this problem based upon the idea that the surface motion map $\Phi(s) = -\bu|_s\cdot \bn_s$ assigns different values to inputs which differ in Sobolev norm, and that it does so in a controlled and positive-definite manner.
 
