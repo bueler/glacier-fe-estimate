@@ -1,4 +1,4 @@
-_secpera = 31556926.0    # seconds per year
+from geometry import secpera
 
 def mkdir(dirname):
     import os
@@ -10,7 +10,7 @@ def mkdir(dirname):
 def livefigure(basemesh, b, s, t, fname=None, writehalfar=False):
     import matplotlib.pyplot as plt
     xx = basemesh.coordinates.dat.data
-    slabel = f's(t,x) at t = {t / _secpera:.3f} a'
+    slabel = f's(t,x) at t = {t / secpera:.3f} a'
     plt.figure(figsize=(6.0, 2.0))
     plt.plot(xx / 1.0e3, s.dat.data, color='C1', label=slabel)
     if writehalfar:
@@ -54,9 +54,9 @@ def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
     fig = plt.figure(constrained_layout=True)
     gs = GridSpec(4, 1, figure=fig)
     ax = (fig.add_subplot(gs[0, 0]), fig.add_subplot(gs[1, 0]), fig.add_subplot(gs[2:4, 0]))
-    rlabel = f's(t,x) at t = {tr / _secpera:.3f} a'
+    rlabel = f's(t,x) at t = {tr / secpera:.3f} a'
     ax[0].plot(xx / 1.0e3, r.dat.data, color='C1', label=rlabel)
-    slabel = f's(t,x) at t = {ts / _secpera:.3f} a'
+    slabel = f's(t,x) at t = {ts / secpera:.3f} a'
     ax[0].plot(xx / 1.0e3, s.dat.data, ':', color='C1', label=slabel)
     ax[0].plot(xx / 1.0e3, b.dat.data, color='C3', label='b(x)')
     ax[0].legend(loc='upper left')
@@ -68,10 +68,10 @@ def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
     nr, ns = fd.as_vector([-r.dx(0), fd.Constant(1.0)]), fd.as_vector([-s.dx(0), fd.Constant(1.0)])
     Phir = fd.Function(DG0bm).project(- fd.dot(ur, nr))
     Phis = fd.Function(DG0bm).project(- fd.dot(us, ns))
-    Phirlabel = f'Phi(t,x) at t = {tr / _secpera:.3f} a'
-    ax[1].plot(xxm / 1.0e3, Phir.dat.data * _secpera, '+', ms=6.0, color='C2', label=Phirlabel)
-    Phislabel = f'Phi(t,x) at t = {ts / _secpera:.3f} a'
-    ax[1].plot(xxm / 1.0e3, Phis.dat.data * _secpera, 'x', ms=6.0, color='C2', label=Phislabel)
+    Phirlabel = f'Phi(t,x) at t = {tr / secpera:.3f} a'
+    ax[1].plot(xxm / 1.0e3, Phir.dat.data * secpera, '+', ms=6.0, color='C2', label=Phirlabel)
+    Phislabel = f'Phi(t,x) at t = {ts / secpera:.3f} a'
+    ax[1].plot(xxm / 1.0e3, Phis.dat.data * secpera, 'x', ms=6.0, color='C2', label=Phislabel)
     ax[1].legend(loc='upper right')
     ax[1].set_ylabel(r'$\Phi$ (m a-1)')
     ax[1].set_xlim([1.05 * min(xx) / 1.0e3, 1.05 * max(xx) / 1.0e3])
@@ -97,7 +97,7 @@ def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
             ymax = 1.0
     ax[2].set_ylim([ymax * 1.0e-5, 1.5 * ymax])
     plt.xlabel('x (km)')
-    fname = dirroot + f'badcoercive-{tr / _secpera:.3f}-{ts / _secpera:.3f}.png'
+    fname = dirroot + f'badcoercive-{tr / secpera:.3f}-{ts / secpera:.3f}.png'
     plt.savefig(fname)
     plt.close()
 

@@ -1,7 +1,7 @@
 from sys import argv
 import numpy as np
 from firedrake import *
-from firedrake.output import VTKFile
+
 from stokesextrude import StokesExtrude, SolverParams, extend_p1_from_basemesh, trace_vector_to_p2, printpar
 from geometry import secpera, bedtypes, g, rho, nglen, A3, B3, t0, halfargeometry
 from figures import mkdir, livefigure, snapsfigure, histogramPhirat
@@ -28,7 +28,6 @@ aposfrac = 0.75                   # fraction of domain on which positive SMB is 
 Nsamples = 1000                   # number of samples when evaluating minimal ratios
 
 # solution method
-explicit = False        # defaults to semi-implicit steps
 zeroheight = 'indices'  # how should StokesExtrude handle zero-height columns;
                         #   alternative is 'bounds', but it seems to do poorly?
 fssa = True             # use Lofgren et al (2022) FSSA technique in Stokes solve
@@ -115,35 +114,33 @@ def _p_hydrostatic(se, sR):
 # initialize surface elevation state variable
 s = Function(P1bm, name='surface elevation (m)')
 s.interpolate(conditional(s_initial < b, b, s_initial))
-ns = as_vector([-s.dx(0), Constant(1.0)])
 
-# set up for *semi-implicit*: implement equation (3.7) and (3.23) in paper,
-#     but use old velocity in weak form
-if not explicit:
-    sibcs = [DirichletBC(P1bm, b.dat.data_ro[0], 1),
-             DirichletBC(P1bm, b.dat.data_ro[-1], 2)]
-    siv = TestFunction(P1bm)
-    sisold = Function(P1bm)
-    siP2Vbm = VectorFunctionSpace(bm, 'CG', 2, dim=2)
-    siubm = Function(siP2Vbm)
-    siparams = {#"snes_monitor": None,
-                "snes_converged_reason": None,
-                "snes_rtol": 1.0e-6,
-                "snes_atol": 1.0e-6,
-                "snes_stol": 0.0,
-                "snes_type": "vinewtonrsls",
-                "snes_vi_zero_tolerance": 1.0e-8,
-                "snes_linesearch_type": "basic",
-                "snes_max_it": 200,
-                "ksp_type": "preonly",
-                "pc_type": "lu",
-                "pc_factor_mat_solver_type": "mumps"}
-    # weak form for (3.23), made semi-implicit
-    siF = inner(s - dt * dot(siubm, ns) - (sisold + dt * a), siv) * dx
-    siproblem = NonlinearVariationalProblem(siF, s, sibcs)
-    sisolver = NonlinearVariationalSolver(siproblem, solver_parameters=siparams,
-                                          options_prefix="step")
-    siub = Function(P1bm).interpolate(Constant(PETSc.INFINITY))
+# set up for semi-implicit method, documented in paper, using old velocity in weak form
+sibcs = [DirichletBC(P1bm, b.dat.data_ro[0], 1),
+         DirichletBC(P1bm, b.dat.data_ro[-1], 2)]
+siv = TestFunction(P1bm)
+sisold = Function(P1bm)
+siP2Vbm = VectorFunctionSpace(bm, 'CG', 2, dim=2)
+siubm = Function(siP2Vbm)  # surface velocity
+siparams = {#"snes_monitor": None,
+            "snes_converged_reason": None,
+            "snes_rtol": 1.0e-6,
+            "snes_atol": 1.0e-6,
+            "snes_stol": 0.0,
+            "snes_type": "vinewtonrsls",
+            "snes_vi_zero_tolerance": 1.0e-8,
+            "snes_linesearch_type": "basic",
+            "snes_max_it": 200,
+            "ksp_type": "preonly",
+            "pc_type": "lu",
+            "pc_factor_mat_solver_type": "mumps"}
+# weak form for semi-implicit
+ns = as_vector([-s.dx(0), Constant(1.0)])
+siF = inner(s - dt * dot(siubm, ns) - (sisold + dt * a), siv) * dx   # FIXME regularize here
+siproblem = NonlinearVariationalProblem(siF, s, sibcs)
+sisolver = NonlinearVariationalSolver(siproblem, solver_parameters=siparams,
+                                      options_prefix="step")
+siub = Function(P1bm).interpolate(Constant(PETSc.INFINITY))
 
 # set up for livefigure() and snapsfigure()
 if writepng:
@@ -177,6 +174,7 @@ for aconst in SMBlist:
         a.dat.data[:] = aconst
     s.interpolate(conditional(s_initial < b, b, s_initial))
     t = 0.0
+
     # inner time-stepping loop
     for n in range(Nsteps):
         # start with reporting
@@ -208,23 +206,15 @@ for aconst in SMBlist:
             pdiff.rename('pdiff = phydro - p (Pa)')
             outfile.write(u, p, nu, nueps, pdiff, time=t)
 
-        # save surface elevation and velocity into list for ratio evals
+        # save surface elevation and surface velocity into list for ratio evals
         _slist.append({'t': t,
                        's': s.copy(deepcopy=True),
                        'us': ubm.copy(deepcopy=True)})
 
-        # time step of VI problem (3.23)
-        if explicit:
-            # explicit time step, mostly pointwise operation (interpolate and truncate)
-            Phi = Function(P1bm).project(- dot(ubm, ns))  # interpolate() would be bad here (P2 nodes)
-            snew = s + dt * (a - Phi)
-            s.interpolate(conditional(snew < b, b, snew))
-            # FIXME consider project() in above line?
-        else:
-            # semi-implicit: solve VI problem with surface velocity from old surface elevation
-            sisold.dat.data[:] = s.dat.data_ro
-            siubm.dat.data[:] = ubm.dat.data_ro
-            sisolver.solve(bounds=(b, siub))
+        # time step of VI problem; semi-implicit: solve VI problem with surface velocity from old surface elevation
+        sisold.dat.data[:] = s.dat.data_ro
+        siubm.dat.data[:] = ubm.dat.data_ro
+        sisolver.solve(bounds=(b, siub))
         t += dt
 
         # end of step reporting
