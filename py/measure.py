@@ -18,20 +18,20 @@ def norm_w1r_sc(q, rpow, Lsc):
     on both base meshes and extruded meshes.  Compare source of norm() at
     https://www.firedrakeproject.org/_modules/firedrake/norms.html.'''
     assert Lsc > 0
-    assert rpow >= 2
+    assert rpow >= 1
     q2 = inner(q, q)
     gq2 = inner(grad(q), grad(q))
     expr = q2**(rpow / 2) + Lsc**rpow * gq2**(rpow / 2)
     return assemble(expr * dx)**(1.0 / rpow)
 
-def geometryreport(basemesh, n, t, s, b, rpow, Lsc):
+def geometryreport(basemesh, n, t, s, b, rpow, Lsc, eps_H=1.0):
     snorm = norm_w1r_sc(s, rpow, Lsc)
     if basemesh.comm.size == 1:
         H = s.dat.data_ro - b.dat.data_ro # numpy array
         x = basemesh.coordinates.dat.data_ro
         width = 0.0
-        if len(x[H > 1.0]) > 0:
-            width = max(x[H > 1.0]) - min(x[H > 1.0])
+        if len(x[H > eps_H]) > 0:
+            width = max(x[H > eps_H]) - min(x[H > eps_H])
         printpar(f't_{n} = {t / secpera:.3f} a:  |s|_H1 = {snorm:.3e},  width = {width / 1000.0:.3f} km')
     else:
         printpar(f't_{n} = {t / secpera:.3f} a:  |s|_H1 = {snorm:.3e}')
@@ -46,13 +46,18 @@ def _us_ratio(slist, k, l, rpow, Lsc):
     dsnorm = norm_w1r_sc(ds, rpow, Lsc)
     return dunorm / dsnorm
 
+def Phi(s, us, q):
+    # FIXME move to physics.py
+    # FIXME optional regularization using H0=1000.0 and p-Laplacian (see below)
+    ns = as_vector([-s.dx(0), Constant(1.0)])
+    return assemble(- dot(us, ns) * q * dx)
+
 def _Phi_ratio(slist, k, l, rpow, Lsc, qpow, b):
     # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_W1r^q
     assert k != l
     r, s = slist[k]['s'], slist[l]['s']
-    nr, ns = as_vector([-r.dx(0), Constant(1.0)]), as_vector([-s.dx(0), Constant(1.0)])
     ur, us = slist[k]['us'], slist[l]['us']
-    ig = - (dot(ur, nr) - dot(us, ns)) * (r - s)
+    dPhi = Phi(r, ur, r - s) - Phi(s, us, r - s)
 
     # FIXME regularize Phi here
     epsreg = 1.0
@@ -60,10 +65,10 @@ def _Phi_ratio(slist, k, l, rpow, Lsc, qpow, b):
     Gamma = 2.0 * A3 * (rho * g)**nglen / (nglen + 2)
     rgn = dot(grad(r), grad(r))**0.5
     sgn = dot(grad(s), grad(s))**0.5
-    ig += epsreg * Gamma * H0**(nglen + 1) \
+    ig = epsreg * Gamma * H0**(nglen + 1) \
           * inner(rgn**(nglen - 1) * grad(r) - sgn**(nglen - 1) * grad(s), grad(r - s))
+    dPhi += assemble(ig * dx)
 
-    dPhi = assemble(ig * dx)
     dsnorm = norm_w1r_sc(r - s, rpow, Lsc)
     return dPhi / dsnorm**qpow
 
@@ -91,7 +96,7 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
         if ipair in pairs:
             continue
         i1, i2 = ipair
-        # measure, and bail/report on freak cases
+        # by-pass extreme cases where norm is zero or ratio is infinity
         if norm_w1r_sc(slist[i1]['s'] - slist[i2]['s'], rpow, Lsc) == 0.0:
             print(RED % '!', end='')  # color provided by firedrake logging.py
             continue
@@ -100,7 +105,7 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
         if Phirat == np.inf:
             print(RED % '*', end='')
             continue
-        # at this point we are actually recording results for this sample pair
+        # now we are actually recording results for this sample pair
         pairs.append(ipair)
         _n += 1
         _max_us_rat = max(_max_us_rat, usrat)
