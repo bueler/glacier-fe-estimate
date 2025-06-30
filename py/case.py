@@ -3,7 +3,7 @@ import numpy as np
 from firedrake import *
 
 from stokesextrude import StokesExtrude, SolverParams, extend_p1_from_basemesh, trace_vector_to_p2, printpar
-from physics import secpera, g, rho, nglen, A3, B3
+from physics import secpera, g, rho, nglen, A3, B3, form_stokes, effective_viscosity, p_hydrostatic
 from geometryinit import bedtypes, t0, generategeometry
 from figures import mkdir, livefigure, snapsfigure, histogramPhirat
 from measure import geometryreport, sampleratios
@@ -12,7 +12,7 @@ from measure import geometryreport, sampleratios
 mx = int(argv[1])              # number of elements in x direction
 mz = int(argv[2])              # number of elements in z (vertical) direction
 Nsteps = int(argv[3])          # number of time steps
-dt = float(argv[4]) * secpera  # dt in years
+dt = float(argv[4]) * secpera  # dt in years, converted to seconds
 bed = argv[5]                  # 'flat', 'smooth', 'rough'
 ratiosfile = argv[6]           # at the end, append a pair of ratios into this file
 writepng = (len(argv) > 7)
@@ -73,44 +73,6 @@ params.update(SolverParams['mumps'])
 params.update({'snes_converged_reason': None})
 params.update({'snes_atol': 1.0e-2})
 params.update({'snes_linesearch_type': 'bt'})  # helps with non-flat beds, it seems
-
-def _D(w):
-    return 0.5 * (grad(w) + grad(w).T)
-
-# weak form for the Stokes problem
-def _form_stokes(se, sR):
-    u, p = split(se.up)
-    v, q = TestFunctions(se.Z)
-    Du2 = 0.5 * inner(_D(u), _D(u)) + eps
-    F = inner(B3 * Du2**(qq / 2.0) * _D(u), _D(v)) * dx(degree=4)
-    F -= (p * div(v) + div(u) * q) * dx
-    source = inner(se.f_body, v) * dx
-    if fssa:
-        # see section 4.2 in Lofgren et al
-        nsR = as_vector([-sR.dx(0), Constant(1.0)])
-        nunit = nsR / sqrt(sR.dx(0)**2 + 1.0)
-        F -= theta_fssa * dt * inner(u, nunit) * inner(se.f_body, v) * ds_t
-        aR = extend_p1_from_basemesh(se.mesh, a)
-        zvec = Constant(as_vector([0.0, 1.0]))
-        source += theta_fssa * dt * aR * inner(zvec, nunit) * inner(se.f_body, v) * ds_t
-    F -= source
-    return F
-
-# diagnostic: effective viscosity nu from the velocity solution
-def _effective_viscosity(u):
-    Du2 = 0.5 * inner(_D(u), _D(u))
-    nu = Function(P1).interpolate(0.5 * B3 * Du2**(qq/2.0))
-    nu.rename('nu (unregularized; Pa s)')
-    nueps = Function(P1).interpolate(0.5 * B3 * (Du2  + (eps * Dtyp)**2)**(qq/2.0))
-    nueps.rename(f'nu (eps={eps:.3f}; Pa s)')
-    return nu, nueps
-
-# diagnostic: hydrostatic pressure
-def _p_hydrostatic(se, sR):
-    _, z = SpatialCoordinate(se.mesh)
-    phydro = Function(P1).interpolate(rho * g * (sR - z))
-    phydro.rename('p_hydro (Pa)')
-    return phydro
 
 # initialize surface elevation state variable
 s = Function(P1bm, name='surface elevation (m)')
@@ -202,9 +164,10 @@ for aconst in SMBlist:
         sR.dat.data[:] = s.dat.data_ro
 
         # solve Stokes on extruded mesh and extract surface trace
-        u, p = se.solve(F=_form_stokes(se, sR),
-                        par=params,
-                        zeroheight=zeroheight)
+        stokesF = form_stokes(se, sR,
+                              q_stokes=qq, eps_stokes=eps,
+                              fssa=fssa, theta_fssa=theta_fssa, dt_fssa=dt, smb_fssa=a)
+        u, p = se.solve(F=stokesF, par=params, zeroheight=zeroheight)
         ubm = trace_vector_to_p2(bm, se.mesh, u)  # surface velocity (m s-1)
         #printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
 
@@ -212,8 +175,8 @@ for aconst in SMBlist:
         if writepvd:
             u.rename('velocity (m s-1)')
             p.rename('pressure (Pa)')
-            nu, nueps = _effective_viscosity(u)
-            phydro = _p_hydrostatic(se, sR)
+            nu, nueps = effective_viscosity(u, P1, q_stokes=qq, eps_stokes=eps, Dtyp_stokes=Dtyp)
+            phydro = p_hydrostatic(se, sR, P1)
             pdiff = Function(P1).interpolate(p - phydro)
             pdiff.rename('pdiff = phydro - p (Pa)')
             outfile.write(u, p, nu, nueps, pdiff, time=t)

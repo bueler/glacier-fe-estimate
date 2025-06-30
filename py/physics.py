@@ -1,6 +1,49 @@
+import firedrake as fd
+from stokesextrude import extend_p1_from_basemesh, trace_vector_to_p2
+
 # public physics parameters
 secpera = 31556926.0    # seconds per year
 g, rho = 9.81, 910.0    # m s-2, kg m-3
 nglen = 3.0
 A3 = 3.1689e-24         # Pa-3 s-1; EISMINT I value of ice softness
 B3 = A3**(-1.0/3.0)     # Pa s(1/3);  ice hardness
+
+def _D(w):
+    return 0.5 * (fd.grad(w) + fd.grad(w).T)
+
+# weak form for the Stokes problem; se is a StokesExtrude object
+def form_stokes(se, sR, q_stokes=(1.0/nglen)-1.0, eps_stokes=0.0, fssa=True, theta_fssa=1.0, dt_fssa=0.0, smb_fssa=None):
+    u, p = fd.split(se.up)
+    v, q = fd.TestFunctions(se.Z)
+    Du2 = 0.5 * fd.inner(_D(u), _D(u)) + eps_stokes
+    F = fd.inner(B3 * Du2**(q_stokes / 2.0) * _D(u), _D(v)) * fd.dx(degree=4)
+    F -= (p * fd.div(v) + fd.div(u) * q) * fd.dx
+    source = fd.inner(se.f_body, v) * fd.dx
+    if fssa:
+        # see section 4.2 in Lofgren et al
+        nsR = fd.as_vector([-sR.dx(0), fd.Constant(1.0)])
+        nunit = nsR / fd.sqrt(sR.dx(0)**2 + 1.0)
+        F -= theta_fssa * dt_fssa * fd.inner(u, nunit) * fd.inner(se.f_body, v) * fd.ds_t
+        aR = extend_p1_from_basemesh(se.mesh, smb_fssa)
+        zvec = fd.Constant(fd.as_vector([0.0, 1.0]))
+        source += theta_fssa * dt_fssa * aR * fd.inner(zvec, nunit) * fd.inner(se.f_body, v) * fd.ds_t
+    F -= source
+    return F
+
+
+# diagnostic: effective viscosity nu from the velocity solution
+def effective_viscosity(u, P1, q_stokes=(1.0/nglen)-1.0, eps_stokes=0.0, Dtyp_stokes=1.0):
+    Du2 = 0.5 * fd.inner(_D(u), _D(u))
+    nu = fd.Function(P1).interpolate(0.5 * B3 * Du2**(q_stokes/2.0))
+    nu.rename('nu (unregularized; Pa s)')
+    nueps = fd.Function(P1).interpolate(0.5 * B3 * (Du2  + (eps_stokes * Dtyp_stokes)**2)**(q_stokes/2.0))
+    nueps.rename(f'nu (eps={eps_stokes:.3f}; Pa s)')
+    return nu, nueps
+
+
+# diagnostic: hydrostatic pressure
+def p_hydrostatic(se, sR, P1):
+    _, z = fd.SpatialCoordinate(se.mesh)
+    phydro = fd.Function(P1).interpolate(rho * g * (sR - z))
+    phydro.rename('p_hydro (Pa)')
+    return phydro
