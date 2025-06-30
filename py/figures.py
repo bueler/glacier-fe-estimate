@@ -1,4 +1,4 @@
-from geometry import secpera
+from physics import secpera
 
 def mkdir(dirname):
     import os

@@ -10,7 +10,7 @@ import numpy as np
 from firedrake import *
 from stokesextrude import printpar
 from figures import badcoercivefigure
-from geometry import secpera, rho, g, nglen, A3
+from physics import secpera, rho, g, nglen, A3
 
 def norm_w1r_sc(q, rpow, Lsc):
     '''Scaled W^{1,r} norm as in paper, using a characteristic length
