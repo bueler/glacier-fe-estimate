@@ -136,7 +136,16 @@ siparams = {#"snes_monitor": None,
             "pc_factor_mat_solver_type": "mumps"}
 # weak form for semi-implicit
 ns = as_vector([-s.dx(0), Constant(1.0)])
-siF = inner(s - dt * dot(siubm, ns) - (sisold + dt * a), siv) * dx   # FIXME regularize here
+#siF = inner(s - dt * dot(siubm, ns) - (sisold + dt * a), siv) * dx
+
+# FIXME regularize weak form here
+epsreg = 1.0
+H0 = 500.0
+Gamma = 2.0 * A3 * (rho * g)**nglen / (nglen + 2)
+sgnorm = dot(grad(s), grad(s))**0.5
+siF = inner(s - dt * dot(siubm, ns) - (sisold + dt * a), siv) * dx \
+      + epsreg * Gamma * inner(H0**(nglen + 1) * sgnorm**(nglen - 1) * grad(s), grad(siv)) * dx
+
 siproblem = NonlinearVariationalProblem(siF, s, sibcs)
 sisolver = NonlinearVariationalSolver(siproblem, solver_parameters=siparams,
                                       options_prefix="step")
@@ -179,7 +188,9 @@ for aconst in SMBlist:
     for n in range(Nsteps):
         # start with reporting
         if n == 0:
-            geometryreport(bm, 0, t, s, b, L)
+            # FIXME
+            rpow = 2.0
+            geometryreport(bm, 0, t, s, b, rpow, L)
             if writepng:
                 livefigure(bm, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png')
 
@@ -218,7 +229,9 @@ for aconst in SMBlist:
         t += dt
 
         # end of step reporting
-        geometryreport(bm, n + 1, t, s, b, L)
+        # FIXME
+        rpow = 2.0
+        geometryreport(bm, n + 1, t, s, b, rpow, L)
         if writepng:
             livefigure(bm, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png',
                     writehalfar=(bed == 'flat' and aconst == 0.0 and n + 1 == Nsteps))
