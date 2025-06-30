@@ -3,13 +3,6 @@
 
 bedtypes = ['flat', 'smooth', 'rough']
 
-# public physics parameters
-secpera = 31556926.0    # seconds per year
-g, rho = 9.81, 910.0    # m s-2, kg m-3
-nglen = 3.0
-A3 = 3.1689e-24         # Pa-3 s-1; EISMINT I value of ice softness
-B3 = A3**(-1.0/3.0)     # Pa s(1/3);  ice hardness
-
 # private to initial geometry
 _len = [120.0e3, 20.0e3, 10.0e3, 4.0e3]  # wavelengths of bed oscillations
 _amp = [100.0, 40.0, 20.0, 25.0]         # amplitudes ...
@@ -26,6 +19,7 @@ _R0 = 65.0e3                             # Halfar dome radius (m)
 _H0 = 1400.0                             # Halfar dome height (m)
 _alpha = 1.0 / 11.0
 _beta = _alpha
+from physics import A3, rho, g
 _Gamma = 2.0 * A3 * (rho * g)**3.0 / 5.0
 t0 = (7.0 / 4.0)**3.0 * (_beta / _Gamma) * _R0**4.0 / _H0**7.0  # public
 
@@ -40,7 +34,7 @@ def _s_halfar(x, t=t0, nglen=3.0):
     s[abs(x) >= s0] = -10000.0  # needs max with bed below
     return s
 
-def halfargeometry(x, t=t0, bed='flat'):
+def generategeometry(x, t=t0, bed='flat'):
     import numpy as np
     assert bed in bedtypes
     b = np.zeros(np.shape(x))

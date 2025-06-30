@@ -10,7 +10,7 @@ import numpy as np
 from firedrake import *
 from stokesextrude import printpar
 from figures import badcoercivefigure
-from geometry import secpera
+from physics import secpera
 
 def norm_h1sc(v, Lsc):
     '''Scaled H^1 = W^{1,2} norm as in paper, using a characteristic length

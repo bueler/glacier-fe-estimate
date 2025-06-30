@@ -3,7 +3,8 @@ import numpy as np
 from firedrake import *
 
 from stokesextrude import StokesExtrude, SolverParams, extend_p1_from_basemesh, trace_vector_to_p2, printpar
-from geometry import secpera, bedtypes, g, rho, nglen, A3, B3, t0, halfargeometry
+from physics import secpera, g, rho, nglen, A3, B3
+from geometryinit import bedtypes, t0, generategeometry
 from figures import mkdir, livefigure, snapsfigure, histogramPhirat
 from measure import geometryreport, sampleratios
 
@@ -46,7 +47,7 @@ xbm = bm.coordinates.dat.data_ro
 # bed and initial geometry
 assert bed in bedtypes
 print(f"Halfar t0 = {t0 / secpera:.3f} a")
-b_np, s_initial_np = halfargeometry(xbm, t=t0, bed=bed)  # get numpy arrays
+b_np, s_initial_np = generategeometry(xbm, t=t0, bed=bed)  # get numpy arrays
 b = Function(P1bm, name='bed elevation (m)')
 b.dat.data[:] = b_np
 s_initial = Function(P1bm)
