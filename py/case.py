@@ -107,7 +107,7 @@ H0 = 500.0
 Gamma = 2.0 * A3 * (rho * g)**nglen / (nglen + 2)
 sgnorm = dot(grad(s), grad(s))**0.5
 siF = inner(s - dt * dot(siubm, ns) - (sisold + dt * a), siv) * dx \
-      + epsreg * Gamma * inner(H0**(nglen + 1) * sgnorm**(nglen - 1) * grad(s), grad(siv)) * dx
+      + dt * epsreg * Gamma * inner(H0**(nglen + 1) * sgnorm**(nglen - 1) * grad(s), grad(siv)) * dx
 
 siproblem = NonlinearVariationalProblem(siF, s, sibcs)
 sisolver = NonlinearVariationalSolver(siproblem, solver_parameters=siparams,
