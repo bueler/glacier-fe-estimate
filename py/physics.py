@@ -1,5 +1,5 @@
 import firedrake as fd
-from stokesextrude import extend_p1_from_basemesh, trace_vector_to_p2
+from stokesextrude import extend_p1_from_basemesh
 
 # public physics parameters
 secpera = 31556926.0    # seconds per year
@@ -12,11 +12,12 @@ def _D(w):
     return 0.5 * (fd.grad(w) + fd.grad(w).T)
 
 # weak form for the Stokes problem; se is a StokesExtrude object
-def form_stokes(se, sR, q_stokes=(1.0/nglen)-1.0, eps_stokes=0.0, fssa=True, theta_fssa=1.0, dt_fssa=0.0, smb_fssa=None):
+def form_stokes(se, sR, pp=(1.0/nglen)+1.0, mu0=0.0, fssa=True, theta_fssa=1.0, dt_fssa=0.0, smb_fssa=None):
     u, p = fd.split(se.up)
     v, q = fd.TestFunctions(se.Z)
-    Du2 = 0.5 * fd.inner(_D(u), _D(u)) + eps_stokes
-    F = fd.inner(B3 * Du2**(q_stokes / 2.0) * _D(u), _D(v)) * fd.dx(degree=4)
+    Du2 = 0.5 * fd.inner(_D(u), _D(u)) + mu0
+    qqq = (pp - 2.0) / 2.0
+    F = fd.inner(B3 * Du2**qqq * _D(u), _D(v)) * fd.dx(degree=4)  # correspondence with paper: nu_p = 0.5 B3
     F -= (p * fd.div(v) + fd.div(u) * q) * fd.dx
     source = fd.inner(se.f_body, v) * fd.dx
     if fssa:
@@ -32,12 +33,14 @@ def form_stokes(se, sR, q_stokes=(1.0/nglen)-1.0, eps_stokes=0.0, fssa=True, the
 
 
 # diagnostic: effective viscosity nu from the velocity solution
-def effective_viscosity(u, P1, q_stokes=(1.0/nglen)-1.0, eps_stokes=0.0, Dtyp_stokes=1.0):
+def effective_viscosity(u, P1, pp=(1.0/nglen)+1.0, mu0=0.0):
     Du2 = 0.5 * fd.inner(_D(u), _D(u))
-    nu = fd.Function(P1).interpolate(0.5 * B3 * Du2**(q_stokes/2.0))
+    qqq = (pp - 2.0) / 2.0
+    nu = fd.Function(P1).interpolate(0.5 * B3 * Du2**qqq)   # correspondence with paper: nu_p = 0.5 B3
     nu.rename('nu (unregularized; Pa s)')
-    nueps = fd.Function(P1).interpolate(0.5 * B3 * (Du2  + (eps_stokes * Dtyp_stokes)**2)**(q_stokes/2.0))
-    nueps.rename(f'nu (eps={eps_stokes:.3f}; Pa s)')
+    Du2 += mu0
+    nueps = fd.Function(P1).interpolate(0.5 * B3 * Du2**qqq)
+    nueps.rename(f'nu (mu0={mu0:.3f}; Pa s)')
     return nu, nueps
 
 

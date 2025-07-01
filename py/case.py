@@ -35,9 +35,9 @@ fssa = True             # use Lofgren et al (2022) FSSA technique in Stokes solv
 theta_fssa = 1.0        #   with this theta value
 
 # Stokes parameters
-qq = 1.0 / nglen - 1.0
+pp = (1.0 / nglen) + 1.0
 Dtyp = 1.0 / secpera      # = 1 a-1; strain rate scale
-eps = 0.0001 * Dtyp**2.0  # viscosity regularization
+mu0 = 0.0001 * Dtyp**2.0  # viscosity regularization
 
 # set up bm = basemesh once
 bm = IntervalMesh(mx, -L, L)
@@ -164,8 +164,7 @@ for aconst in SMBlist:
         sR.dat.data[:] = s.dat.data_ro
 
         # solve Stokes on extruded mesh and extract surface trace
-        stokesF = form_stokes(se, sR,
-                              q_stokes=qq, eps_stokes=eps,
+        stokesF = form_stokes(se, sR, pp=pp, mu0=mu0,
                               fssa=fssa, theta_fssa=theta_fssa, dt_fssa=dt, smb_fssa=a)
         u, p = se.solve(F=stokesF, par=params, zeroheight=zeroheight)
         ubm = trace_vector_to_p2(bm, se.mesh, u)  # surface velocity (m s-1)
@@ -175,7 +174,7 @@ for aconst in SMBlist:
         if writepvd:
             u.rename('velocity (m s-1)')
             p.rename('pressure (Pa)')
-            nu, nueps = effective_viscosity(u, P1, q_stokes=qq, eps_stokes=eps, Dtyp_stokes=Dtyp)
+            nu, nueps = effective_viscosity(u, P1, pp=pp, mu0=mu0)
             phydro = p_hydrostatic(se, sR, P1)
             pdiff = Function(P1).interpolate(p - phydro)
             pdiff.rename('pdiff = phydro - p (Pa)')
