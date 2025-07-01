@@ -99,7 +99,6 @@ siparams = {#"snes_monitor": None,
             "pc_factor_mat_solver_type": "mumps"}
 
 # weak form for semi-implicit
-# FIXME regularize the |grad(s)|^{n-1} grad(s) so that it works with flat bed
 epsreg = 0.1
 siF = dt * Phi(s, siubm, siv, eps=epsreg) * dx + inner(s - (sisold + dt * a), siv) * dx
 
@@ -186,11 +185,12 @@ for aconst in SMBlist:
         t += dt
 
         # end of step reporting
-        rpow = 2.0  # FIXME rpow=4?
+        rpow = 4.0
         geometryreport(bm, n + 1, t, s, b, rpow, L)
         if writepng:
-            livefigure(bm, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png',
-                    writehalfar=(bed == 'flat' and aconst == 0.0 and n + 1 == Nsteps))
+            tfilename = f'{outdirname}t{t/secpera:010.3f}.png'
+            wh = (bed == 'flat' and aconst == 0.0 and n + 1 == Nsteps)
+            livefigure(bm, b, s, t, fname=tfilename, writehalfar=wh)
             if n + 1 == int(round(0.7 * Nsteps)): # reliable if Nsteps is divisible by 10
                 snaps.append(s.copy(deepcopy=True))
 

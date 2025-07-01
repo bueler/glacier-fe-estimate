@@ -32,9 +32,9 @@ def geometryreport(basemesh, n, t, s, b, rpow, Lsc, eps_H=1.0):
         width = 0.0
         if len(x[H > eps_H]) > 0:
             width = max(x[H > eps_H]) - min(x[H > eps_H])
-        printpar(f't_{n} = {t / secpera:.3f} a:  |s|_H1 = {snorm:.3e},  width = {width / 1000.0:.3f} km')
+        printpar(f't_{n} = {t / secpera:.3f} a:  |s|_W1r = {snorm:.3e},  width = {width / 1000.0:.3f} km')
     else:
-        printpar(f't_{n} = {t / secpera:.3f} a:  |s|_H1 = {snorm:.3e}')
+        printpar(f't_{n} = {t / secpera:.3f} a:  |s|_W1r = {snorm:.3e}')
 
 def _us_ratio(slist, k, l, rpow, Lsc):
     # compute the ratio  |ur-us|_Lr' / |r-s|_W1r
