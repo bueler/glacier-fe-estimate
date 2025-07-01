@@ -10,7 +10,7 @@ import numpy as np
 from firedrake import *
 from stokesextrude import printpar
 from figures import badcoercivefigure
-from physics import secpera, rho, g, nglen, A3
+from physics import secpera, rho, g, nglen, A3, Phi
 
 def norm_w1r_sc(q, rpow, Lsc):
     '''Scaled W^{1,r} norm as in paper, using a characteristic length
@@ -46,29 +46,12 @@ def _us_ratio(slist, k, l, rpow, Lsc):
     dsnorm = norm_w1r_sc(ds, rpow, Lsc)
     return dunorm / dsnorm
 
-def Phi(s, us, q):
-    # FIXME move to physics.py
-    # FIXME optional regularization using H0=1000.0 and p-Laplacian (see below)
-    ns = as_vector([-s.dx(0), Constant(1.0)])
-    return assemble(- dot(us, ns) * q * dx)
-
-def _Phi_ratio(slist, k, l, rpow, Lsc, qpow, b):
+def _Phi_ratio(slist, k, l, rpow, Lsc, qpow, b, epsreg=0.0):
     # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_W1r^q
     assert k != l
     r, s = slist[k]['s'], slist[l]['s']
     ur, us = slist[k]['us'], slist[l]['us']
-    dPhi = Phi(r, ur, r - s) - Phi(s, us, r - s)
-
-    # FIXME regularize Phi here
-    epsreg = 1.0
-    H0 = 500.0
-    Gamma = 2.0 * A3 * (rho * g)**nglen / (nglen + 2)
-    rgn = dot(grad(r), grad(r))**0.5
-    sgn = dot(grad(s), grad(s))**0.5
-    ig = epsreg * Gamma * H0**(nglen + 1) \
-          * inner(rgn**(nglen - 1) * grad(r) - sgn**(nglen - 1) * grad(s), grad(r - s))
-    dPhi += assemble(ig * dx)
-
+    dPhi = Phi(r, ur, r - s, eps=epsreg) - Phi(s, us, r - s, eps=epsreg)
     dsnorm = norm_w1r_sc(r - s, rpow, Lsc)
     return dPhi / dsnorm**qpow
 
@@ -81,9 +64,8 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
     Phiratlist = []
     _n = 0
 
-    # FIXME
-    rpow = 2.0
-    qpow = 2.0
+    rpow = 2.0  # FIXME rpow=4?
+    qpow = 2.0  # FIXME qpow=2?
 
     while _n < N:
         # generate a pair of indices; test if it is new
@@ -101,7 +83,7 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
             print(RED % '!', end='')  # color provided by firedrake logging.py
             continue
         usrat = _us_ratio(slist, i1, i2, rpow, Lsc)
-        Phirat = _Phi_ratio(slist, i1, i2, rpow, Lsc, qpow, b)
+        Phirat = _Phi_ratio(slist, i1, i2, rpow, Lsc, qpow, b, epsreg=0.1)  # FIXME with regularization
         if Phirat == np.inf:
             print(RED % '*', end='')
             continue

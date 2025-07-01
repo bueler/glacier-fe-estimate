@@ -2,8 +2,8 @@ from sys import argv
 import numpy as np
 from firedrake import *
 
-from stokesextrude import StokesExtrude, SolverParams, extend_p1_from_basemesh, trace_vector_to_p2, printpar
-from physics import secpera, g, rho, nglen, A3, B3, form_stokes, effective_viscosity, p_hydrostatic
+from stokesextrude import StokesExtrude, SolverParams, trace_vector_to_p2, printpar
+from physics import secpera, g, rho, nglen, form_stokes, effective_viscosity, p_hydrostatic, Phi_ufl
 from geometryinit import bedtypes, t0, generategeometry
 from figures import mkdir, livefigure, snapsfigure, histogramPhirat
 from measure import geometryreport, sampleratios
@@ -97,17 +97,10 @@ siparams = {#"snes_monitor": None,
             "ksp_type": "preonly",
             "pc_type": "lu",
             "pc_factor_mat_solver_type": "mumps"}
-# weak form for semi-implicit
-ns = as_vector([-s.dx(0), Constant(1.0)])
-#siF = inner(s - dt * dot(siubm, ns) - (sisold + dt * a), siv) * dx
 
-# FIXME regularize weak form here
-epsreg = 1.0
-H0 = 500.0
-Gamma = 2.0 * A3 * (rho * g)**nglen / (nglen + 2)
-sgnorm = dot(grad(s), grad(s))**0.5
-siF = inner(s - dt * dot(siubm, ns) - (sisold + dt * a), siv) * dx \
-      + dt * epsreg * Gamma * inner(H0**(nglen + 1) * sgnorm**(nglen - 1) * grad(s), grad(siv)) * dx
+# weak form for semi-implicit
+epsreg = 0.1
+siF = dt * Phi_ufl(s, siubm, siv, eps=epsreg) * dx + inner(s - (sisold + dt * a), siv) * dx
 
 siproblem = NonlinearVariationalProblem(siF, s, sibcs)
 sisolver = NonlinearVariationalSolver(siproblem, solver_parameters=siparams,
@@ -192,8 +185,7 @@ for aconst in SMBlist:
         t += dt
 
         # end of step reporting
-        # FIXME
-        rpow = 2.0
+        rpow = 2.0  # FIXME rpow=4?
         geometryreport(bm, n + 1, t, s, b, rpow, L)
         if writepng:
             livefigure(bm, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png',
