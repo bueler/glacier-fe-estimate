@@ -99,7 +99,7 @@ siparams = {#"snes_monitor": None,
             "pc_factor_mat_solver_type": "mumps"}
 
 # weak form for semi-implicit
-epsreg = 0.1
+epsreg = 0.0  # FIXME how much regularization?
 siF = dt * Phi(s, siubm, siv, eps=epsreg) * dx + inner(s - (sisold + dt * a), siv) * dx
 
 siproblem = NonlinearVariationalProblem(siF, s, sibcs)

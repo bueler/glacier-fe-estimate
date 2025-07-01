@@ -59,7 +59,8 @@ def _Phi_ratio(slist, k, l, rpow, Lsc, qpow, b, epsreg=0.0):
 def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
     # measure 2-coercivity over W^{1,4}
     rpow = nglen + 1.0
-    qpow = rpow   # motivated by coercivity for p-Laplacian implicit step in Bueler 2021)
+    qpow = 2.0
+    #qpow = rpow  # choice motivated by coercivity for p-Laplacian implicit step in Bueler 2021
     printpar(f'computing ratios from {N} pair samples from state list ...')
     assert N >= 2
     from random import randrange
@@ -83,7 +84,7 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
             print(RED % '!', end='')  # color provided by firedrake logging.py
             continue
         usrat = _us_ratio(slist, i1, i2, rpow, Lsc)
-        Phirat = _Phi_ratio(slist, i1, i2, rpow, Lsc, qpow, b, epsreg=0.1)  # FIXME with regularization
+        Phirat = _Phi_ratio(slist, i1, i2, rpow, Lsc, qpow, b, epsreg=0.1)  # FIXME how much regularization?
         if Phirat == np.inf:
             print(RED % '*', end='')
             continue

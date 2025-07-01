@@ -109,7 +109,7 @@ def histogramPhirat(dirname, ratlist):
     fig = plt.figure(figsize=(6.0, 4.0))
     ax = plt.gca()
     ax.stairs(h, edges, color='k')
-    if len(rln) > 0:
+    if len(rln) > 1:   # histogram buggy when only one?
         hn, edgesn = np.histogram(rln, bins=binsn)
         ax.stairs(hn, edgesn, color='k', fill=True)
     plt.xlabel(r'$\Phi$ ratios')
