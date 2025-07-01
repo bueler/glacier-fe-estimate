@@ -154,12 +154,10 @@ for aconst in SMBlist:
         sR = Function(P1R)
         sR.dat.data[:] = s.dat.data_ro
 
-        # solve Stokes on extruded mesh and extract surface trace
-        stokesF = form_stokes(se, sR, pp=pp, mu0=mu0,
-                              fssa=fssa, theta_fssa=theta_fssa, dt_fssa=dt, smb_fssa=a)
+        # for saving with current geometry: solve Stokes on extruded mesh and extract surface trace
+        stokesF = form_stokes(se, sR, pp=pp, mu0=mu0, fssa=False)
         u, p = se.solve(F=stokesF, par=params, zeroheight=zeroheight)
         ubm = trace_vector_to_p2(bm, se.mesh, u)  # surface velocity (m s-1)
-        #printpar(f'  solution norms: |u|_L2 = {norm(u):8.3e},  |p|_L2 = {norm(p):8.3e}')
 
         # optionally write t-dependent .pvd with 2D fields
         if writepvd:
@@ -175,6 +173,12 @@ for aconst in SMBlist:
         _slist.append({'t': t,
                        's': s.copy(deepcopy=True),
                        'us': ubm.copy(deepcopy=True)})
+
+        # for semi-implicit step, solve Stokes on extruded mesh *WITH FSSA* and extract surface trace
+        stokesF = form_stokes(se, sR, pp=pp, mu0=mu0,
+                              fssa=fssa, theta_fssa=theta_fssa, dt_fssa=dt, smb_fssa=a)
+        u, p = se.solve(F=stokesF, par=params, zeroheight=zeroheight)
+        ubm = trace_vector_to_p2(bm, se.mesh, u)  # surface velocity (m s-1)
 
         # time step of VI problem; semi-implicit: solve VI problem with surface velocity from old surface elevation
         sisold.dat.data[:] = s.dat.data_ro
