@@ -15,7 +15,7 @@ def livefigure(basemesh, b, s, t, fname=None, writehalfar=False):
     plt.figure(figsize=(6.0, 2.0))
     plt.plot(xx / 1.0e3, s.dat.data, color='C1', label=slabel)
     if writehalfar:
-        from geometry import generategeometry, t0
+        from geometryinit import generategeometry, t0
         _, shalfar = generategeometry(xx, t=t+t0, bed='flat')  # time t after initial time
         plt.plot(xx / 1.0e3, shalfar, '--', color='C1', label=f's_SIA(t,x)')
     plt.plot(xx / 1.0e3, b.dat.data, color='C3', label='b(x)')
@@ -101,7 +101,7 @@ def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
 
 def histogramPhirat(dirname, ratlist):
     binsp = 24  # bins on positive side
-    binsn = 2   # bins on negative side
+    binsn = 4   # bins on negative side
     rlp = ratlist[ratlist > 0.0]
     assert len(rlp) > 0
     rln = ratlist[ratlist <= 0.0]  # may be empty list
