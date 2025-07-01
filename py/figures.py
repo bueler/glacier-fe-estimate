@@ -1,3 +1,5 @@
+import numpy as np
+import matplotlib.pyplot as plt
 from physics import secpera
 
 def mkdir(dirname):
@@ -8,14 +10,13 @@ def mkdir(dirname):
         pass
 
 def livefigure(basemesh, b, s, t, fname=None, writehalfar=False):
-    import matplotlib.pyplot as plt
     xx = basemesh.coordinates.dat.data
     slabel = f's(t,x) at t = {t / secpera:.3f} a'
     plt.figure(figsize=(6.0, 2.0))
     plt.plot(xx / 1.0e3, s.dat.data, color='C1', label=slabel)
     if writehalfar:
-        from geometry import halfargeometry, t0
-        _, shalfar = halfargeometry(xx, t=t+t0, bed='flat')  # time t after initial time
+        from geometry import generategeometry, t0
+        _, shalfar = generategeometry(xx, t=t+t0, bed='flat')  # time t after initial time
         plt.plot(xx / 1.0e3, shalfar, '--', color='C1', label=f's_SIA(t,x)')
     plt.plot(xx / 1.0e3, b.dat.data, color='C3', label='b(x)')
     plt.legend(loc='upper left')
@@ -30,7 +31,6 @@ def livefigure(basemesh, b, s, t, fname=None, writehalfar=False):
     plt.close()
 
 def snapsfigure(basemesh, b, snaps, fname=None):
-    import matplotlib.pyplot as plt
     xx = basemesh.coordinates.dat.data
     plt.figure(figsize=(6.0, 3.0))
     plt.plot(xx / 1.0e3, b.dat.data, 'k--')
@@ -45,8 +45,6 @@ def snapsfigure(basemesh, b, snaps, fname=None):
     plt.close()
 
 def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
-    import numpy as np
-    import matplotlib.pyplot as plt
     from matplotlib.gridspec import GridSpec
     import firedrake as fd
     xx = basemesh.coordinates.dat.data_ro
@@ -102,8 +100,6 @@ def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
     plt.close()
 
 def histogramPhirat(dirname, ratlist):
-    import numpy as np
-    import matplotlib.pyplot as plt
     # bin width is 0.25e-12 on both sides of zero
     binsp = 24
     binsn = 4

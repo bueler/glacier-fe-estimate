@@ -1,5 +1,4 @@
-# Compute 1D numpy arrays for b(x) and s(x).  Used to set
-# initial geometries in the study.
+# Compute 1D numpy arrays for b(x) and s(x), to set initial geometries in the study.
 
 bedtypes = ['flat', 'smooth', 'rough']
 
