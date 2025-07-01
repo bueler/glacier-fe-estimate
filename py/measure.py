@@ -56,6 +56,9 @@ def _Phi_ratio(slist, k, l, rpow, Lsc, qpow, b, epsreg=0.0):
     return dPhi / dsnorm**qpow
 
 def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
+    # measure 2-coercivity over W^{1,4}
+    rpow = nglen + 1.0
+    qpow = 2.0
     printpar(f'computing ratios from {N} pair samples from state list ...')
     assert N >= 2
     from random import randrange
@@ -63,10 +66,6 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
     pairs = []
     Phiratlist = []
     _n = 0
-
-    rpow = 2.0  # FIXME rpow=4?
-    qpow = 2.0  # FIXME qpow=2?
-
     while _n < N:
         # generate a pair of indices; test if it is new
         i1 = randrange(0, len(slist))
