@@ -144,9 +144,7 @@ for aconst in SMBlist:
     for n in range(Nsteps):
         # start with reporting
         if n == 0:
-            # FIXME
-            rpow = 2.0
-            geometryreport(bm, 0, t, s, b, rpow, L)
+            geometryreport(bm, 0, t, s, b, Lsc=L)
             if writepng:
                 livefigure(bm, b, s, t, fname=f'{outdirname}t{t/secpera:010.3f}.png')
 
@@ -185,8 +183,7 @@ for aconst in SMBlist:
         t += dt
 
         # end of step reporting
-        rpow = 4.0
-        geometryreport(bm, n + 1, t, s, b, rpow, L)
+        geometryreport(bm, n + 1, t, s, b, Lsc=L)
         if writepng:
             tfilename = f'{outdirname}t{t/secpera:010.3f}.png'
             wh = (bed == 'flat' and aconst == 0.0 and n + 1 == Nsteps)
