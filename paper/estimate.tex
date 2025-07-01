@@ -549,7 +549,7 @@ Let $\cX$ be a real reflexive Banach space with norm $\|\cdot\|$ and topological
 \begin{equation}
 f(u)[v-u] \ge \ell[v-u] \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
-VI problem \eqref{eq:be:vi} is in this form, but the best known example is the obstacle problem for the Laplacian operator---see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis.  A key observation is that $f(u)-\ell \in \cX'$ is generally nonzero when $u$ solves \eqref{eq:vi}, though if $u$ is in the interior of $\cK$ then $f(u)=\ell$.  Under sufficient regularity assumptions an NCP like \eqref{eq:ncp} or \eqref{eq:be:ncp} follows from \eqref{eq:vi}.
+VI problem \eqref{eq:be:vi} is in this form, and the best known example is the obstacle problem for the Laplacian operator---see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis.  A key observation is that $f(u)-\ell \in \cX'$ is generally nonzero when $u$ solves \eqref{eq:vi}, but if $u$ is in the interior of $\cK$ then $f(u)=\ell$.  Under sufficient regularity assumptions an NCP like \eqref{eq:ncp} or \eqref{eq:be:ncp} follows from \eqref{eq:vi}.
 
 \begin{definition} \label{def:monotonecoercive}
 An operator $f:\cK \to \cX'$ is said to be \emph{monotone} if
@@ -563,9 +563,9 @@ and \emph{strictly monotone} if equality in \eqref{eq:monotone} implies $v=w$ \c
 (The definition of $\qq$-coercive was already given in Conjecture \ref{conj:b}.)
 \end{definition}
 
-If $f:\cK \to \cX'$ is monotone and coercive, and also continuous on finite-dimensional subspaces, then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then the solution is unique.  If $f$ is $\qq$-coercive then it coercive and strictly monotone, so $\qq$-coercivity and continuity yield well-posedness for \eqref{eq:vi}.  Note that Definitions \ref{def:monotonecoercive} and \ref{def:lipshitz} do not require $f$ to be defined on all of $\cX$, but only on $\cK$.
+If $f:\cK \to \cX'$ is monotone and coercive, and also continuous on finite-dimensional subspaces, then VI \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then the solution is unique.  If $f$ is $\qq$-coercive then it coercive and strictly monotone, so $\qq$-coercivity and continuity yield well-posedness for \eqref{eq:vi}.
   
-The following definition appeared in Lemma \ref{lem:philipschitz}.  If it holds then $f$ is continuous.
+The following definition appeared in Lemma \ref{lem:philipschitz}.  If it holds then $f$ is continuous.  Note that Definitions \ref{def:monotonecoercive} and \ref{def:lipshitz} do not require $f$ to be defined on all of $\cX$, but only on $\cK$.
 
 \begin{definition} \label{def:lipshitz}
 For $R>0$ let $B_R = \{v\in \cX\,:\,\|v\|\le R\}$.  We say $f:\cK \to \cX'$ is \emph{Lipshitz on bounded subsets of $\cK$} if for every $R>0$ there is $C(R)>0$ so that if $v,w \in B_R \cap \cK$ and $z\in\cX$ then $|\left(f(v)-f(w)\right)[z]| \le C(R) \|v-w\| \|z\|$, equivalently
@@ -574,22 +574,24 @@ For $R>0$ let $B_R = \{v\in \cX\,:\,\|v\|\le R\}$.  We say $f:\cK \to \cX'$ is \
 \end{equation}
 \end{definition}
 
-An FE method for \eqref{eq:vi} becomes a finite-dimensional VI problem.  Suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, typically some space of continuous, piecewise-polynomial functions defined on a mesh.  The FE constraint set $\cK_h\subset \cX_h$ is assumed to be closed and convex, but generally $\cK_h \nsubseteq \cK$.  Let $f_h:\cK_h\to\cX'$, and note that generally $f_h\ne f$ because of quadrature and other approximations.  (Looking ahead to Section \ref{sec:application}, both $\cK_h \nsubseteq \cK$ and $f_h\ne f$ occur naturally in the glacier geometry problem.)  The FE VI problem is
+A conforming FE method for \eqref{eq:vi} is a finite-dimensional VI problem.  Suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, typically some space of continuous, piecewise-polynomial functions defined on a mesh.  The FE constraint set $\cK_h\subset \cX_h$ is assumed to be closed and convex, but generally $\cK_h \nsubseteq \cK$.  Let $f_h:\cK_h\to\cX'$, and note that generally $f_h\ne f$ because of quadrature and other approximations.  (Looking ahead to Section \ref{sec:application}, both $\cK_h \nsubseteq \cK$ and $f_h\ne f$ represent the standard case in the glacier geometry problem, although $\cX_h\subset\cX$.)  The FE VI problem is
 \begin{equation}
 f_h(u_h)[v_h-u_h] \ge \ell[v_h-u_h] \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
 \end{equation}
 We will assume that \eqref{eq:fe:vi} has a solution $u_h\in\cK_h$.
 
-The following FE error estimation theorem extends the well-known result by Falk \cite{Falk1974}.  See also Theorem 5.1.1 in \cite{Ciarlet2002}, and the version of the estimate wherein $u$ (but not $u_h$) solves a variational \emph{equality} in \cite[Theorem 1]{KirbyShapero2024}.  For the proof we must assume that the domain of $f$ includes the FE solution, which is achieved here by defining a convex superset of $\cK$ and $\cK_h$.  This technical assumption permits a clean and general estimation theorem, but the choice of $\cK_h$ made in Section \ref{sec:application} means that the convex hull construction is not needed in our glacier application; see also Corollary \ref{cor:abstractestimate:nohull}.
+The following FE error estimation theorem extends the well-known result by Falk \cite{Falk1974}.  See also Theorem 5.1.1 in \cite{Ciarlet2002}, and the recent version of the estimate wherein $u$ (but not $u_h$) solves a variational \emph{equality} in \cite[Theorem 1]{KirbyShapero2024}.  For the proof we must assume that the domain of $f$ includes the FE solution, which is achieved here by defining a convex superset of $\cK$ and $\cK_h$.  This technical assumption permits a clean and general estimation theorem, but the choice of $\cK_h$ made in Section \ref{sec:application} means that the convex hull construction is not needed in our glacier application; see also Corollary \ref{cor:abstractestimate:nohull}.
 
 \begin{theorem} \label{thm:abstractestimate}  Let $\hcK$ be the closure in $\cX$ of the convex hull of $\cK \cup \cK_h$, and suppose that $f:\hcK \to \cX'$.  For $\qq>1$, with conjugate exponent $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive over $\hcK$ with constant $\alpha>0$, and Lipshitz on bounded sets of $\hcK$.  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}, and let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c=c(R_h,\alpha)>0$, not otherwise depending on $u$ or $u_h$, so that
 \begin{align}
 \|u-u_h\|^\qq &\le \quad \frac{2}{\alpha} \inf_{v\in\cK} \left(f(u)-\ell\right)[v-u_h] \label{eq:abstractestimate} \\
-   &\quad\, + \frac{2}{\alpha} \inf_{v_h\in\cK_h} \left(f(u)-\ell\right)[v_h-u] \notag \\
+   &\quad\, + \frac{2}{\alpha} \inf_{v_h\in\cK_h} \left(f(u)-\ell\right)[v_h-\psi] \notag \\
    &\quad\, + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] \notag \\
    &\quad\, + c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}. \notag
 \end{align}
 \end{theorem}
+
+% FIXME the second term in the bound has "\psi" in it; this deserves a Lemma saying that f(u)-\ell is a measure supported in the active set?
 
 \begin{proof}  For arbitrary $v\in\cK$ and $v_h\in\cK_h$, rewrite \eqref{eq:vi} and \eqref{eq:fe:vi} as follows:
 \begin{align}
@@ -613,7 +615,7 @@ Since $u,u_h\in B_{R_h}$, by the Lipshitz assumption over $\hcK$ there is $C(R_h
 \begin{equation}
 \left(f(u)-f(u_h)\right)[u-v_h] \le C(R_h) \|u-u_h\|\|u-v_h\|. \label{eq:abstract:three}
 \end{equation}
-Noting $1<\qq<\infty$, now use Young's inequality with $\eps>0$ \cite[Appendix B.2]{Evans2010}:
+Noting $1<\qq<\infty$, now use Young's inequality with $\eps>0$ \cite[Appendix B.2]{Evans2010} on the right side of \eqref{eq:abstract:three}:
 \begin{align}
 \alpha \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u]  \label{eq:abstract:four} \\
   &\qquad + C(R_h) \left(\eps\|u-u_h\|^\qq + \tilde C(\eps) \|u-v_h\|^{\qq'}\right) \notag \\
