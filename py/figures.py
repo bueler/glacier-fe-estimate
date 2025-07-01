@@ -100,24 +100,19 @@ def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
     plt.close()
 
 def histogramPhirat(dirname, ratlist):
-    # bin width is 0.25e-12 on both sides of zero
-    binsp = 24
-    binsn = 4
+    binsp = 24  # bins on positive side
+    binsn = 4   # bins on negative side
     rlp = ratlist[ratlist > 0.0]
     assert len(rlp) > 0
     rln = ratlist[ratlist <= 0.0]  # may be empty list
-    h, edges = np.histogram(rlp, bins=binsp, range=(0.0, 6.0e-12))
+    h, edges = np.histogram(rlp, bins=binsp)
     fig = plt.figure(figsize=(6.0, 4.0))
     ax = plt.gca()
     ax.stairs(h, edges, color='k')
     if len(rln) > 0:
-        hn, edgesn = np.histogram(rln, bins=binsn, range=(-1.0e-12, 0.0))
+        hn, edgesn = np.histogram(rln, bins=binsn)
         ax.stairs(hn, edgesn, color='k', fill=True)
-    plt.xlabel(r'$\Phi$ ratios ($\times 10^{-12}$)')
-    ax.set_xlim([-1.0e-12, 6.0e-12])
-    ax.set_xticks(np.linspace(-1.0e-12, 6.0e-12, 8))
-    ax.set_xticklabels(['-1', '0', '1', '2', '3', '4', '5', '6'])
-    ax.set_ylim([0, 350])
+    plt.xlabel(r'$\Phi$ ratios')
     fname = dirname + 'Phiratios.png'
     plt.savefig(fname)
     plt.close()
