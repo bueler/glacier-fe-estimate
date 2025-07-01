@@ -101,7 +101,7 @@ def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
 
 def histogramPhirat(dirname, ratlist):
     binsp = 24  # bins on positive side
-    binsn = 4   # bins on negative side
+    binsn = 2   # bins on negative side
     rlp = ratlist[ratlist > 0.0]
     assert len(rlp) > 0
     rln = ratlist[ratlist <= 0.0]  # may be empty list

@@ -52,10 +52,10 @@ def p_hydrostatic(se, sR, P1):
     return phydro
 
 
-# surface motion operator as UFL
+# surface motion operator
 # if eps>0 then regularized with SIA vertical velocity diffusivity
-# this version returns a UFL expression; it makes sense when q is a TestFunction, or if it is a Function
-def Phi_ufl(s, us, q, eps=0.0, H0=1000.0):
+# returns a UFL expression, so q can be a TestFunction or a Function
+def Phi(s, us, q, eps=0.0, H0=1000.0):
     ns = fd.as_vector([-s.dx(0), fd.Constant(1.0)])
     Phi = - fd.dot(us, ns) * q
     if eps > 0.0:
@@ -64,9 +64,3 @@ def Phi_ufl(s, us, q, eps=0.0, H0=1000.0):
         gsnorm = fd.dot(fd.grad(s), fd.grad(s))**0.5
         Phi += eps * C * fd.inner(gsnorm**(nglen - 1) * fd.grad(s), fd.grad(q))
     return Phi
-
-
-# surface motion operator as scalar
-# this version applies assemble() and returns a scalar; it only makes sense when q is a Function
-def Phi(s, us, q, eps=0.0, H0=1000.0):
-    return fd.assemble(Phi_ufl(s, us, q, eps=eps, H0=H0) * fd.dx)

@@ -3,7 +3,7 @@ import numpy as np
 from firedrake import *
 
 from stokesextrude import StokesExtrude, SolverParams, trace_vector_to_p2, printpar
-from physics import secpera, g, rho, nglen, form_stokes, effective_viscosity, p_hydrostatic, Phi_ufl
+from physics import secpera, g, rho, nglen, form_stokes, effective_viscosity, p_hydrostatic, Phi
 from geometryinit import bedtypes, t0, generategeometry
 from figures import mkdir, livefigure, snapsfigure, histogramPhirat
 from measure import geometryreport, sampleratios
@@ -99,8 +99,9 @@ siparams = {#"snes_monitor": None,
             "pc_factor_mat_solver_type": "mumps"}
 
 # weak form for semi-implicit
+# FIXME regularize the |grad(s)|^{n-1} grad(s) so that it works with flat bed
 epsreg = 0.1
-siF = dt * Phi_ufl(s, siubm, siv, eps=epsreg) * dx + inner(s - (sisold + dt * a), siv) * dx
+siF = dt * Phi(s, siubm, siv, eps=epsreg) * dx + inner(s - (sisold + dt * a), siv) * dx
 
 siproblem = NonlinearVariationalProblem(siF, s, sibcs)
 sisolver = NonlinearVariationalSolver(siproblem, solver_parameters=siparams,

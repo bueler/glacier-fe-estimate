@@ -51,9 +51,10 @@ def _Phi_ratio(slist, k, l, rpow, Lsc, qpow, b, epsreg=0.0):
     assert k != l
     r, s = slist[k]['s'], slist[l]['s']
     ur, us = slist[k]['us'], slist[l]['us']
-    dPhi = Phi(r, ur, r - s, eps=epsreg) - Phi(s, us, r - s, eps=epsreg)
+    Phi_r = assemble(Phi(r, ur, r - s, eps=epsreg) * dx)
+    Phi_s = assemble(Phi(s, us, r - s, eps=epsreg) * dx)
     dsnorm = norm_w1r_sc(r - s, rpow, Lsc)
-    return dPhi / dsnorm**qpow
+    return (Phi_r - Phi_s) / dsnorm**qpow
 
 def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0):
     # measure 2-coercivity over W^{1,4}
