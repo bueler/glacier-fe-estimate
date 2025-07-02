@@ -1,6 +1,6 @@
 all: estimate.pdf
 
-_figures := stokesdomain giscross extruded
+_figures := stokesdomain giscross extruded filled icefree
 figures := $(addprefix genfigs/, $(addsuffix .pdf, $(_figures)))
 
 cropfigures: $(figures)
@@ -16,6 +16,9 @@ genfigs/giscross.pdf: genfigs/giscross.py
 
 genfigs/extruded.pdf: genfigs/extruded.py
 	(cd genfigs/ && python3 extruded.py)
+
+genfigs/filled.pdf genfigs/icefree.pdf: genfigs/noncoercive.py
+	(cd genfigs/ && python3 noncoercive.py)
 
 estimate.pdf: estimate.tex estimate.aux estimate.bbl
 	pdflatex estimate

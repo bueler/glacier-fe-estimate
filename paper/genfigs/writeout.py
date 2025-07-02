@@ -2,9 +2,8 @@
 
 import matplotlib.pyplot as plt
 
-_SHOW = False
-def writeout(outname):
-    if _SHOW:
+def writeout(outname, show=False):
+    if show:
         plt.show()
     else:
         print('writing file ' + outname)
