@@ -205,24 +205,30 @@ if writepng:
     snapsfigure(bm, b, snaps, fname=snapsname)
     printpar(f'  finished writing to {snapsname}')
 
-# process _slist from all three SMB cases
-maxcont, rats = sampleratios(dirroot, _slist, bm, b, N=Nsamples, Lsc=L)
-printpar(f'  max continuity ratio:               {maxcont:.3e}')
-histogramPhirat(dirroot, rats)
-pos = rats[rats > 0.0]
-assert len(pos) > 0
-pmin = min(pos)
-pmed = np.median(pos)
-printpar(f'  pos coercivity ratio min:           {pmin:.3e}')
-printpar(f'                       median:        {pmed:.3e}')
-nonpos = rats[rats <= 0.0]
-if len(nonpos) > 0:
-    npmin, npmed, npf = min(nonpos), np.median(nonpos), len(nonpos) / len(rats)
-    printpar(f'  non-pos coercivity ratio min:       {npmin:.3e}')
-    printpar(f'                           median:    {npmed:.3e}')
-    printpar(f'                           fraction:  {npf:.4f}')
-    with open(ratiosfile, 'a') as rfile:
-        rfile.write(f'{maxcont:.3e}, {pmin:.3e}, {pmed:.3e}, {npmin:.3e}, {npmed:.3e}, {npf:.4f}\n')
-else:
-    with open(ratiosfile, 'a') as rfile:
-        rfile.write(f'{maxcont:.3e}, {pmin:.3e}, {pmed:.3e}, N/A, N/A, 0.0000\n')
+# process _slist from all three SMB cases, with and without regularization
+eps = [0.0, 0.1]
+epsstr = ['NOREG', 'REG__']
+for j in range(2):
+    root = dirroot + epsstr[j] + '/'
+    mkdir(root)
+    maxcont, rats = sampleratios(root, _slist, bm, b, N=Nsamples, Lsc=L, epsreg=eps[j])
+    if j == 0:
+        printpar(f'  max continuity ratio:               {maxcont:.3e}')
+    histogramPhirat(root, rats)
+    pos = rats[rats > 0.0]
+    assert len(pos) > 0
+    pmin = min(pos)
+    pmed = np.median(pos)
+    printpar(f'  pos coercivity ratio {epsstr[j]} min:           {pmin:.3e}')
+    printpar(f'                       {epsstr[j]} median:        {pmed:.3e}')
+    nonpos = rats[rats <= 0.0]
+    if len(nonpos) > 0:
+        npmin, npmed, npf = min(nonpos), np.median(nonpos), len(nonpos) / len(rats)
+        printpar(f'  non-pos coercivity ratio {epsstr[j]} min:       {npmin:.3e}')
+        printpar(f'                           {epsstr[j]} median:    {npmed:.3e}')
+        printpar(f'                           {epsstr[j]} fraction:  {npf:.4f}')
+        with open(ratiosfile, 'a') as rfile:
+            rfile.write(f'{epsstr[j]}: {maxcont:.3e}, {pmin:.3e}, {pmed:.3e}, {npmin:.3e}, {npmed:.3e}, {npf:.4f}\n')
+    else:
+        with open(ratiosfile, 'a') as rfile:
+            rfile.write(f'{epsstr[j]}: {maxcont:.3e}, {pmin:.3e}, {pmed:.3e}, N/A, N/A, 0.0000\n')
