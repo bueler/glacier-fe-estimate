@@ -255,7 +255,7 @@ F_\Lambda(\bu,p)[\bv,q] = 0 \qquad \text{for all } (\bv,q) \in \mathcal{M}. \lab
 
 Jouvet and Rappaz \cite{JouvetRappaz2011} have proven that problem \eqref{eq:glenstokes:weak} is well-posed if the Neumann portion of $\partial\Lambda$ is $C^1$.  Their proof uses the equivalence of \eqref{eq:glenstokes:weak} and a minimization problem over the divergence-free subspace $\cV_0 = \{\bv\in\cV\,:\,\Div\bv=0\}$.  Our regularization in Glen law \eqref{eq:glen} differs from theirs, but the necessary modifications are addressed in \cite{Belenkietal2012,IsaacStadlerGhattas2015}.  Note that if the weak solution is sufficiently regular then the strong form \eqref{eq:stokes} is also satisfied.
 
-\begin{theorem}[Theorem 3.10 in \cite{JouvetRappaz2011}] \label{thm:stokeswellposed}  Suppose $\Lambda$ is bounded, $\partial\Lambda$ is Lipschitz, $\Gamma_s$ is $C^1$, and $\Gamma_b$ has positive measure.  Let $1<\pp\le 2$ and $\mu_0>0$ in \eqref{eq:glen}.  Then there exists a unique pair $(\bu,p) \in \mathcal{M}$ solving \eqref{eq:glenstokes:weak}, and $\bu\in \cV_0$.
+\begin{theorem}[Theorem 3.10 in \cite{JouvetRappaz2011}] \label{thm:stokeswellposed}  Suppose $\Lambda$ is bounded, $\partial\Lambda$ is Lipschitz, $\Gamma_s$ is piecewise $C^1$, and $\Gamma_b$ has positive measure.  Let $1<\pp\le 2$ and $\mu_0>0$ in \eqref{eq:glen}.  Then there exists a unique pair $(\bu,p) \in \mathcal{M}$ solving \eqref{eq:glenstokes:weak}, and $\bu\in \cV_0$.
 \end{theorem}
 
 Our primary purpose is to study NCP \eqref{eq:be:ncp} for glacier geometry, and its weak form, but for that we need control on the surface trace $\bu|_s$.  The following \emph{a priori} bound, proven for completeness in Appendix \ref{app:provestokesapriori}, shows that the velocity solution is controlled by the geometry of $\Lambda$ and physical constants.
@@ -491,8 +491,6 @@ for all $q \in \cX$.  Because $\|s^{n-1}\|_{L^{\rr'}}<\infty$ by Sobolev's inequ
 Theorem \ref{thm:stepwellposed} addresses only the well-posedness of a single time-step problem over $[t_{n-1},t_n]$.  Its conclusion is not sufficient to show well-posedness of the time-dependent problem parabolic VI problem over $[0,T]$ corresponding to NCP \eqref{eq:ncp}.  If this problem were known to be well-posed then one might analyze whether implicit steps converge in the $\Delta t\to 0$ limit.
 
 The two Conjectures may be difficult to prove despite some progress in Sections \ref{sec:stokes} and \ref{sec:model}.  Greater progress has been made in the SIA case \cite{Calvoetal2003,JouvetBueler2012,PiersantiTemam2023}, which could be helpful.  In any case, the computation of $\bu|_s$ and $\Phi(s)=-\bu|_s\cdot \bn_s$, or equivalent expressions, is necessary in any evolving-geometry Stokes framework, implicit or not, and modeling practitioners apparently expect such expressions to be well-behaved in some manner.
-
-
 
 
 \section{Abstract error estimate for finite element approximation of VIs} \label{sec:abstractestimate}
@@ -833,17 +831,40 @@ Now let $z=\|\bu\|_\cV$.  We have proved that $z^\pp \le c_0 + c_1 z$ for $\pp>1
 \end{proof}
 
 
-\section{The surface motion map is not coercive (and a non-uniqueness result)} \label{app:noncoercive}
+\section{The surface motion map is not coercive} \label{app:noncoercive}
 
-FIXME
+It is reasonable to suppose that glacier flow models have the property that, for smooth bedrock elevations, there is no flow whenever an admissible surface elevation $s\in \cX=W^{1,r}(\Omega)$ is flat (horizontal) on the ice.  In terms of the inactive set $\Omega_I=\{x\in\Omega\,:\,s(x)>b(x)\}$ (Section \ref{sec:model}) and the 3D icy domain $\Lambda(s)$ (equation \eqref{eq:icydomain}) defined earlier, this property is that if $\grad s=0$ a.e.~in $\Omega_I$ then $\bu=\bzero$ on $\Lambda(s)$.  By well-posedness Theorem \ref{thm:stokeswellposed} this property holds for the (non-sliding) Stokes model considered in the paper.  However, it also holds for a Stokes model with any physically-reasonable sliding law, and for any shallow ice approximation model \cite{JouvetBueler2012}.
+
+Using this property, for bedrock elevations $b$ which have strict local minima then we can construct distinct surface elevations $s_1,s_2\in \cX$, $\|s_1-s_2\|_{\cX}>0$, each with zero surface motion: $\bu|_{s_i}=\bzero$ and $\Phi(s_i)=0$.  (See \eqref{eq:defineus} and \eqref{eq:definePhi}.)  The construction (Figure \ref{fig:noncoercive}) is simply to fill the local minima with flat ice for surface $s_1$, and leave the other as bare ground $s_2=b$.  Note that $s_1$ can be constructed with any (positive) number of local minima filled-in, or with minima only partially filled, but again one has $s_1 \in \cX$, satisfying $\bu|_{s_1}=\bzero$, $\Phi(s_1)=0$, and $\|s_1-s_2\|_{\cX}>0$.
 
 \begin{figure}[ht]
 \begin{center}
 \mbox{\includegraphics[width=0.4\textwidth]{genfigs/filled.pdf} \qquad \includegraphics[width=0.4\textwidth]{genfigs/icefree.pdf}}
 \end{center}
-\caption{FIXME}
+\caption{For a smooth bedrock elevation $b$ with local minima, a surface elevation state $s_1$ that fills-in the minima with flat ice (left) gives zero surface velocity in a Stokes model: $\bu|_{s_1}=\bzero$.   The ice-free state $s_2=b$ (right) likewise has $\bu|_{s_2}=\bzero$.  This shows that the surface motion map $\Phi$ defined in \eqref{eq:definePhi} is not coercive.}
 \label{fig:noncoercive}
 \end{figure}
+
+Two consequences of this construction are now stated as propositions.
+
+\begin{proposition} \label{prop:noncoercive}
+The surface motion map $\Phi$ defined in \eqref{eq:definePhi} is not $q$-coercive (Definition \ref{def:monotonecoercive}), for any $q$, nor is it strictly-monotone.
+\end{proposition}
+
+\begin{proof}
+Note $(\Phi(s_1) - \Phi(s_2))[s_1-s_2]=0$ while $\alpha \|s_1-s_2\|_\cX > 0$.
+\end{proof}
+
+\begin{proposition} \label{prop:notunique}
+When the SMB is identically zero, $a=0$, there are smooth bedrock elevations for which the steady-state version of a glacier geometry model will have more than one solution.
+\end{proposition}
+
+\begin{proof}
+The NCP form of the steady-state and $a=0$ model in question is
+	$$s - b \ge 0, \quad - \bu|_s \cdot \bn_s \ge 0, \quad (s - b) \left(- \bu|_s \cdot \bn_s\right) = 0,$$
+with corresponding weak form over $s\in\cK\subset\cX$.  If $b$ is a smooth function with local minima then the above construction of $s_1$ and $s_2$ gives distinct solutions.
+\end{proof}
+Proposition \ref{prop:notunique} answers negatively the uniqueness question which has been open since the existence theorem for the general-bed, steady shallow ice approximation \cite{JouvetBueler2012}.  It uses a surprisingly-simple construction, but one which seems not to appear in the literature.  Non-uniqueness here happens for a SMB function which is elevation \emph{in}dependent, namely $a=0$.  This result is different from the better-known non-uniqueness \cite{Bodvardsson1955} and non-existence \cite{Jouvetetal2011} results for certain elevation-dependent SMB models.
 
 
 \section{Numerical exploration of near-coercivity of the surface motion map} \label{app:numerical}
