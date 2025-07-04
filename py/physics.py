@@ -1,7 +1,7 @@
 import firedrake as fd
 from stokesextrude import extend_p1_from_basemesh
 
-# public physics parameters
+# public parameters
 secpera = 31556926.0    # seconds per year
 g, rho = 9.81, 910.0    # m s-2, kg m-3
 nglen = 3.0
@@ -52,15 +52,26 @@ def p_hydrostatic(se, sR, P1):
     return phydro
 
 
-# surface motion operator
-# if eps>0 then regularized with SIA vertical velocity diffusivity
-# returns a UFL expression, so q can be a TestFunction or a Function
-def Phi(s, us, q, eps=0.0, H0=1000.0, slopereg=1.0e-8):
-    ns = fd.as_vector([-s.dx(0), fd.Constant(1.0)])
+# constant in SIA
+Gamma = 2.0 * A3 * (rho * g)**nglen / (nglen + 2)
+
+# Compute the regularized surface motion operator Phi = - <u,w>|_s . n_s.
+# If eps>0 then we regularize with SIA vertical velocity diffusivity:
+#   w|_s --> (1 - eps) w|_s + eps w_SIA
+# The vertical velocity in the shallow ice approximation has strong form:
+#   w_SIA = Div(Gamma H0^{n+1} |grad(s)|^{n-1} grad s),
+# but when computing with this we integrate by parts:
+#   w_SIA[q] = - Gamma H0^{n+1} |grad(s)|^{n-1} grad s . grad q
+# Since n_s = <-s_x,1>, the regularized formula is:
+#   Phi = + u|_s s_x - (1 - eps) w|_s - eps w_SIA
+# This function returns a UFL expression, so q can be a TestFunction
+# or a Function.
+def Phi(s, us, q, eps=0.0, H0=1000.0):
+    ns = fd.as_vector([-s.dx(0), fd.Constant(1.0 - eps)])
     Phi = - fd.dot(us, ns) * q
     if eps > 0.0:
-        Gamma = 2.0 * A3 * (rho * g)**nglen / (nglen + 2)
         C = Gamma * H0**(nglen + 1)
-        gsnorm = (fd.dot(fd.grad(s), fd.grad(s)) + slopereg)**0.5
-        Phi += eps * C * fd.inner(gsnorm**(nglen - 1) * fd.grad(s), fd.grad(q))
+        gsnorm = fd.dot(fd.grad(s), fd.grad(s))
+        zpow = (nglen - 1.0) / 2.0
+        Phi += eps * C * fd.inner(gsnorm**zpow * fd.grad(s), fd.grad(q))
     return Phi

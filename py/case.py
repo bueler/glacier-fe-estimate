@@ -98,10 +98,8 @@ siparams = {#"snes_monitor": None,
             "pc_type": "lu",
             "pc_factor_mat_solver_type": "mumps"}
 
-# weak form for semi-implicit
-epsreg = 0.0  # FIXME how much regularization?
-siF = dt * Phi(s, siubm, siv, eps=epsreg) * dx + inner(s - (sisold + dt * a), siv) * dx
-
+# weak form for semi-implicit; UN-regularized
+siF = dt * Phi(s, siubm, siv) * dx + inner(s - (sisold + dt * a), siv) * dx
 siproblem = NonlinearVariationalProblem(siF, s, sibcs)
 sisolver = NonlinearVariationalSolver(siproblem, solver_parameters=siparams,
                                       options_prefix="step")
