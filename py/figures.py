@@ -101,18 +101,22 @@ def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
 
 def histogramPhirat(dirname, ratlist):
     binsp = 24  # bins on positive side
-    binsn = 4   # bins on negative side
+    binsn = 24  # bins on negative side
     rlp = ratlist[ratlist > 0.0]
     assert len(rlp) > 0
-    rln = ratlist[ratlist <= 0.0]  # may be empty list
-    h, edges = np.histogram(rlp, bins=binsp)
+    rlzero = ratlist[ratlist == 0.0]
+    if len(rlzero) > 1:
+        print(f"WARNING: {len(rlzero)} zero ratios detected ... excluded")
+    rln = ratlist[ratlist < 0.0]  # may be empty list
+    h, edges = np.histogram(np.log(rlp)/np.log(10.0), bins=binsp)
     fig = plt.figure(figsize=(6.0, 4.0))
     ax = plt.gca()
-    ax.stairs(h, edges, color='k')
+    ax.stairs(h, edges, color='k', label=f"positive ({len(rlp)})")
     if len(rln) > 1:   # histogram buggy when only one?
-        hn, edgesn = np.histogram(rln, bins=binsn)
-        ax.stairs(hn, edgesn, color='k', fill=True)
-    plt.xlabel(r'$\Phi$ ratios')
+        hn, edgesn = np.histogram(np.log(-rln)/np.log(10.0), bins=binsn)
+        ax.stairs(hn, edgesn, color='k', fill=True, label=f"negative ({len(rln)})")
+    plt.xlabel(r'log10 $\Phi$ ratios')
+    plt.legend()
     fname = dirname + 'Phiratios.png'
     plt.savefig(fname)
     plt.close()
