@@ -385,24 +385,22 @@ Note that if $\alpha\ge 0$ then $(1+\alpha)^{\rr/2} \le 2^{(\rr-2)/2} (1+\alpha^
 Since $2 \le \pp' \le \pp'\rr' < \infty$, by Sobolev's inequality, e.g.~Theorem 8.8 from \cite{LiebLoss1997} using $n=2$, $k=m=1$, $p=\rr$, and $\omega=\pp'\rr'$, we have $\|\omega\|_{L^{\pp'\rr'}} \le C \|\omega\|_{W^{1,\rr}}$, thus \eqref{eq:phibound:early}.
 \end{proof}
 
-Because $\Omega\subset \RR^2$, if $\rr>2$ then $W^{1,\rr}(\Omega) \hookrightarrow C(\bar\Omega)$.  However, for $s\in W^{1,\rr}(\Omega)$ we do not know that $\Gamma_s$ is piecewise $C^1$ as required by the hypotheses of Theorem \ref{thm:stokeswellposed}, so we must conjecture that $\Lambda(s)$ is regular in this sense.
+Because $\Omega\subset \RR^2$, if $\rr>2$ then $W^{1,\rr}(\Omega) \hookrightarrow C(\bar\Omega)$.  However, for $s\in W^{1,\rr}(\Omega)$, generally $\Gamma_s\subset \Lambda(s)$ is not piecewise $C^1$ as stated in the hypotheses of Theorem \ref{thm:stokeswellposed}.  We conjecture that nonetheless $\Lambda(s)$ is a domain on which the Stokes sub-model \eqref{eq:glenstokes:weak} is well-behaved enough for the construction of our map from $s$ to the surface motion term $\bu|_s\cdot \bn_s$.  Note that in Section \ref{sec:application} the FE approximation $s_h\approx s$ will be continuous and piecewise-linear---see Figure \ref{fig:fe:operatorvisualization}---so Theorem \ref{thm:stokeswellposed} will hold on the domain $\Lambda(s_h)$.
 
 \begin{conjecture}[$W^{1,\rr}$ surface elevations allow Stokes solutions] \label{conj:a}
 There exists $2 < \rr \le \infty$ so that if $s\in W^{1,\rr}(\Omega)$ is admissible then the conclusion of Theorem \ref{thm:stokeswellposed} applies on $\Lambda(s)$, providing a unique pair $(\bu,p) \in \mathcal{M}$ solving \eqref{eq:glenstokes:weak}, with $\bu\in \cV_0$.
 \end{conjecture}
 
-From now on suppose Conjecture \ref{conj:a} holds for $\rr>2$.  We define
+Suppose Conjecture \ref{conj:a} holds for some $\rr>2$.  Define
 \begin{equation}
 \boxed{\cX = W^{1,\rr}(\Omega),} \label{eq:defineX}
 \end{equation}
-and the admissible subset $\cK \subset \cX$ by \eqref{eq:be:admissible}.  By Corollary \ref{cor:surfacetracebound} the surface velocity $\bu|_s$ is well-defined as a measurable function, and its $L^\pp(\Gamma_s)$ norm is bounded.  By Lemma \ref{lem:phibound:early} the surface motion term $\bu|_s\cdot\bn_s$ is in $\cX'$.
-
-However, to proceed we must further conjecture that for some $\rr>2$, if $s \in \cX$ then a Lebesgue norm of $\bu|_s$ is well-behaved as a function of $s$, namely that it is \emph{Lipschitz on bounded subsets of $\cK$}.  Proving this might require more detailed knowledge about Stokes problem \eqref{eq:glenstokes:weak} than is currently available.
+with the admissible subset $\cK \subset \cX$ defined by \eqref{eq:be:admissible}.  By Corollary \ref{cor:surfacetracebound} the surface velocity $\bu|_s$ is well-defined as a measurable function, and its $L^\pp(\Gamma_s)$ norm is bounded.  By Lemma \ref{lem:phibound:early} the surface motion term $\bu|_s\cdot\bn_s$ is in $\cX'$.  However, to proceed with well-posedness we must further conjecture that a norm of $\bu|_s$, including extension-by-zero \eqref{eq:defineus}, is Lipschitz as a function of $s$.  Proving this might require more detailed knowledge about Stokes problem \eqref{eq:glenstokes:weak} than is currently available.
 
 \begin{conjecture}[Surface velocity is Lipschitz in the surface elevation] \label{conj:b}
-There exists $2 < \rr \le \infty$ so that if $R>0$ then there is $C(R)>0$ so that for $r,s\in B_R \cap \cK = \{t\in \cK\,:\,\|t\|_{\cX} \le R\}$ and $q\in\cX$,
+There exists $2 < \rr \le \infty$ so that if $R>0$ then there is $C(R)>0$ so that for $\sigma,s\in B_R \cap \cK = \{t\in \cK\,:\,\|t\|_{\cX} \le R\}$ we have
 \begin{equation}
-\big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \le C(R) \|r-s\|_{\cX} \label{eq:ulipschitz}
+\big\|\bu|_\sigma - \bu|_s\big\|_{L^{\rr'}} \le C(R) \|\sigma-s\|_{\cX} \label{eq:ulipschitz}
 \end{equation}
 \end{conjecture}
 
@@ -410,54 +408,53 @@ From now on we will assume that Conjectures \ref{conj:a} and \ref{conj:b} hold f
 
 \begin{definition}  Define the nonlinear \emph{surface motion map} $\Phi:\cK \to \cX'$ by
 \begin{equation}
-\boxed{\Phi(s)[q] = -\int_\Omega \bu|_s\cdot\bn_s\,q\,dx.} \label{eq:definePhi}
+\boxed{\Phi(s)[\omega] = -\int_\Omega \bu|_s\cdot\bn_s\,\omega\,dx,} \label{eq:definePhi}
 \end{equation}
+for $\omega\in \cX$.
 \end{definition}
 
-\begin{lemma} \label{lem:philipschitz}  The map $\Phi$ is Lipschitz on bounded subsets of $\cK$:
+\begin{lemma} \label{lem:philipschitz}  The map $\Phi$ is Lipschitz on bounded subsets of $\cK$, that is, if $R>0$ then there is $\tilde C(R)>0$ so that for $\sigma,s\in B_R \cap \cK$ we have
 \begin{equation}
-\Big|\Phi(r)[q] - \Phi(s)[q]\Big| \le C(R)\, \|r-s\|_{\cX} \|q\|_{\cX}.  \label{eq:philipschitz}
+\left\|\Phi(\sigma) - \Phi(s)\right\|_{\cX'} \le \tilde C(R)\, \|\sigma-s\|_{\cX}.  \label{eq:philipschitz}
 \end{equation}
 \end{lemma}
 
-\begin{proof}  Suppose $s,r\in\cK$.  Add and subtract $\bu|_s \cdot \bn_r$, and note the triangle inequality $|\bn_r|=\left(1+|\grad r|^2\right)^{1/2} \le 1 + |\grad r|$.  Thus:
+\begin{proof}  Let $R>0$ and assume without loss of generality that $R\ge \|b\|_\cX$, so $b\in B_R \cap \cK$.  Suppose $\sigma,s\in B_R \cap \cK$.  For any $\omega\in\cX$, in the following we add and subtract $\bu|_s \cdot \bn_\sigma$, and use the triangle inequality $|\bn_\sigma|=\left(1+|\grad \sigma|^2\right)^{1/2} \le 1 + |\grad \sigma|$:
 \begin{align}
-\Big|\Phi(r)[q] - \Phi(s)[q]\Big| &\le \int_\Omega \Big|\bu|_r - \bu|_s\Big| |\bn_r| |q|\,dx + \int_\Omega \big|\bu|_s\big| |\bn_r-\bn_s| |q|\,dx \\
-    &\le \int_\Omega \Big|\bu|_r - \bu|_s\Big| |q|\,dx + \int_\Omega \Big|\bu|_r - \bu|_s\Big| |\grad r| |q|\,dx \notag \\
-    &\qquad\qquad + \int_\Omega \big|\bu|_s\big| |\grad r-\grad s| |q|\,dx \notag
+\Big|\Phi(\sigma)[\omega] - \Phi(s)[\omega]\Big| &\le \int_\Omega \Big|\bu|_\sigma - \bu|_s\Big| |\bn_\sigma| |\omega|\,dx + \int_\Omega \big|\bu|_s\big| |\bn_\sigma-\bn_s| |\omega|\,dx \\
+    &\le \int_\Omega \Big|\bu|_\sigma - \bu|_s\Big| |\omega|\,dx + \int_\Omega \Big|\bu|_\sigma - \bu|_s\Big| |\grad \sigma| |\omega|\,dx \notag \\
+    &\qquad\qquad + \int_\Omega \big|\bu|_s\big| |\grad \sigma-\grad s| |\omega|\,dx \notag
 \end{align}
-By applying H\"older's inequality to each integral in the last expression we have
+By applying H\"older's inequality to each of these integrals we have
 \begin{align}
-\int_\Omega \Big|\bu|_r - \bu|_s\Big| |q|\,dx &\le \big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \|q\|_{L^{\rr}} \le \|\bu|_r - \bu|_s\|_{L^{\rr'}} \|q\|_{\cX}, \label{eq:philipschitz:1} \\
-\int_\Omega \Big|\bu|_r - \bu|_s\Big| |\grad r| |q|\,dx &\le \left(\int_\Omega \Big|\bu|_r - \bu|_s\Big|^{\rr'} |q|^{\rr'}\, dx\right)^{1/\rr'} \|\grad r\|_{L^\rr} \label{eq:philipschitz:2} \\
-    &\le [L]^{-1} \big\|\bu|_r - \bu|_s\big\|_{L^{\rr'}} \|r\|_{\cX} \|q\|_{L^\infty}, \notag \\
-\int_\Omega \big|\bu|_s\big| |\grad r-\grad s| |q|\,dx &\le \left(\int_\Omega \big|\bu|_s\big|^{\rr'} |q|^{\rr'}\, dx\right)^{1/\rr'} \|\grad r- \grad s\|_{L^\rr}  \label{eq:philipschitz:3} \\
-    &\le [L]^{-1} \big\|\bu|_s - \bzero\big\|_{L^{\rr'}} \|r-s\|_{\cX} \|q\|_{L^\infty}. \notag
+\int_\Omega \Big|\bu|_\sigma - \bu|_s\Big| |\omega|\,dx &\le \big\|\bu|_\sigma - \bu|_s\big\|_{L^{\rr'}} \|\omega\|_{L^{\rr}} \le \|\bu|_\sigma - \bu|_s\|_{L^{\rr'}} \|\omega\|_{\cX}, \label{eq:philipschitz:1} \\
+\int_\Omega \Big|\bu|_\sigma - \bu|_s\Big| |\grad \sigma| |\omega|\,dx &\le \left(\int_\Omega \Big|\bu|_\sigma - \bu|_s\Big|^{\rr'} |\omega|^{\rr'}\, dx\right)^{1/\rr'} \|\grad \sigma\|_{L^\rr} \label{eq:philipschitz:2} \\
+    &\le [L]^{-1} \big\|\bu|_\sigma - \bu|_s\big\|_{L^{\rr'}} \|\sigma\|_{\cX} \|\omega\|_{L^\infty}, \notag \\
+\int_\Omega \big|\bu|_s\big| |\grad \sigma-\grad s| |\omega|\,dx &\le \left(\int_\Omega \big|\bu|_s\big|^{\rr'} |\omega|^{\rr'}\, dx\right)^{1/\rr'} \|\grad \sigma- \grad s\|_{L^\rr}  \label{eq:philipschitz:3} \\
+    &\le [L]^{-1} \big\|\bu|_s - \bzero\big\|_{L^{\rr'}} \|\sigma-s\|_{\cX} \|\omega\|_{L^\infty}. \notag
 \end{align}
-Note that $\bu|_b=\bzero$; there is no glacier.  Because $\rr>2$, Sobolev's inequality gives $\|q\|_{L^\infty} \le c_\infty \|q\|_\cX$ for some $c_\infty>0$.  Now apply Conjecture \ref{conj:a} to \eqref{eq:philipschitz:1}--\eqref{eq:philipschitz:3}:
+Note that $\bu|_b=\bzero$; there is no flow when there is no glacier.  Because $\rr>2$, Sobolev's inequality gives $\|\omega\|_{L^\infty} \le c_\infty \|\omega\|_\cX$ for some $c_\infty>0$.  Now apply Conjecture \ref{conj:b} to each of \eqref{eq:philipschitz:1}--\eqref{eq:philipschitz:3}:
 \begin{equation}
-\big|\Phi(r)[q] - \Phi(s)[q]\big| \le C \left(1 + c_\infty [L]^{-1} \left(\|r\|_{\cX} + \|s - b\|_{\cX}\right)\right) \|r-s\|_{\cX} \|q\|_{\cX}.
+\big|\Phi(\sigma)[\omega] - \Phi(s)[\omega]\big| \le C(R) \left(1 + c_\infty [L]^{-1} \left(\|\sigma\|_{\cX} + \|s - b\|_{\cX}\right)\right) \|\sigma-s\|_{\cX} \|\omega\|_{\cX}.
 \end{equation}
-Assume $s,r,b\in B_R\cap \cK$.  Then, by the triangle inequality, \eqref{eq:philipschitz} follows with $C(R) = C \left(1 + 3 c_\infty [L]^{-1} R\right)$.
+Recalling that $b\in B_R\cap \cK$, use the triangle inequality again to show that \eqref{eq:philipschitz} holds with $\tilde C(R) = C(R) \left(1 + 3 c_\infty [L]^{-1} R\right)$.
 \end{proof}
 
-At this point we have the tools needed to make the continuum mdoel for a backward-Euler time-step \eqref{eq:be:ske} mathematically precise.
+At this point we have the tools needed to make the continuum model for a backward-Euler time-step \eqref{eq:be:ske} mathematically precise.
 
-\begin{definition}
-\emph{a)}\,For $\Delta t>0$, $s\in\cK$, and $q\in\cX$ define the nonlinear \emph{Stokes geometry update operator} $F_{\Delta t}:\cK\to\cX'$ as
+\begin{definition} For $\Delta t>0$, $s\in\cK$, and $\omega\in\cX$ define the nonlinear (Stokes) \emph{geometry update operator} $F_{\Delta t}:\cK\to\cX'$ as
 \begin{equation}
-\boxed{F_{\Delta t}(s)[q] = \Delta t\,\Phi(s)[q] + \int_\Omega s q,}  \label{eq:be:Fdefine}
+\boxed{F_{\Delta t}(s)[\omega] = \Delta t\,\Phi(s)[\omega] + \int_\Omega s \omega.}  \label{eq:be:Fdefine}
 \end{equation}
-
-\emph{b)}\,Assume that the source term $\ell^n$, defined from the model data by \eqref{eq:be:source}, is in $\cX'$.  The updated surface elevation $s^n \in \cK$ solves the \emph{(weak-form) implicit time-step problem} if
+Assume that $\ell^n$, defined from data $s^{n-1}$ and $a$ by \eqref{eq:be:source}, is in $\cX'$.  We say that the surface elevation $s=s^n \in \cK$ solves the (weak-form) \emph{implicit time-step problem} if
 \begin{equation}
-\boxed{F_{\Delta t}(s^n)[r-s^n] \ge \ell^n[r-s^n] \quad \text{for all } r \in \cK.} \label{eq:be:vi}
+\boxed{F_{\Delta t}(s)[\sigma-s] \ge \ell^n[\sigma-s] \quad \text{for all } \sigma \in \cK.} \label{eq:be:vi}
 \end{equation}
 \end{definition}
 
-If Conjectures \ref{conj:a} and \ref{conj:b} hold then $F_{\Delta t}$ is well-defined and Lipschitz on bounded subsets (Lemma \ref{lem:philipschitz}).  The reader should confirm that VI \eqref{eq:be:vi} merely rewrites \eqref{eq:be:viearly}, and then remember that it gives the precise meaning of strong-form NCP \eqref{eq:be:ncp}.
+If Conjectures \ref{conj:a} and \ref{conj:b} hold then $F_{\Delta t}$ is well-defined and Lipschitz on bounded subsets (Lemma \ref{lem:philipschitz}).  The reader should confirm that VI \eqref{eq:be:vi} merely rewrites \eqref{eq:be:viearly}.  This weak form VI gives the precise meaning of strong-form NCP \eqref{eq:be:ncp}.
 
-The seven boxed definitions and inequalities in this Section, \eqref{eq:be:source}, \eqref{eq:be:admissible}, \eqref{eq:domainfroms}, \eqref{eq:defineX}, \eqref{eq:definePhi}, \eqref{eq:be:Fdefine}, and \eqref{eq:be:vi}, form a continuum model for one time step of Stokes (non-shallow) glacier evolution.  Though conjectures are used in the construction of the nonlinear operator $F_{\Delta t}$, this model is sufficiently precise so as to be subject to mathematical argumentation, for instance a future existence or non-existence result.  We will regularize the model in the next Section, making conjectural well-posedness more credible, with numerical evidence, and then we will prove a numerical error theorem for an FE approximation of the model (Sections \ref{sec:abstractestimate}, \ref{sec:application}).
+The seven boxed definitions and inequalities above, namely \eqref{eq:be:source}, \eqref{eq:be:admissible}, \eqref{eq:domainfroms}, \eqref{eq:defineX}, \eqref{eq:definePhi}, \eqref{eq:be:Fdefine}, and \eqref{eq:be:vi}, form a continuum model for a time step of glacier evolution based on Stokes dynamics.  Though conjectures are used in the construction of the operator $F_{\Delta t}$, this model is precise enough to be subject to mathematical analysis, including a future existence and uniqueness result.  However, we will regularize the model in the next Section.  Based on new numerical evidence, this regularization makes (conjectural) well-posedness quite credible.  In Sections \ref{sec:abstractestimate}, \ref{sec:application} we will then prove a numerical error theorem for an FE approximation of the regularized model.
 
 
 \section{Conjectural well-posedness for the regularized problem} \label{sec:conjectural}
@@ -476,13 +473,13 @@ and \emph{strictly monotone} if in addition equality implies $v=w$ \cite{Minty19
 Clearly, $\qq$-coercivity implies strict monotonicity.
 \end{definition}
 
-The abstract Theorem \ref{thm:abstractestimate} applies to VIs for operators $f:\cK\to\cX'$ which are $\qq$-coercive with $\qq>1$.  We wish to apply this to $F_{\Delta t}$ acting on $\cK\subset \cX=W^{1,\rr}(\Omega)$; see \eqref{eq:be:Fdefine}.  However, simple examples in Appendix \ref{app:noncoercive}, apparently new, show that the surface motion map $\Phi$ \eqref{eq:definePhi}, a term in the definition of $F_{\Delta t}$, is \emph{not} $\qq$-coercive, nor strictly monotone, over any space $W^{1,\rr}(\Omega)$.  These examples\footnote{The same examples negatively resolve the previously open question of uniqueness, for elevation-independent SMB, in the shallow ice approximation.  See Appendix \ref{app:noncoercive}.} can be constructed for any bedrock $b$ possessing local minima, by filling them with flat ice.  However, since $F_{\Delta t}$ adds the integral $\int_\Omega sq$ to the surface motion term $\Delta t\,\Phi(s)[q]$, non-coercivity for $\Phi$ is not \emph{per se} a barrier to (strict) monotonicity of $F_{\Delta t}$.
+The abstract Theorem \ref{thm:abstractestimate} applies to VIs for operators $f:\cK\to\cX'$ which are $\qq$-coercive with $\qq>1$.  We wish to apply this to $F_{\Delta t}$ acting on $\cK\subset \cX=W^{1,\rr}(\Omega)$; see \eqref{eq:be:Fdefine}.  However, simple examples in Appendix \ref{app:noncoercive}, apparently new, show that the surface motion map $\Phi$ \eqref{eq:definePhi}, a term in the definition of $F_{\Delta t}$, is \emph{not} $\qq$-coercive, nor strictly monotone, over any space $W^{1,\rr}(\Omega)$.  These examples\footnote{The same examples negatively resolve the previously open question of uniqueness, for elevation-independent SMB, in the shallow ice approximation.  See Appendix \ref{app:noncoercive}.} can be constructed for any bedrock $b$ possessing local minima, by filling them with flat ice.  However, since $F_{\Delta t}$ adds the integral $\int_\Omega sq$ to the surface motion term $\Delta t\,\Phi(s)[\omega]$, non-coercivity for $\Phi$ is not \emph{per se} a barrier to (strict) monotonicity of $F_{\Delta t}$.
 
 Standard ways of writing SKE \eqref{eq:ske} as though it is an advection\footnote{References \cite{Chengetal2020,WirbelJarosch2020} specifically describe the SKE as an advection, but the idea is pervasive in Stokes model descriptions when the surface is evolved.} might also suggest that $F_{\Delta t}$ is not coercive; it is often written $\frac{\partial s}{\partial t} + u_1 \frac{\partial s}{\partial x_1} + u_2 \frac{\partial s}{\partial x_2} = a + w$ with the surface velocity $\bu|_s = (u_1,u_2,w)$ in components \cite{GreveBlatter2009,SchoofHewitt2013}.  However, it is not actually an advection because $\bu|_s$ is determined through coupled stress balance equations over the domain defined by the surface elevation $s$.  That is, $s$ and $\bu|_s$ in \eqref{eq:ske}, and in its time-discretized weak form \eqref{eq:be:vi}, are found \emph{simultaneously}.  Physically, glaciers are gravity-driven viscous flows, and ice tends to flow downhill, so surface bumps are leveled and  indentations filled-in.  This large-scale diffusive response also arises from the infinite speed of stress transmission\footnote{Inertia is orders of magnitude smaller than viscous stresses, e.g.~a Froude number of $10^{-15}$ \cite{GreveBlatter2009}.} in a Stokes model, and it explains the smoothed appearance of actual surface elevations (Figure \ref{fig:giscross}).
 
-On the other hand, returning to the surface motion operator $\Phi$, numerical experiments turn out to show that it is actually very close to coercivity!  Appendix \ref{app:numerical} documents numerical experiments wherein thousands of high-resolution surfaces were generated, and for pairs $r,s\in \cX=W^{1,\rr}(\Omega)$ the $q$-coercivity ratios
+On the other hand, returning to the surface motion operator $\Phi$, numerical experiments turn out to show that it is actually very close to coercivity!  Appendix \ref{app:numerical} documents numerical experiments wherein thousands of high-resolution surfaces were generated, and for pairs $\sigma,s\in \cX=W^{1,\rr}(\Omega)$ the $\omega$-coercivity ratios
 \begin{equation}
-\frac{(\Phi(r) - \Phi(s))[r - s]}{\|r-s\|_{W^{1,\rr}}^{\qq}} \label{eq:ratios}
+\frac{(\Phi(\sigma) - \Phi(s))[\sigma - s]}{\|\sigma-s\|_{W^{1,\rr}}^{\qq}} \label{eq:ratios}
 \end{equation}
 were computed, using surface velocities from the Stokes model in computing $\Phi$ by \eqref{eq:definePhi}; compare definition \eqref{eq:qcoercive}.  This experiment used exponents $\rr=4$ and $\qq=2$; the former value is suggested by the shallow ice approximation theory, discussed momentarily, while the later is largely arbitrary.  If $\Phi$ were $2$-coercive over $\cX=W^{1,4}(\Omega)$, and if all computations were exact, then these ratios would all exceed the coercivity constant $\alpha>0$.  Standard presentations of Stokes models for glaciers give little reason to expect these ratios to even be non-negative, but with mesh refinement the experimental pairs yielding negative ratios become quite rare, while mean and median ratios are decidely positive and stabilize away from zero.
 
@@ -494,7 +491,7 @@ Since Appendix \ref{app:noncoercive} shows that $\Phi$ is not actually $\qq$-coe
 \end{equation}
 where $\nn$ is Glen's exponent and $\Gamma>0$ is a softenss constant computable from the viscosity scale $\nu_\pp$ in \eqref{eq:glen}.  Note that $\wSIA$ degenerates at the glacier margin where the thickness $s-b$ goes to zero.  We therefore regularize the definition of $\Phi$ using a small constant $\eps>0$ and a fixed ice thickness $H_0>0$.  For this we fix $\nn=3$ and write the Stokes velocity in components $\bu = (u_1,u_2,w)$:
 \begin{equation} \label{eq:defineregularizedPhi}
-\Phi^\eps(s)[q] = \int_\Omega \Big(\big(u_1|_s,u_2|_s\big) \cdot \grad s - (1-\eps) w|_s\Big) q - \eps\, \Gamma H_0^4 |\grad s|^2 \grad s \cdot \grad q \,dx
+\Phi^\eps(s)[\omega] = \int_\Omega \Big(\big(u_1|_s,u_2|_s\big) \cdot \grad s - (1-\eps) w|_s\Big) \omega - \eps\, \Gamma H_0^4 |\grad s|^2 \grad s \cdot \grad \omega \,dx
 \end{equation}
 Formula \eqref{eq:defineregularizedPhi} simply replaces the Stokes vertical velocity $w|_s$ used in \eqref{eq:definePhi} with the convex combination $(1-\eps)w|_s + \eps\, \wSIA|_s$; simply expand definitions to check this.  If $\Phi$ is Lipschitz in the Stokes surface velocity, which follows from Conjecture \ref{conj:b} and Lemma \ref{lem:philipschitz}, then $\Phi^\eps$ is also; apply inequality (3.4) in \cite{JouvetBueler2012} to prove this.
 
@@ -502,28 +499,28 @@ The essential reason that regularization \eqref{eq:defineregularizedPhi} is reas
 
 However, we are not able to prove that $\Phi^\eps$ is $\qq$-coercive.  A proof apparently depends on a new understanding of the glaciological Stokes problem.  The numerical analysis in Section \ref{sec:application} will be based on the following conjecture.
 
-\begin{conjecture}[Regularized surface motion $\Phi^\eps(s)$ is $2$-coercive over admissible surface elevations in $W^{1,4}$] \label{conj:c}  Suppose Conjectures \ref{conj:a} and \ref{conj:b} hold for $\rr=4$, and let $\cX = W^{1,4}(\Omega)$.  Fix $b\in C^1(\bar\Omega)$ and let $\cK=\{r\in\cX\,:\,r\ge b \text{ and } r|_{\partial\Omega}=b|_{\partial\Omega}\}$.  There exists $\eps \in (0,1)$ so that, for $\Phi^\eps:\cK\to\cX'$ defined by \eqref{eq:defineregularizedPhi}, there is $\alpha>0$ such that
+\begin{conjecture}[Regularized surface motion $\Phi^\eps(s)$ is $2$-coercive over admissible surface elevations in $W^{1,4}$] \label{conj:c}  Suppose Conjectures \ref{conj:a} and \ref{conj:b} hold for $\rr=4$, and let $\cX = W^{1,4}(\Omega)$.  Fix $b\in C^1(\bar\Omega)$ and let $\cK=\{\sigma\in\cX\,:\,\sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$.  There exists $\eps \in (0,1)$ so that, for $\Phi^\eps:\cK\to\cX'$ defined by \eqref{eq:defineregularizedPhi}, there is $\alpha>0$ such that
 \begin{equation}
-\left(\Phi^\eps(r) - \Phi^\eps(s)\right)[r-s] \ge \alpha \|r-s\|_{\cX}^2 \qquad \text{for all } r,s\in\cK. \label{eq:conj:c}
+\left(\Phi^\eps(\sigma) - \Phi^\eps(s)\right)[\sigma-s] \ge \alpha \|\sigma-s\|_{\cX}^2 \qquad \text{for all } \sigma,s\in\cK. \label{eq:conj:c}
 \end{equation}
 \end{conjecture}
 
 To complete this Section we prove that the above Conjecture suffices for well-posedness of the regularization of VI problem \eqref{eq:be:vi}; recall definition \eqref{eq:be:Fdefine} for $F_{\Delta t}$.
 
-\begin{theorem} \label{thm:regularizedwellposed}  Assume Conjecture \ref{conj:c} holds for $\eps \in (0,1)$.  Suppose that $s^{n-1}\in\cK$ and define the source term $\ell^n \in \cX'$ as in \eqref{eq:be:source}.  Then the regularized implicit step operator $F^\eps_{\Delta t}(s)[q] = \Delta t\,\Phi^\eps(s)[q] + \int_\Omega s q$, is both continuous and $\qq$-coercive.  Thus there exists a unique surface elevation $s\in\cK$ satisfying
+\begin{theorem} \label{thm:regularizedwellposed}  Assume Conjecture \ref{conj:c} holds for $\eps \in (0,1)$.  Suppose that $s^{n-1}\in\cK$ and define the source term $\ell^n \in \cX'$ as in \eqref{eq:be:source}.  Then the regularized implicit step operator $F^\eps_{\Delta t}(s)[\omega] = \Delta t\,\Phi^\eps(s)[\omega] + \int_\Omega s \omega$, is both continuous and $\qq$-coercive.  Thus there exists a unique surface elevation $s\in\cK$ satisfying
 \begin{equation}
-F^\eps_{\Delta t}(s^n)[r-s^n] \ge \ell^n[r-s^n] \quad \text{for all } r \in \cK. \label{eq:regularizedvi}
+F^\eps_{\Delta t}(s^n)[\sigma-s^n] \ge \ell^n[\sigma-s^n] \quad \text{for all } \sigma \in \cK. \label{eq:regularizedvi}
 \end{equation}
 \end{theorem}
 
 \begin{proof}  As noted earlier, from Conjecture \ref{conj:b} and standard facts on $\pp$-Laplacians, $\Phi^\eps$ is Lipschitz over bounded subsets of $\cK$, thus so is $F^\eps_{\Delta t}$.  Thus $F^\eps_{\Delta t}$ is also Lipschitz, and continuous
 \begin{equation*}
-\left|F^\eps_{\Delta t}(r)[q] - F^\eps_{\Delta t}(s)[q]\right| \le \int_\Omega |r-s||q| + \Delta t\, \big|\Phi^\eps(r)[q] - \Phi^\eps(s)[q]\big| \le C \|r-s\|_{\cX} \|q\|_\cX.
+\left|F^\eps_{\Delta t}(\sigma)[\omega] - F^\eps_{\Delta t}(s)[\omega]\right| \le \int_\Omega |\sigma-s||\omega| + \Delta t\, \big|\Phi^\eps(\sigma)[\omega] - \Phi^\eps(s)[\omega]\big| \le C \|\sigma-s\|_{\cX} \|\omega\|_\cX.
 \end{equation*}
 If Conjecture \ref{conj:c} holds then
 \begin{align}
-\left(F^\eps_{\Delta t}(r) - F^\eps_{\Delta t}(s)\right)[r-s] &= \int_\Omega (r-s)^2 + \Delta t\, \left(\Phi^\eps(r) - \Phi^\eps(s)\right)[r-s] \\
-    &\ge \alpha\Delta t \|r-s\|_{\cX}^2, \notag
+\left(F^\eps_{\Delta t}(\sigma) - F^\eps_{\Delta t}(s)\right)[\sigma-s] &= \int_\Omega (\sigma-s)^2 + \Delta t\, \left(\Phi^\eps(\sigma) - \Phi^\eps(s)\right)[\sigma-s] \\
+    &\ge \alpha\Delta t \|\sigma-s\|_{\cX}^2, \notag
 \end{align}
 so $F^\eps_{\Delta t}$ is $\qq$-coercive over $\cK$ with constant $\alpha\Delta t>0$.  Because it is $\qq$-coercive it is also coercive and strictly-monotone (Definition \ref{def:monotonecoercive}), and recall  we have assumed $\ell^n \in \cX'$.  Now Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows unique existence of a solution to \eqref{eq:be:vi}.
 \end{proof}
@@ -674,16 +671,16 @@ The operator $F^h_{\Delta t}$ denotes an FE approximation to the operator $F_{\D
 
 Evaluation of $F^h_{\Delta t}(s_h)$ in the FE VI problem \eqref{eq:fe:be:vi} requires the nontrivial numerical solution of a glaciological Stokes problem \eqref{eq:glenstokes:weak} over a 3D mesh of the domain $\Lambda(s_h)$ between $z=b_h$ and $z=s_h$.  Solvability of this problem, for inf-sup stable elements, is addressed by \cite{Belenkietal2012,JouvetRappaz2011}.  The mesh need not be extruded vertically as shown in Figure \ref{fig:fe:operatorvisualization}, but this is a possibility.  However, the upper and lower surfaces, where boundary conditions \eqref{eq:stokes:stressfreesurface} and \eqref{eq:stokes:noslide} are applied, are assumed to be given by admissible FE functions, i.e.~$s_h,b_h\in\cX_h$ with $s_h\ge b_h$.  The numerical velocity from solving the Stokes problem, over the domain geometry defined by $s_h$, is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  Observe that $\bu_h|_{s_h}$ will generally be different from the surface trace of the exact solution of the same Stokes boundary value problem for the same ($s_h$) geometry, denoted by $\bu|_{s_h}$.  Technically, the FE operator is defined as
 \begin{equation}
-F_{\Delta t}^h(s_h)[q] = \int_\Omega \left(s_h - \Delta t\, \bu_h|_{s_h}\cdot \bn_{s_h}\right) q
+F_{\Delta t}^h(s_h)[\omega] = \int_\Omega \left(s_h - \Delta t\, \bu_h|_{s_h}\cdot \bn_{s_h}\right) \omega
 \label{eq:fe:be:Fdefine}
 \end{equation}
-for $q\in\cX_h$.  This is a different operator from $F_{\Delta t}(s_h)$, defined in \eqref{eq:be:Fdefine}, because it uses the numerical solution velocity at the FE surface, and not the exact velocity of the same Stokes problem.
+for $\omega\in\cX_h$.  This is a different operator from $F_{\Delta t}(s_h)$, defined in \eqref{eq:be:Fdefine}, because it uses the numerical solution velocity at the FE surface, and not the exact velocity of the same Stokes problem.
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=0.7\textwidth]{genfigs/extruded.pdf}
 \end{center}
-\caption{Evaluating $F^h_{\Delta t}(s_h)$ in \eqref{eq:fe:be:Fdefine} requires numerically solving a Stokes problemfor the velocity $\bu_h$, on a mesh between $b_h$ and $s_h$, and then evaluating its surface trace $\bu_h|_{s_h}$.}
+\caption{Evaluating $F^h_{\Delta t}(s_h)$ in \eqref{eq:fe:be:Fdefine} requires numerically solving a Stokes problem for the velocity $\bu_h$, on a mesh between $b_h$ and $s_h$, and then evaluating its surface trace $\bu_h|_{s_h}$.}
 \label{fig:fe:operatorvisualization}
 \end{figure}
 
