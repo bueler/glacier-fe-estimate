@@ -101,19 +101,24 @@ def badcoercivefigure(dirroot, basemesh, b, r, s, ur, us, tr, ts):
 
 def histogramPhirat(dirname, ratlist):
     binsp = 24  # bins on positive side
-    binsn = 24  # bins on negative side
     rlp = ratlist[ratlist > 0.0]
-    assert len(rlp) > 0
+    assert len(rlp) > 1
     rlzero = ratlist[ratlist == 0.0]
-    if len(rlzero) > 1:
+    if len(rlzero) > 0:
         print(f"WARNING: {len(rlzero)} zero ratios detected ... excluded")
     rln = ratlist[ratlist < 0.0]  # may be empty list
     h, edges = np.histogram(np.log(rlp)/np.log(10.0), bins=binsp)
+    width = edges[1] - edges[0]  # for equal-width bins
     fig = plt.figure(figsize=(6.0, 4.0))
     ax = plt.gca()
     ax.stairs(h, edges, color='k', label=f"positive ({len(rlp)})")
-    if len(rln) > 1:   # histogram buggy when only one?
-        hn, edgesn = np.histogram(np.log(-rln)/np.log(10.0), bins=binsn)
+    if len(rln) == 1:
+        print(f"WARNING: undefined behavior since rln has length 1")
+    if len(rln) > 0:
+        lrln = np.log(-rln)/np.log(10.0)
+        # make bins (nearly) same width as for positive
+        binsn = int(np.ceil((lrln.max() - lrln.min()) / width))
+        hn, edgesn = np.histogram(lrln, bins=binsn)
         ax.stairs(hn, edgesn, color='k', fill=True, label=f"negative ({len(rln)})")
     plt.xlabel(r'log10 $\Phi$ ratios')
     plt.legend()
