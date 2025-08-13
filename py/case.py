@@ -5,7 +5,7 @@ from firedrake import *
 from stokesextrude import StokesExtrude, SolverParams, trace_vector_to_p2, printpar
 from physics import secpera, g, rho, nglen, form_stokes, effective_viscosity, p_hydrostatic, Phi
 from geometryinit import bedtypes, t0, generategeometry
-from figures import mkdir, livefigure, snapsfigure, histogramPhirat
+from figures import mkdir, livefigure, snapsfigure
 from measure import geometryreport, sampleratios
 
 # parameters set at runtime
@@ -214,7 +214,6 @@ for j in range(2):
     maxcont, rats = sampleratios(dfilename, _slist, bm, b, N=Nsamples, Lsc=L, epsreg=eps[j])
     if j == 0:
         printpar(f'  max continuity ratio:               {maxcont:.3e}')
-    #histogramPhirat(root, rats)  FIXME need to generate these histograms from dfilename
     pos = rats[rats > 0.0]
     assert len(pos) > 0
     pmin = min(pos)

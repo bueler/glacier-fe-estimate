@@ -63,7 +63,7 @@ def sampleratios(dfilename, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0, e
     rpow = nglen + 1.0
     qpow = rpow  # motivated by coercivity for p-Laplacian implicit step in Bueler 2021
     with open(dfilename, 'w') as dfile:
-        dfile.write(f'# i1, i2, Phi_r, Phi_s, dsnorm[r={rpow}], Phirat[q={qpow}]\n')
+        dfile.write(f'i1,i2,Phi_r,Phi_s,dsnorm[r={rpow}],Phirat[q={qpow}]\n')
     printpar(f'computing ratios from {N} pair samples from state list ...')
     assert N >= 2
     from random import randrange
@@ -95,7 +95,7 @@ def sampleratios(dfilename, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0, e
             continue
         # now we are actually recording results for this sample pair
         with open(dfilename, 'a') as dfile:
-            dfile.write(f'{i1}, {i2}, {Phi_r:.14e}, {Phi_s:.14e}, {dsnorm:.14e}, {Phirat:.14e}\n')
+            dfile.write(f'{i1},{i2},{Phi_r:.14e},{Phi_s:.14e},{dsnorm:.14e},{Phirat:.14e}\n')
         pairs.append(ipair)
         _n += 1
         _max_us_rat = max(_max_us_rat, usrat)

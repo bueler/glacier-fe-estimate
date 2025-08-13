@@ -1,10 +1,9 @@
-*.pvsm
-*.pvd
-ratios.txt
-
-badcoercive*.png
-result*
-reproduce/b*m/
+/*.png
+/*.pvsm
+/*.pvd
+/ratios.txt
+/result*
+/reproduce/b*m/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
