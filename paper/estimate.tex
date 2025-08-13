@@ -2,7 +2,6 @@
 %\documentclass[review,hidelinks,onefignum,onetabnum]{siamart250211}
 
 \usepackage{amsfonts,amssymb}
-%\usepackage{amsopn}
 \usepackage{graphicx}
 \ifpdf
   \DeclareGraphicsExtensions{.eps,.pdf,.png,.jpg}
@@ -10,8 +9,6 @@
   \DeclareGraphicsExtensions{.eps}
 \fi
 \usepackage{bm}
-%\usepackage{empheq}
-%\usepackage{fancyvrb}
 \usepackage{tikz}
 \usetikzlibrary{math,positioning}
 
@@ -477,11 +474,11 @@ Theorem \ref{thm:abstractestimate} below applies to VIs for operators $f:\cK\to\
 
 Standard ways of writing SKE \eqref{eq:ske} as though it is an advection\footnote{References \cite{Chengetal2020,WirbelJarosch2020} specifically describe the SKE as an advection, but the idea is pervasive in Stokes model descriptions when the thickness or surface is evolved.} might also suggest that $F_{\Delta t}$ is not coercive.  It is often written $\frac{\partial s}{\partial t} + u_1 \frac{\partial s}{\partial x_1} + u_2 \frac{\partial s}{\partial x_2} = a + w$ \cite{GreveBlatter2009,SchoofHewitt2013}, with the surface velocity $\bu|_s = (u_1,u_2,w)$ in components.  However, the equation is not actually an advection.  This is because $\bu|_s$ is determined through coupled stress balance equations over the domain defined by the surface elevation $s$.  The fields $s$ and $\bu|_s$ in \eqref{eq:ske}, and inside the weak form \eqref{eq:be:vi}, are found \emph{simultaneously}.  Physically, glaciers are gravity-driven viscous flows, and ice tends to flow downhill, thus surface bumps are leveled and indentations are filled-in.  This large-scale diffusive response arises from the infinite speed of stress transmission\footnote{Inertia is orders of magnitude smaller than viscous stresses, e.g.~a Froude number of $10^{-15}$ \cite{GreveBlatter2009}.} in a Stokes model, which explains the smoothed appearance of actual surface elevations (Figure \ref{fig:giscross}).
 
-On the other hand, numerical experiments turn out to show that the surface motion operator $\Phi$ is \emph{close} to coercivity.  Appendix \ref{app:numerical} documents numerical experiments which generated thousands of high-resolution surface pairs $\sigma,s\in \cK\subset W^{1,\rr}(\Omega)$.  The $\omega$-coercivity ratios were computed for exponents $\rr=4$ and $\qq=2$:
+On the other hand, numerical experiments turn out to show that the surface motion operator $\Phi$ is \emph{close} to coercivity.  Appendix \ref{app:numerical} documents numerical experiments which generated thousands of high-resolution surface pairs $\sigma,s\in \cK\subset W^{1,\rr}(\Omega)$.  The $\omega$-coercivity ratios were computed for exponents $\rr=\qq=4$:
 \begin{equation}
-\frac{(\Phi(\sigma) - \Phi(s))[\sigma - s]}{\|\sigma-s\|_{W^{1,4}}^{2}}. \label{eq:ratios}
+\frac{(\Phi(\sigma) - \Phi(s))[\sigma - s]}{\|\sigma-s\|_{W^{1,4}}^{4}}. \label{eq:ratios}
 \end{equation}
-Surface velocities from the Stokes model were used when evaluating \eqref{eq:definePhi}.  If $\Phi$ were $2$-coercive over $\cX=W^{1,4}(\Omega)$, and if all computations were exact, then these ratios would all exceed a coercivity constant $\alpha>0$.  Though standard presentations of Stokes models for glaciers give no reason to expect these ratios to even be non-negative, with mesh refinement the pairs yielding negative ratios become quite rare.  Mean and median ratios were decidely positive, and under refinement they stabilized away from zero.
+Surface velocities from the Stokes model were used when evaluating \eqref{eq:definePhi}.  If $\Phi$ were $4$-coercive over $\cX=W^{1,4}(\Omega)$, and if all computations were exact, then these ratios would all exceed a coercivity constant $\alpha>0$.  Though standard presentations of Stokes models for glaciers give no reason to expect these ratios to even be non-negative, with mesh refinement the pairs yielding negative ratios become quite rare.  Mean and median ratios were decidely positive, and under refinement they stabilized away from zero.
 
 \newcommand{\wSIA}{\tilde w}
 In any case, since Appendix \ref{app:noncoercive} shows that $\Phi$ is not actually $\qq$-coercive over $W^{1,\rr}(\Omega)$, we will regularize the surface motion term via a connection to the shallow theory of ice \cite{GreveBlatter2009}.  In a small aspect ratio limit this isothermal shallow ice approximation theory gives the following expression for the surface vertical motion:
@@ -495,37 +492,37 @@ Here $\nn$ is Glen's exponent and $\Gamma>0$ is a softness constant computable f
 \end{equation}
 This formula simply replaces the Stokes vertical velocity $w|_s$ used in \eqref{eq:definePhi} with the convex combination $(1-\eps)w|_s + \eps\, \wSIA|_s$, so $\Phi^0=\Phi$.  If $\Phi$ is Lipschitz in $s$, supposing Conjecture \ref{conj:b} and Lemma \ref{lem:philipschitz}, then so is $\Phi^\eps$; inequality (3.4) in \cite{JouvetBueler2012} proves this.
 
-The essential reason that regularization \eqref{eq:defineregularizedPhi} is reasonable, and likely generates a $\qq$-coercive operator over $W^{1,4}(\Omega)$, comes from recalling the $\pp$-Laplacian operator in weak form \cite[for example]{ChoeLewis1991}.  The $\eps$ term in \eqref{eq:defineregularizedPhi} is a multiple of the $4$-Laplacian of $s$, namely $\Div(|\grad s|^2 \grad s)$, and this operator is $4$-coercive over $W^{1,4}(\Omega)$ \cite[for example]{Bueler2021conservation}.  Values $\eps=0.1$ and $H_0=1000$ meters were used in numerical experiments (Appendix \ref{app:numerical}).  The effect was that negative coercivity ratios \eqref{eq:ratios} disappeared, and the distribution of ratios seems to be bounded away from zero.
+The essential reason that regularization \eqref{eq:defineregularizedPhi} is reasonable, and likely generates a $4$-coercive operator over $W^{1,4}(\Omega)$, comes from recalling the $\pp$-Laplacian operator in weak form \cite[for example]{ChoeLewis1991}.  The $\eps$ term in \eqref{eq:defineregularizedPhi} is a multiple of the $4$-Laplacian of $s$, namely $\Div(|\grad s|^2 \grad s)$, and this operator is $4$-coercive over $W^{1,4}(\Omega)$ \cite[for example]{Bueler2021conservation}.  Values $\eps=0.1$ and $H_0=1000$ meters were used in numerical experiments (Appendix \ref{app:numerical}).  The effect was that negative coercivity ratios \eqref{eq:ratios} disappeared, and the experimental distribution of ratios was bounded away from zero.
 
-However, we are not able to prove that $\Phi^\eps$ is $\qq$-coercive.  A proof apparently depends on a new understanding of the glaciological Stokes problem.  The numerical analysis in Section \ref{sec:application} will be based on the following conjecture.
+However, we are not able to prove that $\Phi^\eps$ in \eqref{eq:defineregularizedPhi} is $4$-coercive.  A proof may depend on nontrivial insights into the glaciological Stokes problem.  The numerical analysis in Section \ref{sec:application} will therefore be based on the following conjecture.
 
-\begin{conjecture}[Regularized surface motion $\Phi^\eps(s)$ is $2$-coercive over admissible surface elevations in $W^{1,4}$] \label{conj:c}  Suppose Conjectures \ref{conj:a} and \ref{conj:b} hold for $\rr=4$, and let $\cX = W^{1,4}(\Omega)$.  Fix $b\in C^1(\bar\Omega)$ and let $\cK=\{\sigma\in\cX\,:\,\sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$.  There exists $\eps \in (0,1)$ so that, for $\Phi^\eps:\cK\to\cX'$ defined by \eqref{eq:defineregularizedPhi}, there is $\alpha>0$ such that
+\begin{conjecture}[Regularized surface motion $\Phi^\eps(s)$ is $4$-coercive over admissible surface elevations in $W^{1,4}$] \label{conj:c}  Suppose Conjectures \ref{conj:a} and \ref{conj:b} hold for $\rr=4$, and let $\cX = W^{1,4}(\Omega)$.  Fix $b\in C^1(\bar\Omega)$ and let $\cK=\{\sigma\in\cX\,:\,\sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$.  There exists $\eps \in (0,1)$ so that, for $\Phi^\eps:\cK\to\cX'$ defined by \eqref{eq:defineregularizedPhi}, there is $\alpha>0$ such that
 \begin{equation}
-\left(\Phi^\eps(\sigma) - \Phi^\eps(s)\right)[\sigma-s] \ge \alpha \|\sigma-s\|_{\cX}^2 \qquad \text{for all } \sigma,s\in\cK. \label{eq:conj:c}
+\left(\Phi^\eps(\sigma) - \Phi^\eps(s)\right)[\sigma-s] \ge \alpha \|\sigma-s\|_{\cX}^4 \qquad \text{for all } \sigma,s\in\cK. \label{eq:conj:c}
 \end{equation}
 \end{conjecture}
 
-To complete this Section we prove that the above Conjecture suffices for well-posedness of the regularization of VI problem \eqref{eq:be:vi}; recall definition \eqref{eq:be:Fdefine} for $F_{\Delta t}$.
+To complete this Section we prove that this Conjecture suffices for well-posedness of the regularized VI problem; recall \eqref{eq:be:Fdefine} and \eqref{eq:be:vi} for the unregularized problem.
 
-\begin{theorem} \label{thm:regularizedwellposed}  Assume Conjecture \ref{conj:c} holds for $\eps \in (0,1)$.  Suppose that $s^{n-1}\in\cK$ and define the source term $\ell^n \in \cX'$ as in \eqref{eq:be:source}.  Then the regularized implicit step operator $F^\eps_{\Delta t}(s)[\omega] = \Delta t\,\Phi^\eps(s)[\omega] + \int_\Omega s \omega$, is both continuous and $\qq$-coercive.  Thus there exists a unique surface elevation $s\in\cK$ satisfying
+\begin{theorem} \label{thm:regularizedwellposed}  Assume Conjecture \ref{conj:c} holds for $\eps \in (0,1)$.  Suppose that $s^{n-1}\in\cK$ and define the source term $\ell^n \in \cX'$ as in \eqref{eq:be:source}.  Then the regularized update operator $F^\eps_{\Delta t}(s)[\omega] = \Delta t\,\Phi^\eps(s)[\omega] + \int_\Omega s \omega$ is both continuous and $4$-coercive, and there exists a unique surface elevation $s\in\cK$ satisfying
 \begin{equation}
-F^\eps_{\Delta t}(s^n)[\sigma-s^n] \ge \ell^n[\sigma-s^n] \quad \text{for all } \sigma \in \cK. \label{eq:regularizedvi}
+F^\eps_{\Delta t}(s)[\sigma-s] \ge \ell^n[\sigma-s] \quad \text{for all } \sigma \in \cK. \label{eq:regularizedvi}
 \end{equation}
 \end{theorem}
 
-\begin{proof}  As noted earlier, from Conjecture \ref{conj:b} and standard facts on $\pp$-Laplacians, $\Phi^\eps$ is Lipschitz over bounded subsets of $\cK$, thus so is $F^\eps_{\Delta t}$.  Thus $F^\eps_{\Delta t}$ is also Lipschitz, and continuous
+\begin{proof}  From Conjecture \ref{conj:b} and standard facts on $\pp$-Laplacians, $\Phi^\eps$ is Lipschitz over bounded subsets of $\cK$, thus so is $F^\eps_{\Delta t}$.  Thus for $\sigma,s\in\cK$ and $\omega\in\cX$,
 \begin{equation*}
 \left|F^\eps_{\Delta t}(\sigma)[\omega] - F^\eps_{\Delta t}(s)[\omega]\right| \le \int_\Omega |\sigma-s||\omega| + \Delta t\, \big|\Phi^\eps(\sigma)[\omega] - \Phi^\eps(s)[\omega]\big| \le C \|\sigma-s\|_{\cX} \|\omega\|_\cX.
 \end{equation*}
 If Conjecture \ref{conj:c} holds then
 \begin{align}
 \left(F^\eps_{\Delta t}(\sigma) - F^\eps_{\Delta t}(s)\right)[\sigma-s] &= \int_\Omega (\sigma-s)^2 + \Delta t\, \left(\Phi^\eps(\sigma) - \Phi^\eps(s)\right)[\sigma-s] \\
-    &\ge \alpha\Delta t \|\sigma-s\|_{\cX}^2, \notag
+    &\ge \alpha\Delta t \|\sigma-s\|_{\cX}^4, \notag
 \end{align}
-so $F^\eps_{\Delta t}$ is $\qq$-coercive over $\cK$ with constant $\alpha\Delta t>0$.  Because it is $\qq$-coercive it is also coercive and strictly-monotone (Definition \ref{def:monotonecoercive}), and recall  we have assumed $\ell^n \in \cX'$.  Now Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows unique existence of a solution to \eqref{eq:be:vi}.
+so $F^\eps_{\Delta t}$ is $4$-coercive over $\cK$ with constant $\alpha\Delta t>0$.  Because it is $4$-coercive it is also coercive and strictly-monotone (Definition \ref{def:monotonecoercive}).  Now Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows unique existence of a solution to \eqref{eq:regularizedvi}.
 \end{proof}
 
-Theorem \ref{thm:regularizedwellposed} addresses only the well-posedness of a single time-step, over $[t_{n-1},t_n]$.  Even if it did not depend on conjectures regarding Stokes solutions, its conclusion is not sufficient to show well-posedness of the time-dependent problem parabolic VI problem over $[0,T]$ corresponding to NCP \eqref{eq:ncp}, nor to show that implicit steps converge in the $\Delta t\to 0$ limit.  However, it is a first mathematical step in these directions.  Note that numerical models are already in regular use, modeling the evolution of glacier geometry using Stokes dynamics.  Their designers apparently expect their time-step problems, implicit or not, to be well-posed, and they apparently believe that the computed surface elevations will converge to continuum solutions in some well-behaved manner.
+Theorem \ref{thm:regularizedwellposed} addresses only the well-posedness of a single time-step, over $[t_{n-1},t_n]$.  Its conclusion is not sufficient to show well-posedness of the time-dependent VI problem corresponding to NCP \eqref{eq:ncp}, over $[0,T]$, nor to show that implicit steps converge in the $\Delta t\to 0$ limit.  However, it is a first mathematical step in these directions.  Time-stepping numerical models are already in common use, modeling the evolution of glacier geometry using Stokes dynamics, and their designers apparently expect that each time-step problem, implicit or not, is well-posed.  They apparently believe that the computed surface elevations will converge to continuum solutions of \eqref{eq:ncp} in some well-behaved manner.
 
 
 \section{Abstract error estimate for finite element approximation of VIs} \label{sec:abstractestimate}
