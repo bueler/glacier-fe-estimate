@@ -46,21 +46,24 @@ def _us_ratio(slist, k, l, rpow, Lsc):
     dsnorm = norm_w1r_sc(ds, rpow, Lsc)
     return dunorm / dsnorm
 
-def _Phi_ratio(slist, k, l, rpow, Lsc, qpow, b, epsreg=0.0):
-    # compute the ratio  (Phi(r)-Phi(s))[r-s] / |r-s|_W1r^q
+def _Phi_ratio_parts(slist, k, l, rpow, Lsc, b, epsreg=0.0):
+    # compute the parts of the ratio
+    #   (Phi(r)-Phi(s))[r-s] / |r-s|_W1r^q
+    # the parts are:  Phi(r)[r-s], Phi(r)[r-s], |r-s|_W1r
     assert k != l
     r, s = slist[k]['s'], slist[l]['s']
     ur, us = slist[k]['us'], slist[l]['us']
     Phi_r = assemble(Phi(r, ur, r - s, eps=epsreg) * dx)
     Phi_s = assemble(Phi(s, us, r - s, eps=epsreg) * dx)
     dsnorm = norm_w1r_sc(r - s, rpow, Lsc)
-    return (Phi_r - Phi_s) / dsnorm**qpow
+    return Phi_r, Phi_s, dsnorm
 
-def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0, epsreg=0.0):
-    # measure 2-coercivity over W^{1,4}
+def sampleratios(dfilename, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0, epsreg=0.0):
+    # measure 4-coercivity over W^{1,4}
     rpow = nglen + 1.0
-    #qpow = 2.0
-    qpow = rpow  # choice motivated by coercivity for p-Laplacian implicit step in Bueler 2021
+    qpow = rpow  # motivated by coercivity for p-Laplacian implicit step in Bueler 2021
+    with open(dfilename, 'w') as dfile:
+        dfile.write(f'# i1, i2, Phi_r, Phi_s, dsnorm[r={rpow}], Phirat[q={qpow}]\n')
     printpar(f'computing ratios from {N} pair samples from state list ...')
     assert N >= 2
     from random import randrange
@@ -83,17 +86,21 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0, eps
         if norm_w1r_sc(slist[i1]['s'] - slist[i2]['s'], rpow, Lsc) == 0.0:
             print(RED % '!', end='')  # color provided by firedrake logging.py
             continue
+        # measure ratios
         usrat = _us_ratio(slist, i1, i2, rpow, Lsc)
-        Phirat = _Phi_ratio(slist, i1, i2, rpow, Lsc, qpow, b, epsreg=epsreg)
+        Phi_r, Phi_s, dsnorm = _Phi_ratio_parts(slist, i1, i2, rpow, Lsc, b, epsreg=epsreg)
+        Phirat = (Phi_r - Phi_s) / dsnorm**qpow
         if Phirat == np.inf:
             print(RED % '*', end='')
             continue
         # now we are actually recording results for this sample pair
+        with open(dfilename, 'a') as dfile:
+            dfile.write(f'{i1}, {i2}, {Phi_r:.14e}, {Phi_s:.14e}, {dsnorm:.14e}, {Phirat:.14e}\n')
         pairs.append(ipair)
         _n += 1
         _max_us_rat = max(_max_us_rat, usrat)
         Phiratlist.append(Phirat)
-        # stdout and figure for this pair
+        # stdout for this pair
         if Phirat < 0.0:
             print(RED % '.', end='')
             printpar(RED % f'{i1},{i2}')
@@ -102,15 +109,5 @@ def sampleratios(dirroot, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0, eps
             printpar(BLUE % f'{i1},{i2}')
         else:
             print('.', end='')
-        if False and Phirat <= 0.0:
-            badcoercivefigure(dirroot,
-                              basemesh,
-                              b,
-                              slist[i1]['s'],
-                              slist[i2]['s'],
-                              slist[i1]['us'],
-                              slist[i2]['us'],
-                              slist[i1]['t'],
-                              slist[i2]['t'])
     print()
     return _max_us_rat, np.array(Phiratlist)

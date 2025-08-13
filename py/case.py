@@ -204,15 +204,17 @@ if writepng:
     printpar(f'  finished writing to {snapsname}')
 
 # process _slist from all three SMB cases, with and without regularization
+# writes .csv files with data which allows reconstruction of ratios
 eps = [0.0, 0.1]
 epsstr = ['NOREG', 'REG__']
 for j in range(2):
     root = dirroot + epsstr[j] + '/'
     mkdir(root)
-    maxcont, rats = sampleratios(root, _slist, bm, b, N=Nsamples, Lsc=L, epsreg=eps[j])
+    dfilename = root + 'data.csv'
+    maxcont, rats = sampleratios(dfilename, _slist, bm, b, N=Nsamples, Lsc=L, epsreg=eps[j])
     if j == 0:
         printpar(f'  max continuity ratio:               {maxcont:.3e}')
-    histogramPhirat(root, rats)
+    #histogramPhirat(root, rats)  FIXME need to generate these histograms from dfilename
     pos = rats[rats > 0.0]
     assert len(pos) > 0
     pmin = min(pos)
