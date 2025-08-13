@@ -527,17 +527,16 @@ Theorem \ref{thm:regularizedwellposed} addresses only the well-posedness of a si
 
 \section{Abstract error estimate for finite element approximation of VIs} \label{sec:abstractestimate}
 
-In this Section we consider the FE approximation of an abstract VI problem in a Banach space.  We will return to glaciological problem \eqref{eq:be:vi} in Section \ref{sec:application}.
+In this Section we consider the FE approximation of an abstract VI problem in a Banach space.  We will return to glaciological problem \eqref{eq:regularizedvi} in Section \ref{sec:application}.
 
-Let $\cX$ be a real, reflexive Banach space with norm $\|\cdot\|$ and topological dual (Banach) space $\cX'$.  Denote the dual pairing of $\ell \in \cX'$ and $v\in\cX$ by $\ell[v]$, and define $\|\ell\|_{\cX'} = \sup_{\|v\|=1} \big|\ell[v]\big|$.  Let $\cK \subset \cX$ be a nonempty, closed, and convex subset, the constraint set, whose elements are called admissible.  For a continuous, but generally nonlinear, operator $f:\cK \to \cX'$, and a source functional $\ell\in \cX'$, our abstract VI problem is to find $u\in \cK$ such that
+Let $\cX$ be a real, reflexive Banach space with norm $\|\cdot\|$ and topological dual (Banach) space $\cX'$.  Denote the dual pairing of $\ell \in \cX'$ and $v\in\cX$ by $\ell[v]$, and define $\|\ell\|_{\cX'} = \sup_{\|v\|=1} \big|\ell[v]\big|$.  Let $\cK \subset \cX$ be a nonempty, closed, and convex subset, the constraint set, whose elements are called admissible.  For a continuous, but generally nonlinear, operator $f:\cK \to \cX'$, and a source functional $\ell\in \cX'$, the abstract VI problem is to find $u\in \cK$ such that
 \begin{equation}
 f(u)[v-u] \ge \ell[v-u] \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
-Surface elevation VI \eqref{eq:be:vi} is in this form, but the best known example is the obstacle problem for the Laplacian operator; see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis.  Two key observations about \eqref{eq:vi} are that $f(u)-\ell \in \cX'$ is generally nonzero when $u$ solves \eqref{eq:vi}, though if $u$ is in the interior of $\cK$ then $f(u)-\ell=0$, and that under sufficient regularity assumptions an NCP strong form follows.
 
-Recall Definition \ref{def:monotonecoercive}.  If $f:\cK \to \cX'$ is monotone and coercive, and also continuous on finite-dimensional subspaces, then \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then the solution is unique.  If $f$ is $\qq$-coercive then it coercive and strictly monotone, so $\qq$-coercivity and continuity yield well-posedness for \eqref{eq:vi}.
+The best known example of VI \eqref{eq:vi} is the obstacle problem for the Laplacian operator---see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis---and of course \eqref{eq:regularizedvi} is also in this form.  Before proceeding, recall that $f(u)-\ell \in \cX'$ is generally nonzero when $u$ solves \eqref{eq:vi}, though if $u$ is in the interior of $\cK$ then $f(u)-\ell=0$, and that under sufficient regularity assumptions an NCP strong form generally follows from \eqref{eq:vi}.  Furthermore, recall that if $f:\cK \to \cX'$ is monotone and coercive (Definition \ref{def:monotonecoercive}), and continuous on finite-dimensional subspaces, then \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then that solution is unique, and if $f$ is $\qq$-coercive then it coercive and strictly monotone.
   
-The following definition appeared in Lemma \ref{lem:philipschitz}.  If it holds then $f$ is continuous.  Note that Definitions \ref{def:monotonecoercive} and \ref{def:lipshitz} do not require $f$ to be defined on all of $\cX$.
+The following definition appeared in Lemma \ref{lem:philipschitz}.  If it holds then $f$ is continuous.  Note that Definitions \ref{def:monotonecoercive} and \ref{def:lipshitz} allow $f$ to be defined only on a subset $\cK$.
 
 \begin{definition} \label{def:lipshitz}
 For $R>0$ let $B_R = \{v\in \cX\,:\,\|v\|\le R\}$.  We say $f:\cK \to \cX'$ is \emph{Lipshitz on bounded subsets of $\cK$} if for every $R>0$ there is $C(R)>0$ so that if $v,w \in B_R \cap \cK$ and $z\in\cX$ then $|\left(f(v)-f(w)\right)[z]| \le C(R) \|v-w\| \|z\|$, equivalently
