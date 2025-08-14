@@ -1,4 +1,4 @@
-GENERATE=TRUE  # set to TRUE only if you want to regenerate data.csv files
+GENERATE=FALSE  # set to TRUE only if you want to regenerate data.csv files
 if [ "$GENERATE" = "TRUE" ]; then
     mkdir -p reproduce/
     python3 ./case.py 101 20 50 4.0 flat ratios.txt reproduce/bflat2000m/
