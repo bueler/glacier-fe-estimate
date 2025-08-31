@@ -81,6 +81,9 @@
 \newcommand{\rhoi}{\rho_{\text{i}}}
 \newcommand{\snew}{s^{\text{new}}}
 
+\newcommand{\sdoi}[1]{\,{\scriptsize \href{https://doi.org/#1}{doi:#1}}}
+\newcommand{\surl}[2]{\,{\scriptsize \href{#1}{#2}}}
+
 \newcommand{\comm}[1]{{\footnotesize \hfill \emph{#1}}}
 \newcommand{\where}[1]{\text{\footnotesize #1}}
 \newcommand{\viewin}[1]{{\footnotesize \emph{this view appears in} #1}}
@@ -90,27 +93,24 @@
 
 \title{Finite element errors in Stokes models \\ of glacier evolution}
 
-\date{JMM 2025, Seattle}
+\date{Numerical Analysis Seminar, Stockholm University (September 2025)}
 
 \author{Ed Bueler, University of Alaska Fairbanks}
 
 \titlegraphic{\vspace{-1cm}\par\hspace{-1cm}\includegraphics[width=1.5\textwidth]{figs/polaris-overexposed.png}}
 
 \begin{document}
-\graphicspath{{figs/}{../NWG24/figs/}{../../paper/figs/}}
+\graphicspath{{figs/}{../../paper/figs/}}
 
 \maketitle
 
 
-\begin{frame}{Puget Sound glaciation}
+\begin{frame}[plain]
 
-%\begin{center}
-\mbox{\hspace{-7mm} \,\includegraphics[width=1.1\textwidth]{puget}}
-%\end{center}
+\mbox{\hspace{-9mm} \includegraphics[width=1.15\textwidth]{nhsheets.png}}
 
-\vspace{-4mm}
-
-\hfill {\tiny Washington State Dept of Natural Resources}
+\vspace{-2mm}
+\hfill {\tiny Fig.~1 from Batchelor (2019), \emph{The configuration of Northern Hemisphere ice sheets through the Quaternary}}
 \end{frame}
 
 
@@ -126,7 +126,7 @@
 \item[c)] what is true on {\color{Salmon} free boundary}?
 \end{itemize}\end{column}
 \begin{column}{0.72\textwidth}
-\only<1>{\includegraphics[height=65mm]{xtcrop}}\only<2>{\includegraphics[height=65mm]{implicitstep}}
+FIXME %\only<1>{\includegraphics[height=65mm]{xtcrop}}\only<2>{\includegraphics[height=65mm]{implicitstep}}
 \end{column}
 \end{columns}
 \end{frame}
@@ -147,7 +147,7 @@
 
 \vspace{-2mm}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{xtcrop}
+FIXME %\includegraphics[width=0.55\textwidth]{xtcrop}
 \end{center}
 
 \vspace{-2mm}
@@ -156,7 +156,7 @@
 \includegraphics[width=0.9\textwidth]{mapplane}
 \end{column}
 \begin{column}{0.57\textwidth}
-\hfill \includegraphics[width=\textwidth]{stokesdomainOmega}
+FIXME %\hfill \includegraphics[width=\textwidth]{stokesdomainOmega}
 \end{column}
 \end{columns}
 \end{frame}
@@ -264,7 +264,7 @@ an NCP in $[0,T]\times \Omega$, for fixed $\Omega \subset \RR^2$, coupled to a G
 \begin{frame}{the standard model wants ``fully-implicit'' time-stepping}
 
 \begin{center}
-\includegraphics[width=0.6\textwidth]{implicitstep}
+FIXME %\includegraphics[width=0.6\textwidth]{implicitstep}
 \end{center}
 
 \bigskip
@@ -347,7 +347,7 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 
 \bigskip
 \begin{center}
-\includegraphics[width=0.75\textwidth]{giscrossALPHA}
+\includegraphics[width=0.75\textwidth]{giscross}
 \end{center}
 
 \begin{itemize}
@@ -395,7 +395,7 @@ numerical ratios $\displaystyle \frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq}$
 \end{itemize}
 
 \vspace{-22mm}
-\hfill \includegraphics[width=0.3\textwidth]{smoothratios} \qquad
+FIXME %\hfill \includegraphics[width=0.3\textwidth]{smoothratios} \qquad
 \end{frame}
 
 
@@ -464,10 +464,6 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
 \end{frame}
 
 
-\newcommand{\sdoi}[1]{\,{\scriptsize \href{https://doi.org/#1}{doi:#1}}}
-\newcommand{\surl}[2]{\,{\scriptsize \href{#1}{#2}}}
-
-
 \begin{frame}{summary}
 \begin{itemize}
 \item implicit time-stepping makes sense for geometry-evolving, Stokes models for glaciers
@@ -488,7 +484,7 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
 \noindent \hrulefill
 \begin{columns}
 \begin{column}{0.2\textwidth}
-\includegraphics[width=\textwidth]{qrpreprint.png}
+FIXME %\includegraphics[width=\textwidth]{qrpreprint.png}
 \end{column}
 \begin{column}{0.78\textwidth}
 {\small
