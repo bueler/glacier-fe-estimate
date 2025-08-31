@@ -114,6 +114,83 @@
 \end{frame}
 
 
+\begin{frame}{Outline}
+  \setbeamertemplate{section in toc}[sections numbered]
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+
+\begin{frame}{reminder: coercivity for convex functions}
+
+FIXME make this claude proof less rigorous
+
+\begin{itemize}
+\item let $J: \RR^n \to \RR$ be differentiable and convex
+\item assume the Hessian $\nabla^2 J$ is symmetric positive definite (SPD)
+\end{itemize}
+
+\bigskip
+\begin{theorem}
+the gradient $\nabla J$ is coercive:
+$$(\nabla J(x) - \nabla J(y)) \cdot (x - y) \ge \alpha \|x - y\|^2$$
+for some $\alpha > 0$
+\end{theorem}
+
+\bigskip
+\emph{Proof.} By the fundamental theorem of calculus:
+\begin{align*}
+J(x) - J(y) &= \int_0^1 \nabla J(y + t(x-y)) \cdot (x-y)\,dt \\
+&= \nabla J(y) \cdot (x-y) + \int_0^1 [\nabla J(y + t(x-y)) - \nabla J(y)] \cdot (x-y)\,dt
+\end{align*}
+\end{frame}
+
+
+\begin{frame}{proof continued}
+
+From the previous slide:
+$$J(x) - J(y) = \nabla J(y) \cdot (x-y) + \int_0^1 [\nabla J(y + t(x-y)) - \nabla J(y)] \cdot (x-y)\,dt$$
+
+\bigskip
+Similarly:
+$$J(y) - J(x) = \nabla J(x) \cdot (y-x) + \int_0^1 [\nabla J(x + s(y-x)) - \nabla J(x)] \cdot (y-x)\,ds$$
+
+\bigskip
+Adding these equations and using convexity ($J(x) - J(y) \le \nabla J(x) \cdot (x-y)$ and $J(y) - J(x) \le \nabla J(y) \cdot (y-x)$):
+\begin{align*}
+0 &\ge (\nabla J(x) - \nabla J(y)) \cdot (x-y) \\
+&\quad + \int_0^1 [\nabla J(y + t(x-y)) - \nabla J(y)] \cdot (x-y)\,dt \\
+&\quad + \int_0^1 [\nabla J(x + s(y-x)) - \nabla J(x)] \cdot (y-x)\,ds
+\end{align*}
+\end{frame}
+
+
+\begin{frame}{proof finished}
+
+The key insight: by the mean value theorem, for each $t \in [0,1]$:
+$$\nabla J(y + t(x-y)) - \nabla J(y) = t \nabla^2 J(\xi_t) (x-y)$$
+for some $\xi_t$ on the line segment from $y$ to $y + t(x-y)$.
+
+\bigskip
+Since $\nabla^2 J$ is SPD with smallest eigenvalue $\lambda_{\min} > 0$:
+\begin{align*}
+\int_0^1 [\nabla J(y + t(x-y)) - \nabla J(y)] \cdot (x-y)\,dt &= \int_0^1 t (x-y)^T \nabla^2 J(\xi_t) (x-y)\,dt \\
+&\ge \int_0^1 t \lambda_{\min} \|x-y\|^2\,dt \\
+&= \frac{\lambda_{\min}}{2} \|x-y\|^2
+\end{align*}
+
+\bigskip
+By symmetry, the second integral gives the same bound, so:
+$$(\nabla J(x) - \nabla J(y)) \cdot (x-y) \ge \lambda_{\min} \|x-y\|^2$$
+with $\alpha = \lambda_{\min}$. \qed
+\end{frame}
+
+
+\AtBeginSection[]
+{% nothing here
+}
+
+\section{introduction to the standard glacier model}
+
 \begin{frame}{glacier evolution in space-time \only<2>{ \dots implicitly?}}
 
 \bigskip \bigskip
@@ -130,18 +207,6 @@ FIXME %\only<1>{\includegraphics[height=65mm]{xtcrop}}\only<2>{\includegraphics[
 \end{column}
 \end{columns}
 \end{frame}
-
-
-\begin{frame}{Outline}
-  \setbeamertemplate{section in toc}[sections numbered]
-  \tableofcontents[hideallsubsections]
-\end{frame}
-
-\AtBeginSection[]
-{% nothing here
-}
-
-\section{introduction to the standard glacier model}
 
 \begin{frame}{the 3 views}
 
