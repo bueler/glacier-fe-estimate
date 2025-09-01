@@ -1,4 +1,5 @@
-\documentclass[10pt,dvipsnames]{beamer}
+%\documentclass[10pt,dvipsnames]{beamer}
+\documentclass[10pt,svgnames]{beamer}
 
 \definecolor{links}{HTML}{2A1B81}
 \hypersetup{colorlinks,linkcolor=,urlcolor=links}
@@ -65,6 +66,7 @@
 \newcommand{\bzero}{\bm{0}}
 
 \newcommand{\cK}{\mathcal{K}}
+\newcommand{\cV}{\mathcal{V}}
 \newcommand{\cX}{\mathcal{X}}
 
 \newcommand{\RR}{\mathbb{R}}
@@ -89,6 +91,8 @@
 \newcommand{\viewin}[1]{{\footnotesize \emph{this view appears in} #1}}
 
 \renewcommand*{\thefootnote}{\fnsymbol{footnote}}
+
+\newcommand{\aler}[1]{{\color{FireBrick} #1}}
 
 
 \title{Surface elevation errors in finite element \\ Stokes models for glacier evolution}
@@ -117,7 +121,7 @@
 \end{frame}
 
 
-\begin{frame}{extent of glaciation?}
+\begin{frame}{the ``extent of glaciation'' question}
 
 \begin{itemize}
 \item \alert{where are there glaciers?}
@@ -152,7 +156,7 @@
 
 \bigskip
 \begin{theorem}
-the gradient $F=\nabla J$ is \textbf{coercive}: there exists $\alpha > 0$ so that
+the gradient $F=\nabla J$ is \aler{coercive}: there exists $\alpha > 0$ so that
 $$(F(x) - F(y)) \cdot (x - y) \ge \alpha \|x - y\|^2$$
 \end{theorem}
 
@@ -166,9 +170,86 @@ Add: \quad $0 \ge (F(y) - F(x)) \cdot (x-y) +  \alpha \|x - y\|^2$. \qed
 \end{frame}
 
 
+\begin{frame}{example of a variational inequality: classical obstacle problem}
+
+\includegraphics[width=0.55\textwidth]{figs/obstacle65.png} \qquad \includegraphics[width=0.35\textwidth]{figs/obstacle-sets.png}
+
+\only<1>{
+\begin{itemize}
+\item given: domain $\Omega\subset \RR^2$, obstacle $\psi$, Dirichlet condition $g$, source $\varphi$
+\item define \emph{admissible set}: \, $\cK = \left\{v \in H^1(\Omega) \,:\, v\big|_{\partial \Omega} = g \text{ and } v \ge \psi\right\}$
+\item the \emph{\aler{variational inequality}} (VI) is to find $u\in\cK$ so that
+    $$\int_\Omega \grad u\cdot \grad (v-u) - \varphi (v-u) \ge 0 \quad \text{for all } v \in \cK$$
+\end{itemize}
+}
+\only<2>{
+\begin{itemize}
+\item the solution defines \emph{\aler{active}} $A_u = \{u = \psi\}$ and \emph{\aler{inactive}} $R_u = \{u> \psi\}$ subsets of $\Omega$, and a \emph{\aler{free boundary}} $\Gamma_u=\partial R_u \cap \Omega$
+\item naive strong form poses the problem in terms of its solution?:
+\begin{align*}
+-\grad^2 u &= \varphi \quad \text{ on $R_u$} \\
+u &= \psi \quad \text{ on $A_u$}
+\end{align*}
+\end{itemize}
+}
+\end{frame}
+
+
+\begin{frame}{general variational inequalities}
+
+\begin{itemize}
+\item let $\cV$ be a real, reflexive Banach space
+\item let $\cK \subset \cV$ be a closed and convex subset
+\item suppose $F:\cK \to \cV'$ is a continuous, generally nonlinear operator
+    \begin{itemize}
+    \item[$\circ$] $F$ may be defined \emph{only} on $\mathcal{K}$
+    \item[$\circ$] $F$ may \emph{not}\, be the derivative of an objective function $J$
+    \end{itemize}
+\item the general variational inequality problem {\color{FireBrick} VI($F$,$\mathcal{K}$)} is
+	$${\color{FireBrick} F(u)[v-u] \ge 0 \quad \text{ for all } v \in \mathcal{K}}$$
+\item when $\mathcal{K}$ is nontrivial, VI($F$,$\mathcal{K}$) is nonlinear 
+    \begin{itemize}
+    \item[$\circ$] even when $F$ is a linear operator
+    \item[$\circ$] classical problem has linear operator: \, $F(v)[w] = \int_\Omega \grad v\cdot \grad w - \varphi w$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{VI $=$ ``constrained equation''}
+
+\begin{center}
+\begin{tabular}{l|l}
+\begin{minipage}[t][16mm][t]{0.4\textwidth}
+unconstrained optimization:
+$$\min_{u\in\mathcal{V}} J(u)$$
+\end{minipage}
+&
+\begin{minipage}[t][16mm][t]{0.4\textwidth}
+constrained optimization:
+$$\min_{u\in\mathcal{K}} J(u)$$
+\end{minipage}
+\\ \hline
+\begin{minipage}[t][16mm][t]{0.4\textwidth}
+equation for $u \in \mathcal{V}$: {\LARGE \strut}
+
+$$F(u)=0$$
+\end{minipage}
+&
+\begin{minipage}[t][16mm][t]{0.4\textwidth}
+
+\vspace{-2mm}
+{\color{FireBrick} VI} for $u \in \mathcal{K}$:
+$${\color{FireBrick} F(u)[v-u] \ge 0 \quad \forall v \in \mathcal{K}}$$
+\end{minipage}
+\end{tabular}
+\end{center}
+\end{frame}
+
+
 \begin{frame}{FIXME}
 
-FIXME
+FIXME  $q$-coercivity gives well-posedness
 \end{frame}
 
 
@@ -190,7 +271,7 @@ FIXME
 \begin{column}{0.28\textwidth}
 \begin{itemize}
 \item[a)] what is true within the {\color{RoyalBlue} ice}?
-\item[b)] what is true on {\color{OliveGreen} bare land}?
+\item[b)] what is true on {\color{OliveDrab} bare land}?
 \item[c)] what is true on {\color{Salmon} free boundary}?
 \end{itemize}\end{column}
 \begin{column}{0.72\textwidth}
@@ -535,20 +616,6 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
     \item Cea's lemma for the surface elevation ($s_h$ versus $\Pi_h(s)$) \strut
     \end{enumerate}
 \end{itemize}
-
-\vspace{-1mm}
-\noindent \hrulefill
-\begin{columns}
-\begin{column}{0.2\textwidth}
-FIXME %\includegraphics[width=\textwidth]{qrpreprint.png}
-\end{column}
-\begin{column}{0.78\textwidth}
-{\small
-E.~Bueler (2024). \emph{Surface elevation errors in finite element {S}tokes models for glacier evolution}, \surl{https://arxiv.org/abs/2408.06470}{arxiv:2408.06470}
-}
-\end{column}
-\end{columns}
-
 \end{frame}
 
 
