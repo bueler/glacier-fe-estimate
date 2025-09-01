@@ -91,13 +91,16 @@
 \renewcommand*{\thefootnote}{\fnsymbol{footnote}}
 
 
-\title{Finite element errors in Stokes models \\ of glacier evolution}
+\title{Surface elevation errors in finite element \\ Stokes models for glacier evolution}
 
 \date{Numerical Analysis Seminar, Stockholm University (September 2025)}
 
 \author{Ed Bueler, University of Alaska Fairbanks}
 
-\titlegraphic{\vspace{-1cm}\par\hspace{-1cm}\includegraphics[width=1.5\textwidth]{figs/polaris-overexposed.png}}
+\titlegraphic{\vspace{-1cm}\par\hspace{-1cm}\includegraphics[width=1.5\textwidth]{figs/polaris-overexposed.png}%
+
+\vspace{-25mm}
+\hfill \includegraphics[width=0.2\textwidth]{figs/uafbw.png}}
 
 \begin{document}
 \graphicspath{{figs/}{../../paper/figs/}}
@@ -114,82 +117,70 @@
 \end{frame}
 
 
+\begin{frame}{extent of glaciation?}
+
+\begin{itemize}
+\item \alert{where are there glaciers?}
+\item that is, in a given climate and with a given topography, what is the extent of glaciation?  what is the geometry of those glaciers?
+\item this is my motivation for numerically solving the free-boundary problem for the surface elevation functions of glaciers
+\end{itemize}
+\end{frame}
+
+
 \begin{frame}{Outline}
   \setbeamertemplate{section in toc}[sections numbered]
   \tableofcontents[hideallsubsections]
 \end{frame}
 
+\AtBeginSection[]
+{% do not put toc here this time
+}
 
-\begin{frame}{reminder: coercivity for convex functions}
 
-FIXME make this claude proof less rigorous
+\section{variational inequalities (VIs)}
+
+\begin{frame}{reminder: coercivity for gradients}
 
 \begin{itemize}
-\item let $J: \RR^n \to \RR$ be differentiable and convex
-\item assume the Hessian $\nabla^2 J$ is symmetric positive definite (SPD)
+\item to start, let's recall a famous inequality from convex optimization
+\item let $J: \RR^n \to \RR$ be a smooth objective function
+\item suppose Hessian $H_J$ is uniformly symmetric positive definite (SPD)
+    \begin{itemize}
+    \item[$\circ$] thus $J$ is convex
+    \end{itemize}
 \end{itemize}
 
 \bigskip
 \begin{theorem}
-the gradient $\nabla J$ is coercive:
-$$(\nabla J(x) - \nabla J(y)) \cdot (x - y) \ge \alpha \|x - y\|^2$$
-for some $\alpha > 0$
+the gradient $F=\nabla J$ is \textbf{coercive}: there exists $\alpha > 0$ so that
+$$(F(x) - F(y)) \cdot (x - y) \ge \alpha \|x - y\|^2$$
 \end{theorem}
 
-\bigskip
-\emph{Proof.} By the fundamental theorem of calculus:
+\smallskip
+\emph{Proof.} By Taylor expansion, and $H_J \ge \alpha I$ with $\alpha=\lambda_{\text{min}}(H_J(x))$,
 \begin{align*}
-J(x) - J(y) &= \int_0^1 \nabla J(y + t(x-y)) \cdot (x-y)\,dt \\
-&= \nabla J(y) \cdot (x-y) + \int_0^1 [\nabla J(y + t(x-y)) - \nabla J(y)] \cdot (x-y)\,dt
+J(x) - J(y) &\ge F(y) \cdot (x - y) + \frac{\alpha}{2} \|y-x\|^2 \\
+J(y) - J(x) &\ge F(x) \cdot (y - x) + \frac{\alpha}{2} \|y-x\|^2
 \end{align*}
+Add: \quad $0 \ge (F(y) - F(x)) \cdot (x-y) +  \alpha \|x - y\|^2$. \qed
 \end{frame}
 
 
-\begin{frame}{proof continued}
+\begin{frame}{FIXME}
 
-From the previous slide:
-$$J(x) - J(y) = \nabla J(y) \cdot (x-y) + \int_0^1 [\nabla J(y + t(x-y)) - \nabla J(y)] \cdot (x-y)\,dt$$
-
-\bigskip
-Similarly:
-$$J(y) - J(x) = \nabla J(x) \cdot (y-x) + \int_0^1 [\nabla J(x + s(y-x)) - \nabla J(x)] \cdot (y-x)\,ds$$
-
-\bigskip
-Adding these equations and using convexity ($J(x) - J(y) \le \nabla J(x) \cdot (x-y)$ and $J(y) - J(x) \le \nabla J(y) \cdot (y-x)$):
-\begin{align*}
-0 &\ge (\nabla J(x) - \nabla J(y)) \cdot (x-y) \\
-&\quad + \int_0^1 [\nabla J(y + t(x-y)) - \nabla J(y)] \cdot (x-y)\,dt \\
-&\quad + \int_0^1 [\nabla J(x + s(y-x)) - \nabla J(x)] \cdot (y-x)\,ds
-\end{align*}
+FIXME
 \end{frame}
 
 
-\begin{frame}{proof finished}
+\section{a new \emph{a priori} error bound for VIs}
 
-The key insight: by the mean value theorem, for each $t \in [0,1]$:
-$$\nabla J(y + t(x-y)) - \nabla J(y) = t \nabla^2 J(\xi_t) (x-y)$$
-for some $\xi_t$ on the line segment from $y$ to $y + t(x-y)$.
+\begin{frame}{FIXME}
 
-\bigskip
-Since $\nabla^2 J$ is SPD with smallest eigenvalue $\lambda_{\min} > 0$:
-\begin{align*}
-\int_0^1 [\nabla J(y + t(x-y)) - \nabla J(y)] \cdot (x-y)\,dt &= \int_0^1 t (x-y)^T \nabla^2 J(\xi_t) (x-y)\,dt \\
-&\ge \int_0^1 t \lambda_{\min} \|x-y\|^2\,dt \\
-&= \frac{\lambda_{\min}}{2} \|x-y\|^2
-\end{align*}
-
-\bigskip
-By symmetry, the second integral gives the same bound, so:
-$$(\nabla J(x) - \nabla J(y)) \cdot (x-y) \ge \lambda_{\min} \|x-y\|^2$$
-with $\alpha = \lambda_{\min}$. \qed
+FIXME
 \end{frame}
 
 
-\AtBeginSection[]
-{% nothing here
-}
-
-\section{introduction to the standard glacier model}
+\section{the standard glacier model}
 
 \begin{frame}{glacier evolution in space-time \only<2>{ \dots implicitly?}}
 
@@ -464,7 +455,7 @@ FIXME %\hfill \includegraphics[width=0.3\textwidth]{smoothratios} \qquad
 \end{frame}
 
 
-\section{finite element approximation}
+\section{application: surface elevation error bound}
 
 \begin{frame}{FE method}
 
