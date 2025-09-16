@@ -133,11 +133,11 @@
 \end{center}
 
     \begin{itemize}
-    \item[$\circ$] what is the \alert{geometry}, namely the surface elevation functions, of those glaciers?
+    \item[$\circ$] what is the \alert{geometry}, namely the surface elevation, of the ice?
     \end{itemize}
 
 \bigskip
-\item my motivation for \alert{finite element solutions of variational inequalities} is in the free-boundary problem for the surface elevation of glaciers
+\item my motivation for \alert{finite element solutions of variational inequalities} is from this free-boundary problem for the surface elevation of glaciers
 \end{itemize}
 \end{frame}
 
@@ -218,9 +218,8 @@ Add the above: \quad $0 \ge (F(y) - F(x)) \cdot (x-y) +  \alpha \|x - y\|^2$. \q
     \end{itemize}
 \item the general variational inequality problem {\color{FireBrick} VI($F$,$\mathcal{K}$)} is
 	$${\color{FireBrick} F(u)[v-u] \ge 0 \quad \text{ for all } v \in \mathcal{K}}$$
-\item when $\mathcal{K}$ is nontrivial, VI($F$,$\mathcal{K}$) is nonlinear 
+\item if $\mathcal{K}$ is nontrivial, VI($F$,$\mathcal{K}$) is nonlinear, even when $F$ is linear
     \begin{itemize}
-    \item[$\circ$] even when $F$ is a linear operator
     \item[$\circ$] classical obstacle problem: \, $F(v)[w] = \int_\Omega \grad v\cdot \grad w - \varphi w$
     \end{itemize}
 \onslide<2>{\begin{theorem}
@@ -245,15 +244,16 @@ $$\min_{u\in\mathcal{K}} J(u)$$
 \end{minipage}
 \\ \hline
 \begin{minipage}[t][16mm][t]{0.4\textwidth}
-equation for $u \in \mathcal{V}$: {\LARGE \strut}
+equation for $u \in \mathcal{V}$:
 
-$$F(u)=0$$
+\only<1>{$$F(u)=0$$}
+\only<1>{$$F(u)=0$$}
 \end{minipage}
 &
 \begin{minipage}[t][16mm][t]{0.4\textwidth}
 
 \vspace{-2mm}
-{\color{FireBrick} VI} for $u \in \mathcal{K}$:
+{\color{FireBrick} VI($F$,$\mathcal{K}$)} for $u \in \mathcal{K}$:
 $${\color{FireBrick} F(u)[v-u] \ge 0 \quad \forall v \in \mathcal{K}}$$
 \end{minipage}
 \end{tabular}
