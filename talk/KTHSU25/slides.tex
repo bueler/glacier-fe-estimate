@@ -70,6 +70,7 @@
 
 \newcommand{\bzero}{\bm{0}}
 
+\newcommand{\cH}{\mathcal{H}}
 \newcommand{\cK}{\mathcal{K}}
 \newcommand{\cV}{\mathcal{V}}
 \newcommand{\cX}{\mathcal{X}}
@@ -199,11 +200,11 @@ Add the above: \quad $0 \ge (F(y) - F(x)) \cdot (x-y) +  \alpha \|x - y\|^2$. \q
 \only<2>{
 \begin{itemize}
 \item the solution defines \emph{\aler{active}} $A_u = \{u = \psi\}$ and \emph{\aler{inactive}} $R_u = \{u> \psi\}$ subsets of $\Omega$, and a \emph{\aler{free boundary}} $\Gamma_u=\partial R_u \cap \Omega$
-\item the intuitive/naive strong form poses the problem in terms of its solution (\aler{nonsense}):
+\item the intuitive/naive strong form poses the problem in terms of its solution, a kind of nonsense:
     $$-\grad^2 u = \varphi \quad \text{ on $R_u$, \qquad and \qquad} u = \psi \quad \text{ on $A_u$}$$
-\item the \aler{nonlinear complementarity problem} strong form has sensible statements everywhere on $\Omega$:
-	$$u\ge \psi, \quad -\grad^2 u - \varphi \ge 0, \quad (u-\psi) (-\grad^2 u - \varphi) = 0$$
 \end{itemize}
+
+\vspace{20mm}
 }
 \end{frame}
 
@@ -242,6 +243,25 @@ Add the above: \quad $0 \ge (F(y) - F(x)) \cdot (x-y) +  \alpha \|x - y\|^2$. \q
 \begin{itemize}
 \item $v-u \in \cX$ is a vector pointing feasibly into $\cK$
 \item $(F(u)-\ell)[v-u] \ge 0$ \, $\iff$ \, ``$F(u)-\ell$ is within $90^\circ$ of any $v-u$''
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{complementarity, a key idea about VIs}
+
+\begin{itemize}
+\item if $u\in\cK$ solves a VI, namely
+$$F(u)[v-u] \ge \ell[v-u] \quad \text{ for all } v \in \mathcal{K},$$
+then \aler{generally the residual $F(u)-\ell$ is nonzero}
+    \begin{itemize}
+    \item[$\circ$] if $\cK=\cX$ (unconstrained) then $F(u)-\ell=0$
+    \end{itemize}
+\item for a unilateral obstacle problem, with $\cK = \{v\in\cX\,:\,v\ge \psi\}$, the residual $F(u)-\ell$ is at least \aler{nonnegative}
+    \begin{itemize}
+    \item[$\circ$] for classical obstacle problem:
+	$$u\ge \psi, \quad -\grad^2 u - \varphi \ge 0, \quad (u-\psi) (-\grad^2 u - \varphi) = 0$$
+    \item<2>[$\circ$] the residual is a positive measure $d\mu_u = F(u)-\ell$ supported in the active set $A_u=\{x\,:\, u(x)=\psi(x)\}$
+    \end{itemize}
 \end{itemize}
 \end{frame}
 
@@ -329,91 +349,55 @@ $$F_h(u_h)[v_h-u_h] \ge \ell[v_h-u_h] \quad \forall v_h \in \cK_h$$
 conforming (?) assumptions:
 \begin{itemize}
 \item $\cK_h \subset \cX_h \subset \cX$
+
+\only<1>{\vspace{22mm}}
 \item<2> \aler{generally $\cK_h \not\subseteq \cK$}
 \item<2> \aler{generally $F_h\neq F$}
 \end{itemize}
 
 \vspace{-25mm}
-\hfill \input{tikz/nonadmissible.tex}
+\hfill \only<2>{\input{tikz/nonadmissible.tex}}
 \end{frame}
 
 
-\begin{frame}{theorem}
+\begin{frame}{\emph{a priori} error bound}
 
 \begin{thm}[B.~'25] assume $F$ is $\qq$-coercive with $\qq>1$ and $\alpha>0$, and Lipschitz continuous.  then there is $c=c(\|u\|,\|u_h\|,\alpha)>0$ so that
 \begin{align*}
 \|u-u_h\|^\qq &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \left(F(u)-\ell\right)[v-u_h] + \inf_{v_h\in\cK_h} \left(F(u)-\ell\right)[v_h-u]\right) \\
-   &\quad\, + \frac{2}{\alpha} \left(F(u_h)-F_h(u_h)\right)[u_h] + c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}. \notag
+   &\quad\, + \frac{2}{\alpha} \left(F(u_h)-F_h(u_h)\right)[u_h] + c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}
 \end{align*}
 \end{thm}
 
 \begin{itemize}
-\item<2> in the unconstrained case ($\cK=\cX$ and $\cK_h=\cX_h$) with no variational crimes ($F_h=F$), then this is Cea's lemma in a Banach space:
+\only<1>{\item in the unconstrained case ($\cK=\cX$ and $\cK_h=\cX_h$), with no variational crimes ($F_h=F$), this is Cea's lemma in a Banach space:
     $$\|u-u_h\|^\qq \le c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}$$
+
+\vspace{5.5mm}
+\phantom{foo}}
+\only<2>{\item if $\cX$ is a Hilbert space, $F(u)[v]=(Au,v)$ is linear, $\cX \subset \cH$ for some Hilbert space $\cH$, $\qq=2$, and with no variational crimes ($F_h=F$), then this is Falk's (1974) theorem:
+{\small
+\begin{align*}
+\|u-u_h\|^2 &\le \frac{2}{\alpha} \|Au-\ell\|_{\cH'} \left(\inf_{v\in\cK} \|v-u_h\|_{\cH} + \inf_{v_h\in\cK_h} \|v_h-u\|_{\cH}\right) \\
+   &\quad\, + c \inf_{v_h\in\cK_h} \|v_h - u\|^2
+\end{align*}
+}}
 \end{itemize}
-\end{frame}
-
-
-\begin{frame}{FIXME}
-
-FIXME
-\end{frame}
-
-\begin{frame}{FIXME}
-
-FIXME
 \end{frame}
 
 
 \section{the standard glacier model}
 
-\begin{frame}{glacier evolution in space-time \only<2>{ \dots implicitly?}}
-
-\bigskip \bigskip
-
-\begin{columns}
-\begin{column}{0.28\textwidth}
-\begin{itemize}
-\item[a)] what is true within the {\color{RoyalBlue} ice}?
-\item[b)] what is true on {\color{OliveDrab} bare land}?
-\item[c)] what is true on {\color{Salmon} free boundary}?
-\end{itemize}\end{column}
-\begin{column}{0.72\textwidth}
-FIXME %\only<1>{\includegraphics[height=65mm]{xtcrop}}\only<2>{\includegraphics[height=65mm]{implicitstep}}
-\end{column}
-\end{columns}
-\end{frame}
-
-\begin{frame}{the 3 views}
-
-\vspace{-2mm}
-\begin{center}
-FIXME %\includegraphics[width=0.55\textwidth]{xtcrop}
-\end{center}
-
-\vspace{-2mm}
-\begin{columns}
-\begin{column}{0.43\textwidth}
-\includegraphics[width=0.9\textwidth]{mapplane}
-\end{column}
-\begin{column}{0.57\textwidth}
-FIXME %\hfill \includegraphics[width=\textwidth]{stokesdomainOmega}
-\end{column}
-\end{columns}
-\end{frame}
-
-
-\begin{frame}{what is true everywhere in $[0,T]\times\Omega$?}
+\begin{frame}{the free-boundary problem for glacier surface elevation}
 
 \hfill \includegraphics[width=0.37\textwidth]{mapplane}
 
-\vspace{-40mm}
+\vspace{-35mm}
 
 \begin{minipage}[t]{60mm}
 {\small
 \begin{itemize}
-\item $\Omega \subset \RR^2$ fixed simulation domain
-\item $x = (x_1,x_2) \in \Omega$
+\item $\Omega \subset \RR^2$ fixed domain
 \item $a(t,x)$ surface mass balance (SMB)
 \item $b(x)$ bed elevation
 \item $s(t,x)$ \emph{solution} surface elevation
@@ -424,7 +408,7 @@ FIXME %\hfill \includegraphics[width=\textwidth]{stokesdomainOmega}
 \end{minipage}
 
 \begin{itemize}
-\item nonlinear complementarity problem (NCP) in $[0,T] \times \Omega$:
+\item an obstacle problem, here in complementarity problem form, holds in $[0,T] \times \Omega$:
 \begin{align*}
 s - b &\ge 0 &&\phantom{x} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
@@ -437,9 +421,9 @@ s - b &\ge 0 &&\phantom{x} \\
 \begin{frame}{the free-boundary problem for glacier surface elevation}
 
 \begin{itemize}
-\item surface kinematical equation (SKE) in glaciology:
+\item free surface equation:
    $$\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0$$
-\item our time-dependent, nonlinear complementarity problem (NCP) is the underlying \emph{free-boundary} meaning of the SKE:
+\item but the complementarity problem is the actual \emph{free-boundary} meaning of the free surface equation:
 \begin{align*}
 s - b &\ge 0 &&\phantom{x} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
@@ -447,57 +431,58 @@ s - b &\ge 0 &&\phantom{x} \\
 \end{align*}
 
     \begin{itemize}
+    \item[$\circ$] says: free surface equation holds where there is ice
+    \item[$\circ$] says: $a\le 0$ where there is no ice
     \item[$\circ$] applies regardless of dynamical model within the ice
-    \item[$\circ$] this NCP appears in (Calvo et al 2003), but only for shallow ice
+    \item[$\circ$] this appears first in (Calvo et al 2003), but only for shallow ice
     \end{itemize}
-\item state-of-the-art numerically: first-order explicit time-stepping
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{what is true within the ice?}
+\begin{frame}{Glen-Stokes equations within the ice}
 
-\hfill \includegraphics[width=0.55\textwidth]{stokesdomain}
+\hfill \includegraphics[width=0.45\textwidth]{stokesdomain.png}
 
-\vspace{-5mm}
+\vspace{-4mm}
 
 \begin{itemize}
-\item fix $t$ and define:
-    $$\Lambda(s) = \{(x,z)\,:\,b(x)<z<s(t,x)\} \qquad \subset \RR^3$$
-\item Glen-Stokes equations in $\Lambda(s)$ with $\pp = (\nn + 1)/\nn \approx 4/3$:
+\item define:
+    $$\Lambda(t) = \{(x,z)\,:\,b(x)<z<s(t,x)\} \hspace{20mm}$$
+\item Glen-Stokes equations in $\Lambda(t)$ with $\pp = (\nn + 1)/\nn \approx 4/3$:
 \begin{align*}
 - \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg  \\
 \nabla \cdot \bu &= 0  \\
-\nu(D\bu) &= \nu_0 |D\bu|^{\pp-2} && \quad {\scriptsize \leftarrow \text{needs regularization}}
+\nu(D\bu) &= \nu_0 |D\bu|^{\pp-2} && \phantom{foo}
 \end{align*}
 
 \vspace{-1mm}
-\item boundary conditions:
+\item stress boundary conditions:
 \begin{align*}
-&\left(2 \nu(D\bu) D\bu - pI\right) \bn_s = \bzero   && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
-&\bu  = \bzero \text{ } \,\text{or } \,f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
+&\left(2 \nu(D\bu) D\bu - pI\right) \bn_s = \bzero   && \where{on $\Gamma_s \subset \partial\Lambda(t)$} \\
+&f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(t)$}
 \end{align*}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{\underline{the} standard model for glacier evolution}
+\begin{frame}{\underline{the} standard model for glacier evolution?}
 
 \begin{align*}
 s - b &\ge 0 & &\where{in $\Omega$} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 \\
-- \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(s)$} \\
+- \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(t)$} \\
 \nabla \cdot \bu &= 0 \\
-\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
-\bu  = \bzero \quad \text{or} \quad f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
+\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(t)$} \\
+f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(t)$}
 \end{align*}
 
 \bigskip
 \newtheorem*{smodel}{standard model}
 
 \begin{smodel}
-an NCP in $[0,T]\times \Omega$, for fixed $\Omega \subset \RR^2$, coupled to a Glen-Stokes problem within the ice, in $\Lambda(s) \subset \RR^3$
+a complementarity problem (obstacle problem) in $[0,T]\times \Omega$, for fixed $\Omega \subset \RR^2$, coupled to a Glen-Stokes problem within the ice $\Lambda(t) \subset \RR^3$
 \end{smodel}
 \end{frame}
 
@@ -514,14 +499,6 @@ an inequality-constrained \textbf{differential algebraic system} in $\infty$ dim
 \end{block}
 \end{frame}
 
-
-\AtBeginSection[]
-{
-  \begin{frame}<beamer>
-    \frametitle{Outline}
-    \tableofcontents[currentsection,hideallsubsections]
-  \end{frame}
-}
 
 
 \section{well-posed implicit steps?}
@@ -668,22 +645,6 @@ find $s\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
 \end{itemize}
 
 \phantom{x}
-\end{frame}
-
-
-\begin{frame}{implementation \alert{\dots in progress}}
-
-\begin{itemize}
-\item extruded-mesh Stokes solver infrastructure: \href{https://github.com/bueler/stokes-extrude}{github.com/bueler/stokes-extrude}
-\item solver in Firedrake/PETSc:
-    \begin{itemize}
-    \item[$\circ$] VI-adapted, reduced-space Newton method
-    \item[$\circ$] for admissible surface elevation iterates $s_h^{(j)} \ge b_h$, \alert{each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$}
-    \end{itemize}
-\item accelerate using new FASCD nonlinear multigrid scheme (Bueler \& Farrell, 2024), using above solver as the smoother
-\end{itemize}
-
-\bigskip
 \end{frame}
 
 
