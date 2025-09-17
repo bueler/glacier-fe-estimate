@@ -55,6 +55,7 @@
 
 \newtheorem*{defn}{definition}
 \newtheorem*{thm}{theorem}
+\newtheorem*{question}{question}
 \newtheorem*{conjecture}{conjecture}
 \newtheorem*{proposition}{proposition}
 
@@ -149,7 +150,7 @@
 
 \begin{frame}{Outline}
   \setbeamertemplate{section in toc}[sections numbered]
-  \tableofcontents[hideallsubsections]
+  \tableofcontents%[hideallsubsections]
 \end{frame}
 
 \AtBeginSection[]
@@ -328,7 +329,7 @@ if $F$ is $\qq$-coercive and continuous then the continuum VI problem is well-po
 \AtBeginSection[] {
     \begin{frame}{Outline}
     \setbeamertemplate{section in toc}[sections numbered]
-    \tableofcontents[currentsection,hideallsubsections]
+    \tableofcontents[currentsection]%,hideallsubsections]
     \end{frame}
 }
 
@@ -347,17 +348,19 @@ VI for $u_h \in \cK_h$:
 $$F_h(u_h)[v_h-u_h] \ge \ell[v_h-u_h] \quad \forall v_h \in \cK_h$$
 \end{feproblem}
 
-conforming (?) assumptions:
+conforming assumptions\only<1>{:}\only<2-3>{\aler{?}}
 \begin{itemize}
 \item $\cK_h \subset \cX_h \subset \cX$
 
 \only<1>{\vspace{22mm}}
-\item<2> \aler{generally $\cK_h \not\subseteq \cK$}
-\item<2> \aler{generally $F_h\neq F$}
+\item<2-3> \aler{generally $F_h\neq F$}
+
+\only<2>{\vspace{22mm}}
+\item<3> \aler{generally $\cK_h \not\subseteq \cK$}
 \end{itemize}
 
 \vspace{-25mm}
-\hfill \only<2>{\input{tikz/nonadmissible.tex}}
+\hfill \only<3>{\input{tikz/nonadmissible.tex}}
 \end{frame}
 
 
@@ -372,7 +375,7 @@ conforming (?) assumptions:
 
 \begin{itemize}
 \only<1>{\item in the unconstrained case ($\cK=\cX$ and $\cK_h=\cX_h$), with no variational crimes ($F_h=F$), this is \aler{Cea's lemma} in a Banach space:
-    $$\|u-u_h\|^\qq \le c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}$$
+    $$\|u-u_h\|^\qq \le c \inf_{v_h\in\cX_h} \|v_h - u\|^{\qq'}$$
 
 \vspace{5.5mm}
 \phantom{foo}}
@@ -502,7 +505,7 @@ a complementarity problem (obstacle problem) in $[0,T]\times \Omega$, for fixed 
 \item at each instant $t$, if the surface elevation $s$ is known, and adequately smooth, then the velocity $\bu$ and pressure $p$ are uniquely-determined
 \end{itemize}
 
-\begin{theorem}[Jouvet \& Rappaz, 2011]
+\begin{thm}[Jouvet \& Rappaz, 2011]
 over a fixed $C^1$ domain $\Lambda\subset\RR^3$, the $\pp>1$ Stokes problem
 \begin{align*}
 - \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda$} \\
@@ -511,7 +514,7 @@ over a fixed $C^1$ domain $\Lambda\subset\RR^3$, the $\pp>1$ Stokes problem
 f(\bu,D\bu) &= 0 && \where{on $\Gamma_b\subset\partial\Lambda$}
 \end{align*}
 is well-posed for the solution $(\bu,p) \in W^{1,\pp}(\Omega;\RR^3) \times L^{\pp'}(\Omega)$
-\end{theorem}
+\end{thm}
 \end{frame}
 
 
@@ -537,7 +540,7 @@ the model is an inequality-constrained \aler{differential algebraic equations} (
 \begin{frame}{a single implicit time step of the standard model}
 
 \begin{itemize}
-\item consider a \aler{backward Euler time step} with $\Delta t>0$:
+\item consider a \aler{backward Euler time step}, with $\Delta t>0$, of the frozen-bed model:
 {\small
 \begin{align*}
 s - b &\ge 0 & &\where{in $\Omega$} \\
@@ -546,44 +549,136 @@ s - \Delta t\, \bu|_s \cdot \bn_s - \ell &\ge 0 \\
 - \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(s)$} \\
 \nabla \cdot \bu &= 0 \\
 \left(2 \nu_0 |D\bu|^{\pp-2} D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
-f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
+\bu &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
 \end{align*}
 }
-where \aler{$s \approx s(t_k)$}, $s^{k-1}\approx s(t_{k-1})$, and
+where \aler{$s \approx s(t_k)$}, $s^{k-1}\approx s(t_{k-1})$, and with source term
 {\small
     $$\ell(x) = s^{k-1}(x) + \Delta t\,\int_{t_{k-1}}^{t_k} a(t,x)\,dt$$
 }
-is a source term
-\item \aler{the solution is a triple $(s,\bu,p)$, at the new time $t_k$}
+\item<2> \aler{the solution}, if it exists, \aler{is a triple $(s,\bu,p)$ for the new time $t_k$}
     \begin{itemize}
-    \item[$\circ$] $s$ must be admissible, that is, above the bed
+    \item[$\circ$] $s$ must be admissible: \, $s\ge b$
     \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{implicit time-step problem is a variational inequality}
+\subsection{(core issue: is the surface motion $\qq$-coercive?)}
+
+\begin{frame}{the surface motion term}
 
 \begin{itemize}
-\item weak form of time-discretized NCP; details found in preprint\footnote{Bueler (2024). \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv 2408.06470}}
-\item $\cX$ denotes Banach space of elevation functions on $\Omega$; $b\in\cX$
-\item for $\Delta t > 0$ define:
+\item for understanding well-posedness, and surface elevation errors, we focus on the key term
 
-\vspace{-7mm}
-\begin{align*}
-\cK &= \{r \in \cX\,:\, r \ge b \,\text{ a.e. } \Omega\} \\
-\ell^k(x) &= s(t_{k-1},x) + \int_{t_{k-1}}^{t_k} a(t,x)\,dt \\
-F(s)[q] &= \int_\Omega (s - \Delta t\,\bu|_s \cdot \bn_s) q 
-\end{align*}
+\begin{defn}
+the \aler{surface motion} in the standard model: \, $\Phi(s) = -\bu_s\cdot \bn_s$
+\end{defn}
+
+    \begin{itemize}
+    \item[$\circ$] for $s\in \cX$, where $\cX$ is a Banach space to be determined
+    \end{itemize}
+
+\item and we focus on the key question
+\begin{question}
+is the surface motion $\Phi(s)$ $\qq$-coercive?
+\end{question}
+\item that is, are there $\qq>1$ and $\alpha>0$ so that
+$$(\Phi(s) - \Phi(\sigma))[s-\sigma] \stackrel{?}{\ge} \alpha \|s-\sigma\|_{\cX}^\qq$$
+for all $s,\sigma \in \cK = \{\omega \in \cX\,:\, \omega\big|_{\partial \Omega} = b\big|_{\partial \Omega} \, \text{ and } \, \omega \ge b\}$
 \end{itemize}
+\end{frame}
 
-\medskip
-\begin{definition}
-the \emph{backward Euler time-step problem}, for $t_k \in [0,T]$, is to find the surface elevation $s \approx s(t_k,x) \in \cK$ solving the variational inequality (VI)
-$$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
-\end{definition}
+
+\begin{frame}{is the surface motion term coercive?}
+
+\begin{question}
+$$(\Phi(s) - \Phi(\sigma))[s-\sigma] \stackrel{?}{\ge} \alpha \|s-\sigma\|_{\cX}^\qq$$
+\end{question}
+
+\begin{itemize}
+\item the answer is \aler{no} for general, bumpy beds
+\item for surfaces $s_1,s_2\in\cK$ below we compute
+\begin{align*}
+\Phi(s_1) &= 0 \\
+\Phi(s_2) &= 0 \\
+\|s_1-s_2\|_{\cX} &> 0
+\end{align*}
+
+\hfill \includegraphics[width=0.35\textwidth]{figs/filled.png} \qquad \includegraphics[width=0.35\textwidth]{figs/icefree.png}
+\item neither surface generates flow when we solve Stokes over $\Lambda(s_i)$
+    \begin{itemize}
+    \item[$\circ$] note $\Lambda(s_2)=\emptyset$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{is the \underline{regularized} surface motion term coercive?}
+
+FIXME FORMAT
+
+\begin{question}
+$$(\Phi^{\aler{\eps}}(s) - \Phi^{\aler{\eps}}(\sigma))[s-\sigma] \stackrel{?}{\ge} \alpha^{\aler{\eps}} \|s-\sigma\|_{\cX}^\qq$$
+\end{question}
+
+\begin{itemize}
+\only<1>{
+\item a \aler{regularization}, based upon the shallow ice approximation, breaks the symmetry on the last slide, and prefers flat ice surfaces
+\item by definition, for $\eps>0$ small and $H_0$ comparable to ice thickness, let
+   $$\Phi^\eps(s) = (u|_s,v|_s) \cdot \grad s - (1-\eps) w|_s - \eps \Div\left(\Gamma H_0^5 |\grad s|^2\grad s\right)$$
+\item note $\eps=0$ case returns $\Phi(s)$:
+   $$\Phi^0(s) = (u|_s,v|_s) \cdot \grad s - w|_s = -\bu_s\cdot \bn_s$$
+}
+\only<2>{
+\item a \aler{numerical experiment} gives evidence of $\qq=4$-coercivity
+\item I computed these ratios, for $\eps=0.1$ and $H_0=1000$ m:
+$$\frac{(\Phi^{\aler{\eps}}(s_1) - \Phi^{\aler{\eps}}(s_1))[s_1-s_2]}{\|s_1-s_2\|_{\cX}^4}$$
+\item randomly chosen pairs $s_1,s_2 \in W^{1,4}(\Omega)$ from $10^3$ states, for two beds, generated using FSSA acceleration (L\"ofgren et al.~2022)
 
 \bigskip
+\centering
+\includegraphics[width=0.35\textwidth]{figs/snapsflat.png} \qquad \includegraphics[width=0.35\textwidth]{figs/snapsrough.png}
+}
+\only<3>{
+\item ratios without regularization:
+
+\medskip
+\hfill
+\includegraphics[width=0.32\textwidth]{figs/bflat500mNOREG.png} \qquad \includegraphics[width=0.32\textwidth]{figs/brough500mNOREG.png}
+
+\item \aler{ratios with regularization}:
+
+\medskip
+\hfill
+\includegraphics[width=0.32\textwidth]{figs/bflat500mREG.png} \qquad \includegraphics[width=0.32\textwidth]{figs/brough500mREG.png}
+}
+\only<4>{
+\item with regularization, under refinement ($\Delta x=2$ km, 1 km, 500 m):
+
+\medskip
+\hfill
+\includegraphics[width=0.27\textwidth]{figs/brough2000mREG.png}
+\quad \includegraphics[width=0.27\textwidth]{figs/brough1000mREG.png}
+\quad \includegraphics[width=0.27\textwidth]{figs/brough500mREG.png}
+}
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{a single implicit time step of the standard model}
+
+FIXME CONTENT
+
+\begin{itemize}
+\item define
+    $$F(\sigma)[\omega] = \int_\Omega \left(\sigma + \Delta t\,\Phi(\sigma)\right) \omega$$
+\end{itemize}
+
+\begin{defn}
+the \emph{backward Euler time-step problem}, for $t_k \in [0,T]$, is to find the surface elevation $s \approx s(t_k,x) \in \cK$ solving the variational inequality (VI)
+$$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
+\end{defn}
 \end{frame}
 
 
@@ -598,62 +693,6 @@ the backward Euler time-step VI problem,
     $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK,$$
 is well-posed for $s\in\cK$
 \end{conjecture}
-\end{frame}
-
-
-\begin{frame}{what's behind the conjecture?}
-
-\bigskip
-\begin{center}
-\includegraphics[width=0.75\textwidth]{giscross}
-\end{center}
-
-\begin{itemize}
-\item question: use ice surface elevation $s$ or thickness $H = s - b$ for geometry in the standard model?
-\item answer: prefer $s$ for smoothness reasons
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{what's behind the conjecture?}
-
-\begin{center}
-\begin{tikzpicture}[scale=1.0]
-  \node (wedge) {\includegraphics[width=30mm]{wedge.png}} node[xshift=-4mm, yshift=1mm] at (wedge.center) {{\small \emph{ice}}};
-  \node[right= 5mm of wedge] (unbounded) {\includegraphics[width=30mm]{unbounded.png}} node[xshift=-2mm, yshift=1mm] at (unbounded.center) {{\small \emph{ice}}};
-  \node[right= 5mm of unbounded] (realistic) {\includegraphics[width=30mm]{realistic.png}} node[xshift=-6mm, yshift=4mm] at (realistic.center) {{\small \emph{ice}}};
-\end{tikzpicture}
-\end{center}
-
-\begin{itemize}
-\item the conjecture is that $s$ exists in $\cX = W^{1,\qq}(\Omega)$ for some $\qq>2$
-\item however, margin shape of glaciers is a hard modeling problem
-\end{itemize}
-\end{frame}
-
-
-\begin{frame}{what's behind the conjecture?}
-
-\bigskip
-\begin{conjecture}[actual; B '24]
-For $s \in \cK = \{r \ge b\} \subset \cX = W^{1,\qq}(\Omega)$, for some $\qq>2$, let $\Lambda(s) = \{b<z<s\} \subset \RR^3$, and suppose $\bu$ solves Glen-Stokes over $\Lambda(s)$.  Define
-	$$\Phi(s) = - \bu|_s \cdot \bn_s,$$
-a map $\Phi:\cK \to \cX'$.  Then $\Phi$ is $\qq$-coercive: there is $\alpha>0$ so that
-	$$\left(\Phi(s) - \Phi(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq \qquad \text{for all } r,s\in\cK$$
-\end{conjecture}
-
-\bigskip
-\footnotesize
-\noindent \textbf{numerical evidence?}
-
-\begin{itemize}
-\item from surface elevation samples $r,s$, compute
-
-numerical ratios $\displaystyle \frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq}$
-\end{itemize}
-
-\vspace{-22mm}
-FIXME %\hfill \includegraphics[width=0.3\textwidth]{smoothratios} \qquad
 \end{frame}
 
 
@@ -708,18 +747,20 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
 
 \begin{frame}{summary}
 \begin{itemize}
-\item implicit time-stepping is desirable for the standard geometry-evolving Stokes model for glaciers
+\item implicit time-stepping for variational inequalities is needed for the standard geometry-evolving Stokes model for glaciers
     \begin{itemize}
     \item[$\circ$] both a differential-algebraic system and a free-boundary problem
     \end{itemize}
-\item<2-5> \textbf{conjecture.} for some $\qq>2$, the surface motion $-\bu|_s\cdot \bn_s$ from the Glen-Stokes problem is $\qq$-coercive over admissible $s\in W^{1,\qq}(\Omega)$
-\item<3-5> \textbf{theorem.} for abstract $\qq$-coercive operators, the finite element approximation of the VI problem has a (new) \emph{a priori} bound
-\item<4-5> \textbf{theorem.} supposing $\qq$-coercivity, each continuous-space, backward Euler time step problem is well-posed
-\item<5> \textbf{theorem.} supposing $\qq$-coercivity, the surface elevation FE error is bounded by a sum of 3 terms:
+\item<2-4> \textbf{conjecture.} for some $\qq>2$, a regularized form of the surface motion $\Phi(s) = -\bu|_s\cdot \bn_s$, from the Glen-Stokes problem, is $\qq$-coercive over admissible $s\in W^{1,\qq}(\Omega)$
+    \begin{itemize}
+    \item[$\circ$] this would imply that each continuous-space, backward Euler time step problem is well-posed
+    \end{itemize}
+\item<3-4> \textbf{theorem.} for abstract $\qq$-coercive operators, the finite element approximation of the VI problem has an \emph{a priori} bound with certain terms \dots
+\item<4> \textbf{theorem.} supposing $\qq$-coercivity, the FE error for surface elevations, in the standard glacier model, is bounded by a sum of 3 terms:
     \begin{enumerate}
-    \item discretizing the bed elevation ($b_h$ versus $b$)
-    \item numerically solving the Stokes equations ($\bu_h$ versus $\bu$)
-    \item Cea's lemma for the surface elevation ($s_h$ versus $\Pi_h(s)$) \strut
+    \item error in discretizing the bed elevation ($b_h$ versus $b$)
+    \item error in numerically solving the Stokes equations ($\bu_h$ versus $\bu$)
+    \item a Cea's lemma term for the surface elevation ($s_h$ versus $\Pi_h(s)$) \strut
     \end{enumerate}
 \end{itemize}
 \end{frame}
