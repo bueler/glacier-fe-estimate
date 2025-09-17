@@ -53,10 +53,13 @@
 \lstset{style=colorEX,
         basewidth = {.49em}}
 
-\newtheorem*{conjecture}{Conjecture}
-\newtheorem*{proposition}{Proposition}
+\newtheorem*{defn}{definition}
+\newtheorem*{thm}{theorem}
+\newtheorem*{conjecture}{conjecture}
+\newtheorem*{proposition}{proposition}
 
 \newtheorem*{cproblem}{continuum problem}
+\newtheorem*{feproblem}{finite element problem}
 
 \newcommand{\bg}{\mathbf{g}}
 \newcommand{\bn}{\mathbf{n}}
@@ -123,21 +126,21 @@
 \end{frame}
 
 
-\begin{frame}{an important question about glaciers and ice sheets}
+\begin{frame}{motivating question about glaciers and ice sheets}
 
 \begin{itemize}
 \item in a given climate and with a given topography,
 
 \begin{center}
-\alert{what is the extent of glaciation?}
+\aler{what is the extent of glaciation?}
 \end{center}
 
     \begin{itemize}
-    \item[$\circ$] what is the \alert{geometry}, namely the surface elevation, of the ice?
+    \item[$\circ$] what is the \aler{geometry}, namely the surface elevation, of the ice?
     \end{itemize}
 
 \bigskip
-\item my motivation for \alert{finite element solutions of variational inequalities} is from this free-boundary problem for the surface elevation of glaciers
+\item my motivation for \aler{finite element solutions of variational inequalities} is this free-boundary problem for the surface elevation of glaciers
 \end{itemize}
 \end{frame}
 
@@ -150,7 +153,6 @@
 \AtBeginSection[]
 {% do not put toc here this time
 }
-
 
 \section{variational inequalities (VIs)}
 
@@ -168,7 +170,7 @@ the gradient $F=\nabla J$ is \aler{coercive}: there exists $\alpha > 0$ so that
 $$(F(x) - F(y)) \cdot (x - y) \ge \alpha \|x - y\|^2$$
 \end{proposition}
 
-\emph{Proof.} By Taylor expansion, and $H \ge \alpha I$ with $\alpha=\min_{x} \lambda_{\text{min}}(H(x))$,
+\emph{proof.} By Taylor expansion, and $H \ge \alpha I$ with $\alpha=\min_{x} \lambda_{\text{min}}(H(x))$,
 \begin{align*}
 J(x) - J(y) &\ge F(y) \cdot (x - y) + \frac{\alpha}{2} \|y-x\|^2 \\
 J(y) - J(x) &\ge F(x) \cdot (y - x) + \frac{\alpha}{2} \|y-x\|^2
@@ -209,65 +211,153 @@ Add the above: \quad $0 \ge (F(y) - F(x)) \cdot (x-y) +  \alpha \|x - y\|^2$. \q
 \begin{frame}{general variational inequalities}
 
 \begin{itemize}
-\item let $\cV$ be a real, reflexive Banach space
-\item let $\cK \subset \cV$ be a closed and convex subset
-\item suppose $F:\cK \to \cV'$ is a continuous, generally nonlinear operator
+\item let $\cX$ be a real, reflexive Banach space
+\item let $\cK \subset \cX$ be a closed and convex subset
+\item suppose $F:\cK \to \cX'$ is a continuous operator
     \begin{itemize}
-    \item[$\circ$] $F$ may be defined \emph{only} on $\mathcal{K}$
-    \item[$\circ$] $F$ may \emph{not}\, be the derivative of an objective function $J$
+    \item[$\circ$] $F$ may be defined only on $\mathcal{K}$
+    \item[$\circ$] $F$ may not be the derivative of an objective function $J$
+    \item[$\circ$] $F$ may be nonlinear
     \end{itemize}
-\item the general variational inequality problem {\color{FireBrick} VI($F$,$\mathcal{K}$)} is
-	$${\color{FireBrick} F(u)[v-u] \ge 0 \quad \text{ for all } v \in \mathcal{K}}$$
-\item if $\mathcal{K}$ is nontrivial, VI($F$,$\mathcal{K}$) is nonlinear, even when $F$ is linear
+\item suppose $\ell\in\cX'$
+\item the general variational inequality problem {\color{FireBrick} VI($F$,$\ell$,$\mathcal{K}$)} is
+	$${\color{FireBrick} F(u)[v-u] \ge \ell[v-u] \quad \text{ for all } v \in \mathcal{K}}$$
+\item if $\mathcal{K}$ is nontrivial, VI($F$,$\ell$,$\mathcal{K}$) is nonlinear, even when $F$ is linear
     \begin{itemize}
-    \item[$\circ$] classical obstacle problem: \, $F(v)[w] = \int_\Omega \grad v\cdot \grad w - \varphi w$
+    \item[$\circ$] classical obstacle problem: \, $F(v)[w] = \int_\Omega \grad v\cdot \grad w$, $\ell[w] = \int_\Omega \varphi w$
     \end{itemize}
-\onslide<2>{\begin{theorem}
-if $F$ is coercive then there is a unique $u\in\cK \subset H^1(\Omega)$ solving VI($F$,$\mathcal{K}$)
-\end{theorem}}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{VI $=$ ``constrained equation''}
+\begin{frame}{why ``$v-u$'' in the VI?}
+
+\begin{center}
+\includegraphics[width=0.75\textwidth]{figs/viconvex.png}
+\end{center}
+
+\vspace{-5mm}
+\hfill {\tiny P.~Farrell figure}
+
+\begin{itemize}
+\item $v-u \in \cX$ is a vector pointing feasibly into $\cK$
+\item $(F(u)-\ell)[v-u] \ge 0$ \, $\iff$ \, ``$F(u)-\ell$ is within $90^\circ$ of any $v-u$''
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{variational inequality $=$ constrained equation}
 
 \begin{center}
 \begin{tabular}{l|l}
 \begin{minipage}[t][16mm][t]{0.4\textwidth}
 unconstrained optimization:
-$$\min_{u\in\mathcal{V}} J(u)$$
+$$\min_{u\in\mathcal{X}} J(u)$$
 \end{minipage}
 &
-\begin{minipage}[t][16mm][t]{0.4\textwidth}
+\begin{minipage}[t][16mm][t]{0.5\textwidth}
 constrained optimization:
 $$\min_{u\in\mathcal{K}} J(u)$$
 \end{minipage}
 \\ \hline
 \begin{minipage}[t][16mm][t]{0.4\textwidth}
-equation for $u \in \mathcal{V}$:
+\phantom{foo}
 
-\only<1>{$$F(u)=0$$}
-\only<1>{$$F(u)=0$$}
+equation for $u \in \mathcal{X}$:
+$$\only<1>{F(u)=\ell}\only<2>{F(u)[v]=\ell[v] \quad \forall v \in \mathcal{X}}$$
 \end{minipage}
 &
-\begin{minipage}[t][16mm][t]{0.4\textwidth}
+\begin{minipage}[t][16mm][t]{0.5\textwidth}
+\only<1>{
+\phantom{foo}
 
-\vspace{-2mm}
-{\color{FireBrick} VI($F$,$\mathcal{K}$)} for $u \in \mathcal{K}$:
-$${\color{FireBrick} F(u)[v-u] \ge 0 \quad \forall v \in \mathcal{K}}$$
+\begin{center}
+{\Large ?}
+\end{center}
+}
+\only<2>{
+\phantom{foo}
+
+VI for $u \in \mathcal{K}$:
+$${\color{FireBrick} F(u)[v-u] \ge \ell[v-u] \quad \forall v \in \mathcal{K}}$$
+}
 \end{minipage}
 \end{tabular}
 \end{center}
 \end{frame}
 
 
-\begin{frame}{FIXME}
+\begin{frame}{$\qq$-coercivity and well-posedness}
 
-FIXME  $q$-coercivity gives well-posedness
+\begin{block}{continuum VI problem}
+VI for $u \in \cK$:
+$$F(u)[v-u] \ge \ell[v-u] \quad \forall v \in \cK$$
+\end{block}
+
+\begin{defn} $F:\cK \to \cX'$ is \aler{$\qq$-coercive} for $\qq>1$ if
+  $$\left(F(v)-F(w)\right)[v-w] \ge \alpha \|v-w\|^\qq \qquad \forall v,w \in \cK$$
+\end{defn}
+
+\begin{thm}[well-posedness; Kinderlehrer \& Stampaccia (1980)] 
+if $F$ is $\qq$-coercive and continuous then the continuum VI problem is well-posed
+\end{thm}
 \end{frame}
 
 
-\section{a new \emph{a priori} error bound for VIs}
+\AtBeginSection[] {
+    \begin{frame}{Outline}
+    \setbeamertemplate{section in toc}[sections numbered]
+    \tableofcontents[currentsection,hideallsubsections]
+    \end{frame}
+}
+
+\section{a new \emph{a priori} error bound for finite element methods on VIs}
+
+
+\begin{frame}{finite element (FE) approximation of the VI}
+
+\begin{cproblem}
+VI for $u \in \cK$:
+$$F(u)[v-u] \ge \ell[v-u] \quad \forall v \in \cK$$
+\end{cproblem}
+
+\begin{feproblem}
+VI for $u_h \in \cK_h$:
+$$F_h(u_h)[v_h-u_h] \ge \ell[v_h-u_h] \quad \forall v_h \in \cK_h$$
+\end{feproblem}
+
+conforming (?) assumptions:
+\begin{itemize}
+\item $\cK_h \subset \cX_h \subset \cX$
+\item<2> \aler{generally $\cK_h \not\subseteq \cK$}
+\item<2> \aler{generally $F_h\neq F$}
+\end{itemize}
+
+\vspace{-25mm}
+\hfill \input{tikz/nonadmissible.tex}
+\end{frame}
+
+
+\begin{frame}{theorem}
+
+\begin{thm}[B.~'25] assume $F$ is $\qq$-coercive with $\qq>1$ and $\alpha>0$, and Lipschitz continuous.  then there is $c=c(\|u\|,\|u_h\|,\alpha)>0$ so that
+\begin{align*}
+\|u-u_h\|^\qq &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \left(F(u)-\ell\right)[v-u_h] + \inf_{v_h\in\cK_h} \left(F(u)-\ell\right)[v_h-u]\right) \\
+   &\quad\, + \frac{2}{\alpha} \left(F(u_h)-F_h(u_h)\right)[u_h] + c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}. \notag
+\end{align*}
+\end{thm}
+
+\begin{itemize}
+\item<2> in the unconstrained case ($\cK=\cX$ and $\cK_h=\cX_h$) with no variational crimes ($F_h=F$), then this is Cea's lemma in a Banach space:
+    $$\|u-u_h\|^\qq \le c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}$$
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}{FIXME}
+
+FIXME
+\end{frame}
 
 \begin{frame}{FIXME}
 
