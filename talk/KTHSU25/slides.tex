@@ -101,7 +101,7 @@
 \newcommand{\aler}[1]{{\color{FireBrick} #1}}
 
 
-\title{Surface elevation errors in finite element \\ Stokes models for glacier evolution}
+\title{Surface elevation errors \\ in finite element Stokes models \\ for glacier evolution}
 
 \date{Numerical Analysis Seminar, KTH \& SU (September 2025)}
 
@@ -137,7 +137,8 @@
 \end{center}
 
     \begin{itemize}
-    \item[$\circ$] what is the \aler{geometry}, namely the surface elevation, of the ice?
+    \item[$\circ$] what is the geometry, namely the surface elevation, of the ice?
+    \item[$\circ$] this is a coupled climate-and-ice-flow problem
     \end{itemize}
 
 \bigskip
@@ -258,7 +259,7 @@ then \aler{generally the residual $F(u)-\ell$ is nonzero}
     \end{itemize}
 \item for a unilateral obstacle problem, with $\cK = \{v\in\cX\,:\,v\ge \psi\}$, the residual $F(u)-\ell$ is at least \aler{nonnegative}
     \begin{itemize}
-    \item[$\circ$] for classical obstacle problem:
+    \item[$\circ$] for classical obstacle problem the strong form is:
 	$$u\ge \psi, \quad -\grad^2 u - \varphi \ge 0, \quad (u-\psi) (-\grad^2 u - \varphi) = 0$$
     \item<2>[$\circ$] the residual is a positive measure $d\mu_u = F(u)-\ell$ supported in the active set $A_u=\{x\,:\, u(x)=\psi(x)\}$
     \end{itemize}
@@ -364,24 +365,30 @@ conforming (?) assumptions:
 
 \begin{thm}[B.~'25] assume $F$ is $\qq$-coercive with $\qq>1$ and $\alpha>0$, and Lipschitz continuous.  then there is $c=c(\|u\|,\|u_h\|,\alpha)>0$ so that
 \begin{align*}
-\|u-u_h\|^\qq &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \left(F(u)-\ell\right)[v-u_h] + \inf_{v_h\in\cK_h} \left(F(u)-\ell\right)[v_h-u]\right) \\
-   &\quad\, + \frac{2}{\alpha} \left(F(u_h)-F_h(u_h)\right)[u_h] + c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}
+\|u-u_h\|^\qq &\le \frac{2}{\alpha} \left(\inf_{v\in\aler{\cK}} \left(F(u)-\ell\right)[v-u_h] + \inf_{v_h\in\aler{\cK_h}} \left(F(u)-\ell\right)[v_h-u]\right) \\
+   &\quad\, + \frac{2}{\alpha} \left(F(u_h)-F_h(u_h)\right)[u_h] + c \inf_{v_h\in\aler{\cK_h}} \|v_h - u\|^{\qq'}
 \end{align*}
 \end{thm}
 
 \begin{itemize}
-\only<1>{\item in the unconstrained case ($\cK=\cX$ and $\cK_h=\cX_h$), with no variational crimes ($F_h=F$), this is Cea's lemma in a Banach space:
+\only<1>{\item in the unconstrained case ($\cK=\cX$ and $\cK_h=\cX_h$), with no variational crimes ($F_h=F$), this is \aler{Cea's lemma} in a Banach space:
     $$\|u-u_h\|^\qq \le c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}$$
 
 \vspace{5.5mm}
 \phantom{foo}}
-\only<2>{\item if $\cX$ is a Hilbert space, $F(u)[v]=(Au,v)$ is linear, $\cX \subset \cH$ for some Hilbert space $\cH$, $\qq=2$, and with no variational crimes ($F_h=F$), then this is Falk's (1974) theorem:
+\only<2>{\item if $\cX$ is a Hilbert space, $F(u)[v]=(Au,v)$ is linear, $\cX \subset \cH$ for some Hilbert space $\cH$, $\qq=2$, and with no variational crimes ($F_h=F$), then this is \aler{Falk's (1974) theorem} for VIs:
 {\small
 \begin{align*}
 \|u-u_h\|^2 &\le \frac{2}{\alpha} \|Au-\ell\|_{\cH'} \left(\inf_{v\in\cK} \|v-u_h\|_{\cH} + \inf_{v_h\in\cK_h} \|v_h-u\|_{\cH}\right) \\
    &\quad\, + c \inf_{v_h\in\cK_h} \|v_h - u\|^2
 \end{align*}
 }}
+\only<3>{\item for unilateral \aler{obstacle problems} $\cK = \{v\ge \psi\}$, with $d\mu_u=F(u)-\ell$ a positive measure supported in the active set $A_u$, this says
+\begin{align*}
+\|u-u_h\|^\qq &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \int_{A_u} v-u_h\,d\mu_u + \inf_{v_h\in\cK_h} \int_{A_u} v_h-u \,d\mu_u\right) \\
+   &\quad\, + \frac{2}{\alpha} \left(F(u_h)-F_h(u_h)\right)[u_h] + c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}
+\end{align*}
+}
 \end{itemize}
 \end{frame}
 
@@ -390,17 +397,17 @@ conforming (?) assumptions:
 
 \begin{frame}{the free-boundary problem for glacier surface elevation}
 
-\hfill \includegraphics[width=0.37\textwidth]{mapplane}
+\hfill \includegraphics[width=0.4\textwidth]{mapplane}
 
-\vspace{-35mm}
+\vspace{-39mm}
 
 \begin{minipage}[t]{60mm}
 {\small
 \begin{itemize}
 \item $\Omega \subset \RR^2$ fixed domain
-\item $a(t,x)$ surface mass balance (SMB)
-\item $b(x)$ bed elevation
-\item $s(t,x)$ \emph{solution} surface elevation
+\item $a(t,x)$ surface mass balance data
+\item $b(x)$ bed elevation data
+\item $s(t,x)$ surface elevation (solution)
 \item $\bn_s = (- \grad s,1)$ surface-normal vector
 \item $\bu|_s(t,x)$ surface value of ice velocity, extended by zero to bare land
 \end{itemize}
@@ -408,7 +415,7 @@ conforming (?) assumptions:
 \end{minipage}
 
 \begin{itemize}
-\item an obstacle problem, here in complementarity problem form, holds in $[0,T] \times \Omega$:
+\item an obstacle problem, in strong form, holds in $[0,T] \times \Omega$:
 \begin{align*}
 s - b &\ge 0 &&\phantom{x} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
@@ -444,19 +451,16 @@ s - b &\ge 0 &&\phantom{x} \\
 
 \hfill \includegraphics[width=0.45\textwidth]{stokesdomain.png}
 
-\vspace{-4mm}
-
 \begin{itemize}
-\item define:
-    $$\Lambda(t) = \{(x,z)\,:\,b(x)<z<s(t,x)\} \hspace{20mm}$$
+\item define ${\displaystyle \Lambda(t) = \{(x,z)\,:\,b(x)<z<s(t,x)\}}$
 \item Glen-Stokes equations in $\Lambda(t)$ with $\pp = (\nn + 1)/\nn \approx 4/3$:
 \begin{align*}
 - \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg  \\
-\nabla \cdot \bu &= 0  \\
-\nu(D\bu) &= \nu_0 |D\bu|^{\pp-2} && \phantom{foo}
+\nabla \cdot \bu &= 0
 \end{align*}
+where $D\bu = \frac{1}{2}\left(\grad\bu + \grad\bu^\top\right)$ is the strain-rate tensor
 
-\vspace{-1mm}
+and $\nu(D\bu) = \nu_0 |D\bu|^{\pp-2}$ is the viscosity
 \item stress boundary conditions:
 \begin{align*}
 &\left(2 \nu(D\bu) D\bu - pI\right) \bn_s = \bzero   && \where{on $\Gamma_s \subset \partial\Lambda(t)$} \\
@@ -466,42 +470,71 @@ s - b &\ge 0 &&\phantom{x} \\
 \end{frame}
 
 
-\begin{frame}{\underline{the} standard model for glacier evolution?}
-
+\newcommand{\stdblock}{
 \begin{align*}
 s - b &\ge 0 & &\where{in $\Omega$} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0 \\
 - \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(t)$} \\
 \nabla \cdot \bu &= 0 \\
-\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(t)$} \\
+\left(2 \nu_0 |D\bu|^{\pp-2} D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(t)$} \\
 f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(t)$}
 \end{align*}
+}
+
+\begin{frame}{\underline{the} standard model for glacier evolution?}
+
+\stdblock
 
 \bigskip
 \newtheorem*{smodel}{standard model}
 
 \begin{smodel}
-a complementarity problem (obstacle problem) in $[0,T]\times \Omega$, for fixed $\Omega \subset \RR^2$, coupled to a Glen-Stokes problem within the ice $\Lambda(t) \subset \RR^3$
+a complementarity problem (obstacle problem) in $[0,T]\times \Omega$, for fixed $\Omega \subset \RR^2$, \aler{coupled} to a Glen-Stokes problem, within the $s$-dependent ice domain $\Lambda(t) \subset \RR^3$, with solution $s,\bu,p$
 \end{smodel}
 \end{frame}
 
 
-\begin{frame}{the standard model wants ``fully-implicit'' time-stepping}
+\begin{frame}{mathematical knowledge for continuum problem}
 
-\begin{center}
-FIXME %\includegraphics[width=0.6\textwidth]{implicitstep}
-\end{center}
+\begin{itemize}
+\item \dots is limited, for now, to the \aler{fixed-domain Stokes problem}
+\item at each instant $t$, if the surface elevation $s$ is known, and adequately smooth, then the velocity $\bu$ and pressure $p$ are uniquely-determined
+\end{itemize}
 
-\bigskip
-\begin{block}{standard model as a dynamical system}
-an inequality-constrained \textbf{differential algebraic system} in $\infty$ dimensions
+\begin{theorem}[Jouvet \& Rappaz, 2011]
+over a fixed $C^1$ domain $\Lambda\subset\RR^3$, the $\pp>1$ Stokes problem
+\begin{align*}
+- \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda$} \\
+\nabla \cdot \bu &= 0 \\
+\left(2 \nu_0 |D\bu|^{\pp-2} D\bu - pI\right) \bn_h &= \bzero && \where{on $\Gamma_s\subset\partial\Lambda$} \\
+f(\bu,D\bu) &= 0 && \where{on $\Gamma_b\subset\partial\Lambda$}
+\end{align*}
+is well-posed for the solution $(\bu,p) \in W^{1,\pp}(\Omega;\RR^3) \times L^{\pp'}(\Omega)$
+\end{theorem}
+\end{frame}
+
+
+\begin{frame}{the standard model wants implicit time-stepping}
+
+{\footnotesize
+\stdblock
+}
+
+\begin{block}{standard model (as a dynamical system)}
+the model is an inequality-constrained \textbf{differential algebraic equations} (DAEs) system in $\infty$ dimensions
 \end{block}
+
+{\small
+\begin{itemize}
+\item you won't pass your ``numerical methods for stiff differential equations'' course if you blindly recommend explicit methods for the infinitely-stiff limit, which are DAEs
+\end{itemize}
+}
 \end{frame}
 
 
 
-\section{well-posed implicit steps?}
+\section{are implicit steps of the standard model well-posed?}
 
 \begin{frame}{implicit time-step problem is a variational inequality}
 
@@ -542,26 +575,7 @@ is well-posed for $s\in\cK$
 \end{frame}
 
 
-\begin{frame}{what's behind the conjecture? 1}
-
-\begin{center}
-\includegraphics[width=0.6\textwidth]{stokesdomain}
-\end{center}
-
-\begin{theorem}[Jouvet \& Rappaz, 2011]
-over a fixed domain $\Lambda$, the Glen-Stokes problem
-\begin{align*}
-- \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda$} \\
-\nabla \cdot \bu &= 0 \\
-\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda$} \\
-\bu  = \bzero \quad \text{or} \quad f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda$}
-\end{align*}
-is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)$
-\end{theorem}
-\end{frame}
-
-
-\begin{frame}{what's behind the conjecture? 2}
+\begin{frame}{what's behind the conjecture?}
 
 \bigskip
 \begin{center}
@@ -575,7 +589,7 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 \end{frame}
 
 
-\begin{frame}{what's behind the conjecture? 3}
+\begin{frame}{what's behind the conjecture?}
 
 \begin{center}
 \begin{tikzpicture}[scale=1.0]
@@ -592,7 +606,7 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 \end{frame}
 
 
-\begin{frame}{what's behind the conjecture? 4}
+\begin{frame}{what's behind the conjecture?}
 
 \bigskip
 \begin{conjecture}[actual; B '24]
@@ -674,7 +688,7 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
     \end{itemize}
 \item \textbf{conjecture.} for some $\qq>2$, the surface motion $-\bu|_s\cdot \bn_s$ from the Glen-Stokes problem is $\qq$-coercive over admissible $s\in W^{1,\qq}(\Omega)$
 \item \textbf{theorem.} supposing $\qq$-coercivity, each continuous-space, backward Euler time step problem is well-posed
-\item \textbf{theorem.} supposing well-posedness, the surface elevation FE error is bounded by a sum of 3 terms:
+\item \textbf{theorem.} supposing $\qq$-coercivity, the surface elevation FE error is bounded by a sum of 3 terms:
     \begin{enumerate}
     \item discretizing the bed elevation ($b_h$ versus $b$)
     \item numerically solving the Stokes equations ($\bu_h$ versus $\bu$)
