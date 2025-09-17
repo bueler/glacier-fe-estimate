@@ -490,7 +490,7 @@ f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(t)$}
 \newtheorem*{smodel}{standard model}
 
 \begin{smodel}
-a complementarity problem (obstacle problem) in $[0,T]\times \Omega$, for fixed $\Omega \subset \RR^2$, \aler{coupled} to a Glen-Stokes problem, within the $s$-dependent ice domain $\Lambda(t) \subset \RR^3$, with solution $s,\bu,p$
+a complementarity problem (obstacle problem) in $[0,T]\times \Omega$, for fixed $\Omega \subset \RR^2$, \aler{coupled} to a Glen-Stokes problem for $\bu$ and $p$, within the $s$-dependent ice domain $\Lambda(t) \subset \RR^3$; the solution is a triple $(s,\bu,p)$
 \end{smodel}
 \end{frame}
 
@@ -522,39 +522,41 @@ is well-posed for the solution $(\bu,p) \in W^{1,\pp}(\Omega;\RR^3) \times L^{\p
 }
 
 \begin{block}{standard model (as a dynamical system)}
-the model is an inequality-constrained \textbf{differential algebraic equations} (DAEs) system in $\infty$ dimensions
+the model is an inequality-constrained \aler{differential algebraic equations} (DAEs) system in $\infty$ dimensions
 \end{block}
 
-{\small
 \begin{itemize}
-\item implicit methods are the usual recommendation for the infinitely-stiff limit of ODE systems, namely DAEs
+\item<2> \aler{implicit} methods are the usual recommendation for the infinitely-stiff limit of ODE systems, namely DAEs
 \end{itemize}
-}
 \end{frame}
 
 
 
 \section{are implicit steps of the standard model well-posed?}
 
-\begin{frame}{implicit time steps of the standard model}
-
-FIXME
+\begin{frame}{a single implicit time step of the standard model}
 
 \begin{itemize}
-\item consider backward Euler time steps with $\Delta t>0$:
+\item consider a \aler{backward Euler time step} with $\Delta t>0$:
+{\small
 \begin{align*}
 s - b &\ge 0 & &\where{in $\Omega$} \\
-s - \Delta t\, \bu|_s \cdot \bn_s - (s^{k-1} + \Delta t\,a) &\ge 0 \\
-(s - b) \left(s - \Delta t\, \bu|_s \cdot \bn_s - (s^{k-1} + \Delta t\,a)\right) &= 0 \\
+s - \Delta t\, \bu|_s \cdot \bn_s - \ell &\ge 0 \\
+(s - b) \left(s - \Delta t\, \bu|_s \cdot \bn_s - \ell\right) &= 0 \\
 - \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(s)$} \\
 \nabla \cdot \bu &= 0 \\
 \left(2 \nu_0 |D\bu|^{\pp-2} D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
 f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
 \end{align*}
-where
+}
+where \aler{$s \approx s(t_k)$}, $s^{k-1}\approx s(t_{k-1})$, and
+{\small
+    $$\ell(x) = s^{k-1}(x) + \Delta t\,\int_{t_{k-1}}^{t_k} a(t,x)\,dt$$
+}
+is a source term
+\item \aler{the solution is a triple $(s,\bu,p)$, at the new time $t_k$}
     \begin{itemize}
-    \item[$\circ$] $s \approx s(t_k)$, $s^{k-1}\approx s(t_{k-1})$, and
-        $$\ell^{k-1} = s^{k-1} + \Delta t\,a$$
+    \item[$\circ$] $s$ must be admissible, that is, above the bed
     \end{itemize}
 \end{itemize}
 \end{frame}
@@ -706,13 +708,14 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
 
 \begin{frame}{summary}
 \begin{itemize}
-\item implicit time-stepping makes sense for geometry-evolving, Stokes models for glaciers
+\item implicit time-stepping is desirable for the standard geometry-evolving Stokes model for glaciers
     \begin{itemize}
     \item[$\circ$] both a differential-algebraic system and a free-boundary problem
     \end{itemize}
-\item \textbf{conjecture.} for some $\qq>2$, the surface motion $-\bu|_s\cdot \bn_s$ from the Glen-Stokes problem is $\qq$-coercive over admissible $s\in W^{1,\qq}(\Omega)$
-\item \textbf{theorem.} supposing $\qq$-coercivity, each continuous-space, backward Euler time step problem is well-posed
-\item \textbf{theorem.} supposing $\qq$-coercivity, the surface elevation FE error is bounded by a sum of 3 terms:
+\item<2-5> \textbf{conjecture.} for some $\qq>2$, the surface motion $-\bu|_s\cdot \bn_s$ from the Glen-Stokes problem is $\qq$-coercive over admissible $s\in W^{1,\qq}(\Omega)$
+\item<3-5> \textbf{theorem.} for abstract $\qq$-coercive operators, the finite element approximation of the VI problem has a (new) \emph{a priori} bound
+\item<4-5> \textbf{theorem.} supposing $\qq$-coercivity, each continuous-space, backward Euler time step problem is well-posed
+\item<5> \textbf{theorem.} supposing $\qq$-coercivity, the surface elevation FE error is bounded by a sum of 3 terms:
     \begin{enumerate}
     \item discretizing the bed elevation ($b_h$ versus $b$)
     \item numerically solving the Stokes equations ($\bu_h$ versus $\bu$)
