@@ -527,7 +527,7 @@ the model is an inequality-constrained \textbf{differential algebraic equations}
 
 {\small
 \begin{itemize}
-\item you won't pass your ``numerical methods for stiff differential equations'' course if you blindly recommend explicit methods for the infinitely-stiff limit, which are DAEs
+\item implicit methods are the usual recommendation for the infinitely-stiff limit of ODE systems, namely DAEs
 \end{itemize}
 }
 \end{frame}
@@ -535,6 +535,30 @@ the model is an inequality-constrained \textbf{differential algebraic equations}
 
 
 \section{are implicit steps of the standard model well-posed?}
+
+\begin{frame}{implicit time steps of the standard model}
+
+FIXME
+
+\begin{itemize}
+\item consider backward Euler time steps with $\Delta t>0$:
+\begin{align*}
+s - b &\ge 0 & &\where{in $\Omega$} \\
+s - \Delta t\, \bu|_s \cdot \bn_s - (s^{k-1} + \Delta t\,a) &\ge 0 \\
+(s - b) \left(s - \Delta t\, \bu|_s \cdot \bn_s - (s^{k-1} + \Delta t\,a)\right) &= 0 \\
+- \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(s)$} \\
+\nabla \cdot \bu &= 0 \\
+\left(2 \nu_0 |D\bu|^{\pp-2} D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
+f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
+\end{align*}
+where
+    \begin{itemize}
+    \item[$\circ$] $s \approx s(t_k)$, $s^{k-1}\approx s(t_{k-1})$, and
+        $$\ell^{k-1} = s^{k-1} + \Delta t\,a$$
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
 
 \begin{frame}{implicit time-step problem is a variational inequality}
 
