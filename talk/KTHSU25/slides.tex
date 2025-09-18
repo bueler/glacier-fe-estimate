@@ -378,7 +378,7 @@ conforming assumptions\only<1>{:}\only<2-3>{\aler{?}}
 \end{thm}
 
 \begin{itemize}
-\only<1>{\item in the unconstrained case ($\cK=\cX$ and $\cK_h=\cX_h$), with no variational crimes ($F_h=F$), this is \aler{Cea's lemma} in a Banach space:
+\only<1>{\item in the unconstrained case ($\cK=\cX$), with no variational crimes ($F_h=F$), this is \aler{Cea's lemma} in a Banach space:
     $$\|u-u_h\|^\qq \le c \inf_{v_h\in\cX_h} \|v_h - u\|^{\qq'}$$
 
 \vspace{5.5mm}
@@ -390,7 +390,7 @@ conforming assumptions\only<1>{:}\only<2-3>{\aler{?}}
    &\quad\, + c \inf_{v_h\in\cK_h} \|v_h - u\|^2
 \end{align*}
 }}
-\only<3>{\item for unilateral \aler{obstacle problems} $\cK = \{v\ge \psi\}$, with $d\mu_u=F(u)-\ell$ a positive measure supported in the active set $A_u$, this says
+\only<3>{\item for unilateral \aler{obstacle problems} $\cK = \{v\ge \psi\}$, with $d\mu_u=F(u)-\ell$ a \aler{positive measure supported in the exact active set $A_u$}, this says
 \begin{align*}
 \|u-u_h\|^\qq &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \int_{A_u} v-u_h\,d\mu_u + \inf_{v_h\in\cK_h} \int_{A_u} v_h-u \,d\mu_u\right) \\
    &\quad\, + \frac{2}{\alpha} \left(F(u_h)-F_h(u_h)\right)[u_h] + c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}
@@ -760,16 +760,19 @@ Suppose $\Phi^\eps$ is $4$-coercive in $\cX = W^{1,4}(\Omega)$.  In discretizing
 
 \begin{frame}{summary}
 \begin{itemize}
-\item implicit time-stepping for variational inequalities is needed for the standard geometry-evolving Stokes model for glaciers
+\item implicit time-stepping for variational inequalities is needed for the geometry-evolving Stokes model for glaciers
     \begin{itemize}
     \item[$\circ$] both a differential-algebraic system and a free-boundary problem
     \end{itemize}
-\item<2-4> \textbf{conjecture.} an SIA-regularized form of the surface motion $\Phi(s) = -\bu|_s\cdot \bn_s$, with $\bu|_s$ from the Glen-Stokes problem, is $4$-coercive over admissible $s\in W^{1,4}(\Omega)$
+\item<2-4> \textbf{theorem.} for abstract $\qq$-coercive operators, the FE approximation of the VI problem has an \emph{a priori} bound with 4 terms
+    \begin{itemize}
+    \item[$\circ$] generalizes Cea's and Falk's result to nonlinear operators
+    \end{itemize}
+\item<3-4> \textbf{conjecture.} an SIA-regularized form of the glacier surface motion $\Phi(s) = -\bu|_s\cdot \bn_s$, with $\bu|_s$ from the Glen-Stokes problem, is $4$-coercive over admissible $s\in W^{1,4}(\Omega)$
     \begin{itemize}
     \item[$\circ$] implies that each continuous-space, backward Euler time step problem is well-posed
     \end{itemize}
-\item<3-4> \textbf{theorem.} for abstract $\qq$-coercive operators, the FE approximation of the VI problem has an \emph{a priori} bound with 4 terms \dots
-\item<4> \textbf{theorem.} supposing the conjecture, the FE surface elevation error, in a backward Euler step of the standard glacier model is bounded by a sum of terms:
+\item<4> \textbf{theorem.} supposing the conjecture, the FE surface elevation error, in a backward Euler step of the standard glacier model, is bounded by a sum of terms:
     \begin{enumerate}
     \item error in discretizing the bed elevation ($b_h$ versus $b$)
     \item error in numerically solving the Stokes equations ($\bu_h$ versus $\bu$)
