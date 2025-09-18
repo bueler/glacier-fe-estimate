@@ -159,6 +159,8 @@
 
 \section{variational inequalities (VIs)}
 
+\subsection{(and coercivity)}
+
 \begin{frame}{reminder: coercivity for gradients}
 
 \begin{itemize}
@@ -175,7 +177,7 @@ $$(F(x) - F(y)) \cdot (x - y) \ge \alpha \|x - y\|^2$$
 
 \emph{proof.} By Taylor expansion, and $H \ge \alpha I$ with $\alpha=\min_{x} \lambda_{\text{min}}(H(x))$,
 \begin{align*}
-J(x) - J(y) &\ge F(y) \cdot (x - y) + \frac{\alpha}{2} \|y-x\|^2 \\
+J(x) - J(y) &\ge F(y) \cdot (x - y) + \frac{\alpha}{2} \|x-y\|^2 \\
 J(y) - J(x) &\ge F(x) \cdot (y - x) + \frac{\alpha}{2} \|y-x\|^2
 \end{align*}
 Add the above: \quad $0 \ge (F(y) - F(x)) \cdot (x-y) +  \alpha \|x - y\|^2$. \qed
@@ -195,7 +197,8 @@ Add the above: \quad $0 \ge (F(y) - F(x)) \cdot (x-y) +  \alpha \|x - y\|^2$. \q
     $$\int_\Omega \grad u\cdot \grad (v-u) - \varphi (v-u) \ge 0 \quad \text{for all } v \in \cK$$
 
     \begin{itemize}
-    \item[$\circ$] here the weak form operator is $F(u)[v] = \int_\Omega \grad u\cdot \grad v - \varphi v$, and it is coercive on $H^1(\Omega)$
+    \item[$\circ$] the weak form operator is $F(u)[v] = \int_\Omega \grad u\cdot \grad v - \varphi v$
+    \item[$\circ$] $F$ is coercive on $H^1(\Omega)$
     \end{itemize}
 \end{itemize}
 }
@@ -218,17 +221,18 @@ Add the above: \quad $0 \ge (F(y) - F(x)) \cdot (x-y) +  \alpha \|x - y\|^2$. \q
 \item let $\cK \subset \cX$ be a closed and convex subset
 \item suppose $F:\cK \to \cX'$ is a continuous operator
     \begin{itemize}
-    \item[$\circ$] $F$ may be defined only on $\mathcal{K}$
-    \item[$\circ$] $F$ may not be the derivative of an objective function $J$
+    \item[$\circ$] $F$ \aler{may not} be the gradient of any objective function $J$
+    \item[$\circ$] $F$ may be defined \aler{only on $\mathcal{K}$}
     \item[$\circ$] $F$ may be nonlinear
     \end{itemize}
 \item suppose $\ell\in\cX'$
-\item the general variational inequality problem {\color{FireBrick} VI($F$,$\ell$,$\mathcal{K}$)} is
+\item denote the general variational inequality problem as {\color{FireBrick} VI($F$,$\ell$,$\mathcal{K}$)}:
 	$${\color{FireBrick} F(u)[v-u] \ge \ell[v-u] \quad \text{ for all } v \in \mathcal{K}}$$
-\item if $\mathcal{K}$ is nontrivial, VI($F$,$\ell$,$\mathcal{K}$) is nonlinear, even when $F$ is linear
+
     \begin{itemize}
-    \item[$\circ$] classical obstacle problem: \, $F(v)[w] = \int_\Omega \grad v\cdot \grad w$, $\ell[w] = \int_\Omega \varphi w$
+    \item[$\circ$] if $\mathcal{K}$ is nontrivial, VI($F$,$\ell$,$\mathcal{K}$) is nonlinear, even when $F$ is linear
     \end{itemize}
+
 \end{itemize}
 \end{frame}
 
@@ -236,7 +240,7 @@ Add the above: \quad $0 \ge (F(y) - F(x)) \cdot (x-y) +  \alpha \|x - y\|^2$. \q
 \begin{frame}{why ``$v-u$'' in the VI?}
 
 \begin{center}
-\includegraphics[width=0.75\textwidth]{figs/viconvex.png}
+\includegraphics[width=0.7\textwidth]{figs/viconvex.png}
 \end{center}
 
 \vspace{-5mm}
@@ -252,7 +256,7 @@ Add the above: \quad $0 \ge (F(y) - F(x)) \cdot (x-y) +  \alpha \|x - y\|^2$. \q
 \begin{frame}{complementarity, a key idea about VIs}
 
 \begin{itemize}
-\item if $u\in\cK$ solves a VI, namely
+\item if $u\in\cK$ solves the VI
 $$F(u)[v-u] \ge \ell[v-u] \quad \text{ for all } v \in \mathcal{K},$$
 then \aler{generally the residual $F(u)-\ell$ is nonzero}
     \begin{itemize}
@@ -260,10 +264,10 @@ then \aler{generally the residual $F(u)-\ell$ is nonzero}
     \end{itemize}
 \item for a unilateral obstacle problem, with $\cK = \{v\in\cX\,:\,v\ge \psi\}$, the residual $F(u)-\ell$ is at least \aler{nonnegative}
     \begin{itemize}
-    \item[$\circ$] for classical obstacle problem the strong form is:
-	$$u\ge \psi, \quad -\grad^2 u - \varphi \ge 0, \quad (u-\psi) (-\grad^2 u - \varphi) = 0$$
-    \item<2>[$\circ$] the residual is a positive measure $d\mu_u = F(u)-\ell$ supported in the active set $A_u=\{x\,:\, u(x)=\psi(x)\}$
+    \item[$\circ$] the residual is a positive measure $d\mu_u = F(u)-\ell$ supported in the active set $A_u=\{x\,:\, u(x)=\psi(x)\}$
     \end{itemize}
+\item for classical obstacle problem, the strong form statement of complementarity is:
+	$$u\ge \psi, \quad -\grad^2 u - \varphi \ge 0, \quad (u-\psi) (-\grad^2 u - \varphi) = 0$$
 \end{itemize}
 \end{frame}
 
@@ -300,7 +304,7 @@ $$\only<1>{F(u)=\ell}\only<2>{F(u)[v]=\ell[v] \quad \forall v \in \mathcal{X}}$$
 \only<2>{
 \phantom{foo}
 
-VI for $u \in \mathcal{K}$:
+variational inequality for $u \in \mathcal{K}$:
 $${\color{FireBrick} F(u)[v-u] \ge \ell[v-u] \quad \forall v \in \mathcal{K}}$$
 }
 \end{minipage}
@@ -366,9 +370,9 @@ conforming assumptions\only<1>{:}\only<2-3>{\aler{?}}
 
 \begin{frame}{\emph{a priori} error bound}
 
-\begin{thm}[B.~'25] assume $F$ is $\qq$-coercive with $\qq>1$ and $\alpha>0$, and Lipschitz continuous.  then there is $c=c(\|u\|,\|u_h\|,\alpha)>0$ so that
+\begin{thm}[B~'24] assume $F$ is $\qq$-coercive with $\qq>1$ and $\alpha>0$, and Lipschitz continuous.  then there is $c=c(\|u\|,\|u_h\|,\alpha)>0$ so that
 \begin{align*}
-\|u-u_h\|^\qq &\le \frac{2}{\alpha} \left(\inf_{v\in\aler{\cK}} \left(F(u)-\ell\right)[v-u_h] + \inf_{v_h\in\aler{\cK_h}} \left(F(u)-\ell\right)[v_h-u]\right) \\
+\|u-u_h\|^\qq &\le \frac{2}{\alpha} \left[\inf_{v\in\aler{\cK}} \left(F(u)-\ell\right)[v-u_h] + \inf_{v_h\in\aler{\cK_h}} \left(F(u)-\ell\right)[v_h-u]\right] \\
    &\quad\, + \frac{2}{\alpha} \left(F(u_h)-F_h(u_h)\right)[u_h] + c \inf_{v_h\in\aler{\cK_h}} \|v_h - u\|^{\qq'}
 \end{align*}
 \end{thm}
@@ -410,7 +414,7 @@ conforming assumptions\only<1>{:}\only<2-3>{\aler{?}}
 \item $\Omega \subset \RR^2$ fixed domain
 \item $a(t,x)$ surface mass balance data
 \item $b(x)$ bed elevation data
-\item $s(t,x)$ surface elevation (solution)
+\item \aler{$s(t,x)$ surface elevation (solution)}
 \item $\bn_s = (- \grad s,1)$ surface-normal vector
 \item $\bu|_s(t,x)$ surface value of ice velocity, extended by zero to bare land
 \end{itemize}
@@ -433,7 +437,7 @@ s - b &\ge 0 &&\phantom{x} \\
 \begin{itemize}
 \item free surface equation:
    $$\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0$$
-\item but the complementarity problem is the actual \emph{free-boundary} meaning of the free surface equation:
+\item the complementarity problem is the \aler{true free-boundary meaning of the free surface equation}:
 \begin{align*}
 s - b &\ge 0 &&\phantom{x} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
@@ -441,11 +445,11 @@ s - b &\ge 0 &&\phantom{x} \\
 \end{align*}
 
     \begin{itemize}
-    \item[$\circ$] says: free surface equation holds where there is ice
-    \item[$\circ$] says: $a\le 0$ where there is no ice
-    \item[$\circ$] applies regardless of dynamical model within the ice
-    \item[$\circ$] this appears first in (Calvo et al 2003), but only for shallow ice
+    \item[$\circ$] this applies regardless of dynamical model within the ice
+    \item[$\circ$] the free surface equation holds where there is ice
+    \item[$\circ$] $a\le 0$ where there is no ice
     \end{itemize}
+\item this free-boundary problem appears first in (Calvo et al 2003), but only for shallow ice
 \end{itemize}
 \end{frame}
 
@@ -455,7 +459,7 @@ s - b &\ge 0 &&\phantom{x} \\
 \hfill \includegraphics[width=0.45\textwidth]{stokesdomain.png}
 
 \begin{itemize}
-\item define ${\displaystyle \Lambda(t) = \{(x,z)\,:\,b(x)<z<s(t,x)\}}$
+\item define \aler{${\displaystyle \Lambda(t) = \{(x,z)\,:\,b(x)<z<s(t,x)\}}$}
 \item Glen-Stokes equations in $\Lambda(t)$ with $\pp = (\nn + 1)/\nn \approx 4/3$:
 \begin{align*}
 - \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg  \\
@@ -467,7 +471,7 @@ and $\nu(D\bu) = \nu_0 |D\bu|^{\pp-2}$ is the viscosity
 \item stress boundary conditions:
 \begin{align*}
 &\left(2 \nu(D\bu) D\bu - pI\right) \bn_s = \bzero   && \where{on $\Gamma_s \subset \partial\Lambda(t)$} \\
-&f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(t)$}
+&\beta(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(t)$}
 \end{align*}
 \end{itemize}
 \end{frame}
@@ -481,7 +485,7 @@ s - b &\ge 0 & &\where{in $\Omega$} \\
 - \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda(t)$} \\
 \nabla \cdot \bu &= 0 \\
 \left(2 \nu_0 |D\bu|^{\pp-2} D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda(t)$} \\
-f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(t)$}
+\beta(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(t)$}
 \end{align*}
 }
 
@@ -493,17 +497,15 @@ f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(t)$}
 \newtheorem*{smodel}{standard model}
 
 \begin{smodel}
-a complementarity problem (obstacle problem) in $[0,T]\times \Omega$, for fixed $\Omega \subset \RR^2$, \aler{coupled} to a Glen-Stokes problem for $\bu$ and $p$, within the $s$-dependent ice domain $\Lambda(t) \subset \RR^3$; the solution is a triple $(s,\bu,p)$
+a complementarity problem (obstacle problem) in $[0,T]\times \Omega$, over a fixed $\Omega \subset \RR^2$, \aler{coupled} to a Glen-Stokes problem for $\bu$ and $p$, within the $s$-dependent ice domain $\Lambda(t) \subset \RR^3$; the solution is a triple $(s,\bu,p)$
 \end{smodel}
 \end{frame}
 
 
-\begin{frame}{mathematical knowledge for continuum problem}
+\begin{frame}{mathematical knowledge about the standard model}
 
 \begin{itemize}
 \item \dots is limited, for now, to the \aler{fixed-domain Stokes problem}
-\item at each instant $t$, if the surface elevation $s$ is known, and adequately smooth, then the velocity $\bu$ and pressure $p$ are uniquely-determined
-\end{itemize}
 
 \begin{thm}[Jouvet \& Rappaz, 2011]
 over a fixed $C^1$ domain $\Lambda\subset\RR^3$, the $\pp>1$ Stokes problem
@@ -511,10 +513,13 @@ over a fixed $C^1$ domain $\Lambda\subset\RR^3$, the $\pp>1$ Stokes problem
 - \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda$} \\
 \nabla \cdot \bu &= 0 \\
 \left(2 \nu_0 |D\bu|^{\pp-2} D\bu - pI\right) \bn_h &= \bzero && \where{on $\Gamma_s\subset\partial\Lambda$} \\
-f(\bu,D\bu) &= 0 && \where{on $\Gamma_b\subset\partial\Lambda$}
+\beta(\bu,D\bu) &= 0 && \where{on $\Gamma_b\subset\partial\Lambda$}
 \end{align*}
 is well-posed for the solution $(\bu,p) \in W^{1,\pp}(\Omega;\RR^3) \times L^{\pp'}(\Omega)$
 \end{thm}
+
+\item thus, at each instant $t$, if the surface elevation $s$ is known and smooth, then the velocity $\bu$ and pressure $p$ are uniquely-determined
+\end{itemize}
 \end{frame}
 
 
@@ -524,12 +529,13 @@ is well-posed for the solution $(\bu,p) \in W^{1,\pp}(\Omega;\RR^3) \times L^{\p
 \stdblock
 }
 
+\bigskip
 \begin{block}{standard model (as a dynamical system)}
-the model is an inequality-constrained \aler{differential algebraic equations} (DAEs) system in $\infty$ dimensions
+the model is an inequality-constrained \aler{differential algebraic equation} (DAE) system in $\infty$ dimensions
 \end{block}
 
 \begin{itemize}
-\item<2> \aler{implicit} methods are the usual recommendation for the infinitely-stiff limit of ODE systems, namely DAEs
+\item \aler{implicit} methods are the usual recommendation for the infinitely-stiff limit of ODE systems, namely DAEs
 \end{itemize}
 \end{frame}
 
@@ -540,7 +546,9 @@ the model is an inequality-constrained \aler{differential algebraic equations} (
 \begin{frame}{a single implicit time step of the standard model}
 
 \begin{itemize}
-\item consider a \aler{backward Euler time step}, with $\Delta t>0$, of the frozen-bed model:
+\item let $\Delta t>0$ and denote \aler{$s \approx s(t_k)$} and $s^{k-1}\approx s(t_{k-1})$
+\item change notation: \aler{$\Lambda(s) = \{(x,z)\,:\,b(x) < z < s(x)\}$}
+\item consider a \aler{backward Euler time step} of the non-sliding model:
 {\small
 \begin{align*}
 s - b &\ge 0 & &\where{in $\Omega$} \\
@@ -552,14 +560,11 @@ s - \Delta t\, \bu|_s \cdot \bn_s - \ell &\ge 0 \\
 \bu &= 0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
 \end{align*}
 }
-where \aler{$s \approx s(t_k)$}, $s^{k-1}\approx s(t_{k-1})$, and with source term
+\item with source term
 {\small
     $$\ell(x) = s^{k-1}(x) + \Delta t\,\int_{t_{k-1}}^{t_k} a(t,x)\,dt$$
 }
-\item<2> \aler{the solution}, if it exists, \aler{is a triple $(s,\bu,p)$ for the new time $t_k$}
-    \begin{itemize}
-    \item[$\circ$] $s$ must be admissible: \, $s\ge b$
-    \end{itemize}
+\item the solution, if it exists, is a triple $(s,\bu,p)$ for the new time $t_k$
 \end{itemize}
 \end{frame}
 
@@ -569,35 +574,32 @@ where \aler{$s \approx s(t_k)$}, $s^{k-1}\approx s(t_{k-1})$, and with source te
 \begin{frame}{the surface motion term}
 
 \begin{itemize}
-\item for understanding well-posedness, and surface elevation errors, we focus on the key term
+\item regarding the questions of well-posedness and surface elevation errors, we focus on the key term
 
 \begin{defn}
 the \aler{surface motion} in the standard model: \, $\Phi(s) = -\bu_s\cdot \bn_s$
 \end{defn}
 
-    \begin{itemize}
-    \item[$\circ$] for $s\in \cX$, where $\cX$ is a Banach space to be determined
-    \end{itemize}
-
-\item and we focus on the key question
+\item \dots and on the key question
 \begin{question}
 is the surface motion $\Phi(s)$ $\qq$-coercive?
-\end{question}
-\item that is, are there $\qq>1$ and $\alpha>0$ so that
+
+are there $\qq>1$ and $\alpha>0$ so that
 $$(\Phi(s) - \Phi(\sigma))[s-\sigma] \stackrel{?}{\ge} \alpha \|s-\sigma\|_{\cX}^\qq$$
-for all $s,\sigma \in \cK = \{\omega \in \cX\,:\, \omega\big|_{\partial \Omega} = b\big|_{\partial \Omega} \, \text{ and } \, \omega \ge b\}$
+for all $s,\sigma \in \cK = \{\omega \in \cX\,:\, \omega\big|_{\partial \Omega} = b\big|_{\partial \Omega} \, \text{ and } \, \omega \ge b\}$, where $\cX$ is a Banach space to be determined?
+\end{question}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{is the surface motion term coercive?}
+\begin{frame}{is the surface motion coercive?}
 
 \begin{question}
 $$(\Phi(s) - \Phi(\sigma))[s-\sigma] \stackrel{?}{\ge} \alpha \|s-\sigma\|_{\cX}^\qq$$
 \end{question}
 
 \begin{itemize}
-\item the answer is \aler{no} for general, bumpy beds
+\item the answer is \aler{no} for general bumpy beds
 \item for surfaces $s_1,s_2\in\cK$ below we compute
 \begin{align*}
 \Phi(s_1) &= 0 \\
@@ -614,9 +616,7 @@ $$(\Phi(s) - \Phi(\sigma))[s-\sigma] \stackrel{?}{\ge} \alpha \|s-\sigma\|_{\cX}
 \end{frame}
 
 
-\begin{frame}{is the \underline{regularized} surface motion term coercive?}
-
-FIXME FORMAT
+\begin{frame}{is the \underline{regularized} surface motion coercive?}
 
 \begin{question}
 $$(\Phi^{\aler{\eps}}(s) - \Phi^{\aler{\eps}}(\sigma))[s-\sigma] \stackrel{?}{\ge} \alpha^{\aler{\eps}} \|s-\sigma\|_{\cX}^\qq$$
@@ -624,17 +624,20 @@ $$(\Phi^{\aler{\eps}}(s) - \Phi^{\aler{\eps}}(\sigma))[s-\sigma] \stackrel{?}{\g
 
 \begin{itemize}
 \only<1>{
-\item a \aler{regularization}, based upon the shallow ice approximation, breaks the symmetry on the last slide, and prefers flat ice surfaces
-\item by definition, for $\eps>0$ small and $H_0$ comparable to ice thickness, let
+\item for $\eps>0$ small and $H_0$ comparable to ice thickness, define
    $$\Phi^\eps(s) = (u|_s,v|_s) \cdot \grad s - (1-\eps) w|_s - \eps \Div\left(\Gamma H_0^5 |\grad s|^2\grad s\right)$$
-\item note $\eps=0$ case returns $\Phi(s)$:
+\item this \aler{regularization of the surface value of the vertical velocity}, using the shallow ice approximation formula, breaks the symmetry on the last slide
+    \begin{itemize}
+    \item[$\circ$] it prefers flat ice surfaces
+    \end{itemize}
+\item $\eps=0$ case returns $\Phi(s)$:
    $$\Phi^0(s) = (u|_s,v|_s) \cdot \grad s - w|_s = -\bu_s\cdot \bn_s$$
 }
 \only<2>{
-\item a \aler{numerical experiment} gives evidence of $\qq=4$-coercivity
-\item I computed these ratios, for $\eps=0.1$ and $H_0=1000$ m:
+\item a \aler{numerical experiment}, computing these ratios for $\eps=0.1$ and $H_0=1000$ m,
 $$\frac{(\Phi^{\aler{\eps}}(s_1) - \Phi^{\aler{\eps}}(s_1))[s_1-s_2]}{\|s_1-s_2\|_{\cX}^4}$$
-\item randomly chosen pairs $s_1,s_2 \in W^{1,4}(\Omega)$ from $10^3$ states, for two beds, generated using FSSA acceleration (L\"ofgren et al.~2022)
+\aler{gives evidence of $\qq=4$-coercivity}
+\item randomly chosen pairs $s_1,s_2 \in W^{1,4}(\Omega)$ from $10^3$ states which were generated using FSSA acceleration (L\"ofgren et al.~2022)
 
 \bigskip
 \centering
@@ -654,45 +657,50 @@ $$\frac{(\Phi^{\aler{\eps}}(s_1) - \Phi^{\aler{\eps}}(s_1))[s_1-s_2]}{\|s_1-s_2\
 \includegraphics[width=0.32\textwidth]{figs/bflat500mREG.png} \qquad \includegraphics[width=0.32\textwidth]{figs/brough500mREG.png}
 }
 \only<4>{
-\item with regularization, under refinement ($\Delta x=2$ km, 1 km, 500 m):
+\item mesh refinement ($\Delta x=2$ km, 1 km, 500 m) eliminates negative ratios:
 
 \medskip
 \hfill
 \includegraphics[width=0.27\textwidth]{figs/brough2000mREG.png}
 \quad \includegraphics[width=0.27\textwidth]{figs/brough1000mREG.png}
 \quad \includegraphics[width=0.27\textwidth]{figs/brough500mREG.png}
+
+\item perhaps $\alpha_\eps \sim 10^{-21} \,\text{m}^{9/4}\,\text{s}^{-1}$?
+
+\vspace{19mm}
 }
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{a single implicit time step of the standard model}
-
-FIXME CONTENT
+\begin{frame}{an implicit time step of the regularized standard model}
 
 \begin{itemize}
 \item define
-    $$F(\sigma)[\omega] = \int_\Omega \left(\sigma + \Delta t\,\Phi(\sigma)\right) \omega$$
+    $$F^\eps(\sigma)[\omega] = \int_\Omega \left(\sigma + \Delta t\,\Phi^\eps(\sigma)\right) \omega$$
 \end{itemize}
 
 \begin{defn}
-the \emph{backward Euler time-step problem}, for $t_k \in [0,T]$, is to find the surface elevation $s \approx s(t_k,x) \in \cK$ solving the variational inequality (VI)
-$$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
+the weak form \aler{backward Euler time-step problem} is to find the surface elevation $s \approx s(t_k,x)$ in $\cK =\{\sigma\,:\, \sigma \ge b \text{ and } \sigma|_{\partial\Omega} = b_{\partial\Omega}\} \subset \cX$, where $\cX = W^{1,4}(\Omega)$, solving the VI
+$$F^\eps(s)[\sigma-s] \ge \ell[\sigma-s] \quad \text{for all } \sigma \in \cK$$
 \end{defn}
 \end{frame}
 
 
 \begin{frame}{well-posedness is only conjectural}
 
-\hfill \includegraphics[width=0.35\textwidth]{mapplane}
+\begin{conjecture}[B~'24]
+$\Phi^\eps$ is $4$-coercive,
 
-\begin{conjecture}[B '24]
-for some $\qq>2$, with $\cX = W^{1,\qq}(\Omega)$, and defining the admissible surface elevation subset
-    $$\cK = \{r \ge b\} \subset \cX,$$
-the backward Euler time-step VI problem,
-    $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK,$$
-is well-posed for $s\in\cK$
+so the backward Euler time-step problem is well-posed for $s$
 \end{conjecture}
+
+\smallskip
+\begin{itemize}
+\item this is a license to go hunting for a numerical solution to the glaciation problem
+\end{itemize}
+
+\includegraphics[width=0.45\textwidth]{nhsheets} \hfill \includegraphics[width=0.4\textwidth]{mapplane}
 \end{frame}
 
 
@@ -704,23 +712,16 @@ is well-posed for $s\in\cK$
 \includegraphics[width=0.7\textwidth]{extruded}
 \end{center}
 
-\begin{cproblem}
-find $s\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
-   $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
-\end{cproblem}
-
 \begin{itemize}
-\item proposed FE spaces:
+\item proposed, simplest FE spaces:
    \begin{itemize}
-   \item[$\circ$] $b_h,s_h \in P_1$
-   \item[$\circ$] $\bu_h,p_h \in P_2 \times P_1$, on an extruded mesh \hfill {\scriptsize $\leftarrow$ one possibility}
+   \item[$\circ$] an extruded mesh
+   \item[$\circ$] $b_h,s_h \in P_1$ in 2D, over $\Omega$
+   \item[$\circ$] $\bu_h,p_h \in P_2 \times P_1$ in 3D, over $\Lambda(s_h)$
    \end{itemize}
-\item FE method for $s_h\in\cK_h = \{r_h \ge b_h\}$:
-   $$F_h(s_h)[r_h-s_h] \ge \ell^k[r_h-s_h] \quad \text{for all } r_h \in \cK_h$$
-
-   \begin{itemize}
-   \item[$\circ$] mostly conforming, especially if one pretends $b_h=b$
-   \end{itemize}
+\item discrete admissible set: $\cK_h = \{\sigma_h \,:\, \sigma_h \ge b_h \text{ and } {\sigma_h}|_{\partial\Omega} = {b_h}|_{\partial\Omega}\}$
+\item FE method for $s_h\in\cK_h$:
+   $$F_h(s_h)[\sigma_h-s_h] \ge \ell[\sigma_h-s_h] \quad \text{for all } \sigma_h \in \cK_h$$
 \end{itemize}
 
 \phantom{x}
