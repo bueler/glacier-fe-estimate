@@ -709,7 +709,7 @@ so the backward Euler time-step problem is well-posed for $s$
 \begin{frame}{FE method}
 
 \begin{center}
-\includegraphics[width=0.7\textwidth]{extruded}
+\includegraphics[width=0.8\textwidth]{extruded}
 \end{center}
 
 \begin{itemize}
@@ -728,21 +728,33 @@ so the backward Euler time-step problem is well-posed for $s$
 \end{frame}
 
 
-\begin{frame}{error theorem for a backward Euler step}
+\newcommand{\result}{
+\begin{align*}
+\|s_h-s\|_{\cX}^4 &\le \, \frac{c_0}{\Delta t} \int_{\Omega_A(s)} (b - \ell) (b_h - b) \\
+   &\quad\, + c_1(s_h) \big\|\bu_h - \bu\big\|_{W^{1,4/3}(\Lambda(s_h))} \\
+   &\quad\, + c_2 \|\Pi_h(s) - s\|_{\cX}^{4/3}
+\end{align*}
+}
+
+\begin{frame}{bound on surface elevation errors for implicit step}
 
 \noindent \includegraphics[width=0.6\textwidth]{extruded} \hfill \includegraphics[width=0.23\textwidth]{mapplane}
 
 \medskip
-\begin{theorem}[B '24]
-Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact active set, and $\Pi_h$ the interpolation into $\cK_h = \{r_h \ge b_h\}$.  Then the FE error in the new ($t_k$) surface elevation is bounded by 3 terms:
-\begin{align*}
-\|s_h-s\|_{W^{1,\qq}}^\qq &\le \, \frac{c_1}{\Delta t} \int_{\Omega_A(s)} (b - \ell^k) (b_h - b) \\
-   &\quad\, + C(s_h) \big\|\bu_h - \bu\big\|_{W^{1,\pp}} \\
-   &\quad\, + c_0 \|\Pi_h(s) - s\|_{W^{1,\qq}}^{\qq'}
-\end{align*}
-\end{theorem}
+\begin{thm}[B'24]
+Suppose $\Phi^\eps$ is $4$-coercive in $\cX = W^{1,4}(\Omega)$.  In discretizing the bed, ensure that $b_h\ge b$.  Let $\Omega_A(s)$ be the exact active set, the ice-free area.  Let $\Pi_h$ be interpolation and truncation $\cK \to \cK_h$.  Then the error in the FE surface elevation $s_h\in\cK_h$ is bounded by 3 terms:
+\result
+\end{thm}
+\end{frame}
 
-\noindent \emph{Proof.} Make the Falk (1974) technique for VIs fully nonlinear. \qed
+
+\begin{frame}{bound on surface elevation errors for implicit step}
+
+\begin{thm}[B'24]
+\result
+\end{thm}
+
+\noindent \emph{Proof.} Apply the general \emph{a priori} theorem.  Of the four terms, the ``$\inf_{v\in \cK}$'' term can be replaced by zero because $\cK_h\subset \cK$ from the bed construction.  Estimate the ``$\inf_{v_h\in\cK_h}$'' term for the residual by considering the residual measure; it simplifies to $d\mu_u=b-\ell$ in $\Omega_A(s)$.  Estimate the ``$(F(u_h)-F_h(u_h))[u_h]$'' term by bounding the surface trace of the Stokes velocity solution.  Estimate the Cea's lemma term in the usual interpolation way, but remember to truncate into $\cK_h$. \qed
 \end{frame}
 
 
@@ -752,12 +764,12 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
     \begin{itemize}
     \item[$\circ$] both a differential-algebraic system and a free-boundary problem
     \end{itemize}
-\item<2-4> \textbf{conjecture.} for some $\qq>2$, a regularized form of the surface motion $\Phi(s) = -\bu|_s\cdot \bn_s$, from the Glen-Stokes problem, is $\qq$-coercive over admissible $s\in W^{1,\qq}(\Omega)$
+\item<2-4> \textbf{conjecture.} an SIA-regularized form of the surface motion $\Phi(s) = -\bu|_s\cdot \bn_s$, with $\bu|_s$ from the Glen-Stokes problem, is $4$-coercive over admissible $s\in W^{1,4}(\Omega)$
     \begin{itemize}
-    \item[$\circ$] this would imply that each continuous-space, backward Euler time step problem is well-posed
+    \item[$\circ$] implies that each continuous-space, backward Euler time step problem is well-posed
     \end{itemize}
-\item<3-4> \textbf{theorem.} for abstract $\qq$-coercive operators, the finite element approximation of the VI problem has an \emph{a priori} bound with certain terms \dots
-\item<4> \textbf{theorem.} supposing $\qq$-coercivity, the FE error for surface elevations, in the standard glacier model, is bounded by a sum of 3 terms:
+\item<3-4> \textbf{theorem.} for abstract $\qq$-coercive operators, the FE approximation of the VI problem has an \emph{a priori} bound with 4 terms \dots
+\item<4> \textbf{theorem.} supposing the conjecture, the FE surface elevation error, in a backward Euler step of the standard glacier model is bounded by a sum of terms:
     \begin{enumerate}
     \item error in discretizing the bed elevation ($b_h$ versus $b$)
     \item error in numerically solving the Stokes equations ($\bu_h$ versus $\bu$)
