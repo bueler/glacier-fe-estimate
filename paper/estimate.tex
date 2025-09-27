@@ -240,59 +240,58 @@ We will use only the following few abbreviations which are standard in their res
 
 \section{Surface velocity from the Stokes sub-model} \label{sec:stokes}
 
-In this Section we address only the Stokes sub-model \eqref{eq:glen}--\eqref{eq:stokes}, applied at some time $t$, that is, on a (for now) fixed 3D domain $\Lambda = \Lambda(t)$ defined by \eqref{eq:icydomain}.  The ice base $\Gamma_b\subset\partial \Lambda$, on which the non-sliding Dirichlet condition \eqref{eq:stokes:noslide} holds, is assumed to have positive measure.  The remaining Neumann boundary $\Gamma_s = \partial \Lambda \setminus \overline{\Gamma_b}$ is subject to a zero normal stress condition \eqref{eq:stokes:stressfreesurface}.  This submodel will compute the surface velocity $\bu|_s$ which appears in NCPs \eqref{eq:ncp} and \eqref{eq:be:ncp}, but we defer this coupling to later sections.
+In this Section we address only the Stokes sub-model \eqref{eq:glen}--\eqref{eq:stokes}, applied at some time $t$ on a 3D domain $\Lambda = \Lambda(t)$ which is defined by \eqref{eq:icydomain}.  The ice base $\Gamma_b\subset\partial \Lambda$ is assumed to have positive measure.  This sub-model will compute the surface velocity $\bu|_s$ which appears in NCPs \eqref{eq:ncp} and \eqref{eq:be:ncp}, but we defer discussion of such coupling to the later sections.
 
-Suitable function spaces for well-posedness of this sub-model are known.  Let $1 < \pp \le 2$.  Denote the Sobolev space \cite{Evans2010} of real-valued functions on $\Lambda \subset \RR^3$ with $\pp$th-power integrable first derivatives by $W^{1,\pp}(\Lambda)$, and let $\cV = W_0^{1,\pp}(\Lambda; \RR^3)$ be the corresponding space of vector-valued functions with trace zero along $\Gamma_b$.  Let $[H]\ge 1\,\text{meter}$ be a representative \emph{vertical} glacier scale.  We define the norm on $\cV$ by
+Suitable function spaces for well-posedness of this sub-model are known.  Let $1 < \pp \le 2$.  Denote the Sobolev space \cite{Evans2010} of real-valued functions on $\Lambda \subset \RR^3$ with $\pp$th-power integrable first derivatives by $W^{1,\pp}(\Lambda)$.  Let $\cV = W_0^{1,\pp}(\Lambda; \RR^3)$ be the vector-valued functions with trace zero along $\Gamma_b$.  For $[H]\ge 1$ a representative vertical glacier scale in meters, we define the norm
 \begin{equation}
 \|\bv\|_{\cV} = \left(\int_\Lambda |\bv|^\pp\,dx\,dz + [H]^\pp \int_\Lambda |\grad\bv|^\pp\,dx\,dz\right)^{1/\pp}. \label{eq:vnorm}
 \end{equation}
-(The 3D volume element $dx\,dz = dx_1\,dx_2\,dz$ will be suppressed from now on.)  Here $|\bv|$ denotes the Euclidean norm, $|\grad\bv|=\left((\grad\bv)_{ij} (\grad\bv)_{ij}\right)^{1/2}$ is the Frobenius norm on $\RR^{3\times 3}$, and the scale $[H]$ gives $\|\bv\|_{\cV}$ consistent units; compare \cite[Remark 1.2.1]{BoffiBrezziFortin2013}.  Let $\cQ=L^{\pp'}(\Lambda)$ where $\pp'=\pp/(\pp-1)$ is the conjugate exponent.  Define $\mathcal{M} = \cV \times \cQ$ as the space of admissible velocity and pressure pairs.  For $(\bu,p), (\bv,q) \in \mathcal{M}$ define
+Here $|\grad\bv|=\left(\grad\bv : \grad\bv\right)^{1/2}$ is the Frobenius norm on $\RR^{3\times 3}$, for $A:B=a_{ij}b_{ij}$.  The scale $[H]$ gives $\|\bv\|_{\cV}$ consistent units \cite[Remark 1.2.1]{BoffiBrezziFortin2013}.  (The volume element $dx\,dz = dx_1\,dx_2\,dz$ will be suppressed from now on.)  Finally let $\cQ=L^{\pp'}(\Lambda)$ where $\pp'=\pp/(\pp-1)$ is the conjugate exponent.
+
+For $(\bu,p), (\bv,q) \in \mathcal{M} = \cV \times \cQ$, the mixed velocity-pressure space, define
 \begin{equation}
-F_\Lambda(\bu,p)[\bv,q] = \int_\Lambda 2 \nu(D\bu) D\bu : D\bv - p \Div\bv - (\Div\bu) q - \rhoi \bg \cdot \bv, \label{eq:glenstokes:fcnl}
+F_\Lambda(\bu,p)[\bv,q] = \int_\Lambda 2 \nu(D\bu) D\bu : D\bv - p \Div\bv - (\Div\bu) q - \rhoi \bg \cdot \bv. \label{eq:glenstokes:fcnl}
 \end{equation}
-where $A:B=a_{ij}b_{ij}$.  The (mixed) weak form of the Stokes sub-model \eqref{eq:glen}--\eqref{eq:stokes} seeks the solution $(\bu,p) \in \mathcal{M}$ satisfying
+The weak form of the Stokes sub-model \eqref{eq:glen}--\eqref{eq:stokes} seeks $(\bu,p) \in \mathcal{M}$ satisfying
 \begin{equation}
 F_\Lambda(\bu,p)[\bv,q] = 0 \qquad \text{for all } (\bv,q) \in \mathcal{M}. \label{eq:glenstokes:weak}
 \end{equation}
 
-Jouvet and Rappaz \cite{JouvetRappaz2011} have proven that problem \eqref{eq:glenstokes:weak} is well-posed if the Neumann portion of $\partial\Lambda$ is piecewise $C^1$.  Their proof of the following theorem uses the equivalence of \eqref{eq:glenstokes:weak} and a minimization problem over the divergence-free subspace $\cV_0 = \{\bv\in\cV\,:\,\Div\bv=0\}$.  Our regularization in Glen law \eqref{eq:glen} differs from theirs, but the necessary modifications are addressed in \cite{Belenkietal2012,IsaacStadlerGhattas2015}.  Note that if the weak solution is sufficiently regular then the strong form \eqref{eq:stokes} is also satisfied.
+Problem \eqref{eq:glenstokes:weak} is well-posed if $\partial\Lambda$ is appropriately regular, e.g.~piecewise $C^1$ \cite{JouvetRappaz2011} or polygonal \cite{Belenkietal2012}.  Our regularization in Glen law \eqref{eq:glen} matches that in \cite{Belenkietal2012,IsaacStadlerGhattas2015}.  Thus there exists a unique pair $(\bu,p) \in \mathcal{M}$ solving \eqref{eq:glenstokes:weak}, with $\bu\in \cV_0 = \{\bv\in\cV\,:\, \Div\bv=0\}$.
 
-\begin{theorem}[Theorem 3.10 in \cite{JouvetRappaz2011}] \label{thm:stokeswellposed}  Suppose $\Lambda$ is bounded, $\partial\Lambda$ is Lipschitz, $\Gamma_s$ is piecewise $C^1$, and $\Gamma_b$ has positive measure.  Let $1<\pp\le 2$ and $\mu_0>0$ in \eqref{eq:glen}.  Then there exists a unique pair $(\bu,p) \in \mathcal{M}$ solving \eqref{eq:glenstokes:weak}, and $\bu\in \cV_0$.
-\end{theorem}
-
-Our primary purpose is to study NCP \eqref{eq:be:ncp} for glacier geometry, and its weak form, but for that we need control on the surface trace $\bu|_s$.  The following \emph{a priori} bound is proven for completeness in Appendix \ref{app:provestokesapriori}.
+Our primary purpose is to study NCP \eqref{eq:be:ncp} for glacier geometry, specifically its time-discretized weak form, but for that we need control on the surface trace $\bu|_s$.  The following \emph{a priori} bound is proven for completeness in Appendix \ref{app:provestokesapriori}.
 
 \begin{lemma} \label{lem:stokesapriori}
-There is $C>0$ depending continuously on $\pp$, $\rhoi |\bg|$, $\nu_\pp$, $\mu_0$, $[H]$, and $\Lambda$ so that if $\bu\in\cV_0$ is the solution from Theorem \ref{thm:stokeswellposed} then
+There is $C>0$ depending continuously on $\pp$, $\rhoi |\bg|$, $\nu_\pp$, $\mu_0$, $[H]$, and $\Lambda$ so that if $\bu\in\cV_0$ is the solution from \eqref{eq:glenstokes:weak} then
 \begin{equation}
 \|\bu\|_{\cV} \le C. \label{eq:stokesapriori}
 \end{equation}
 \end{lemma}
 
 \begin{lemma}[Trace inequality] \label{lem:trace}
-Under the assumptions of Theorem \ref{thm:stokeswellposed}, there exists a constant $C$, dependent only on $\pp$, $[H]$, and $\Lambda$, so that for all $\bv \in \cV$,
+There exists a constant $C$, depending only on $\pp$, $[H]$, and $\Lambda$, so that for all $\bv \in \cV$,
 \begin{equation}
 \int_{\Gamma_s} \big|\bv|_s\big|^\pp \,dS \le C \|\bv\|_{\cV}^\pp. \label{eq:trace}
 \end{equation}
-On the left of \eqref{eq:trace}, $\bv|_s$ denotes the trace on $\Gamma_s$ and $dS$ is the area element over $\partial\Lambda$.
+On the left of \eqref{eq:trace}, $\bv|_s$ denotes the trace on $\Gamma_s$, and $dS$ is the area element of $\partial\Lambda$.
 \end{lemma}
 
 \begin{proof}
-Theorem 5.5.1 in \cite{Evans2010} defines the trace operator $T:\cV\to L^\pp(\partial\Lambda)$, for which there exists a constant $c>0$ so that
+Theorem 5.5.1 in \cite{Evans2010} defines the trace operator $T:\cV\to L^\pp(\partial\Lambda)$, for which there exists a constant $C>0$ so that
 \begin{equation}
-\int_{\partial\Lambda} |T\bv|^p\,dS \le c \int_{\Lambda} |\bv|^\pp + |\grad\bv|^\pp \le c \int_{\Lambda} |\bv|^\pp + [H]^\pp |\grad\bv|^\pp \label{eq:tracework}
+\int_{\partial\Lambda} |T\bv|^p\,dS \le C \int_{\Lambda} |\bv|^\pp + |\grad\bv|^\pp \le C \int_{\Lambda} |\bv|^\pp + [H]^\pp |\grad\bv|^\pp \label{eq:tracework}
 \end{equation}
-for $\bv\in\cV$.  However, because $\bv=\bzero$ along $\Gamma_b$, the result follows.
+for $\bv\in\cV$.  Because $\bv=\bzero$ along $\Gamma_b$, the result follows.
 \end{proof}
 
 Combining Lemmas \ref{lem:stokesapriori} and \ref{lem:trace} yields the following bound on the surface trace of the velocity.  When applying this result, recall that $\Lambda=\Lambda(t)$ and $\Gamma_s=\Gamma_s(t)$ are defined via \eqref{eq:icydomain}, in terms of $s(t,x)$ and $b(x)$.
 
-\begin{corollary}[\emph{A priori} surface velocity bound] \label{cor:surfacetracebound}
-Under the assumptions of Theorem \ref{thm:stokeswellposed}, there is a constant $C>0$, computable from physical constants and the geometry of $\Lambda$, so that if $\bu\in\cV_0$ is the Stokes velocity solution then
+\begin{lemma}[Surface velocity bound] \label{lem:surfacetracebound}
+There is a constant $C>0$, computable from physical constants and the geometry of $\Lambda$, so that for $\bu\in\cV_0$ solving \eqref{eq:glenstokes:weak},
 \begin{equation}
 \int_{\Gamma_s} \big|\bu|_s\big|^\pp \,dS \le C. \label{eq:surfacetracebound}
 \end{equation}
-\end{corollary}
+\end{lemma}
 
 
 \section{The weak form of an implicit time step} \label{sec:model}
