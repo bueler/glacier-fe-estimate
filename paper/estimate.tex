@@ -452,19 +452,20 @@ However, we will regularize the model in the next Section.  Based on numerical e
 
 \section{Conjectural well-posedness for the regularized problem} \label{sec:conjectural}
 
-Theorem \ref{thm:glacierapp}, our main result, is numerical, bounding the FE error in surface elevation.  It is based on an extension, to a large class of nonlinear operators, of an abstract technique from Falk \cite{Falk1974}.  This is tied to the concepts of monotonicity and coercivity.
+Theorem \ref{thm:glacierapp}, our main result to come, is numerical as it bounds the FE error in surface elevation.  It is based upon an extension of an abstract technique from Falk \cite{Falk1974} to a large class of nonlinear operators.  It is tied to the concepts of monotonicity \cite{Minty1963} and coercivity \cite[Chapter III]{KinderlehrerStampacchia1980}.
 
 \begin{definition} \label{def:monotonecoercive}
 Suppose $\cX$ is a Banach space, with norm $\|\cdot\|$, and $\cK\subset \cX$ is closed and convex.  An operator $f:\cK \to \cX'$ is said to be \emph{monotone} if
 \begin{equation}
 \left(f(v)-f(w)\right)[v-w] \ge 0 \qquad \text{for all } v,w \in \cK, \label{eq:monotone}
 \end{equation}
-and \emph{strictly monotone} if in addition equality implies $v=w$ \cite{Minty1963}.  It is \emph{coercive} \cite[Chapter III]{KinderlehrerStampacchia1980} if there is $w\in \cK$ so that $\left(f(v)-f(w)\right)[v-w]/\|v-w\| \to +\infty$ for $v \in \cK$ as $\|v\| \to +\infty$.  It is \emph{$\qq$-coercive} \cite{Bueler2021conservation} for $\qq>1$ if there exists $\alpha>0$ such that
+and \emph{strictly monotone} if in addition equality implies $v=w$.  It is \emph{coercive} if there is $w\in \cK$ so that $\left(f(v)-f(w)\right)[v-w]/\|v-w\| \to +\infty$ for $v \in \cK$ as $\|v\| \to +\infty$.  It is \emph{$\qq$-coercive} \emph{\cite{Bueler2021conservation}} for $\qq>1$ if there exists $\alpha>0$ such that
 \begin{equation}
 \left(f(v)-f(w)\right)[v-w] \ge \alpha \|v-w\|^\qq \qquad \text{for all } v,w \in \cK. \label{eq:qcoercive}
 \end{equation}
-Clearly, $\qq$-coercivity implies coercivity and strict monotonicity.
 \end{definition}
+
+In the $\qq=2$ case, $\qq$-coercivity is sometimes called \emph{strong monotonicity} \cite{Chow1989}.  It implies coercivity and strict monotonicity.
 
 Theorem \ref{thm:abstractestimate} below applies to VIs for operators $f:\cK\to\cX'$ which are $\qq$-coercive with $\qq>1$.  We wish to apply this to $F_{\Delta t}$ acting on an admissible subset $\cK$ of $\cX=W^{1,\rr}(\Omega)$, and the surface motion map $\Phi$, defined by \eqref{eq:definePhi}, is the main term in $F_{\Delta t}$.  However, simple examples in Appendix \ref{app:noncoercive}, apparently new, show that $\Phi$ is neither $\qq$-coercive nor strictly monotone over $W^{1,\rr}(\Omega)$ for any $\rr$.  These examples can be constructed for any bedrock $b$ possessing local minima, by filling with flat ice.\footnote{The same examples negatively resolve a previously open question of uniqueness, for elevation-independent SMB, in the shallow ice approximation.  See Appendix \ref{app:noncoercive}.}  However, since $F_{\Delta t}$ adds the integral $\int_\Omega s\omega$ to the surface motion term $\Delta t\,\Phi(s)[\omega]$, non-coercivity for $\Phi$ is not \emph{per se} a barrier to (strict) monotonicity of $F_{\Delta t}$.
 
