@@ -330,9 +330,9 @@ It remains to identify a Sobolev space $\cX$ suitable for surface elevations.  H
 \begin{figure}[ht]
 \begin{center}
 \begin{tikzpicture}[scale=1.0]
-  \node (wedge) {\includegraphics[width=30mm]{figs/wedge.png}} node[xshift=-4mm, yshift=1mm] at (wedge.center) {{\small \emph{ice}}};
-  \node[right=of wedge] (unbounded) {\includegraphics[width=30mm]{figs/unbounded.png}} node[xshift=-2mm, yshift=1mm] at (unbounded.center) {{\small \emph{ice}}};
-  \node[right=of unbounded] (realistic) {\includegraphics[width=30mm]{figs/realistic.png}} node[xshift=-6mm, yshift=4mm] at (realistic.center) {{\small \emph{ice}}};
+  \node (wedge) {\includegraphics[width=25mm]{figs/wedge.png}} node[xshift=-4mm, yshift=1mm] at (wedge.center) {{\small \emph{ice}}};
+  \node[right=of wedge] (unbounded) {\includegraphics[width=26mm]{figs/unbounded.png}} node[xshift=-2mm, yshift=1mm] at (unbounded.center) {{\small \emph{ice}}};
+  \node[right=of unbounded] (realistic) {\includegraphics[width=26mm]{figs/realistic.png}} node[xshift=-6mm, yshift=4mm] at (realistic.center) {{\small \emph{ice}}};
 \end{tikzpicture}
 \end{center}
 
@@ -517,45 +517,40 @@ Theorem \ref{thm:regularizedwellposed} addresses only the well-posedness of a si
 
 In this Section we consider the FE approximation of an abstract VI problem in a Banach space.  We will return to glaciological problem \eqref{eq:regularizedvi} in Section \ref{sec:application}.
 
-Let $\cX$ be a real, reflexive Banach space with norm $\|\cdot\|$ and topological dual (Banach) space $\cX'$.  Denote the dual pairing of $\ell \in \cX'$ and $v\in\cX$ by $\ell[v]$, and define $\|\ell\|_{\cX'} = \sup_{\|v\|=1} \big|\ell[v]\big|$.  Let $\cK \subset \cX$ be a nonempty, closed, and convex subset, the constraint set, whose elements are called admissible.  For a continuous, but generally nonlinear, operator $f:\cK \to \cX'$, and a source functional $\ell\in \cX'$, the abstract VI problem is to find $u\in \cK$ such that
+Let $\cX$ be a real, reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cX'$.  Denote the dual pairing of $\ell \in \cX'$ and $v\in\cX$ by $\ell[v]$, and define $\|\ell\|_{\cX'} = \sup_{\|v\|=1} \big|\ell[v]\big|$.  Let $\cK \subset \cX$ be a nonempty, closed, and convex subset, the constraint or admissible set.  For a continuous and (generally) nonlinear operator $f:\cK \to \cX'$, and a source functional $\ell\in \cX'$, the VI problem is to find $u\in \cK$ such that
 \begin{equation}
 f(u)[v-u] \ge \ell[v-u] \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
-The best known example of VI \eqref{eq:vi} is the obstacle problem for the Laplacian operator---see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis---and \eqref{eq:regularizedvi} is also in this form.
+The best known example of \eqref{eq:vi} is the obstacle problem for the Laplacian operator; see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis of that problem.  Also, \eqref{eq:regularizedvi} is in this form.
 
-Regarding this abstract VI problem, recall that $f(u)-\ell \in \cX'$ is generally nonzero when $u$ solves \eqref{eq:vi}, though if $u$ is in the interior of $\cK$ then $f(u)-\ell=0$.  Also, under sufficient regularity assumptions an NCP strong form generally follows from \eqref{eq:vi}.  Furthermore, recall that if $f:\cK \to \cX'$ is monotone and coercive (Definition \ref{def:monotonecoercive}), and continuous on finite-dimensional subspaces, then \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then the solution is unique, and if $f$ is $\qq$-coercive then it coercive and strictly monotone.
-  
-The following definition appeared in Lemma \ref{lem:philipschitz}.  If it holds then $f$ is continuous.  Note that Definitions \ref{def:monotonecoercive} and \ref{def:lipshitz} allow $f$ to be defined only on a subset $\cK$.
+If $f:\cK \to \cX'$ is monotone and coercive (Definition \ref{def:monotonecoercive}), and continuous on finite-dimensional subspaces, then abstract VI problem \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then the solution is unique, and if $f$ is $\qq$-coercive then it coercive and strictly monotone.  On the other hand, if $f$ is Lipschitz on bounded subsets (Definition \ref{def:lipshitz}) then it is continuous.  Recall that $f(u)-\ell \in \cX'$ is generally nonzero when $u$ solves \eqref{eq:vi}, but if $u$ is in the interior of $\cK$ then $f(u)-\ell=0$.  Under sufficient regularity assumptions, an NCP strong form generally follows from \eqref{eq:vi}.  Finally, note that Definitions \ref{def:lipshitz} and \ref{def:monotonecoercive} allow $f$ to be defined only on a subset $\cK$.
 
-FIXME definition \ref{def:lipschitz} moved from here back to section \ref{sec:model}
+Suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, typically some FE space of continuous, piecewise-polynomial functions defined on a mesh, and suppose the FE constraint set $\cK_h\subset \cX_h$ is closed and convex.  Generally $\cK_h \nsubseteq \cK$; for reasons explained below we do not assume FE states are continuum admissible.  Let $f_h:\cK_h\to\cX'$ be an approximation to $f$, and note that generally $f_h\ne f$ because of quadrature and other approximations.  In fact, in the standard FE construction of a Stokes-type glacier geometry problem (Section \ref{sec:application}), both $\cK_h \nsubseteq \cK$ and $f_h\ne f$ apply for natural reasons.
 
-Suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, typically some FE space of continuous, piecewise-polynomial functions defined on a mesh.  The FE constraint set $\cK_h\subset \cX_h$ will be assumed to be closed and convex, but generally $\cK_h \nsubseteq \cK$.  Let $f_h:\cK_h\to\cX'$, and note that generally $f_h\ne f$ because of quadrature and other approximations.\footnote{Looking ahead to Section \ref{sec:application}, both $\cK_h \nsubseteq \cK$ and $f_h\ne f$ hold in the standard FE construction of a Stokes-type glacier geometry problem.}  The FE method for \eqref{eq:vi} is the finite-dimensional VI problem
+The FE method for \eqref{eq:vi} is the finite-dimensional VI problem
 \begin{equation}
 f_h(u_h)[v_h-u_h] \ge \ell[v_h-u_h] \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
 \end{equation}
-We will assume that \eqref{eq:fe:vi} has a solution $u_h\in\cK_h$, e.g.~because $f_h$ is also $\qq$-coercive.
+We will assume that \eqref{eq:fe:vi} has a solution $u_h\in\cK_h$.
 
-The following \emph{a priori} theorem extends the well-known one by Falk \cite{Falk1974}; see also Theorem 5.1.1 in \cite{Ciarlet2002}.\footnote{A recent variant, where $u$ solves a variational \emph{equality}, appears in \cite[Theorem 1]{KirbyShapero2024}.}  We assume here that $f$ is coercive and Lipschitz on an (unnamed) larger set than $\cK$, which contains the FE solution $u_h$.  This technical assumption permits a clean and general result, and it reveals an extra source of error which we can avoid.  In fact, the choice of FE admissible set $\cK_h$ in Section \ref{sec:application} will avoid it by construction.  On the other hand, this Theorem does \emph{not} assume any of the following: $\cK_h \subset \cK$, $f$ is linear, $f_h=f$, $f_h$ is continuous, or $f_h$ is $\qq$-coercive.  We do not even require that $u_h$ is the \emph{unique} solution of \eqref{eq:fe:vi}; bound \eqref{eq:abstractestimate} holds for any FE solution.
+The following \emph{a priori} estimation theorem extends the well-known result of Falk \cite{Falk1974}; see also Theorem 5.1.1 in \cite{Ciarlet2002}.  We assume here that $f$ is coercive and Lipschitz on an (unnamed) larger set than $\cK$, which contains the FE solution $u_h$.  This technical assumption permits a clean and general result.  We do \emph{not} assume any of the following: $\cK_h \subset \cK$, $f$ is linear, $f_h=f$, $f_h$ is continuous, or $f_h$ is $\qq$-coercive.  We do not even require that $u_h$ is the \emph{unique} solution of \eqref{eq:fe:vi}; bound \eqref{eq:abstractestimate} holds for any FE solution.
 
-\begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  For $\qq>1$, with conjugate exponent $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive, with constant $\alpha>0$, on a set which contains $\cK$ and the numerical solution $u_h$.  Assume $f$ is also Lipschitz on bounded subsets of this larger set.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c=c(R_h,\alpha)>0$, not otherwise depending on $u$ or $u_h$, so that
+\begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  For $\qq>1$, with conjugate exponent $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive, with constant $\alpha>0$, on a set which contains $\cK$ and the numerical solution $u_h$.  Assume $f$ is also Lipschitz on bounded subsets of this set.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c=c(R_h,\alpha)>0$, not otherwise depending on $u$ or $u_h$, so that
 \begin{align}
 \|u-u_h\|^\qq &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \left(f(u)-\ell\right)[v-u_h] + \inf_{v_h\in\cK_h} \left(f(u)-\ell\right)[v_h-u]\right)\label{eq:abstractestimate} \\
    &\quad\, + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] + c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}. \notag
 \end{align}
 \end{theorem}
 
-\begin{proof}  For arbitrary $v\in\cK$ and $v_h\in\cK_h$, rewrite \eqref{eq:vi} and \eqref{eq:fe:vi} as follows:
+\begin{proof}  It follows from $\qq$-coercivity of $f$ that
 \begin{align}
-f(u)[u]     &\le f(u)[v] + \ell[u-v], \label{eq:abstract:one}  \\
-f_h(u_h)[u_h] &\le f_h(u_h)[v_h] + \ell[u_h-v_h]. \notag
-\end{align}
-It follows from \eqref{eq:abstract:one} and $\qq$-coercivity of $f$ that
-\begin{align}
-\alpha \|u-u_h\|^\qq &\le \left(f(u)-f(u_h)\right)[u-u_h] \label{eq:abstract:two} \\
+\alpha \|u-u_h\|^\qq &\le \left(f(u)-f(u_h)\right)[u-u_h] \notag \\
   &= f(u)[u] + f(u_h)[u_h] - f(u)[u_h] - f(u_h)[u] \notag \\
-  &= f(u)[u] + f_h(u_h)[u_h] \notag \\
-  &\qquad - f(u)[u_h] - f(u_h)[u] + \left(f(u_h)-f_h(u_h)\right)[u_h] \notag \\
-  &\le f(u)[v] + \ell[u-v] + f(u_h)[v_h] + \ell[u_h-v_h] \notag \\
+  &= f(u)[u] + f_h(u_h)[u_h] - f(u)[u_h] - f(u_h)[u] + \left(f(u_h)-f_h(u_h)\right)[u_h]. \label{eq:abstract:one}
+\end{align}
+Next, for arbitrary $v\in\cK$ and $v_h\in\cK_h$, rewrite \eqref{eq:vi} as $f(u)[u]     \le f(u)[v] + \ell[u-v]$ and \eqref{eq:fe:vi} as $f_h(u_h)[u_h] \le f_h(u_h)[v_h] + \ell[u_h-v_h]$.  Then
+\begin{align}
+\alpha \|u-u_h\|^\qq &\le f(u)[v] + \ell[u-v] + f(u_h)[v_h] + \ell[u_h-v_h] \label{eq:abstract:two} \\
   &\qquad - f(u)[u_h] - f(u_h)[u] + \left(f(u_h)-f_h(u_h)\right)[u_h] \notag \\
   &= f(u)[v-u_h] - \ell[v-u_h] + f(u_h)[v_h-u] - \ell[v_h-u] \notag \\
   &\qquad + \left(f(u_h)-f_h(u_h)\right)[u_h] \notag \\
