@@ -67,6 +67,7 @@
 
 \newcommand{\rhoi}{\rho_{\text{i}}}
 
+\newcommand{\nsubset}{\not\subset}
 \DeclareMathOperator*{\argmin}{arg\,min}
 \DeclareMathOperator*{\Hull}{Hull}
 
@@ -497,7 +498,11 @@ The numerical experiments in Appendix \ref{app:numerical} used values $\eps=0.1$
 
 To complete this Section we prove that this Conjecture suffices for well-posedness of the regularized VI problem; recall \eqref{eq:be:Fdefine} and \eqref{eq:be:vi} for the unregularized problem.
 
-\begin{theorem} \label{thm:regularizedwellposed}  Assume Conjectures \ref{conj:lipschitz} and \ref{conj:regcoercive} hold.  Suppose that $s^{n-1}\in\cK$ and define the source term $\ell^n \in \cX'$ as in \eqref{eq:be:source}.  For $\Delta t>0$ define the regularized update operator $F^\eps_{\Delta t}(s)[\omega] = \Delta t\,\Phi^\eps(s)[\omega] + \int_\Omega s \omega$.  This operator is Lipschitz on bounded subsets, continuous, and $4$-coercive, and thus there exists a unique surface elevation $s\in\cK$ satisfying the VI problem
+\begin{theorem} \label{thm:regularizedwellposed}  Assume Conjectures \ref{conj:lipschitz} and \ref{conj:regcoercive} hold.  Suppose that $s^{n-1}\in\cK$ and define the source term $\ell^n \in \cX'$ as in \eqref{eq:be:source}.  For $\Delta t>0$ define
+\begin{equation}
+F^\eps_{\Delta t}(s)[\omega] = \Delta t\,\Phi^\eps(s)[\omega] + \int_\Omega s \omega, \label{eq:regularizedF}
+\end{equation}
+the regularized update operator.  This operator is Lipschitz on bounded subsets and $4$-coercive, thus there exists a unique surface elevation $s\in\cK$ satisfying the VI problem
 \begin{equation}
 F^\eps_{\Delta t}(s)[\sigma-s] \ge \ell^n[\sigma-s] \quad \text{for all } \sigma \in \cK. \label{eq:regularizedvi}
 \end{equation}
@@ -521,13 +526,15 @@ While \eqref{eq:regularizedvi} is of course in this form, the best known example
 
 If $f:\cK \to \cX'$ is monotone and coercive (Definition \ref{def:monotonecoercive}), and continuous on finite-dimensional subspaces, then problem \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then the solution is unique, and if $f$ is $\qq$-coercive then it coercive and strictly monotone.  On the other hand, if $f$ is Lipschitz on bounded subsets (Definition \ref{def:lipshitz}) then it is continuous.  Recall that $f(u)-\ell \in \cX'$ is generally nonzero if $u$ solves \eqref{eq:vi}, but $f(u)-\ell=0$ when $u$ is in the interior of $\cK$.  Under sufficient regularity assumptions, an NCP strong form generally follows from \eqref{eq:vi}.
 
-Suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, typically some FE space of continuous, piecewise-polynomial functions defined on a mesh, and suppose that the FE constraint set $\cK_h\subset \cX_h$ is closed and convex.  Generally $\cK_h \nsubseteq \cK$; we will not assume that FE states are continuum admissible.  Let $f_h:\cK_h\to\cX'$ be an approximation to $f$, and note that generally $f_h\ne f$ because of quadrature and other approximations.  In fact, in the standard FE construction of a Stokes-type glacier geometry problem (Section \ref{sec:application}), both $\cK_h \nsubseteq \cK$ and $f_h\ne f$ apply for practical reasons.  Now the FE method for \eqref{eq:vi} is the finite-dimensional VI problem
+Suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, typically some FE space of continuous, piecewise-polynomial functions defined on a mesh.  Let $\cK_h\subset \cX_h$ be a closed and convex subset, and suppose $f_h:\cK_h\to\cX'$ is an approximation of $f$.  Generally $\cK_h \nsubset \cK$---we will not assume that FE states are continuum admissible---and $f_h\ne f$ because of quadrature and other approximations.  In fact, in the standard FE construction of a Stokes-type glacier geometry problem (Section \ref{sec:application}), both $\cK_h \nsubset \cK$ and $f_h\ne f$ apply for practical reasons.
+
+The FE method for \eqref{eq:vi} is the finite-dimensional VI problem
 \begin{equation}
 f_h(u_h)[v_h-u_h] \ge \ell[v_h-u_h] \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
 \end{equation}
-We will assume that this problem has a solution $u_h\in\cK_h$.
+We will assume that this problem has a solution $u_h\in\cK_h$, but it need not be unique for the bound \eqref{eq:abstractestimate} below to apply.
 
-The following \emph{a priori} estimation theorem extends the well-known result of Falk \cite{Falk1974}; see also Theorem 5.1.1 in \cite{Ciarlet2002}.  We assume here that $f$ is coercive and Lipschitz on an (unnamed) larger set than $\cK$, which contains the FE solution $u_h$, a technical assumption permiting a clean and general result.  However, we do \emph{not} assume any of the following: $\cK_h \subset \cK$, $f$ is linear, $f_h=f$, $f_h$ is continuous, or $f_h$ is $\qq$-coercive.  Nor do we require that $u_h$ is unique; bound \eqref{eq:abstractestimate} below holds for any FE solution of \eqref{eq:fe:vi}.
+The following \emph{a priori} estimation theorem extends the well-known result of Falk \cite{Falk1974}; see also Theorem 5.1.1 in \cite{Ciarlet2002}.  We assume here that $f$ is coercive and Lipschitz on an (unnamed) larger set than $\cK$, which contains the FE solution $u_h$, a technical assumption permiting a clean and general result.  However, we do \emph{not} assume any of the following: $\cK_h \subset \cK$, $f$ is linear, $f_h=f$, $f_h$ is continuous, or $f_h$ is $\qq$-coercive.
 
 \begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  For $\qq>1$, with conjugate exponent $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive, with constant $\alpha>0$, on a set which contains $\cK$ and the numerical solution $u_h$.  Also, assume $f$ is Lipschitz on bounded subsets of this set.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c(R_h,\alpha)>0$, not otherwise depending on $u$ or $u_h$, so that
 \begin{align}
@@ -567,7 +574,7 @@ where $\tilde C(\eps) = (\eps \qq)^{-\qq'/\qq} {\qq'}^{-1}$.  Choose $\eps>0$ so
 Take infimums to show \eqref{eq:abstractestimate}.
 \end{proof}
 
-Consider the residual $f(u)-\ell\in \cX'$ when $u$ solves \eqref{eq:vi}.  In a unilateral obstacle problem, over $\Omega\subset \RR^d$, this residual is a positive measure $d\mu_u$ supported in the active set $A_u\subset \Omega$ \cite[Theorem II.6.9]{KinderlehrerStampacchia1980}.  The first two terms in bound \eqref{eq:abstractestimate} represent errors made within $A_u$.
+Considering the residual $f(u)-\ell\in \cX'$ for a unilateral obstacle problem, over $\Omega\subset \RR^d$, allows us to refine the estimate.  In this case the residual is a positive measure $d\mu_u$ supported in the active set $A_u\subset \Omega$ \cite[Theorem II.6.9]{KinderlehrerStampacchia1980}.  The first two terms in bound \eqref{eq:abstractestimate} represent errors made within $A_u$.
 
 \begin{corollary}  \label{cor:abstractwithmeasure}  Suppose $\cX=W^{1,\rr}(\Omega)$, a space of scalar functions, over a domain $\Omega\subset\RR^d$, and suppose $\cK\subset\cX$ is defined as in \eqref{eq:be:admissible} for an obstacle $b$.  Let $d\mu_u = f(u)-\ell$, and define the active set $A_u=\{x\in\Omega\,:\,u(x)>b(x)\}$.  Under the assumptions of Theorem \ref{thm:abstractestimate} we have the bound
 \begin{align}
@@ -577,7 +584,7 @@ Consider the residual $f(u)-\ell\in \cX'$ when $u$ solves \eqref{eq:vi}.  In a u
 \end{align}
 \end{corollary}
 
-The original result by Falk \cite{Falk1974} computes residual norms, losing the active-set information in Corollary \ref{cor:abstractwithmeasure}.  The next Corollary makes this historical connection by applying a norm-based approach; $\cX=W^{1,\rr}(\Omega) \subset L^\qq(\Omega) = \cB$ would be typical.
+The original result by Falk \cite{Falk1974}, which computes residual norms, loses the active-set information in Corollary \ref{cor:abstractwithmeasure}.  The next Corollary makes this historical connection by applying a norm-based approach; $\cX=W^{1,\rr}(\Omega) \subset L^\qq(\Omega) = \cB$ would be typical.
 
 \begin{corollary}  \label{cor:abstractestimate:Bnorm}  Suppose that $\cX$ continuously and densely embeds into a larger Banach space: $\cX \hookrightarrow \cB$, $\bar{\cX} = \cB$, and $\cB' \subset \cX'$.  Suppose $f:\cK\to\cB'$ and $\ell\in\cB'$.  Under the assumptions of Theorem \ref{thm:abstractestimate} we have
 \begin{align}
@@ -586,9 +593,9 @@ The original result by Falk \cite{Falk1974} computes residual norms, losing the 
 \end{align}
 \end{corollary}
 
-The Falk result \cite{Falk1974} is recovered when $\cX, \cB$ are Hilbert spaces, but also assuming that $f(v)[w]=a(v,w)$ is bilinear, uniformly-elliptic, and continuous,\footnote{The definition of uniform ellipticity coincides with definition \eqref{eq:qcoercive} of $2$-coercive, and continuity of $a(v,w)$ implies \eqref{eq:liponbounded}.} and finally that $f_h=f$.  In this context, up to isomorphism, $f(u)-\ell \in \cH$.  Also, since $f$ is defined on all of $\cX$, $f$ is defined on $u_h\in\cX_h\subset\cX$ so the technical assumption is unnecessary.  With all of these restrictions, Corollary \ref{cor:abstractestimate:Bnorm} reduces to Theorem 1 in \cite{Falk1974}.
+The Falk result \cite{Falk1974} is recovered when $\cX, \cB$ are Hilbert spaces, and assuming that $f(v)[w]=f_h(v)[w]=a(v,w)$ is bilinear, uniformly-elliptic, and continuous.\footnote{The definition of uniform ellipticity coincides with definition \eqref{eq:qcoercive} of $2$-coercive, and continuity of $a(v,w)$ implies \eqref{eq:liponbounded}.}  In this context, up to isomorphism, $f(u)-\ell \in \cH$.  Since $f$ is defined on all of $\cX$, the technical assumption about a larger set containing $u_h$ is unnecessary.  With these simplifications, Corollary \ref{cor:abstractestimate:Bnorm} reduces to Theorem 1 in \cite{Falk1974}.
 
-Note that if $u$ is in the interior of $\cK$, and if $f=f_h$, then all bounds \eqref{eq:abstractestimate}, \eqref{eq:abstractwithmeasure}, and \eqref{eq:abstractestimate:Bnorm} reduce to their last error term, which is Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002}, but now in a Banach space and for a coercive nonlinear operator.  For glaciers this case occurs when the entire domain $\Omega$ is covered by ice.
+Note that if $u$ is in the interior of $\cK$, and if $f=f_h$, then all bounds \eqref{eq:abstractestimate}, \eqref{eq:abstractwithmeasure}, and \eqref{eq:abstractestimate:Bnorm} reduce to their last error term.  Thus we get Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002}, but now stated in a Banach space and for a coercive nonlinear operator.  For glaciers this case occurs when the entire domain $\Omega$ is covered by ice.
 
 The ``$\inf_{v\in\cK}$'' terms in bound \eqref{eq:abstractestimate} is generally nonzero when $\cK_h \not\subset \cK$.  To see how this can occur in a unilateral obstacle problem, even for an arbitrarily smooth obstacle, suppose $\cK$ is defined as in \eqref{eq:be:admissible}.  Suppose $b_h=\pi_h b$ is the FE interpolant of $b$, and define $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge b_h \text{ and } v_h|_{\partial\Omega}=b_h|_{\partial\Omega}\}$.  While $b_h(x_j)=b(x_j)$ for the interpolation nodes $x_j$, generally $b_h(x) \ge b(x)$ will not hold for all $x\in\Omega$ (Figure \ref{fig:nonadmissible}; see also \cite[Figure 5.1.3]{Ciarlet2002}).  That is, nodal admissibility does not imply admissibility.
 
@@ -596,47 +603,53 @@ The ``$\inf_{v\in\cK}$'' terms in bound \eqref{eq:abstractestimate} is generally
 \begin{center}
 \input{tikz/nonadmissible.tex} \quad \input{tikz/monoadmissible.tex}
 \end{center}
-\caption{Left: If $b_h=\pi_h b$ is the interpolant of $b$ then generally $\cK_h\not\subset\cK$.  Right: Defining $b_h=R_h^{\oplus} b$, using \eqref{eq:monotoneop}, implies $b_h\ge b$ and $\cK_h\subset\cK$.}
+\caption{Left: If $b_h=\pi_h b$ is the interpolant of $b$ then generally $\cK_h\nsubset\cK$.  Right: Defining $b_h=R_h^{\oplus} b$, using \eqref{eq:monotoneop}, implies $b_h\ge b$ and $\cK_h\subset\cK$.}
 \label{fig:nonadmissible}
 \end{figure}
 
-However, when $\cK_h \subset \cK$ the ``\,$\inf_{v\in\cK}$'' term vanishes.  For unilateral obstacle problems, and $P_1$ or $Q_1$ elements, we may force this case by using a monotone restriction operator \cite{BuelerFarrell2024}, defined as follows.  For a node $x_i$ let $N_i$ be the union of elements adjacent to $x_i$.  Define $R_h^{\oplus}b\in\cX_h$ by
+For unilateral obstacle problems and $P_1$ or $Q_1$ elements we may force $\cK_h\subset\cK$ by using a monotone restriction operator \cite{BuelerFarrell2024}, defined as follows.  For a node $x_i$ let $N_i$ be the union of elements adjacent to $x_i$.  Define $R_h^{\oplus}b\in\cX_h$ by
 \begin{equation}
 (R_h^{\oplus}b)(x_i) = \sup_{x \in N_i} b(x). \label{eq:monotoneop}
 \end{equation}
-If $b_h=R_h^{\oplus} b$ then $b_h(x)\ge b(x)$ for all $x\in \Omega$, and thus $\cK_h\subset \cK$ (Figure \ref{fig:nonadmissible}; right).
+If $b_h=R_h^{\oplus} b$ then $b_h(x)\ge b(x)$ for all $x\in \Omega$ (Figure \ref{fig:nonadmissible}; right), thus $\cK_h\subset \cK$ and the ``\,$\inf_{v\in\cK}$'' term vanishes from the bounds.
 
 In summary, Theorem \ref{thm:abstractestimate} is a powerful and nontrivial generalization of Falk's bound \cite{Falk1974} and Cea's lemma.  We now return to the glacier problem.
 
 
 \section{Application to numerical glacier models} \label{sec:application}
 
-FIXME from now on we are regularized
+Now we can apply the above theory to an implicit time step of an evolving-surface, Stokes-based glacier simulation.  Our approach essentially defines the phrase ``conforming FE method'' for such glacier simulations.  We will combine the three major threads from earlier Sections: \emph{a)} well-posedness and \emph{a priori} bounds for the glaciological Stokes problem on a fixed domain (Section \ref{sec:stokes}), \emph{b)} conjectural $4$-coercivity and well-posedness of the VI problem for an implicit time step of the surface elevation (Sections \ref{sec:model} and \ref{sec:conjectural}), and \emph{c)} an abstract error estimate for the FE solutions of such VIs (Section \ref{sec:abstractestimate}).
 
-FIXME We will use $R_h^{\oplus}$ on the bed elevation $b$.  Note that models which parameterize geometry with ice thickness, for which $\cK = \{v\in\cX\,:\,v\ge 0, v|_{\partial\Omega}=0\}$, would not need this admissibility step, assuming $P_1$/$Q_1$ elements, because then $\cK_h=\cK\cap\cX_h \subset \cK$, but we have pointed-out in the Introduction the disadvantage that the thickness tends to be less smooth than the surface.
-
-Now we can synthesize all of the above theory and apply it to an implicit time step of a Stokes-based glacier simulation with evolving surface elevation.  Our approach essentially defines the phrase ``conforming FE method'' for such glacier simulations.  We will combine three major threads: \emph{a)} well-posedness and \emph{a priori} bounds for the glaciological Stokes problem on a fixed domain (Section \ref{sec:stokes}), \emph{b)} conjectural well-posedness of the VI problem for an implicit time step of the surface elevation (Sections \ref{sec:model} and \ref{sec:conjectural}), and \emph{c)} the abstract error estimate for FE solutions of VIs (Section \ref{sec:abstractestimate}).
-
-Consider an FE method for VI problem \eqref{eq:be:vi}, with $F_{\Delta t}$ defined in \eqref{eq:be:Fdefine}.  For a finite-dimensional subspace $\cX_h\subset \cX$, with a constraint set $\cK_h\subset \cX_h$, we seek $s_h\in\cK_h$ solving
-\begin{equation}
-F^h_{\Delta t}(s_h)[r_h-s_h] \ge \ell^n[r_h-s_h] \quad \text{for all } r_h \in \cK_h. \label{eq:fe:be:vi}
-\end{equation}
-The operator $F^h_{\Delta t}$ denotes an FE approximation to the operator $F_{\Delta t}$; see \eqref{eq:fe:be:Fdefine} below.  The source $\ell^n = s^{n-1} + \Delta t\,a^n$ is defined exactly as before, by equation \eqref{eq:be:source}.  We assume that the previous surface elevation $s^{n-1} \in \cK$ is general; we do not require $s^{n-1}\in\cK_h$.
-
-Evaluation of $F^h_{\Delta t}(s_h)$ in the FE VI problem \eqref{eq:fe:be:vi} requires the nontrivial numerical solution of a glaciological Stokes problem \eqref{eq:glenstokes:weak} over a 3D mesh of the domain $\Lambda(s_h)$ between $z=b_h$ and $z=s_h$.  Solvability of this problem, for inf-sup stable elements, is addressed by \cite{Belenkietal2012,JouvetRappaz2011}.  The mesh need not be extruded vertically as shown in Figure \ref{fig:fe:operatorvisualization}, but this is a possibility.  However, the upper and lower surfaces, where boundary conditions \eqref{eq:stokes:stressfreesurface} and \eqref{eq:stokes:noslide} are applied, are assumed to be given by admissible FE functions, i.e.~$s_h,b_h\in\cX_h$ with $s_h\ge b_h$.  The numerical velocity from solving the Stokes problem, over the domain geometry defined by $s_h$, is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  Observe that $\bu_h|_{s_h}$ will generally be different from the surface trace of the exact solution of the same Stokes boundary value problem for the same ($s_h$) geometry, denoted by $\bu|_{s_h}$.  Technically, the FE operator is defined as
-\begin{equation}
-F_{\Delta t}^h(s_h)[\omega] = \int_\Omega \left(s_h - \Delta t\, \bu_h|_{s_h}\cdot \bn_{s_h}\right) \omega
-\label{eq:fe:be:Fdefine}
-\end{equation}
-for $\omega\in\cX_h$.  This is a different operator from $F_{\Delta t}(s_h)$, defined in \eqref{eq:be:Fdefine}, because it uses the numerical solution velocity at the FE surface, and not the exact velocity of the same Stokes problem.
+Practical models for glaciers, whether based on stuctured or unstructured meshes, use polygonal domain geometry for the 3D Stokes problem \cite{Brinkerhoff2023,IsaacStadlerGhattas2015,Jouvetetal2008,Lengetal2012}.  For this reason we assume that the map-plane domain $\Omega \subset \RR^2$ is a polygon, and that the discrete bed and surface elevations $b_h,s_h$ are from the continuous $P_1$ FE space $\cX_h$ over a triangulation $\cT_h$ of $\Omega$ (Figure \ref{fig:fe:domain}).  The mesh need not be extruded vertically as shown in Figure \ref{fig:fe:domain}, but this is a possibility.
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=0.7\textwidth]{genfigs/extruded.pdf}
 \end{center}
-\caption{Evaluating $F^h_{\Delta t}(s_h)$ in \eqref{eq:fe:be:Fdefine} requires numerically solving a Stokes problem for the velocity $\bu_h$, on a mesh between $b_h$ and $s_h$, and then evaluating its surface trace $\bu_h|_{s_h}$.}
-\label{fig:fe:operatorvisualization}
+\caption{The Stokes problem for the velocity $\bu_h$ is solved on a polygonal domain, on a mesh between $P_1$ functions $b_h$ and $s_h$.  Computation of $F_{\Delta t}^h$ requires evaluation of the surface trace $\bu_h|_{s_h}$.}
+\label{fig:fe:domain}
 \end{figure}
+
+We apply monotone restriction to the original bed elevation data $b$, thus $b_h = R_h^{\oplus} b$ using \eqref{eq:monotoneop}, or in any case we assume $b_h \ge b$ and also that $b_h=b$ along $\partial\Omega$.  Now, following \eqref{eq:be:admissible}, we define $\cK_h=\{\sigma_h \in \cX_h\,:\,\sigma_h|_{\partial\Omega}=b_h|_{\partial\Omega} \text{ and } \sigma_h\ge b_h\}$, so that $\cK_h\subset\cK \subset \cX$ where $\cX = W^{1,4}(\Omega)$.
+
+From these geometric and discrete-space choices, consider the FE method for regularised VI problem \eqref{eq:regularizedvi}, with $F^\eps_{\Delta t}$ defined by \eqref{eq:regularizedF}.  The source term $\ell^n$ in \eqref{eq:regularizedvi} may be defined exactly as in \eqref{eq:be:source}, though presumably with quadrature in the integral.  We allow the previous surface elevation to be general, i.e.~$s^{n-1} \in \cK$ and not necessarily $s^{n-1}\in\cK_h$, so the analysis to follow also applies to the first time-step, from any initial surface elevation $s^0$.
+
+Approximate evaluation of $F^\eps_{\Delta t}(s_h)$ requires the nontrivial numerical solution of the glaciological Stokes problem \eqref{eq:glenstokes:weak} over a 3D mesh of the domain $\Lambda(s_h)$ between $z=b_h$ and $z=s_h$ (equation \eqref{eq:domainfroms} and Figure \ref{fig:fe:domain}).  We emphasize that the upper and lower surfaces of $\Lambda(s_h)$, where boundary conditions \eqref{eq:stokes:stressfreesurface} and \eqref{eq:stokes:noslide} are applied, are given by admissible FE functions $s_h,b_h\in\cX_h$, with $s_h\ge b_h$.  Solvability of this Stokes problem using inf-sup stable elements is addressed by \cite{Belenkietal2012,JouvetRappaz2011}.  The numerical velocity from solving the Stokes problem over $\Lambda(s_h)$ is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  We make no restrictions to or assumptions on the solution process for $\bu_h$ other than that this surface trace is well-defined, allowing (approximate) evaluation of $F^\eps_{\Delta t}(s_h)$.  Observe that $\bu_h|_{s_h}$ will generally be different from the surface trace of the exact solution of the same Stokes boundary value problem for the same $\Lambda(s_h)$ geometry, which is denoted by $\bu|_{s_h}$. 
+
+FIXME
+
+For a finite-dimensional subspace $\cX_h\subset \cX$, with a constraint set $\cK_h\subset \cX_h$, we seek $s_h\in\cK_h$ solving
+\begin{equation}
+F^h_{\Delta t}(s_h)[r_h-s_h] \ge \ell^n[r_h-s_h] \quad \text{for all } r_h \in \cK_h. \label{eq:fe:be:vi}
+\end{equation}
+The operator $F^h_{\Delta t}$ denotes an FE approximation to the operator $F_{\Delta t}$; see \eqref{eq:fe:be:Fdefine} below.  
+
+ Technically, the FE operator is defined as
+\begin{equation}
+F_{\Delta t}^h(s_h)[\omega] = \int_\Omega \left(s_h - \Delta t\, \bu_h|_{s_h}\cdot \bn_{s_h}\right) \omega
+\label{eq:fe:be:Fdefine}
+\end{equation}
+for $\omega\in\cX_h$.  This is a different operator from $F_{\Delta t}(s_h)$, defined in \eqref{eq:be:Fdefine}, because it uses the numerical solution velocity at the FE surface, and not the exact velocity of the same Stokes problem.
 
 A key concern in applying abstract Theorem \ref{thm:abstractestimate}, or its Corollaries to the glacier problem is the choice of the numerical bed elevation $b_h \approx b$, which defines the constraint set $\cK_h$.  We will assume that $b$ is continuous on the closed domain $\bar\Omega$, i.e.~$b\in C(\bar\Omega) \cap \cX$.  In practice $b$ is provided via a high resolution map derived from ice-penetrating radar \cite{Morlighemetal2017}, and it may already be in a continuous FE space, but often it is on a finer mesh than $\cT_h$.  We assert that it is desirable to choose $b_h \in \cX_h$ to satisfy $b_h\ge b$ because the ``$\inf_{v\in\cK}$'' term in \eqref{eq:abstractestimate} disappears; see Corollary \ref{cor:abstractestimate:nohull}.  A monotone nodal operator \eqref{eq:monotoneop}, or similar, can be applied to achieve this, $b_h = R^\oplus b$.  As one would in a conforming FE method for a PDE problem \cite{Elmanetal2014}, we will assume $b_h=b$ along the fixed boundary $\partial\Omega$.  We also need to define an interpolation and truncation operation $\Pi_h : \cX \to \cK_h$ as follows.  For $r\in\cX$ this gives the unique FE function $\Pi_h(r) \in \cX_h$ so that
 \begin{equation}
