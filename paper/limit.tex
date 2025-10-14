@@ -1,0 +1,106 @@
+\documentclass[12pt]{article}
+
+\usepackage{amssymb,amsmath,amsthm}
+\usepackage[top=1in, bottom=1in, left=1.25in, right=1.25in]{geometry}
+\usepackage{enumerate,palatino,bm}
+\usepackage[final]{graphicx}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=red,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{conjecture}{Conjecture}
+
+\newcommand{\RR}{\ensuremath{\mathbb R}}
+\newcommand{\ZZ}{\ensuremath{\mathbb Z}}
+
+\newcommand{\bu}{\ensuremath{\mathbf{u}}}
+
+\newcommand{\bzero}{\ensuremath{\bm{0}}}
+
+\newcommand{\cK}{\ensuremath{\mathcal{K}}}
+\newcommand{\cX}{\ensuremath{\mathcal{X}}}
+
+\newcommand{\grad}{\ensuremath{\nabla}}
+\newcommand{\eps}{\ensuremath{\epsilon}}
+
+
+\title{A bound on the surface elevation solution \\ in terms of the climate}
+\author{Ed Bueler}
+
+\begin{document}
+\maketitle
+
+We consider a glacier geometry problem, to determine the surface elevation if the dynamical model is a Stokes balance or similar.  We consider a single, regularized backward-Euler step.  The main idea in this short note is that if we conjecture coercivity for the regularized surface motion then we can bound a Sobolev norm of the steady-state surface elevation in terms of the average climate.
+
+Suppose $\Omega\subset \RR^2$ is a bounded domain, with notation $x=(x_1,x_2)\in\Omega$ for a location in the map-plane.  We use the following Banach space for surface elevations:
+\begin{equation}
+\cX = W^{1,4}(\Omega). \label{eq:defineX}
+\end{equation}
+The climate data $a(t,x)$ is assumed to be in $C([0,T]; L^{4/3}(\Omega))$.  We fix a bed elevation function $b\in C^1(\bar\Omega)$, and define
+\begin{equation}
+\cK=\{\sigma\in\cX\,:\,\sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\} \label{eq:defineK}
+\end{equation}
+
+Let $\bu=(u_1,u_2,w)$ be the solution of the Stokes problem over the domain
+\begin{equation}
+\Lambda(s) = \left\{(x,z)\,:\,b(x) < z < s(x)\right\} \subset \Omega \times \RR. \label{eq:domainfroms}
+\end{equation}
+The surface trace of the velocity is denoted $\bu|_s=(u_1|_s,u_2|_s,w|_s)$.  This surface velocity is extended by zero to all of $\Omega$, that is, it is zero outside of the part which is covered by ice ($s>b$).  Now, for $\eps>0$ and $H_0>0$, and physical constant $\Gamma>0$, define the SIA-regularized surface motion
+\begin{equation}
+\Phi^\eps(s)[\omega] = \int_\Omega \Big(\big(u_1|_s,u_2|_s\big) \cdot \grad s - (1-\eps) w|_s\Big) \omega + \eps\, \Gamma H_0^4 |\grad s|^2 \grad s \cdot \grad \omega. \label{eq:defineregularizedPhi}
+\end{equation}
+
+Reference \cite{Bueler2025} makes the following conjecture that $\Phi^\eps$ is $4$-coercive.
+
+\begin{conjecture} \label{conj:regcoercive}  There exists $\eps \in (0,1)$ and $H_0>0$, and $\alpha>0$, so that
+\begin{equation}
+\left(\Phi^\eps(\sigma) - \Phi^\eps(s)\right)[\sigma-s] \ge \alpha \|\sigma-s\|_{\cX}^4 \qquad \text{for all } \sigma,s\in\cK. \label{eq:regcoercive}
+\end{equation}
+\end{conjecture}
+
+Consider a backward Euler time step over $[t_{n-1},t_n]$ with $\Delta t=t_n-t_{n-1} > 0$.  For the previous surface elevation $s^{n-1}\in\cX$, define the source term
+\begin{equation}
+\ell^n(x) = s^{n-1}(x) + \int_{t_{n-1}}^{t_n} a(t,x)\,dt. \label{eq:be:source}
+\end{equation}
+For a test function $\omega\in\cX$, define the regularized functional for the step:
+\begin{equation}
+F^\eps_{\Delta t}(s)[\omega] = \Delta t\,\Phi^\eps(s)[\omega] + \int_\Omega s \omega, \label{eq:regularizedF}
+\end{equation}
+The variational inequality (VI) problem for this step is
+\begin{equation}
+F^\eps_{\Delta t}(s)[\sigma-s] \ge \ell^n[\sigma-s] \quad \text{for all } \sigma \in \cK. \label{eq:regularizedvi}
+\end{equation}
+
+Reference \cite{Bueler2025} shows that, under Conjecture \ref{conj:regcoercive} and an additional conjecture that the surface trace of the Stokes velocity is Lipschitz in the surface elevation, VI problem \eqref{eq:regularizedvi} has a unique solution.
+
+\begin{theorem}
+Suppose Conjecture \ref{conj:regcoercive}.  A solution $s\in\cK$ of VI problem \eqref{eq:regularizedvi} satisfies the following bound:
+\begin{equation}
+\|s-b\|_{\cX}^4 \le FIXME \label{eq:thebound}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Note $b\in\cK$.  Substitute $\sigma=b$ into \eqref{eq:regularizedvi} and rewrite as follows:
+\begin{equation}
+\Delta t \Phi^\eps(s)[s-b] \le \int_\Omega (\ell^n - s) (s - b).
+\end{equation}
+Subtract and add $b$ on the right to get:
+\begin{equation}
+\Delta t \Phi^\eps(s)[s-b] + \|s-b\|_{L^2}^2 \le \int_\Omega (\ell^n - b) (s - b).
+\end{equation}
+Observe that, because $\bu|_b=\bzero$,
+\begin{equation}
+\Phi^\eps(b)[\omega] = \int_\Omega \eps \Gamma H_0^4 |\grad b|^2 \grad b \cdot \grad\omega.
+\end{equation}
+Subtract from both sides to get
+\begin{align*}
+\Delta t (\Phi^\eps(s) - \Phi^\eps(b))[s-b] + \|s-b\|_{L^2}^2 &\le \int_\Omega (\ell^n - b) (s - b) \\
+ &\quad + \Delta t \int_\Omega \eps \Gamma H_0^4 |\grad b|^2 \grad b \cdot \grad(s-b).
+\end{align*}
+x
+\end{proof}
+
+\bibliographystyle{siamplain}
+\bibliography{estimate}
+
+\end{document}
