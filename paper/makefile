@@ -1,4 +1,4 @@
-all: estimate.pdf
+all: estimate.pdf limit.pdf
 
 _figures := stokesdomain giscross extruded filled icefree
 figures := $(addprefix genfigs/, $(addsuffix .pdf, $(_figures)))
@@ -30,6 +30,17 @@ estimate.aux: estimate.tex cropfigures
 
 estimate.bbl: estimate.aux estimate.bib
 	bibtex estimate
+
+limit.pdf: limit.tex limit.aux limit.bbl
+	pdflatex limit
+	pdflatex limit
+
+limit.aux: limit.tex
+	pdflatex limit
+	bibtex limit
+
+limit.bbl: limit.aux estimate.bib
+	bibtex limit
 
 # generate .zip of source files suitable for submitting to arxiv
 publish.zip: estimate.pdf estimate.bbl
