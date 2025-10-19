@@ -765,10 +765,10 @@ We do not possess a proof of the well-posedness of the continuous-space, implici
 \appendix
 \section{Proof of Lemma \ref{lem:stokesapriori}} \label{app:provestokesapriori}
 
-The proof of Lemma \ref{lem:stokesapriori} is hinted in \cite{JouvetRappaz2011}, and is standard.  It requires Poincar\'e's inequality, below as \eqref{eq:poincare}, which is (7.44) in \cite{GilbargTrudinger2001}, and Korn's inequality \eqref{eq:korns}, which can by proven by setting $F(x)$ to the identity in Corollary 4.1 of \cite{Pompe2003}.
+The proof of Lemma \ref{lem:stokesapriori} is hinted in \cite{JouvetRappaz2011}, and it is standard.  It requires the following Poincar\'e's and Korn's inequalities, which can be proven by (7.44) in \cite{GilbargTrudinger2001} for \eqref{eq:poincare}, and by setting $F(x)$ to the identity in Corollary 4.1 of \cite{Pompe2003} for \eqref{eq:korns}.
 
 \begin{lemma} \label{lem:poincarekorns}
-Under the assumptions of Theorem \ref{thm:stokeswellposed}, there exist dimensionless constants $C$, depending on the geometry of $\Lambda$, so that for all $\bv \in \cV$,
+There exist dimensionless constants $C$, depending on the geometry of $\Lambda$, so that for all $\bv \in \cV$,
 \begin{equation}
 \int_\Lambda |\bv|^\pp \le C [H]^\pp \int_\Lambda |\grad\bv|^\pp, \label{eq:poincare}
 \end{equation}
@@ -788,14 +788,9 @@ Apply \eqref{eq:korns}, the facts that $\pp>0$ and $(\pp-2)/2 \le 0$, and equati
 \int_\Lambda |\grad\bu|^\pp &\le C \int_\Lambda |D\bu|^\pp \le C \int_\Lambda \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} \left(D\bu:D\bu + \eps\right) \label{eq:stokes:startapriori} \\
 	&= C \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \int_\Lambda 2\nu(D\bu) D\bu:D\bu\right]. \notag
 \end{align}
-By equation \eqref{eq:stokes:substituteu}, Cauchy-Schwarz, and H\"older's inequality we thus have
-\begin{align}
-\int_\Lambda |\grad\bu|^\pp &\le C \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \int_\Lambda \rhoi \bg \cdot \bu\right] \label{eq:stokes:workapriori} \\
-	&\le C \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \rhoi |\bg| |\Lambda|^{1/\pp'} \|\bu\|_\cV\right]. \notag
-\end{align}
-From \eqref{eq:poincare},
+By equation \eqref{eq:stokes:substituteu}, Cauchy-Schwarz, H\"older's inequality, and \eqref{eq:poincare} we thus have
 \begin{equation}
-\|\bu\|_{\cV}^\pp \le C [H]^\pp \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \rhoi |\bg| |\Lambda|^{1/\pp'} \|\bu\|_\cV\right].
+\int_\Lambda |\grad\bu|^\pp \le C [H]^\pp \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \rhoi |\bg| |\Lambda|^{1/\pp'} \|\bu\|_\cV\right]. \label{eq:stokes:workapriori}
 \end{equation}
 Now let $z=\|\bu\|_\cV$.  We have proved that $z^\pp \le c_0 + c_1 z$ for $\pp>1$ and constants $c_i>0$.  Furthermore $g(y) = y^\pp - c_1 y - c_0$ is smooth with $g(0)=-c_0<0$, and $g(y) \to +\infty$ as $y \to +\infty$ since $\pp>1$.  Thus there exists a right-most root $\tilde y>0$ with $\tilde y = f(\pp,c_0,c_1)$.  Since $g(z)\le 0$ we have $z \le \tilde y$.  This proves \eqref{eq:stokesapriori} with $C=\tilde y$.
 \end{proof}
@@ -803,19 +798,17 @@ Now let $z=\|\bu\|_\cV$.  We have proved that $z^\pp \le c_0 + c_1 z$ for $\pp>1
 
 \section{The surface motion map is not coercive} \label{app:noncoercive}
 
-It is reasonable to suppose that glacier flow models have the property that, for smooth bedrock elevations, there is no flow whenever an admissible surface elevation $s\in \cX=W^{1,r}(\Omega)$ is flat (horizontal) on the ice.  In terms of the inactive set $\Omega_I=\{x\in\Omega\,:\,s(x)>b(x)\}$ (Section \ref{sec:model}) and the 3D icy domain $\Lambda(s)$ (equation \eqref{eq:icydomain}) defined earlier, this property is that if $\grad s=0$ a.e.~in $\Omega_I$ then $\bu=\bzero$ on $\Lambda(s)$.  By well-posedness Theorem \ref{thm:stokeswellposed} this property holds for the (non-sliding) Stokes model considered in the paper.  However, it also holds for a Stokes model with any physically-reasonable sliding law, and for any shallow ice approximation model \cite{JouvetBueler2012}.
-
-Using this property, for bedrock elevations $b$ which have strict local minima then we can construct distinct surface elevations $s_1,s_2\in \cX$, $\|s_1-s_2\|_{\cX}>0$, each with zero surface motion: $\bu|_{s_i}=\bzero$ and $\Phi(s_i)=0$.  (See \eqref{eq:defineus} and \eqref{eq:definePhi}.)  The construction (Figure \ref{fig:noncoercive}) is simply to fill the local minima with flat ice for surface $s_1$, and leave the other as bare ground $s_2=b$.  Note that $s_1$ can be constructed with any (positive) number of local minima filled-in, or with minima only partially filled, but again one has $s_1 \in \cX$, satisfying $\bu|_{s_1}=\bzero$, $\Phi(s_1)=0$, and $\|s_1-s_2\|_{\cX}>0$.
+It is reasonable to suppose that glacier flow models produce no flow whenever an admissible surface elevation $s\in \cX=W^{1,r}(\Omega)$ is flat (horizontal) everywhere on the ice.  In terms of the inactive set $\Omega_I=\{x\in\Omega\,:\,s(x)>b(x)\}$ (Section \ref{sec:model}) and the 3D icy domain $\Lambda(s)$ from \eqref{eq:icydomain}, this property says that if $\grad s=0$ a.e.~in $\Omega_I$ then $\bu=\bzero$ on $\Lambda(s)$.  This property holds for the non-sliding Stokes model considered in the paper, but it appears to be true under any physically-reasonable sliding law, and for shallow ice approximation models \cite{JouvetBueler2012} too.
 
 \begin{figure}[ht]
 \begin{center}
 \mbox{\includegraphics[width=0.4\textwidth]{genfigs/filled.pdf} \qquad \includegraphics[width=0.4\textwidth]{genfigs/icefree.pdf}}
 \end{center}
-\caption{For a smooth bedrock elevation $b$ with local minima, a surface elevation state $s_1$ that fills-in the minima with flat ice (left) gives zero surface velocity in a Stokes model: $\bu|_{s_1}=\bzero$.   The ice-free state $s_2=b$ (right) likewise has $\bu|_{s_2}=\bzero$.  This shows that the surface motion map $\Phi$ defined in \eqref{eq:definePhi} is not coercive.}
+\caption{For a smooth bedrock elevation $b$ with local minima, one surface elevation state $s_1$ fills-in the minima with flat ice (left), while the other is ice-free $s_2=b$ (right).  Because neither state generates flow, $\bu|_{s_i}=\bzero$, the surface motion map $\Phi$ in equation \eqref{eq:definePhi} cannot be coercive.}
 \label{fig:noncoercive}
 \end{figure}
 
-Two consequences of this construction are now stated as propositions.
+Using this property, for any bedrock elevations $b$ possessing local minima we can construct distinct surface elevations $s_1,s_2\in \cX$, $\|s_1-s_2\|_{\cX}>0$, with zero surface velocity $\bu|_{s_i}=\bzero$ \eqref{eq:defineus}, and therefore zero surface motion ($\Phi(s_i)=0$ from \eqref{eq:definePhi}).  The construction (Figure \ref{fig:noncoercive}) simply fills-in the local minima with flat ice for surface $s_1$, and leaves $s_2=b$ as bare ground.  Note that $s_1$ can be constructed with any number of local minima filled-in, or with minima only partially filled.  Two consequences of this construction follow, as propositions.
 
 \begin{proposition} \label{prop:noncoercive}
 The surface motion map $\Phi$ defined in \eqref{eq:definePhi} is not $q$-coercive (Definition \ref{def:monotonecoercive}), for any $q$, nor is it strictly-monotone.
@@ -826,15 +819,17 @@ Note $(\Phi(s_1) - \Phi(s_2))[s_1-s_2]=0$ while $\alpha \|s_1-s_2\|_\cX > 0$.
 \end{proof}
 
 \begin{proposition} \label{prop:notunique}
-When the SMB is identically zero, $a=0$, there are smooth bedrock elevations for which the steady-state version of a glacier geometry model will have more than one solution.
+When the SMB is identically zero, $a=0$, there are smooth bedrock elevations for which the steady-state version of a glacier geometry model \eqref{eq:ncp} will have more than one solution.
 \end{proposition}
 
 \begin{proof}
-The NCP form of the steady-state and $a=0$ model in question is
+The strong (NCP) form of the steady-state and $a=0$ model is
 	$$s - b \ge 0, \quad - \bu|_s \cdot \bn_s \ge 0, \quad (s - b) \left(- \bu|_s \cdot \bn_s\right) = 0,$$
-with corresponding weak form over $s\in\cK\subset\cX$.  If $b$ is a smooth function with local minima then the above construction of $s_1$ and $s_2$ gives distinct solutions.
+with corresponding weak form VI similar to \eqref{eq:be:vi}.  If $b$ is a smooth function with local minima then the above construction of $s_1$ and $s_2$ gives distinct solutions.
 \end{proof}
-Proposition \ref{prop:notunique} answers negatively the uniqueness question which has been open since the existence theorem for the general-bed, steady shallow ice approximation \cite{JouvetBueler2012}.  It uses a surprisingly-simple construction, but one which seems not to appear in the literature.  Non-uniqueness here happens for a SMB function which is elevation \emph{in}dependent, namely $a=0$.  This result is different from the better-known non-uniqueness \cite{Bodvardsson1955} and non-existence \cite{Jouvetetal2011} results for certain elevation-dependent SMB models.
+Proposition \ref{prop:notunique} answers negatively the uniqueness question which has been open since the existence theorem for the general-bed, steady shallow ice approximation \cite{JouvetBueler2012}.  This surprisingly-simple construction seems not to appear in the literature.
+
+Non-uniqueness here happens for an SMB function which is elevation \emph{in}dependent, namely $a=0$.  This result is different from the better-known non-uniqueness \cite{Bodvardsson1955} and non-existence \cite{Jouvetetal2011} results for certain elevation-dependent SMB models.
 
 
 \section{Experiments on coercivity of the surface motion map} \label{app:numerical}
