@@ -1,4 +1,4 @@
-all: estimate.pdf limit.pdf
+all: estimate.pdf # limit.pdf
 
 _figures := stokesdomain giscross extruded filled icefree
 figures := $(addprefix genfigs/, $(addsuffix .pdf, $(_figures)))

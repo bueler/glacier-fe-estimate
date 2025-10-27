@@ -765,7 +765,7 @@ We do not possess a proof of the well-posedness of the continuous-space, implici
 \appendix
 \section{Proof of Lemma \ref{lem:stokesapriori}} \label{app:provestokesapriori}
 
-The proof of Lemma \ref{lem:stokesapriori} is hinted in \cite{JouvetRappaz2011}, and it is standard.  It requires the following Poincar\'e's and Korn's inequalities, which can be proven by (7.44) in \cite{GilbargTrudinger2001} for \eqref{eq:poincare}, and by setting $F(x)$ to the identity in Corollary 4.1 of \cite{Pompe2003} for \eqref{eq:korns}.
+The proof below of Lemma \ref{lem:stokesapriori} is hinted in \cite{JouvetRappaz2011}, and it is standard.  It requires the following Poincar\'e's and Korn's inequalities, which can be proven by (7.44) in \cite{GilbargTrudinger2001} for \eqref{eq:poincare}, and by setting $F(x)$ to the identity in Corollary 4.1 of \cite{Pompe2003} for \eqref{eq:korns}.
 
 \begin{lemma} \label{lem:poincarekorns}
 There exist dimensionless constants $C$, depending on the geometry of $\Lambda$, so that for all $\bv \in \cV$,
@@ -785,12 +785,12 @@ From \eqref{eq:glenstokes:weak} and $\bu \in\Vdiv$ it follows that
 \end{equation}
 Apply \eqref{eq:korns}, the facts that $\pp>0$ and $(\pp-2)/2 \le 0$, and equation \eqref{eq:glen}:
 \begin{align}
-\int_\Lambda |\grad\bu|^\pp &\le C \int_\Lambda |D\bu|^\pp \le C \int_\Lambda \left(|D\bu|^2 + \eps\right)^{(\pp-2)/2} \left(D\bu:D\bu + \eps\right) \label{eq:stokes:startapriori} \\
-	&= C \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \int_\Lambda 2\nu(D\bu) D\bu:D\bu\right]. \notag
+\int_\Lambda |\grad\bu|^\pp &\le C \int_\Lambda |D\bu|^\pp \le C \int_\Lambda \left(|D\bu|^2 + \mu_0\right)^{(\pp-2)/2} \left(D\bu:D\bu + \mu_0\right) \label{eq:stokes:startapriori} \\
+	&= C \left[\mu_0^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \int_\Lambda 2\nu(D\bu) D\bu:D\bu\right]. \notag
 \end{align}
 By equation \eqref{eq:stokes:substituteu}, Cauchy-Schwarz, H\"older's inequality, and \eqref{eq:poincare} we thus have
 \begin{equation}
-\int_\Lambda |\grad\bu|^\pp \le C [H]^\pp \left[\eps^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \rhoi |\bg| |\Lambda|^{1/\pp'} \|\bu\|_\cV\right]. \label{eq:stokes:workapriori}
+\int_\Lambda |\grad\bu|^\pp \le C [H]^\pp \left[\mu_0^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \rhoi |\bg| |\Lambda|^{1/\pp'} \|\bu\|_\cV\right]. \label{eq:stokes:workapriori}
 \end{equation}
 Now let $z=\|\bu\|_\cV$.  We have proved that $z^\pp \le c_0 + c_1 z$ for $\pp>1$ and constants $c_i>0$.  Furthermore $g(y) = y^\pp - c_1 y - c_0$ is smooth with $g(0)=-c_0<0$, and $g(y) \to +\infty$ as $y \to +\infty$ since $\pp>1$.  Thus there exists a right-most root $\tilde y>0$ with $\tilde y = f(\pp,c_0,c_1)$.  Since $g(z)\le 0$ we have $z \le \tilde y$.  This proves \eqref{eq:stokesapriori} with $C=\tilde y$.
 \end{proof}
@@ -798,7 +798,7 @@ Now let $z=\|\bu\|_\cV$.  We have proved that $z^\pp \le c_0 + c_1 z$ for $\pp>1
 
 \section{The surface motion map is not coercive} \label{app:noncoercive}
 
-It is reasonable to suppose that glacier flow models produce no flow whenever an admissible surface elevation $s\in \cX=W^{1,r}(\Omega)$ is flat (horizontal) everywhere on the ice.  In terms of the inactive set $\Omega_I=\{x\in\Omega\,:\,s(x)>b(x)\}$ (Section \ref{sec:model}) and the 3D icy domain $\Lambda(s)$ from \eqref{eq:icydomain}, this property says that if $\grad s=0$ a.e.~in $\Omega_I$ then $\bu=\bzero$ on $\Lambda(s)$.  This property holds for the non-sliding Stokes model considered in the paper, but it appears to be true under any physically-reasonable sliding law, and for shallow ice approximation models \cite{JouvetBueler2012} too.
+It is reasonable to suppose that a glacier flow model will produce no flow for an admissible surface elevation $s\in \cX=W^{1,r}(\Omega)$ which is flat (horizontal) everywhere on the ice.  In terms of the inactive set $\Omega_I=\{x\in\Omega\,:\,s(x)>b(x)\}$ and the domain $\Lambda(s)$ from \eqref{eq:icydomain}, this property says that if $\grad s=0$ a.e.~in $\Omega_I$ then $\bu=\bzero$ on $\Lambda(s)$.  This holds for the non-sliding Stokes model considered in the paper, but it would also hold for most sliding laws, and in shallow ice approximation models \cite{JouvetBueler2012}.
 
 \begin{figure}[ht]
 \begin{center}
@@ -811,11 +811,11 @@ It is reasonable to suppose that glacier flow models produce no flow whenever an
 Using this property, for any bedrock elevations $b$ possessing local minima we can construct distinct surface elevations $s_1,s_2\in \cX$, $\|s_1-s_2\|_{\cX}>0$, with zero surface velocity $\bu|_{s_i}=\bzero$ \eqref{eq:defineus}, and therefore zero surface motion ($\Phi(s_i)=0$ from \eqref{eq:definePhi}).  The construction (Figure \ref{fig:noncoercive}) simply fills-in the local minima with flat ice for surface $s_1$, and leaves $s_2=b$ as bare ground.  Note that $s_1$ can be constructed with any number of local minima filled-in, or with minima only partially filled.  Two consequences of this construction follow, as propositions.
 
 \begin{proposition} \label{prop:noncoercive}
-The surface motion map $\Phi$ defined in \eqref{eq:definePhi} is not $q$-coercive (Definition \ref{def:monotonecoercive}), for any $q$, nor is it strictly-monotone.
+The surface motion map $\Phi$ defined in \eqref{eq:definePhi} is not $\qq$-coercive (Definition \ref{def:monotonecoercive}), for any $\qq$, nor is it strictly-monotone.
 \end{proposition}
 
 \begin{proof}
-Note $(\Phi(s_1) - \Phi(s_2))[s_1-s_2]=0$ while $\alpha \|s_1-s_2\|_\cX > 0$.
+Note $(\Phi(s_1) - \Phi(s_2))[s_1-s_2]=0$ while $\|s_1-s_2\|_\cX > 0$.
 \end{proof}
 
 \begin{proposition} \label{prop:notunique}
@@ -827,16 +827,14 @@ The strong (NCP) form of the steady-state and $a=0$ model is
 	$$s - b \ge 0, \quad - \bu|_s \cdot \bn_s \ge 0, \quad (s - b) \left(- \bu|_s \cdot \bn_s\right) = 0,$$
 with corresponding weak form VI similar to \eqref{eq:be:vi}.  If $b$ is a smooth function with local minima then the above construction of $s_1$ and $s_2$ gives distinct solutions.
 \end{proof}
-Proposition \ref{prop:notunique} answers negatively the uniqueness question which has been open since the existence theorem for the general-bed, steady shallow ice approximation \cite{JouvetBueler2012}.  This surprisingly-simple construction seems not to appear in the literature.
-
-Non-uniqueness here happens for an SMB function which is elevation \emph{in}dependent, namely $a=0$.  This result is different from the better-known non-uniqueness \cite{Bodvardsson1955} and non-existence \cite{Jouvetetal2011} results for certain elevation-dependent SMB models.
+Proposition \ref{prop:notunique} answers negatively, via a surprisingly-simple construction which seems not to appear in the literature, the uniqueness question which has been open since the proof of existence for the general-bed, steady shallow ice approximation \cite{JouvetBueler2012}.  Non-uniqueness here is for an elevation-\emph{in}dependent SMB function, namely $a=0$.  This result is very different from the better-known non-uniqueness \cite{Bodvardsson1955} and non-existence \cite{Jouvetetal2011} results for certain elevation-dependent SMB models.
 
 
 \section{Experiments on coercivity of the surface motion map} \label{app:numerical}
 
-Conjecture \ref{conj:regcoercive} represents a proposed well-posedness framework for the continuum implicit time-step problem for glaciers (Sections \ref{sec:stokes}--\ref{sec:model}).  It is critical to the application of \emph{a priori} Theorem \ref{thm:abstractestimate}, which hypothesizes coercivity, in our main goal of bounding the surface elevation errors in FE simulations, by proving Theorem \ref{thm:glacierapp}.
+Conjecture \ref{conj:regcoercive} represents a well-posedness framework for the continuum implicit time-step problem for glaciers (Sections \ref{sec:stokes}--\ref{sec:model}).  It is critical to the application of \emph{a priori} Theorem \ref{thm:abstractestimate}, in our main goal of bounding the surface elevation errors in FE simulations (Theorem \ref{thm:glacierapp}).  The reasonableness of the Conjecture can be tested by sampling from numerical simulations.
 
-The reasonableness of Conjecture \ref{conj:regcoercive} can be tested by sampling from simulations.  The numerical experiments here, using Python and the Firedrake FE library \cite{Hametal2023},\footnote{Source code is at the public repository \href{https://github.com/bueler/glacier-fe-estimate}{\texttt{github.com/bueler/glacier-fe-estimate}}, in the \texttt{py/} directory.  The codes call the library at \href{https://github.com/bueler/stokes-extrude}{\texttt{github.com/bueler/stokes-extrude}}.} are not intended to demonstrate time-stepping.  They simply generate admissible surface elevation pairs $\sigma,s\in\cK \subset \cX = W^{1,4}(\Omega)$, to use as samples in a coercivity test.  For each pair of surfaces we evaluate the coercivity ratios based on formula \eqref{eq:defineregularizedPhi}:
+The numerical experiments here, using Python and the Firedrake FE library \cite{Hametal2023},\footnote{Source code is at the public repository \href{https://github.com/bueler/glacier-fe-estimate}{\texttt{github.com/bueler/glacier-fe-estimate}}, in the \texttt{py/} directory.  The codes call the library at \href{https://github.com/bueler/stokes-extrude}{\texttt{github.com/bueler/stokes-extrude}}.} are not intended to demonstrate time-stepping.  They simply generate admissible surface elevation pairs $\sigma,s\in\cK \subset \cX = W^{1,4}(\Omega)$, to use as samples in a coercivity test.  For each pair of surfaces we evaluate the coercivity ratios based on formula \eqref{eq:defineregularizedPhi}:
 \begin{equation}
 \rho^\eps(\sigma,s) = \frac{\left(\Phi^\eps(\sigma) - \Phi^\eps(s)\right)[\sigma-s]}{\|\sigma-s\|_{\cX}^4}. \label{eq:Phiratio}
 \end{equation}
@@ -844,20 +842,20 @@ In the experiments below we use $\eps=0$ first and then $\eps=0.1$.
 
 Appendix \ref{app:noncoercive} shows that for bumpy beds there exist pairs that give $\rho^0(\sigma,s) = 0$.  However, by coercivity of the $4$-Laplacian, for $\eps>0$ these pairs generate $\rho^\eps(\sigma,s)>0$.
 
-If the set of all possible ratios $\{\rho^\eps(\sigma,s)\}_{\sigma,s\in\cK}$ were bounded below by a positive constant $\alpha>0$, then this fact would confirm bound \eqref{eq:regcoercive} and Conjecture \ref{conj:regcoercive}.  However, an experiment obviously allows only finite sampling using particular data and discretization choices.  Here the domain is the 1D interval $\Omega=(-L,L)$ with $L=100$ km, meshed into equal intervals.  The FE space $\cX_h\subset \cX$ is the set of continuous $P_1$ (piecewise-linear) functions.  For $b,s\in\cX_h$ the Stokes domain $\Lambda(s)$ \eqref{eq:domainfroms} is thus polygonal.  Regarding the data, two bed profiles (Figure \ref{fig:cases}) are considered, \emph{flat} ($b_1(x)=0$) and \emph{rough} ($b_2(x)$); the latter is a linear combination of several sinusoids down to 4 km wavelength.  Three spatially-constant SMB values $a_j\in\{-2.5,0.0,1.0\}\times 10^{-7}$\, $\text{m}\,\text{s}^{-1}$ were chosen.
+If the set of all possible ratios $\{\rho^\eps(\sigma,s)\}_{\sigma,s\in\cK}$ were bounded below by a positive constant $\alpha>0$, then this would confirm bound \eqref{eq:regcoercive} and Conjecture \ref{conj:regcoercive}.  However, an experiment obviously allows only finite sampling using particular data and discretizations.  Here the domain is the 1D interval $\Omega=(-L,L)$ with $L=100$ km, meshed into equal intervals.  The FE space $\cX_h\subset \cX$ is the set of continuous $P_1$ (piecewise-linear) functions, thus the Stokes domain $\Lambda(s)$ is polygonal.  Regarding the data, two bed profiles (Figure \ref{fig:cases}) are considered, \emph{flat} ($b_1(x)=0$) and \emph{rough} ($b_2(x)$); the latter is a linear combination of several sinusoids down to 4 km wavelength.  Three spatially-constant SMB values $a_j\in\{-2.5,0.0,1.0\}\times 10^{-7}$\, $\text{m}\,\text{s}^{-1}$ were chosen.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=0.35\textwidth]{figs/snapsflat.png} \quad \includegraphics[width=0.37\textwidth]{figs/snapsrough.png}
-\caption{Two bed profiles, flat and rough, define constraint sets ${\cK_h}_i\subset\cX_h$, $i=1,2$, in the numerical experiment.  For each ${\cK_h}_i$, runs using different constant values of the SMB (see text) generated a large number of admissible surface elevations, representing a range of glacier sizes covering different portions of the domain.}
+\caption{Two bed profiles, flat and rough, define constraint sets $\cK_h^i\subset\cX_h$, $i=1,2$, in the numerical experiment.  For each $\cK_h^i$, runs using different constant values of the SMB (see text) generated a large number of admissible surface elevations, representing a range of glacier sizes covering different portions of the domain.}
 \label{fig:cases}
 \end{figure}
 
-Using definition \eqref{eq:be:admissible}, each bed elevation $b_i$, $i=1,2$, corresponds to a constraint set ${\cK_h}_i \subset \cX_h$.  A time-dependent, Stokes-dynamics simulation of $T=200$ years was done for each combination of set ${\cK_h}_i$ and value $a_j$.  One thousand sample pairs were taken from the three runs with a given ${\cK_h}_i$, at random times in $[0,T]$, with samples coming equally from different $a_j$ runs.  Because the $a_j$ values caused advance or retreat of the ice margins, and indeed for $a_1<0$ the glacier disappears.  Thus the computed ratios came from both similar and very-different surface elevation pairs.  The initial surface for these runs is a Halfar profile\footnote{For the $b_1=a_2=0$ case the exact time-dependent surface elevation solution \emph{under shallow dynamics} would be known.  Though Stokes dynamics was used in the numerical experiment, the computed surfaces agree closely with this shallow exact solution; compare \cite{LofgrenAhlkronaHelanow2022}.} \cite{Halfar1981} (Figure \ref{fig:cases}, dotted).
+Using definition \eqref{eq:be:admissible}, each bed elevation $b_i$, $i=1,2$, corresponds to a constraint set $\cK_h^i \subset \cX_h$.  A time-dependent, Stokes-dynamics simulation of $T=200$ years was done for each combination of set $\cK_h^i$ and value $a_j$.  One thousand sample pairs were taken from the three runs with a given $\cK_h^i$, at random times in $[0,T]$, with samples coming equally from different $a_j$ runs.  The different $a_j$ values caused advance or retreat of the ice margins, and indeed for $a_1<0$ the glacier disappears.  Thus the computed ratios came from both similar and very-different surface elevation pairs.  The initial surface for these runs is a Halfar profile\footnote{For the $b_1=a_2=0$ case the exact time-dependent surface elevation solution \emph{under shallow dynamics} would be known.  Though Stokes dynamics was used in the numerical experiment, the computed surfaces indeed agree closely with this shallow exact solution; compare \cite{LofgrenAhlkronaHelanow2022}.} \cite{Halfar1981} (Figure \ref{fig:cases}, dotted).
 
-In these simulations each time-step was semi-implicit, approximating VI \eqref{eq:be:vi} by using $\bu|_{s^{n-1}}\cdot\bn_{s^n}$ as mentioned in the Introduction, and the free-surface stabilization technique from \cite{LofgrenAhlkronaHelanow2022} was applied to lengthen the stable time steps.  (The resulting time-dependent numerical method is only conditionally-stable.)  The VI problems at each step were solved using a reduced-space Newton method with line search \cite{BensonMunson2006}.  The Stokes problems \eqref{eq:glenstokes:weak}, with viscosity regularization $\mu_0=10^{-19}\, \text{s}^{-2}$ in \eqref{eq:glen}, were solved on the domains $\Lambda(s^{n})$ using a vertically-extruded mesh of quadrilaterals (Figure \ref{fig:fe:domain}), a $Q_2\times Q_1$ Taylor-Hood stable method \cite{Elmanetal2014}, and a Newton solver, with direct solution of the linear step equations.
+In these simulations each time-step was semi-implicit, approximating VI \eqref{eq:be:vi} by using $\bu|_{s^{n-1}}\cdot\bn_{s^n}$, and the free-surface stabilization technique from \cite{LofgrenAhlkronaHelanow2022} was applied to lengthen the stable time steps.  (The resulting time-dependent numerical method is only conditionally-stable.)  The VI problems at each step were solved using a reduced-space Newton method with line search \cite{BensonMunson2006}.  The Stokes problems \eqref{eq:glenstokes:weak}, with viscosity regularization $\mu_0=10^{-19}\, \text{s}^{-2}$ in \eqref{eq:glen}, were solved on the domains $\Lambda(s^{n})$ using a vertically-extruded mesh of quadrilaterals (Figure \ref{fig:fe:domain}), a $Q_2\times Q_1$ Taylor-Hood stable method \cite{Elmanetal2014}, and a Newton solver, with direct solution of the linear Newton step equations.
 
-The essential result of these experiments is in Figure \ref{fig:regratios}, which shows sample ratios $\rho^{0.1}(\sigma,s)$, from \eqref{eq:Phiratio}, as histograms on a logarithmic axis.  These are from the highest spatial resolutionwith $\Delta x=500$ m and 40 elements in each (extruded) column.  More than $99\%$ of the ratios are positive for the flat bed $b_1$, and all are positive for the more-generic rough bed $b_2$.  For the latter a coercivity constant $\alpha=10^{-22}$ is credible.  Note that dimensional values around $10^{-20}$ are expected because $\|s\|_{\cX}\sim 10^{5}$ is typical in $\cX = W^{1,4}(\Omega)$, using the unit-consistent norm scaling \eqref{eq:norm:Omega}, while residuals in the numerator of \eqref{eq:Phiratio} have typical magnitudes in $(10^{-5},1)$.
+The essential result of these experiments is shown in Figure \ref{fig:regratios}, with histograms of sample ratios $\rho^{0.1}(\sigma,s)$ on a logarithmic axis.  These are from the highest spatial resolution ($\Delta x=500$ m and 40 elements in each column).  More than $99\%$ of the ratios are positive for the flat bed $b_1$, and $100\%$ are positive for the more-generic rough bed $b_2$.
 
 \begin{figure}[ht]
 \centering
@@ -866,7 +864,9 @@ The essential result of these experiments is in Figure \ref{fig:regratios}, whic
 \label{fig:regratios}
 \end{figure}
 
-An underlying reason for this numerical evidence of coercivity in the regularized $\eps>0$ case is that \emph{the regularization does not need to do much work}.  Figure \ref{fig:noregratios} shows the unregularized ratios from the same sample pairs.  About $10\%$ of ratios are negative, which violates coercivity, but their absolute values are about two orders of magnitude smaller than the positive ratios.
+For the rough-bed experiment a coercivity constant $\alpha=10^{-22}$ is credible.  Note that dimensional values around $10^{-20}$ are expected because $\|s\|_{\cX}\sim 10^{5}$ is typical in $\cX = W^{1,4}(\Omega)$, using the norm scaling \eqref{eq:norm:Omega}, while residuals in the numerator of \eqref{eq:Phiratio} have typical magnitudes in $(10^{-5},1)$.
+
+An underlying reason for this numerical evidence of coercivity is that \emph{the regularization does not need to do much work}.  Figure \ref{fig:noregratios} shows the unregularized ratios from the same sample pairs.  About $10\%$ of ratios are negative, which violates coercivity, but their absolute values are about two orders of magnitude smaller than the positive ratios.
 
 \begin{figure}[ht]
 \centering
@@ -875,7 +875,7 @@ An underlying reason for this numerical evidence of coercivity in the regularize
 \label{fig:noregratios}
 \end{figure}
 
-Glacier evolution under Stokes dynamics seemingly ``wants'' to be coercive.  In fact, the continuum problem may be more coercive than any discretization.  Figure \ref{fig:resolutionratios} shows the results from running the same rough-bed experiment, at right in Figure \ref{fig:regratios}, but at lower $\Delta x=1000,2000$ m horizontal resolutions (and lower vertical resolution).  Such poorer discretizations produced negative ratios $\rho^\eps(\sigma,s)$ in a case where finer resolution did not.  Higher marginal resolution, e.g.~via free-boundary targeted adaptive mesh refinement \cite{FochesattoBueler2025}, will likely improve numerical coercivity.
+Glacier evolution under Stokes dynamics seemingly ``wants'' to be coercive.  In fact, the continuum problem may be more coercive than any discretization.  Figure \ref{fig:resolutionratios} shows the results from running the same rough-bed experiment as in Figure \ref{fig:regratios}, but at lower resolutions.  Poorer discretizations produced negative ratios $\rho^\eps(\sigma,s)$ in this case where finer resolution did not.  Higher marginal resolution, e.g.~via free-boundary targeted adaptive mesh refinement \cite{FochesattoBueler2025}, will likely improve numerical coercivity.
 
 \begin{figure}[ht]
 \mbox{\includegraphics[width=0.31\textwidth]{figs/brough2000mREG.png} \, \includegraphics[width=0.31\textwidth]{figs/brough1000mREG.png} \, \includegraphics[width=0.31\textwidth]{figs/brough500mREG.png}}
@@ -885,8 +885,8 @@ Glacier evolution under Stokes dynamics seemingly ``wants'' to be coercive.  In 
 
 % flat: 2.576e-07
 % rough: 2.230e-07
-Regarding Conjecture \ref{conj:lipschitz}, namely Lipschitz continuity for the surface velocity trace, the maximum of the ratios $\big\|\bu|_\sigma - \bu|_s\big\|_{L^{4/3}}/\|\sigma-s\|_{\cX}$ was $2.6\times 10^{-7}$ for the sample pairs from Figure \ref{fig:regratios}. 
+Regarding Conjecture \ref{conj:lipschitz}, namely Lipschitz continuity for the surface velocity trace, the maximum of the ratios $\big\|\bu|_\sigma - \bu|_s\big\|_{L^{4/3}}\,\|\sigma-s\|_{\cX}^{-1}$ was $2.6\times 10^{-7}$ for the sample pairs from Figure \ref{fig:regratios}. 
 
-In summary we have substantial, but necessarily very incomplete, evidence for Conjecture \ref{conj:regcoercive}.  This Conjecture, implying well-posedness of the spatially-continuous and regularized implicit time-step VI problem \eqref{eq:regularizedvi}, is critical to the glaciers application (Theorem \ref{thm:glacierapp}) of the new \emph{a priori} error bound for VIs, Theorem \ref{thm:abstractestimate}.
+In summary we have substantial, but necessarily very incomplete, evidence for Conjecture \ref{conj:regcoercive}.  This Conjecture, which implies well-posedness of the regularized implicit time-step VI problem \eqref{eq:regularizedvi}, is critical to our glaciers application of the new \emph{a priori} error bound for VIs, namely Theorem \ref{thm:abstractestimate}.
 
 \end{document}
