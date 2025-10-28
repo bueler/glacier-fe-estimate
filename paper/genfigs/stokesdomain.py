@@ -44,9 +44,9 @@ plt.text(x[550] - 1.0, b[600] + 0.4 * s[600], r'$\Lambda(t)$',
          fontsize=bigfsize, color='k')
 drawclimate(x,s)
 # mark top surface
-plt.text(x[220], s[300] + 0.7, r'$s(t,x)$', fontsize=bigfsize, color='k')
+plt.text(x[150], s[300] + 0.7, r'$z=s(t,x)$', fontsize=bigfsize, color='k')
 # mark bottom surface
-plt.text(x[650], b[650] - 0.5, r'$b(x)$', fontsize=bigfsize, color='k')
+plt.text(x[650], b[650] - 0.5, r'$z=b(x)$', fontsize=bigfsize, color='k')
 # show \Omega
 yR = min(b) - 0.5
 plt.plot([min(x),max(x)],[yR,yR],color='k',lw=1.0)
