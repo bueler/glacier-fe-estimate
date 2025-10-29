@@ -31,6 +31,7 @@
 \newcommand{\bbf}{\mathbf{f}}
 \newcommand{\bg}{\mathbf{g}}
 \newcommand{\bn}{\mathbf{n}}
+\newcommand{\bq}{\mathbf{q}}
 \newcommand{\bu}{\mathbf{u}}
 \newcommand{\bv}{\mathbf{v}}
 \newcommand{\bw}{\mathbf{w}}
@@ -438,31 +439,38 @@ The seven boxed definitions and inequalities above, namely \eqref{eq:be:source},
 
 \section{Conjectural well-posedness for the regularized problem} \label{sec:conjectural}
 
-Theorem \ref{thm:glacierapp}, our main result to come, is numerical.  It bounds the FE error in surface elevation by extending an abstract technique from Falk \cite{Falk1974} to a large class of nonlinear operators.  It is tied to the concepts of monotonicity \cite{Minty1963} and coercivity \cite[Chapter III]{KinderlehrerStampacchia1980}.
+Theorem \ref{thm:glacierapp}, our main result to come, is numerical.  It bounds the FE surface elevation error by extending a technique from Falk \cite{Falk1974} to a large class of nonlinear operators.  This is tied to the concepts of monotonicity \cite{Minty1963} and coercivity \cite[Chapter III]{KinderlehrerStampacchia1980}.
 
 \begin{definition} \label{def:monotonecoercive}
 Suppose $\cX$ is a Banach space, with norm $\|\cdot\|$, and $\cK\subset \cX$ is closed and convex.  An operator $f:\cK \to \cX'$ is said to be \emph{monotone} if
 \begin{equation}
 \left(f(v)-f(w)\right)[v-w] \ge 0 \qquad \text{for all } v,w \in \cK, \label{eq:monotone}
 \end{equation}
-and \emph{strictly monotone} if in addition equality implies $v=w$.  It is \emph{coercive} if there is $w\in \cK$ so that $\left(f(v)-f(w)\right)[v-w]/\|v-w\| \to +\infty$ for $v \in \cK$ as $\|v\| \to +\infty$.  It is \emph{$\qq$-coercive} \emph{\cite{Bueler2021conservation}} for $\qq>1$ if there exists $\alpha>0$ such that
+and \emph{strictly monotone} if equality implies $v=w$.  It is \emph{coercive} if there is $w\in \cK$ so that $\left(f(v)-f(w)\right)[v-w]/\|v-w\| \to +\infty$ for $v \in \cK$ as $\|v\| \to +\infty$.  It is \emph{$\qq$-coercive} for $\qq>1$ if there exists $\alpha>0$ such that
 \begin{equation}
 \left(f(v)-f(w)\right)[v-w] \ge \alpha \|v-w\|^\qq \qquad \text{for all } v,w \in \cK. \label{eq:qcoercive}
 \end{equation}
 \end{definition}
 
-Note that $\qq$-coercivity implies coercivity and strict monotonicity.  Also, $2$-coercivity is sometimes called \emph{strong monotonicity} \cite{Chow1989}.
+Note that $\qq$-coercivity \cite{Bueler2021conservation} implies coercivity and strict monotonicity, and that $2$-coercivity is sometimes called \emph{strong monotonicity} \cite{Chow1989}.
 
-Theorem \ref{thm:abstractestimate} in the next section applies to VIs for operators $f:\cK\to\cX'$ which are $\qq$-coercive.  We would want to apply the Theorem to $F_{\Delta t}$ \eqref{eq:be:Fdefine} acting on an admissible subset $\cK$ of $\cX=W^{1,\rr}(\Omega)$, and note that the surface motion map $\Phi$ \eqref{eq:definePhi} is the main term in $F_{\Delta t}$.  However, apparently-new examples in Appendix \ref{app:noncoercive} show that $\Phi$ is not $\qq$-coercive or strictly monotone over $W^{1,\rr}(\Omega)$ for any $\rr$.  These examples can be constructed for any bedrock $b$ possessing local minima, by filling with flat ice.\footnote{The same examples negatively resolve a previously open question of uniqueness, for elevation-independent SMB, in the shallow ice approximation.  See Appendix \ref{app:noncoercive}.}  Since $F_{\Delta t}$ adds the integral $\int_\Omega s\omega$ to the surface motion term $\Delta t\,\Phi(s)[\omega]$, lack of coercivity for $\Phi$ does not dis-prove it for $F_{\Delta t}$, but we proceed in another direction.
+Theorem \ref{thm:abstractestimate} below applies to VIs for operators $f:\cK\to\cX'$ which are $\qq$-coercive.  We would like to apply that Theorem to $F_{\Delta t}$ \eqref{eq:be:Fdefine} acting on an admissible subset $\cK$ of $W^{1,\rr}(\Omega)$.  However, examples\footnote{These apparently-new examples also negatively resolve a previously open question of uniqueness, for elevation-independent SMB, in the shallow ice approximation.} in Appendix \ref{app:noncoercive} show that the surface motion map $\Phi$ \eqref{eq:definePhi} is not $\qq$-coercive, nor strictly monotone, over $W^{1,\rr}(\Omega)$ for any $\rr$, at least for any bedrock $b$ possessing local minima.  Since $F_{\Delta t}$ adds the integral $\int_\Omega s\omega$ to the surface motion term $\Delta t\,\Phi(s)[\omega]$, lack of coercivity for $\Phi$ does not dis-prove it for $F_{\Delta t}$.
 
-The numerical experiments in Appendix \ref{app:numerical} turn out to show that the surface motion operator $\Phi$ is \emph{nearly} $\qq$-coercive.  In these experiments thousands of high-resolution surface pairs $\sigma,s\in \cK\subset W^{1,\rr}(\Omega)$ were generated from a 1D glacier simulation.  Coercivity ratios were computed for exponents $\rr=\qq=4$:
+However, the numerical experiments in Appendix \ref{app:numerical} show that the surface motion operator $\Phi$ is \emph{nearly} $\qq$-coercive.  In these experiments thousands of high-resolution surface pairs $\sigma,s\in \cK\subset W^{1,\rr}(\Omega)$ were generated from a 1D glacier simulation.  Coercivity ratios for $\Phi$ were computed with exponents $\rr=\qq=4$,
 \begin{equation}
-\frac{(\Phi(\sigma) - \Phi(s))[\sigma - s]}{\|\sigma-s\|_{W^{1,4}}^{4}}. \label{eq:ratios}
+\frac{(\Phi(\sigma) - \Phi(s))[\sigma - s]}{\|\sigma-s\|_{W^{1,4}}^{4}}, \label{eq:ratios}
 \end{equation}
-Surface velocities from the Stokes model were used when evaluating \eqref{eq:definePhi}.  Recalling Definition \eqref{def:monotonecoercive}, if $\Phi$ were $4$-coercive over $\cX=W^{1,4}(\Omega)$, and if all computations were exact, then these ratios would all exceed a coercivity constant $\alpha>0$.  Though standard presentations of Stokes models for glaciers give no reason to expect these ratios to even be non-negative, Appendix \ref{app:numerical} shows that under mesh refinement the pairs yielding negative ratios become quite rare.  The mean and median ratios are decidely positive, and under refinement they stabilize away from zero.
+using surface velocities from a numerical Stokes model (when evaluating $\Phi(s)$ and $\Phi(\sigma)$).  Recalling definition \eqref{eq:qcoercive}, if $\Phi$ were $4$-coercive over $\cX=W^{1,4}(\Omega)$, and if computations were exact, then these ratios would all exceed a constant $\alpha>0$.  Appendix \ref{app:numerical} shows that under mesh refinement the pairs yielding negative ratios become quite rare.  Standard presentations of Stokes models for glaciers give no reason to expect these ratios should prefer positive values, but the mean and median ratios are decidely positive, and under refinement they stabilize away from zero.
+
+A different expression for the surface motion $\Phi(s)$, one which suggests coercivity, can be found for our particular Stokes model.  To state this, extend $\omega$ to $\overline{\Lambda(s)}$ as $\tilde\omega(x,z)=\omega(x)$, and consider the glaciological ice flux $\bq(s) = \int_b^s \bU\,dz$ \cite{SchoofHewitt2013}, which is the vertical integral of the horizontal portion $\bU$ of the ice velocity $\bu$.  Using incompressibility, the non-sliding assumption ($\bu|_{\Gamma_b}=\bzero$), definition \eqref{eq:definePhi}, and the divergence theorem yields
+\begin{align}
+\Phi(s)[\omega] &= -\int_{\Omega} \bu|_s \cdot \bn_s\,\omega\,dx = -\int_{\partial\Lambda(s)} \bu\cdot {\hat\bn}\,\tilde\omega\,dS = - \int_{\Lambda(s)} \Div\left(\tilde\omega \bu\right)  \label{eq:fluxformPhi} \\
+  &= - \int_{\Lambda(s)} \bu\cdot \grad \tilde\omega = -\int_\Omega \bq(s) \cdot \grad \omega, \notag
+\end{align}
+where, on $\partial\Lambda(s)$, $\hat\bn$ is the outward norm unit vector and $dS$ is the area element.  FIXME
 
 \newcommand{\wSIA}{\tilde w}
-However, because Appendix \ref{app:noncoercive} examples show that $\Phi$ is not actually $\qq$-coercive over $W^{1,\rr}(\Omega)$, we will regularize the surface motion term using the shallow theory of ice \cite{GreveBlatter2009}.  In the limit of small aspect ratios this isothermal shallow ice approximation theory yields an expression for the surface vertical motion:
+In any case, because Appendix \ref{app:noncoercive} examples show that $\Phi$ is not actually $\qq$-coercive over $W^{1,\rr}(\Omega)$, we will regularize the surface motion term using the shallow theory of ice \cite{GreveBlatter2009}.  In the limit of small aspect ratios this isothermal shallow ice approximation theory yields an expression for the surface vertical motion:
 % Gamma = \frac{\nn+1}{\nn+2} 2 (rho g)^2 / (\nn+2),  i.e. (n+1)/(n+2) times the usual Gamma
 \begin{equation} \label{eq:verticalvelocitysia}
 \wSIA|_s = \Div \left(\Gamma (s-b)^{\nn+1} |\grad s|^{\nn-1} \grad s\right).
