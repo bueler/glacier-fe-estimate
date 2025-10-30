@@ -509,27 +509,23 @@ Theorem \ref{thm:regularizedwellposed} addresses only the well-posedness of a si
 
 \section{Abstract error estimate for finite element approximation of VIs} \label{sec:abstractestimate}
 
-In this Section we consider the FE approximation of an abstract VI problem in a Banach space.  We will return to glaciological problem \eqref{eq:regularizedvi} in Section \ref{sec:application}.
+In this Section we consider the FE approximation of an abstract VI problem in a Banach space.  We will return to the glaciological problem \eqref{eq:regularizedvi} in Section \ref{sec:application}.
 
-Let $\cX$ be a real, reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cX'$.  Denote the dual pairing of $\ell \in \cX'$ and $v\in\cX$ by $\ell[v]$, and define $\|\ell\|_{\cX'} = \sup_{\|v\|=1} \big|\ell[v]\big|$.  Let $\cK \subset \cX$ be a nonempty, closed, and convex subset, the constraint or admissible set.  For a continuous and (generally) nonlinear operator $f:\cK \to \cX'$, and a source functional $\ell\in \cX'$, the abstract VI problem is to find $u\in \cK$ such that
+Let $\cX$ be a real, reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cX'$.  Denote the dual pairing of $\ell \in \cX'$ and $v\in\cX$ by $\ell[v]$, and define $\|\ell\|_{\cX'} = \sup_{\|v\|=1} \big|\ell[v]\big|$.  Let $\cK \subset \cX$ be a nonempty, closed, and convex subset, the admissible set.  For a continuous and (generally) nonlinear operator $f:\cK \to \cX'$, and a source functional $\ell\in \cX'$, the VI problem is to find $u\in \cK$ such that
 \begin{equation}
 f(u)[v-u] \ge \ell[v-u] \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
-While \eqref{eq:regularizedvi} is of course in this form, the best known example of \eqref{eq:vi} is the obstacle problem for the Laplacian operator; see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis.
+While \eqref{eq:regularizedvi} is in this form, the best known example is the obstacle problem for the Laplacian operator; see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis.  If $f:\cK \to \cX'$ is monotone and coercive (Definition \ref{def:monotonecoercive}), and continuous on finite-dimensional subspaces, then problem \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}, and if $f$ is strictly monotone then the solution is unique.  If $f$ is $\qq$-coercive then it coercive and strictly monotone, and if $f$ is Lipschitz on bounded subsets (Definition \ref{def:lipshitz}) then it is continuous.  Recall that $f(u)-\ell \in \cX'$ is generally nonzero if $u$ solves \eqref{eq:vi}, but $f(u)-\ell=0$ when $u$ is in the interior of $\cK$.  Under sufficient regularity assumptions, an NCP strong form generally follows from \eqref{eq:vi}.
 
-If $f:\cK \to \cX'$ is monotone and coercive (Definition \ref{def:monotonecoercive}), and continuous on finite-dimensional subspaces, then problem \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}.  If $f$ is strictly monotone then the solution is unique, and if $f$ is $\qq$-coercive then it coercive and strictly monotone.  On the other hand, if $f$ is Lipschitz on bounded subsets (Definition \ref{def:lipshitz}) then it is continuous.  Recall that $f(u)-\ell \in \cX'$ is generally nonzero if $u$ solves \eqref{eq:vi}, but $f(u)-\ell=0$ when $u$ is in the interior of $\cK$.  Under sufficient regularity assumptions, an NCP strong form generally follows from \eqref{eq:vi}.
-
-Suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, typically some FE space of continuous, piecewise-polynomial functions defined on a mesh.  Let $\cK_h\subset \cX_h$ be a closed and convex subset, and suppose $f_h:\cK_h\to\cX'$ is an approximation of $f$.  Generally $\cK_h \nsubset \cK$---we will not assume that FE states are continuum admissible---and $f_h\ne f$ because of quadrature and other approximations.  In fact, in the standard FE construction of a Stokes-type glacier geometry problem (Section \ref{sec:application}), both $\cK_h \nsubset \cK$ and $f_h\ne f$ apply for practical reasons.
+Now suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, typically some FE space of continuous, piecewise-polynomial functions defined on a mesh.  Let $\cK_h\subset \cX_h$ be a closed and convex subset, and suppose $f_h:\cK_h\to\cX'$ is an approximation of $f$.  Generally $\cK_h \nsubset \cK$---we will \emph{not} assume initially that FE states are continuum admissible---and generally $f_h\ne f$ because of quadrature and other approximations.  In fact, in standard FE Stokes-type glacier simulations both $\cK_h \nsubset \cK$ and $f_h\ne f$ apply for practical reasons, though in Section \ref{sec:application} we arrange that $\cK_h\subset\cK$.
 
 The FE method for \eqref{eq:vi} is the finite-dimensional VI problem
 \begin{equation}
 f_h(u_h)[v_h-u_h] \ge \ell[v_h-u_h] \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
 \end{equation}
-We will assume that this problem has a solution $u_h\in\cK_h$, but it need not be unique for the bound \eqref{eq:abstractestimate} below to apply.
+We will assume that this problem has a solution $u_h\in\cK_h$.  The following \emph{a priori} estimation theorem extends the well-known result of Falk \cite{Falk1974}; see also Theorem 5.1.1 in \cite{Ciarlet2002}.  We assume that $f$ is coercive and Lipschitz on an (unnamed) larger set than $\cK$, which contains the FE solution $u_h$, a technical assumption permiting a clean and general result.  However, we do \emph{not} assume any of the following: $\cK_h \subset \cK$, $f$ is linear, $f_h=f$, $f_h$ is continuous, $f_h$ is $\qq$-coercive, or that the solution of \eqref{eq:fe:vi} is unique.
 
-The following \emph{a priori} estimation theorem extends the well-known result of Falk \cite{Falk1974}; see also Theorem 5.1.1 in \cite{Ciarlet2002}.  We assume here that $f$ is coercive and Lipschitz on an (unnamed) larger set than $\cK$, which contains the FE solution $u_h$, a technical assumption permiting a clean and general result.  However, we do \emph{not} assume any of the following: $\cK_h \subset \cK$, $f$ is linear, $f_h=f$, $f_h$ is continuous, or $f_h$ is $\qq$-coercive.
-
-\begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  For $\qq>1$, with conjugate exponent $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive, with constant $\alpha>0$, on a set which contains $\cK$ and the numerical solution $u_h$.  Also, assume $f$ is Lipschitz on bounded subsets of this set.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c(R_h,\alpha)>0$, not otherwise depending on $u$ or $u_h$, so that
+\begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  For $\qq>1$, with conjugate exponent $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive, with constant $\alpha>0$, on a set which contains $\cK$ and the numerical solution $u_h$.  Assume $f$ is Lipschitz on bounded subsets of the same set.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c(R_h,\alpha)>0$, not otherwise depending on $u$ or $u_h$, so that
 \begin{align}
 \|u-u_h\|^\qq &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \left(f(u)-\ell\right)[v-u_h] + \inf_{v_h\in\cK_h} \left(f(u)-\ell\right)[v_h-u]\right)\label{eq:abstractestimate} \\
    &\quad\, + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] + c(R_h,\alpha) \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}. \notag
@@ -567,9 +563,9 @@ where $\tilde C(\eps) = (\eps \qq)^{-\qq'/\qq} {\qq'}^{-1}$.  Choose $\eps>0$ so
 Take infimums to show \eqref{eq:abstractestimate}.
 \end{proof}
 
-Considering the residual $f(u)-\ell\in \cX'$ for a unilateral obstacle problem, over $\Omega\subset \RR^d$, allows us to refine the estimate.  In this case the residual is a positive measure $d\mu_u$ supported in the active set $A_u\subset \Omega$ \cite[Theorem II.6.9]{KinderlehrerStampacchia1980}.  The first two terms in bound \eqref{eq:abstractestimate} represent errors made within $A_u$.
+We can significantly refine the estimate in the case of a unilateral obstacle problem, where $\cX$ are scalar functions.  In this case the residual $f(u)-\ell\in \cX'$ is a positive measure $d\mu_u$ supported in the active set \cite[Theorem II.6.9]{KinderlehrerStampacchia1980}.
 
-\begin{corollary}  \label{cor:abstractwithmeasure}  Suppose $\cX=W^{1,\rr}(\Omega)$, a space of scalar functions, over a domain $\Omega\subset\RR^d$, and suppose $\cK\subset\cX$ is defined as in \eqref{eq:be:admissible} for an obstacle $b$.  Let $d\mu_u = f(u)-\ell$, and define the active set $A_u=\{x\in\Omega\,:\,u(x)>b(x)\}$.  Under the assumptions of Theorem \ref{thm:abstractestimate} we have the bound
+\begin{corollary}  \label{cor:abstractwithmeasure}  Suppose $\cX=W^{1,\rr}(\Omega)$ over a domain $\Omega\subset\RR^d$, and suppose $\cK\subset\cX$ is defined as in \eqref{eq:be:admissible} for an obstacle $b$.  Let $A_u=\{x\in\Omega\,:\,u(x)>b(x)\}$ be the active set.  Under the assumptions of Theorem \ref{thm:abstractestimate} we have the bound
 \begin{align}
 \|u-u_h\|^\qq &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \int_{A_u} v - u_h\,d\mu_u + \inf_{v_h\in\cK_h} \int_{A_u} v_h - b\,d\mu_u\right)
   \label{eq:abstractwithmeasure} \\
@@ -577,20 +573,7 @@ Considering the residual $f(u)-\ell\in \cX'$ for a unilateral obstacle problem, 
 \end{align}
 \end{corollary}
 
-The original result by Falk \cite{Falk1974}, which computes residual norms, loses the active-set information in Corollary \ref{cor:abstractwithmeasure}.  The next Corollary makes this historical connection by applying a norm-based approach; $\cX=W^{1,\rr}(\Omega) \subset L^\qq(\Omega) = \cB$ would be typical.
-
-\begin{corollary}  \label{cor:abstractestimate:Bnorm}  Suppose that $\cX$ continuously and densely embeds into a larger Banach space: $\cX \hookrightarrow \cB$, $\bar{\cX} = \cB$, and $\cB' \subset \cX'$.  Suppose $f:\cK\to\cB'$ and $\ell\in\cB'$.  Under the assumptions of Theorem \ref{thm:abstractestimate} we have
-\begin{align}
-\|u-u_h\|^\qq &\le \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \left( \inf_{v\in\cK} \|v-u_h\|_{\cB} +   \inf_{v_h\in\cK_h} \|v_h-u\|_{\cB} \right) \label{eq:abstractestimate:Bnorm} \\
-   &\qquad + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] + c\,\inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}. \notag
-\end{align}
-\end{corollary}
-
-The Falk result \cite{Falk1974} is recovered when $\cX, \cB$ are Hilbert spaces, and assuming that $f(v)[w]=f_h(v)[w]=a(v,w)$ is bilinear, uniformly-elliptic, and continuous.\footnote{The definition of uniform ellipticity coincides with definition \eqref{eq:qcoercive} of $2$-coercive, and continuity of $a(v,w)$ implies \eqref{eq:liponbounded}.}  In this context, up to isomorphism, $f(u)-\ell \in \cH$.  Since $f$ is defined on all of $\cX$, the technical assumption about a larger set containing $u_h$ is unnecessary.  With these simplifications, Corollary \ref{cor:abstractestimate:Bnorm} reduces to Theorem 1 in \cite{Falk1974}.
-
-Note that if $u$ is in the interior of $\cK$, and if $f=f_h$, then all bounds \eqref{eq:abstractestimate}, \eqref{eq:abstractwithmeasure}, and \eqref{eq:abstractestimate:Bnorm} reduce to their last error term.  Thus we get Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002}, but now stated in a Banach space and for a coercive nonlinear operator.  For glaciers this case occurs when the entire domain $\Omega$ is covered by ice.
-
-The ``$\inf_{v\in\cK}$'' terms in bound \eqref{eq:abstractestimate} is generally nonzero when $\cK_h \not\subset \cK$.  To see how this can occur in a unilateral obstacle problem, even for an arbitrarily smooth obstacle, suppose $\cK$ is defined as in \eqref{eq:be:admissible}.  Suppose $b_h=\pi_h b$ is the FE interpolant of $b$, and define $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge b_h \text{ and } v_h|_{\partial\Omega}=b_h|_{\partial\Omega}\}$.  While $b_h(x_j)=b(x_j)$ for the interpolation nodes $x_j$, generally $b_h(x) \ge b(x)$ will not hold for all $x\in\Omega$ (Figure \ref{fig:nonadmissible}; see also \cite[Figure 5.1.3]{Ciarlet2002}).  That is, nodal admissibility does not imply admissibility.
+The ``$\inf_{v\in\cK}$'' terms in bound \eqref{eq:abstractwithmeasure} is generally nonzero when $\cK_h \not\subset \cK$.  To see how this can occur even for an arbitrarily smooth obstacle, with $\cK$ defined as in \eqref{eq:be:admissible}, suppose $b_h=\pi_h b$ is the FE interpolant of $b$, and define $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge b_h \text{ and } v_h|_{\partial\Omega}=b_h|_{\partial\Omega}\}$.  While $b_h(x_j)=b(x_j)$ for the interpolation nodes $x_j$, generally $b_h(x) \ge b(x)$ will not hold for all $x\in\Omega$ (Figure \ref{fig:nonadmissible}; compare \cite[Figure 5.1.3]{Ciarlet2002}).  That is, nodal admissibility does not imply admissibility.
 
 \begin{figure}[ht]
 \begin{center}
@@ -606,41 +589,48 @@ For unilateral obstacle problems and $P_1$ or $Q_1$ elements we may force $\cK_h
 \end{equation}
 If $b_h=R_h^{\oplus} b$ then $b_h(x)\ge b(x)$ for all $x\in \Omega$ (Figure \ref{fig:nonadmissible}; right), thus $\cK_h\subset \cK$ and the ``\,$\inf_{v\in\cK}$'' term vanishes from the bounds.
 
-In summary, Theorem \ref{thm:abstractestimate} is a powerful and nontrivial generalization of Falk's bound \cite{Falk1974} and Cea's lemma.  We now return to the glacier problem.
+The original result by Falk \cite{Falk1974}, which computes residual norms, loses the active-set information in Corollary \ref{cor:abstractwithmeasure}.  The next Corollary makes this historical connection by applying a norm-based approach.  It recovers the Falk result \cite{Falk1974} when $\cX,\cB$ are Hilbert spaces, and $f(v)[w]=f_h(v)[w]=a(v,w)$ is bilinear, uniformly-elliptic, and continuous.  (The definition of uniform ellipticity coincides with definition \eqref{eq:qcoercive} of $2$-coercive, and continuity implies \eqref{eq:liponbounded}.)  With these simplifications, Corollary \ref{cor:abstractestimate:Bnorm} reduces to Theorem 1 in \cite{Falk1974}.
+
+\begin{corollary}  \label{cor:abstractestimate:Bnorm}  Suppose that $\cX$ continuously and densely embeds into a larger Banach space: $\cX \hookrightarrow \cB$, $\bar{\cX} = \cB$, and $\cB' \subset \cX'$.  Suppose $f:\cK\to\cB'$ and $\ell\in\cB'$.  Under the assumptions of Theorem \ref{thm:abstractestimate} we have
+\begin{align}
+\|u-u_h\|^\qq &\le \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \left( \inf_{v\in\cK} \|v-u_h\|_{\cB} +   \inf_{v_h\in\cK_h} \|v_h-u\|_{\cB} \right) \label{eq:abstractestimate:Bnorm} \\
+   &\qquad + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] + c\,\inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}. \notag
+\end{align}
+\end{corollary}
+
+Note that if $u$ is in the interior of $\cK$, and if $f=f_h$, then all bounds \eqref{eq:abstractestimate}, \eqref{eq:abstractwithmeasure}, and \eqref{eq:abstractestimate:Bnorm} reduce to their last error term.  Thus we get Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002}, but now stated in a Banach space for a coercive nonlinear operator.  For glaciers this case occurs when the entire domain $\Omega$ is covered by ice.  In summary, Theorem \ref{thm:abstractestimate} is a powerful and nontrivial generalization of Falk's bound \cite{Falk1974} and Cea's lemma.
 
 
 \section{Application to numerical glacier models} \label{sec:application}
 
-Now we can apply the above theory to a time-step of an evolving-surface, Stokes-based glacier simulation.  Our approach essentially defines the phrase ``conforming FE method'' for such glacier simulations.  We will combine the three major threads from earlier Sections: well-posedness and \emph{a priori} bounds for the glaciological Stokes problem on a fixed domain (Section \ref{sec:stokes}), conjectural $4$-coercivity and well-posedness of the regularized VI problem for an implicit and fully-coupled step of the surface elevation (Sections \ref{sec:model} and \ref{sec:conjectural}), and an abstract error estimate for the FE solutions of such VIs (Section \ref{sec:abstractestimate}).
+Now we can apply the above theory to a time-step of an evolving-surface, Stokes-based glacier simulation.  Our approach essentially defines the phrase ``conforming FE method'' for such models.  We will combine the major threads so far: a surface velocity bound for the glaciological Stokes problem on a fixed domain (Section \ref{sec:stokes}), conjectural Lipschitz continuity and $4$-coercivity of the regularized surface-motion operator (Sections \ref{sec:model} and \ref{sec:conjectural}), and an abstract error estimate for FE solutions of unilateral obstacle problems (Section \ref{sec:abstractestimate}).
 
-Practical models for glaciers, generally based on unstructured meshes in the 2D map-plane, use polygonal domain geometry for the 3D Stokes problem \cite{Brinkerhoff2023,IsaacStadlerGhattas2015,Jouvetetal2008,Lengetal2012}.  For this reason we assume that the domain $\Omega \subset \RR^2$ is a polygon, and that the discrete bed and surface elevations $b_h,s_h$ are from the continuous $P_1$ FE space $\cX_h$ over a triangulation $\cT_h$ of $\Omega$ (Figure \ref{fig:fe:domain}).  The 3D mesh need not be extruded vertically from $\cT_h$, as shown in Figure \ref{fig:fe:domain}, but this is a possibility.
+Practical models for glaciers, based on unstructured meshes in the 2D map-plane, use polygonal domain geometry for the 3D Stokes problem \cite{Brinkerhoff2023,IsaacStadlerGhattas2015,Jouvetetal2008,Lengetal2012}.  For this reason we assume that the domain $\Omega \subset \RR^2$ is a polygon, and that the discrete bed and surface elevations $b_h,s_h$ are from the continuous $P_1$ FE space $\cX_h$ over a triangulation $\cT_h$ of $\Omega$ (Figure \ref{fig:fe:domain}).  The 3D mesh need not be extruded vertically from $\cT_h$, as shown in Figure \ref{fig:fe:domain}, but this is a possibility.
 
 \begin{figure}[ht]
 \begin{center}
 \includegraphics[width=0.7\textwidth]{genfigs/extruded.pdf}
 \end{center}
-\caption{The Stokes problem for the velocity $\bu_h$ is solved on a polygonal domain, on a mesh between $P_1$ functions $b_h$ and $s_h$.  Computation of $F_{\Delta t}^h$ requires evaluation of the surface trace $\bu_h|_{s_h}$.}
+\caption{The Stokes problem for the velocity $\bu_h$ is solved on a meshed polygonal domain, between $P_1$ functions $b_h$ and $s_h$.  Computation of $F_{\Delta t}^{\eps,h}$ requires evaluation of the surface trace $\bu_h|_{s_h}$.}
 \label{fig:fe:domain}
 \end{figure}
 
-We will assume that the original bed elevation $b$ is well-behaved, $b\in C^1(\bar\Omega)$.  In practice $b$ is provided via a high resolution map derived from ice-penetrating radar \cite{Morlighemetal2017}, often over a much finer mesh than $\cT_h$.  For the discrete bed $b_h\in\cT_h$ we suppose $b_h=b$ along $\partial\Omega$.  By application of monotone restriction, thus $b_h = R_h^{\oplus} b$ using \eqref{eq:monotoneop}, or otherwise, we assume $b_h \ge b$; this will eliminate a term in the Theorem \ref{thm:abstractestimate} bound when it is applied below.  Now, following \eqref{eq:be:admissible}, we define $\cK_h=\{\sigma_h \in \cX_h\,:\,\sigma_h|_{\partial\Omega}=b_h|_{\partial\Omega} \text{ and } \sigma_h\ge b_h\}$, so that $\cK_h\subset\cK \subset \cX$ where $\cX = W^{1,4}(\Omega)$.
+We will assume that the original bed elevation $b$ is well-behaved, $b\in C^1(\bar\Omega)$.  In practice $b$ is provided via a high resolution map derived from ice-penetrating radar \cite{Morlighemetal2017}, often over a much finer mesh than $\cT_h$.  For the discrete bed $b_h\in\cT_h$ we suppose $b_h=b$ along $\partial\Omega$.  By application of monotone restriction, $b_h = R_h^{\oplus} b$ \eqref{eq:monotoneop}, or otherwise, we achieve $b_h \ge b$; this eliminates a term in bound \eqref{eq:abstractestimate} when Theorem \ref{thm:abstractestimate} is applied below.  Now, following \eqref{eq:be:admissible}, we define $\cK_h=\{\sigma_h \in \cX_h\,:\,\sigma_h|_{\partial\Omega}=b_h|_{\partial\Omega} \text{ and } \sigma_h\ge b_h\}$, so that $\cK_h\subset\cK \subset \cX$ where $\cX = W^{1,4}(\Omega)$.
 
-From these geometric and discrete-space choices, recall the regularised VI problem \eqref{eq:regularizedvi}, with $F^\eps_{\Delta t}$ defined by \eqref{eq:defineregularizedPhi} and \eqref{eq:regularizedF}.  Approximate evaluation of $F^\eps_{\Delta t}(s_h)$ requires the nontrivial numerical solution of the glaciological Stokes problem \eqref{eq:glenstokes:weak} over a meshed 3D domain $\Lambda(s_h)$; see equation \eqref{eq:domainfroms}.  The upper and lower surfaces of $\Lambda(s_h)$, where boundary conditions \eqref{eq:stokes:stressfreesurface} and \eqref{eq:stokes:noslide} apply, are given by admissible FE functions $s_h \in \cK_h$ and $b_h\in\cX_h$.  Solvability of this Stokes problem using inf-sup stable elements is addressed by \cite{Belenkietal2012,JouvetRappaz2011}.  The numerical velocity from solving \eqref{eq:glenstokes:weak} over $\Lambda(s_h)$ is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  (The approximate velocity $\bu_h$ is distinct from the exact solution of the (same) Stokes problem over $\Lambda(s_h)$.)  We make no assumptions on the solution process for \eqref{eq:glenstokes:weak}, but it must permit computation of an approximate surface trace, for use in evaluating $\Phi^\eps(s_h)$ and then $F^\eps_{\Delta t}(s_h)$. 
+From these geometric and discrete-space choices, recall the regularised VI problem \eqref{eq:regularizedvi}, with $F^\eps_{\Delta t}$ defined by \eqref{eq:defineregularizedPhi} and \eqref{eq:regularizedF}.  Approximate evaluation of $F^\eps_{\Delta t}(s_h)$ requires the numerical solution of the glaciological Stokes problem \eqref{eq:glenstokes:weak} over a meshed 3D domain $\Lambda(s_h)$; see equation \eqref{eq:domainfroms}.  The upper and lower surfaces of $\Lambda(s_h)$, where boundary conditions \eqref{eq:stokes:stressfreesurface} and \eqref{eq:stokes:noslide} are applied, are given by admissible FE functions $s_h \in \cK_h$ and $b_h\in\cX_h$.  Solvability of this Stokes problem using inf-sup stable elements is addressed by \cite{Belenkietal2012,JouvetRappaz2011}.  The numerical velocity from solving \eqref{eq:glenstokes:weak} over $\Lambda(s_h)$ is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  (Note that $\bu_h$ is distinct from the exact solution of the (same) Stokes problem over $\Lambda(s_h)$.)  We make no assumptions on the solution process for \eqref{eq:glenstokes:weak}, except that it must generate an approximate surface trace for use in evaluating $\Phi^\eps(s_h)$ and $F^\eps_{\Delta t}(s_h)$. 
 
-These preliminaries allow us to define the regularized FE VI problem.  Following \eqref{eq:defineregularizedPhi} and \eqref{eq:regularizedF}, for $\Delta t>0$ and $s_h,\omega \in \cK_h$ we define
+These preliminaries allow us to define the regularized and numerical operator.  Following \eqref{eq:defineregularizedPhi} and \eqref{eq:regularizedF}, for $\Delta t>0$ and $s_h,\omega \in \cK_h$ we define
 \begin{align}
 F^{\eps,h}_{\Delta t}(s_h)[\omega] &= \int_\Omega s_h \omega + \Delta t\,\int_\Omega \Big(\big(u^h_1|_{s_h},u^h_2|_{s_h}\big) \cdot \grad s_h - (1-\eps) w^h|_{s_h}\Big) \omega \label{eq:fe:regularizedF} \\
   &\qquad + \Delta t \int_\Omega \eps\, \Gamma H_0^4 |\grad s_h|^2 \grad s_h \cdot \grad \omega, \notag
 \end{align}
-where $\bu_h = (u^h_1,u^h_2,w^h)$ is from numerically solving over $\Lambda(s_h)$.  This numerical operator $F^{\eps,h}_{\Delta t}(s_h)$ uses the FE function $s_h$ directly (in the above integrals) and indirectly (in defining the domain of the Stokes problem for $\bu_h$), and our goal in what follows is to bound the numerical error arising from both aspects.
-
-Corresponding to the continuum problem \eqref{eq:regularizedvi}, we seek $s_h\in\cK_h$ solving
+where $\bu_h = (u^h_1,u^h_2,w^h)$ is from numerically solving over $\Lambda(s_h)$.  This numerical operator $F^{\eps,h}_{\Delta t}(s_h)$ uses the FE function $s_h$ directly (in the above integrals) and indirectly (in defining the domain of the Stokes problem for $\bu_h$).  Corresponding to the continuum problem \eqref{eq:regularizedvi}, we seek $s_h\in\cK_h$ solving the VI
 \begin{equation}
 F^{\eps,h}_{\Delta t}(s_h)[\sigma_h-s_h] \ge \ell^n[\sigma_h-s_h] \quad \text{for all } \sigma_h \in \cK_h. \label{eq:fe:regularizedvi}
 \end{equation}
-The source term $\ell^n$ may be defined exactly as in \eqref{eq:be:source}, though presumably with quadrature in the integral.  The previous surface elevation is general, $s^{n-1} \in \cK$, and later analysis applies to the first time-step from any admissible initial surface elevation.
+The source term $\ell^n$ is defined exactly as in \eqref{eq:be:source}; straightforward adjustments apply if quadrature is used in the integral.  The previous surface elevation is general, $s^{n-1} \in \cK$, so our analysis applies to the first time-step.
 
-Collecting the above, we identify some standard assumptions regarding the data and function spaces used when solving VI problem \eqref{eq:regularizedvi} by numerical scheme \eqref{eq:fe:regularizedvi}.  Note that the conforming condition $\cK_h\subset \cK$ follows from assumptions \ref{item:goodbh} and \ref{item:defineKh}.
+Collecting the above, we identify some standard assumptions regarding the data and function spaces used when solving VI problem \eqref{eq:regularizedvi} by numerical scheme \eqref{eq:fe:regularizedvi}.  Note that the conforming condition $\cK_h\subset \cK$ follows from assumption \ref{item:goodbh}.
 
 \begin{stdass}
 The following data are given:
@@ -650,21 +640,25 @@ The following data are given:
 \item A time-dependent SMB function $a\in C([0,T]; L^{4/3}(\Omega))$.
 \item A bed elevation function $b \in C^1(\bar\Omega)$, piecewise-linear along $\partial\Omega$.
 \end{enumerate}
-We make these definitions:
+We make these continuum definitions:
 \begin{enumerate}
 \setcounter{enumi}{3}
-\item $\cX = W^{1,4}(\Omega)$, with the norm as defined in \eqref{eq:norm:Omega}.
+\item $\cX = W^{1,4}(\Omega)$, with the norm defined in \eqref{eq:norm:Omega}.
 \item $\cK = \{\sigma\in\cX\,:\,\sigma|_{\partial \Omega} = b|_{\partial \Omega} \text{ and } \sigma \ge b\}$.
+\end{enumerate}
+We assume this FE configuration:
+\begin{enumerate}
+\setcounter{enumi}{5}
 \item $\cT_h$ is a triangulation of $\bar\Omega$.
-\item $\cX_h \subset \cX$ is the continuous $P_1$ space over $\cT_h$.
-\item $b_h\in\cX_h$ satisfies $b_h\ge b$ and $b_h=b$ along $\partial \Omega$. \label{item:goodbh}
+\item $\cX_h \subset \cX$ is the continuous $P_1$ space over $\cT_h$. \label{item:pone}
+\item $b_h\in\cX_h$ satisfies $b_h\ge b$ in $\Omega$ and $b_h=b$ along $\partial \Omega$. \label{item:goodbh}
 \item $\cK_h = \{\sigma_h\in\cX_h\,:\,\sigma_h|_{\partial \Omega} = b_h|_{\partial \Omega} \text{ and } \sigma_h \ge b_h\}$. \label{item:defineKh}
 \end{enumerate}
 \end{stdass}
 
-For the continuum solution $s\in\cK$ from Theorem \ref{thm:regularizedwellposed}, application of Theorem \ref{thm:abstractestimate} with $\qq=4$ yields the following Lemma.  Because $s_h\in\cK_h\subset \cK$, the first term in \eqref{eq:abstractestimate} disappears and the technical set construction in Theorem \ref{thm:abstractestimate} is unneeded.
+For the continuum solution $s\in\cK$, from Theorem \ref{thm:regularizedwellposed}, application of Theorem \ref{thm:abstractestimate} with $\qq=4$ yields the following Lemma.  Because $s_h\in\cK_h\subset \cK$, the first term in \eqref{eq:abstractestimate} disappears and the technical set construction in Theorem \ref{thm:abstractestimate} is not needed.
 
-\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions, and assume Conjecture \ref{conj:lipschitz} holds for $\rr=4$, and assume Conjecture \ref{conj:regcoercive} holds for parameters $\eps\in(0,1)$, $H_0>0$, and $\alpha>0$.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  For $\Delta t>0$ let $s\in\cK$ be the unique surface elevation satisfying the regularized implicit time-step VI problem \eqref{eq:regularizedvi}, and assume that $s_h\in\cK_h$ solves the corresponding numerical problem \eqref{eq:fe:regularizedvi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $c_0=c_0(R_h,\alpha\Delta t)>0$ so that
+\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions, and assume Conjecture \ref{conj:lipschitz} holds for $\rr=4$, and assume Conjecture \ref{conj:regcoercive} holds for parameters $\eps\in(0,1)$, $\eta_0>0$, and $\alpha>0$.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  For $\Delta t>0$ let $s\in\cK$ be the unique surface elevation satisfying the regularized implicit time-step VI problem \eqref{eq:regularizedvi}, and assume that $s_h\in\cK_h$ is any solution of numerical problem \eqref{eq:fe:regularizedvi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $c_0=c_0(R_h,\alpha\Delta t)>0$ so that
 \begin{align}
 \|s-s_h\|_\cX^4 &\le \quad \frac{2}{\alpha \Delta t} \inf_{\sigma_h\in\cK_h} \left(F^\eps_{\Delta t}(s)-\ell^n\right)[\sigma_h-s] \label{eq:preglacierestimate} \\
    &\quad\, + \frac{2}{\alpha \Delta t} \left(F^\eps_{\Delta t}(s_h)-F^{\eps,h}_{\Delta t}(s_h)\right)[s_h] \notag \\
@@ -672,28 +666,26 @@ For the continuum solution $s\in\cK$ from Theorem \ref{thm:regularizedwellposed}
 \end{align}
 \end{lemma}
 
-The meaning of each term in bound \eqref{eq:preglacierestimate} will turn out to be reasonably clear for glacier simulations, especially in the refined form from the next theorem.  Recall that $\cV=W_0^{1,\pp}(\Lambda(s_h); \RR^3)$, $1<\pp\le 2$, is the velocity space for Stokes problem \eqref{eq:glenstokes:weak}.  Also, for the final term in \eqref{eq:preglacierestimate} needs interpolation and truncation.  For $\omega\in\cX$ this is the unique function $\Pi_h(\omega)\in\cX_h$ so that
+The meaning of each term in bound \eqref{eq:preglacierestimate} turns out to be reasonably clear, especially in the refined form from the next Theorem.  Recall that $\cV=W_0^{1,\pp}(\Lambda(s_h); \RR^3)$ is the velocity space for Stokes problem \eqref{eq:glenstokes:weak}.  For $\omega\in\cX$ define $\Pi_h(\omega)\in\cX_h$ by
 \begin{equation}
-\Pi_h(\omega)(x_j) = \max \,\{b_h(x_j), \omega(x_j)\} \label{eq:definePi}
+\Pi_h(\omega)(x_j) = \max \,\{b_h(x_j), \omega(x_j)\}, \label{eq:definePi}
 \end{equation}
-for nodes $x_j \in \cT_h$.  If $\sigma\in \cK$ then $\Pi_h(\sigma) \in \cK_h$ because nodal admissibility implies admissibility in the continuous $P_1$ space $\cX_h$.
+over nodes $x_j \in \cT_h$.  If $\sigma\in \cK$ then $\Pi_h(\sigma) \in \cK_h$ because nodal admissibility implies admissibility under assumption \ref{item:pone}.
 
-\begin{theorem} \label{thm:glacierapp}  Make the same assumptions as in Lemma \ref{lem:preglacierapp}, and consider $s\in\cK$ solving \eqref{eq:regularizedvi} and $s_h\in\cK_h$ solving \eqref{eq:fe:regularizedvi}.  Define
+\begin{theorem} \label{thm:glacierapp}  Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Define
 \begin{equation}
 \Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\},
 \end{equation}
-the ice-free region (active set) for the exact solution.  Then
+the closed ice-free region (active set) for the exact solution.  Then
 \begin{align}
 \|s_h-s\|_\cX^4 &\le \quad \frac{2}{\alpha \Delta t} \int_{\Omega_A(s)}  (b_h - b) (b - \ell^n) &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
-   &\quad\, + \frac{g(\|s_h\|_{\cX})}{\alpha} \big\|\bu_h - \bu\big\|_{\cV} + \frac{2\eps}{\alpha} \left\|(w^h - w)|_{s_h}\right\|_{L^\pp} \|s_h\|_{L^{\pp'}} &&\text{\textnormal{[term 2]}} \notag \\
+   &\quad\, + \frac{2G}{\alpha} \big\|\bu_h - \bu\big\|_{\cV} + \frac{2\eps}{\alpha} \left\|(w^h - w)|_{s_h}\right\|_{L^\pp} \|s_h\|_{L^{\pp'}} &&\text{\textnormal{[term 2]}} \notag \\
    &\quad\, + c_0 \|\Pi_h(s) - s\|_\cX^{4/3}, &&\text{\textnormal{[term 3]}} \notag
 \end{align}
-where the coefficient function $g(x)$ in term 2 is derived in the proof and $c_0>0$ in term 3 is from Lemma \ref{lem:preglacierapp}.
+where the coefficient $G=G(\|s_h\|_{\cX})$ is derived in the proof.
 \end{theorem}
 
-\begin{proof}  Because $s$ solves \eqref{eq:regularizedvi}, the residual $\Psi = F^\eps_{\Delta t}(s)-\ell^n \in \cX'$ is non-negative.  It is represented by a positive Borel measure $\mu$ \cite[Theorem 6.22]{LiebLoss1997}, so $\Psi[\phi] = \int_\Omega \phi\,d\mu$.  (If $\phi\in C_c^\infty(\Omega)$ is nonnegative then $\sigma=s+\phi \in \cK$ and $\Psi[\sigma-s] = \Psi[\phi] \ge 0$.)  However, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in $\Omega_A(s)$, and in fact it has density $b-\ell^n$ (Section \ref{sec:model}; argument leading to \eqref{eq:be:viearly}).
-
-Now apply Lemma \ref{lem:preglacierapp}.  Note that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.  Set $\sigma_h = b_h \in \cK_h$ to give term 1 in \eqref{eq:preglacierestimate}:
+\begin{proof}  Because $s$ solves \eqref{eq:regularizedvi}, the residual $F^\eps_{\Delta t}(s)-\ell^n \in \cX'$ is represented by a positive Borel measure $\mu$ \cite[Theorem 6.22]{LiebLoss1997}.  However, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in $\Omega_A(s)$, and it has density $b-\ell^n$ (Section \ref{sec:model}; argument leading to \eqref{eq:be:viearly}).  Apply Lemma \ref{lem:preglacierapp} and note that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.  Set $\sigma_h = b_h \in \cK_h$ to give term 1 in \eqref{eq:preglacierestimate}:
 \begin{equation}
 \left(F^\eps_{\Delta t}(s)-\ell^n\right)[b_h-s] = \int_\Omega (b_h - s) \,d\mu = \int_{\Omega_A(s)} (b_h - b) (b - \ell^n).
 \end{equation}
@@ -704,38 +696,38 @@ For term 2, first expand \eqref{eq:regularizedF} and \eqref{eq:fe:regularizedF}:
 &\hspace{45mm} - \int_\Omega \Big(\big(u^h_1|_{s_h},u^h_2|_{s_h}\big) \cdot \grad s_h - (1-\eps) w^h|_{s_h}\Big) s_h \notag \\
 &\qquad = - \int_\Omega \left(\bu|_{s_h} - \bu_h|_{s_h}\right) \cdot \bn_{s_h} \,s_h + \eps \int_\Omega \left(w|_{s_h} - w^h|_{s_h}\right) s_h \notag
 \end{align}
-(This form assumes that quadrature for $\cX_h$ is chosen so that the first and last integrals in \eqref{eq:fe:regularizedF} are computed exactly.)  For the first of these integrals, apply the triangle inequality, the H\"older inequality (twice), the trace inequality (Lemma \ref{lem:trace}), and a Sobolev inequality:
+(This form assumes that quadrature for $\cX_h$ is such that the integrals in \eqref{eq:fe:regularizedF} are computed exactly.)  For the first of these integrals, apply the triangle inequality, the H\"older inequality (twice), the trace inequality (Lemma \ref{lem:trace}), and a Sobolev inequality:
 \begin{align}
 \Big|\int_\Omega \left(\bu|_{s_h} - \bu_h|_{s_h}\right) \cdot &\bn_{s_h} \,s_h\Big| \le \int_\Omega \Big|\bu|_{s_h} - \bu_h|_{s_h}\Big| |\bn_{s_h}|^{1/\pp} |\bn_{s_h}|^{1/\pp'} |s_h| \\
  &\le \left(\int_\Omega \Big|\bu|_{s_h} - \bu_h|_{s_h}\Big|^\pp |\bn_{s_h}|\right)^{1/\pp} \left(\int_\Omega |\bn_{s_h}| |s_h|^{\pp'}\right)^{1/\pp'} \notag \\
   &\le \left(\int_{\Gamma_{s_h}} \big|\bu - \bu_h\big|^\pp\right)^{1/\pp} \left(\int_\Omega |\bn_{s_h}|^4\right)^{1/(4\pp')} \|s_h\|_{L^{4\pp'/3}} \notag \\
   &\le C \|\bu - \bu_h\|_{\cV} \left(\int_\Omega 1 + |\grad s_h|^4\right)^{1/(4\pp')} \|s_h\|_{\cX}  \notag \\
-  &= \frac{1}{2} g(\|s_h\|_{\cX}) \|\bu - \bu_h\|_{\cV}.  \notag
+  &= G(\|s_h\|_{\cX}) \|\bu - \bu_h\|_{\cV}.  \notag
 \end{align}
-(Along the way, recall that $|\bn_{s_h}|\,dx$ is the area element for $\Gamma_{s_h} \subset \partial \Lambda(s_h)$.)  The constant $C$ depends nontrivially on $\Lambda(s_h)$, and $g(\|s_h\|_{\cX})$ simply collects the factors shown.  H\"older applied the second integral from \eqref{eq:techythm} completes term 2.
+(Also recall that $|\bn_{s_h}|\,dx$ is the area element for $\Gamma_{s_h} \subset \partial \Lambda(s_h)$.)  Note that $C$ depends nontrivially on $\Lambda(s_h)$, and and that $G(\|s_h\|_{\cX})$ simply collects the factors shown.  H\"older applied the second integral from \eqref{eq:techythm} completes term 2.
 
 Term 3 follows by substituting $\sigma_h=\Pi_h(s)$ into the last term in \eqref{eq:preglacierestimate}.
 \end{proof}
 
-Now we describe the meaning of each term in the bound \eqref{eq:glacierestimate}:
+Now we consider the meaning of each term in the bound \eqref{eq:glacierestimate}:
 
 \medskip
 \begin{itemize}
-\item[term 1:]  This term comes from the FE approximation of the bed elevation in the exact ice-free area $\Omega_A(s)$.  If the bed were exactly represented ($b_h=b$) the term would be zero.  Of course, $\Omega_A(s)$ is generally unknown.  Regarding the computed ice-free area $\Omega_A(s_h)$, in areas where the ablation is large and one is far from the nearest flowing glacier, one might simply declare that no ice geometry error is made, by accepting $b_h$ as bare land even though $b_h>b$ in general (by assumption \ref{item:goodbh}).  However, neglecting term 1 cannot be implemented near the unknown glacier margin $\Omega \cap \partial \Omega_A(s)$, the free boundary.
+\item[term 1:]  This term comes from any bed elevation approximation errors within the unknown, exact ice-free area $\Omega_A(s)$.  If the bed is exactly represented ($b_h=b$) then this term is zero.  In portions of the computed ice-free area $\Omega_A(s_h)$ which are far from the nearest flowing glacier, and where the climate is ablating ($a < 0$), one might simply declare that no ice geometry error is made, by accepting $b_h$ as representing bare land $b$.  However, one cannot neglect term 1 near the unknown, exact glacier margin $\Omega \cap \partial \Omega_A(s)$, the free boundary.  Putting the free boundary in the wrong place on inaccurate bed topography inherently generates an ice surface elevation error.
 
 \medskip
-\item[term 2:]  This term quantifies how numerical velocity errors over the domain $\Lambda(s_h)$, from solving Stokes problem \eqref{eq:glenstokes:weak}, affect the numerical surface elevation error.  If the Stokes problem were solved exactly then this term would be zero.  The second contribution to term 2 scales with the regularization $\eps$ used in \eqref{eq:regularizedF}.
+\item[term 2:]  This term quantifies how numerical velocity errors over the domain $\Lambda(s_h)$, from solving Stokes problem \eqref{eq:glenstokes:weak}, affect the numerical surface elevation error.  If \eqref{eq:glenstokes:weak} were solved exactly then this term would be zero.  The second contribution to term 2 scales with the regularization $\eps$ used in \eqref{eq:regularizedF}.
 
 \medskip
-\item[term 3:]  An interpolation error term like this arises in the classical Cea's lemma argument for quasi-optimality of FE methods for PDEs \cite{Ciarlet2002}.  Here $\Pi_h(s)$ from \eqref{eq:definePi} is the $P_1$ interpolant of $s$, which is necessarily (and nonlinearly) truncated into $\cK_h$ to achieve discrete admissibility.
+\item[term 3:]  An interpolation error term like this arises in the classical Cea's lemma argument for quasi-optimality of FE methods for PDEs \cite{Ciarlet2002}.  Here $\Pi_h(s)$ \eqref{eq:definePi} is the $P_1$ interpolant of $s$, but also nonlinearly truncated into $\cK_h$ to achieve discrete admissibility.
 \end{itemize}
 
 \medskip
-One might try to derive a convergence rate from Theorem \ref{thm:glacierapp}, perhaps starting by applying interpolation theory to term 3.  From \cite[Theorem 3.1.6]{Ciarlet2002}, for example, if $\mu \in [4,+\infty]$ then for $\sigma \in W^{2,\mu}(\Omega)$ we have $\|\pi_h(\sigma) - \sigma\|_{\cX} \le C h \|\sigma\|_{W^{2,\mu}}$.  Here $\pi_h$ is ordinary interpolation into $\cX_h$, without truncation into $\cK_h$.  Eliding that distinction, suppose also that the exact solution $s\in\cK$ satisfies $s\in W^{2,\mu}$ for some $\mu \in [\rr,+\infty]$.  It would follow that term 3 in \eqref{eq:glacierestimate} was $O(h)$ with a coefficient depending on $\|s\|_{W^{2,\mu}}$.  (The argument for Theorem 4.3 in \cite{JouvetBueler2012} makes a comparably-strong assumption for a power of the ice thickness in an SIA problem.)  However, $s\in W^{2,\mu}$ would imply a glacier margin which is tangential to the bed, something only conceivable because of the $4$-Laplacian regularization in \eqref{eq:regularizedF}.  For real glaciers the surface gradient need not approach the bed gradient at the ice margin; while $s \in \cX = W^{1,4}$ is credible, $s\in W^{2,\mu}$ is not.
+One might try to derive a convergence rate from Theorem \ref{thm:glacierapp}, perhaps starting by applying interpolation theory to term 3.  From \cite[Theorem 3.1.6]{Ciarlet2002}, for example, if $\mu \in [4,+\infty]$ then for $\sigma \in W^{2,\mu}(\Omega)$ we have $\|\pi_h(\sigma) - \sigma\|_{\cX} \le C h \|\sigma\|_{W^{2,\mu}}$.  (Here $\pi_h$ is ordinary interpolation into $\cX_h$, without truncation into $\cK_h$.)  Suppose also that the exact solution $s\in\cK$ satisfies $s\in W^{2,\mu}$ for some $\mu \in [\rr,+\infty]$.  It would follow that term 3 was $O(h)$ with a coefficient depending on $\|s\|_{W^{2,\mu}}$.  (Theorem 4.3 in \cite{JouvetBueler2012} makes a comparably-strong assumption in a shallow ice model.)  However, $s\in W^{2,\mu}$ would imply a glacier margin which is tangential to the bed.  For real glaciers the surface gradient generally does not approach the bed gradient at the ice margin; while $s \in \cX = W^{1,4}$ is credible, $s\in W^{2,\mu}$ is not.  Thus, attempting to prove convergence via Theorem \ref{thm:glacierapp}, via direct use of FE interpolation theory, is difficult.
 
-Thus, direct use of standard FE interpolation theory to prove convergence via Theorem \ref{thm:glacierapp} is difficult, and consideration of term 2 adds further difficulties.  Suppose one assumes solution regularity for the Stokes problem \eqref{eq:glenstokes:weak}, specifically that $\bu\in W^{2,\kappa}(\Lambda(s_h);\RR^3)$ and $p \in W^{1,\kappa'}(\Lambda(s_h))$ for some $\kappa \in [\pp,2]$.  Suppose that a mixed FE method for that problem satisfies Bramble-Hilbert interpolation bounds for the discrete velocity and pressure spaces, respectively , and that the method satisfies a discrete inf-sup condition; for example, see inequalities (4.1), (4.26), (4.27) in \cite{JouvetRappaz2011}.  One then concludes that $\|\bu_h - \bu\|_{\cV} \le C h^{\kappa/2}$, for a constant $C>0$ which depends on the regularity norms of $\bu,p$, the discrete inf-sup constant, \emph{and the domain} $\Lambda(s_h)$.  The last dependence is problematic for convergence of the coupled problem.  One should not suppose, for example, that $\Lambda(s_h)$ remains unchanged under the 2D mesh refinement of $\Omega$ which is necessary to reduce terms 1 and 3.  Instead, one would need to know how the constant in the $O(h^{\kappa/2})$ convergence rate depends on $s_h$ via $\Lambda(s_h)$.
+Consideration of term 2 adds further difficulties.  Suppose one assumes solution regularity for the Stokes problem \eqref{eq:glenstokes:weak}, specifically that $\bu\in W^{2,\kappa}(\Lambda(s_h);\RR^3)$ and $p \in W^{1,\kappa'}(\Lambda(s_h))$ for some $\kappa \in [\pp,2]$.  Suppose that a mixed FE method for that problem satisfies Bramble-Hilbert interpolation bounds for the discrete velocity and pressure spaces, respectively, and that the method satisfies a discrete inf-sup condition; for example, see inequalities (4.1), (4.26), (4.27) in \cite{JouvetRappaz2011}.  One then concludes that $\|\bu_h - \bu\|_{\cV} \le C h^{\kappa/2}$, for a constant $C>0$ which depends on the regularity norms of $\bu,p$, the discrete inf-sup constant, \emph{and the domain} $\Lambda(s_h)$.  The last dependence is problematic for convergence of the coupled problem.  For example, the domain $\Lambda(s_h)$ will change under 2D mesh refinement of $\Omega$, which is necessary to reduce terms 1 and 3.  Concretely, one would need to know how the constant in the $O(h^{\kappa/2})$ velocity convergence rate depends on $s_h$.
 
-In a different direction, note that the mass-conservation barrier theory in \cite{Bueler2021conservation} argues that any time-stepping FE solution of a fluid-layer VI problem like \eqref{eq:regularizedvi} commits a mass conservation error near the (unknown) exact free boundary.  However, that theory is phrased in terms of layer thickness, where the zero obstacle is exactly represented.  Term 1 in \eqref{eq:glacierestimate} is thus new relative to the errors identified in \cite{Bueler2021conservation}.
+In a different direction, note that the mass-conservation barrier theory in \cite{Bueler2021conservation} argues that any time-stepping FE solution of a fluid-layer VI problem, like the glacier problem here, commits a mass conservation error near the (unknown) exact free boundary.  However, that theory is phrased in terms of layer thickness, where the zero obstacle is exactly represented.  Term 1 in \eqref{eq:glacierestimate} is thus new relative to the errors identified in \cite{Bueler2021conservation}.
 
 
 \section{Discussion and conclusion} \label{sec:conclusion}
