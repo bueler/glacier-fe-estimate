@@ -462,28 +462,26 @@ However, the numerical experiments in Appendix \ref{app:numerical} show that the
 \end{equation}
 using surface velocities from a numerical Stokes model (when evaluating $\Phi(s)$ and $\Phi(\sigma)$).  Recalling definition \eqref{eq:qcoercive}, if $\Phi$ were $4$-coercive over $\cX=W^{1,4}(\Omega)$, and if computations were exact, then these ratios would all exceed a constant $\alpha>0$.  Appendix \ref{app:numerical} shows that under mesh refinement the pairs yielding negative ratios become quite rare.  Standard presentations of Stokes models for glaciers give no reason to expect these ratios should prefer positive values, but the mean and median ratios are decidely positive, and under refinement they stabilize away from zero.
 
-A different expression for the surface motion $\Phi(s)$, one which suggests coercivity, can be found for our particular Stokes model.  To state this, extend $\omega$ to $\overline{\Lambda(s)}$ as $\tilde\omega(x,z)=\omega(x)$, and consider the glaciological ice flux $\bq(s) = \int_b^s \bU\,dz$ \cite{SchoofHewitt2013}, which is the vertical integral of the horizontal portion $\bU$ of the ice velocity $\bu$.  Using incompressibility, the non-sliding assumption ($\bu|_{\Gamma_b}=\bzero$), definition \eqref{eq:definePhi}, and the divergence theorem yields
+In our particular Stokes model we can express the surface motion $\Phi(s)$ in a different manner which suggests coercivity.  Extend $\omega\in \cX$ to $\Lambda(s)$ as $\tilde\omega(x,z)=\omega(x)$, and define the glaciological ice flux $\bq(s) = \int_b^s \bU\,dz$ \cite{SchoofHewitt2013}.  (Here $\bU=(u_1,u_2)$ is the horizontal velocity, from $\bu=(u_1,u_2,w)$.)  Using definition \eqref{eq:definePhi}, the non-sliding assumption ($\bu|_{\Gamma_b}=\bzero$), the divergence theorem, and incompressibility yields
 \begin{align}
-\Phi(s)[\omega] &= -\int_{\Omega} \bu|_s \cdot \bn_s\,\omega\,dx = -\int_{\partial\Lambda(s)} \bu\cdot {\hat\bn}\,\tilde\omega\,dS = - \int_{\Lambda(s)} \Div\left(\tilde\omega \bu\right)  \label{eq:fluxformPhi} \\
+\Phi(s)[\omega] &= -\int_{\Omega} \bu|_s \cdot \bn_s\,\omega\,dx = -\int_{\partial\Lambda(s)} \tilde\omega \bu\cdot {\hat\bn}\,dS = - \int_{\Lambda(s)} \Div\left(\tilde\omega \bu\right)  \label{eq:fluxformPhi} \\
   &= - \int_{\Lambda(s)} \bu\cdot \grad \tilde\omega = -\int_\Omega \bq(s) \cdot \grad \omega, \notag
 \end{align}
-where, on $\partial\Lambda(s)$, $\hat\bn$ is the outward norm unit vector and $dS$ is the area element.  FIXME
+where $\hat\bn$ is the outward unit normal and $dS$ is the area element along $\partial\Lambda(s)$.  Now, the natural glaciological belief is that ice flows downhill, which is the informal association $\bq(s) \sim - \grad s$.  Under that heuristic, formula \eqref{eq:fluxformPhi} implies $(\Phi(\sigma) - \Phi(s))[\sigma - s] \sim \int_\Omega |\grad s - \grad \sigma|^2$.  On the other hand, the shallow ice existence theory for shear-thinning ice in \cite{JouvetBueler2012} suggests that $W^{1,2}(\Omega)$ is not the space in which to seek the surface elevation solution.
 
 \newcommand{\wSIA}{\tilde w}
-In any case, because Appendix \ref{app:noncoercive} examples show that $\Phi$ is not actually $\qq$-coercive over $W^{1,\rr}(\Omega)$, we will regularize the surface motion term using the shallow theory of ice \cite{GreveBlatter2009}.  In the limit of small aspect ratios this isothermal shallow ice approximation theory yields an expression for the surface vertical motion:
+We will instead regularize the surface motion term as follows.  The isothermal shallow ice approximation \cite{GreveBlatter2009} yields an expression for the surface vertical motion:
 % Gamma = \frac{\nn+1}{\nn+2} 2 (rho g)^2 / (\nn+2),  i.e. (n+1)/(n+2) times the usual Gamma
 \begin{equation} \label{eq:verticalvelocitysia}
 \wSIA|_s = \Div \left(\Gamma (s-b)^{\nn+1} |\grad s|^{\nn-1} \grad s\right).
 \end{equation}
-Here $\nn$ is Glen's exponent and $\Gamma>0$ is a softness constant computable from the viscosity scale $\nu_\pp$ in \eqref{eq:glen}.
-
-Formula \eqref{eq:verticalvelocitysia} degenerates at the glacier margin where the thickness $s-b$ goes to zero, so we regularize using a fixed ice thickness $H_0>0$.  Let $\nn=3$ and $\eps>0$.  Writing the Stokes velocity in components $\bu = (u_1,u_2,w)$, for $\omega \in \cX$ we define this regularized version of weak formula \eqref{eq:definePhi}:
+Here $\nn$ is Glen's exponent and $\Gamma>0$ is an ice softness constant computable from the viscosity scale $\nu_\pp$ in \eqref{eq:glen}.  Formula \eqref{eq:verticalvelocitysia} degenerates at the glacier margin, where the thickness $s-b$ goes to zero, so we regularize using a fixed ice thickness $\eta_0>0$.  Let $\nn=3$ and $\eps>0$.  Writing the Stokes velocity in components $\bu = (u_1,u_2,w)$, for $\omega \in \cX$ we define this regularized weak formula to replace \eqref{eq:definePhi}:
 \begin{equation} \label{eq:defineregularizedPhi}
-\Phi^\eps(s)[\omega] = \int_\Omega \Big(\big(u_1|_s,u_2|_s\big) \cdot \grad s - (1-\eps) w|_s\Big) \omega + \eps\, \Gamma H_0^4 |\grad s|^2 \grad s \cdot \grad \omega.
+\Phi^\eps(s)[\omega] = \int_\Omega \Big(\big(u_1|_s,u_2|_s\big) \cdot \grad s - (1-\eps) w|_s\Big) \omega + \eps\, \Gamma \eta_0^4 |\grad s|^2 \grad s \cdot \grad \omega.
 \end{equation}
-This formula replaces the Stokes vertical velocity $w|_s$ with the convex combination $(1-\eps)w|_s + \eps\, \wSIA|_s$.  If $\Phi$ is Lipschitz on bounded subsets of $\cK$ (Lemma \ref{lem:philipschitz}) then so is $\Phi^\eps$; inequality (3.4) in \cite{JouvetBueler2012} proves this.  Regularization \eqref{eq:defineregularizedPhi} is likely to generate a $4$-coercive operator over $W^{1,4}(\Omega)$ because of properties of the (weak-form) $\pp$-Laplacian operator \cite[for example]{ChoeLewis1991}.  The $\eps$ term in \eqref{eq:defineregularizedPhi} is a multiple of the $4$-Laplacian of $s$, namely $-\Div(|\grad s|^2 \grad s)$, which is $4$-coercive over $W^{1,4}(\Omega)$.
+This replaces the Stokes vertical velocity $w|_s$ with the convex combination $(1-\eps)w|_s + \eps\, \wSIA|_s$.  If $\Phi$ is Lipschitz on bounded subsets of $\cK$ (Lemma \ref{lem:philipschitz}) then so is $\Phi^\eps$.  Regularization \eqref{eq:defineregularizedPhi} might generate a $4$-coercive operator over $W^{1,4}(\Omega)$ because of properties of the (weak) $\pp$-Laplacian operator \cite[for example]{ChoeLewis1991}; the regularization is a multiple of the $4$-Laplacian, which is $4$-coercive over $W^{1,4}(\Omega)$.
 
-The numerical experiments in Appendix \ref{app:numerical} used values $\eps=0.1$ and $H_0=1000$ meters in \eqref{eq:defineregularizedPhi}.  The observed effect was that negative coercivity ratios \eqref{eq:ratios} disappeared at high spatial resolution, and that the experimental distribution of ratios was bounded away from zero.  However, we are not able to \emph{prove} that $\Phi^\eps$ in \eqref{eq:defineregularizedPhi} is $4$-coercive.  A proof would seem to depend on novel and nontrivial insights into the glaciological Stokes problem.  The numerical analysis in Section \ref{sec:application} will therefore be based on the following final conjecture.
+The numerical experiments in Appendix \ref{app:numerical} use values $\eps=0.1$ and $\eta_0=1000$ meters in \eqref{eq:defineregularizedPhi}.  The observed effect is that negative coercivity ratios \eqref{eq:ratios} disappears at high spatial resolution, and that the experimental distribution of ratios is bounded away from zero.  However, we are not able to \emph{prove} that $\Phi^\eps$ in \eqref{eq:defineregularizedPhi} is $4$-coercive.  A proof would seem to depend on novel and nontrivial insights into the glaciological Stokes problem.  The numerical analysis in Section \ref{sec:application} will therefore be based on the following second conjecture.
 
 \begin{conjecture}[Regularized surface motion $\Phi^\eps(s)$ is $4$-coercive over admissible surface elevations in $W^{1,4}$] \label{conj:regcoercive}  Suppose Conjecture \ref{conj:lipschitz} holds for $\rr=4$, and let $\cX = W^{1,4}(\Omega)$.  Fix $b\in C^1(\bar\Omega)$ and let $\cK=\{\sigma\in\cX\,:\,\sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$.  There exists $\eps \in (0,1)$ and $H_0>0$, and $\alpha>0$, so that
 \begin{equation}
@@ -491,22 +489,22 @@ The numerical experiments in Appendix \ref{app:numerical} used values $\eps=0.1$
 \end{equation}
 \end{conjecture}
 
-To complete this Section we prove that this Conjecture suffices for well-posedness of the regularized VI problem; recall \eqref{eq:be:Fdefine} and \eqref{eq:be:vi} for the unregularized problem.
+To complete this Section we prove that this Conjecture suffices for well-posedness of the regularized VI problem; compare \eqref{eq:be:Fdefine}, \eqref{eq:be:vi} for the unregularized problem.
 
-\begin{theorem} \label{thm:regularizedwellposed}  Assume Conjectures \ref{conj:lipschitz} and \ref{conj:regcoercive} hold.  Suppose that $s^{n-1}\in\cK$ and define the source term $\ell^n \in \cX'$ as in \eqref{eq:be:source}.  For $\Delta t>0$ define
+\begin{theorem} \label{thm:regularizedwellposed}  Assume Conjectures \ref{conj:lipschitz} and \ref{conj:regcoercive}.  Suppose that $s^{n-1}\in\cK$ and define the source term $\ell^n \in \cX'$ as in \eqref{eq:be:source}.  For positive $\Delta t,\eps,\eta_0$ define
 \begin{equation}
 F^\eps_{\Delta t}(s)[\omega] = \Delta t\,\Phi^\eps(s)[\omega] + \int_\Omega s \omega, \label{eq:regularizedF}
 \end{equation}
-the regularized update operator.  This operator is Lipschitz on bounded subsets and $4$-coercive, thus there exists a unique surface elevation $s\in\cK$ satisfying the VI problem
+the regularized update operator.  This operator is Lipschitz on bounded subsets and $4$-coercive, thus there exists a unique surface elevation $s\in\cK$ satisfying the VI problem%
 \begin{equation}
 F^\eps_{\Delta t}(s)[\sigma-s] \ge \ell^n[\sigma-s] \quad \text{for all } \sigma \in \cK. \label{eq:regularizedvi}
 \end{equation}
 \end{theorem}
 
-\begin{proof}  The Lipschitz and $4$-coercive properties are straightforward inequalities following from the Conjectures.  In particular, $F^\eps_{\Delta t}$ is $4$-coercive over $\cK$ with constant $\alpha\Delta t>0$, and thus it is also coercive and strictly-monotone (Definition \ref{def:monotonecoercive}).  Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} now shows unique existence for \eqref{eq:regularizedvi}.
+\begin{proof}  The Lipschitz and $4$-coercive inequalities follow straightforwardly from the Conjectures.  In particular, $F^\eps_{\Delta t}$ is $4$-coercive over $\cK$ with constant $\alpha\Delta t>0$, and thus it is also coercive and strictly-monotone (Definition \ref{def:monotonecoercive}).  Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows unique existence for \eqref{eq:regularizedvi}.
 \end{proof}
 
-Theorem \ref{thm:regularizedwellposed} addresses only the well-posedness of a single time-step, over $[t_{n-1},t_n]$.  Its conclusion is certainly not sufficient to show well-posedness of the time-dependent VI problem corresponding to NCP \eqref{eq:ncp}, nor to show that implicit steps converge in the $\Delta t\to 0$ limit.  However, it is a first mathematical step in these directions.  Time-stepping numerical models for the evolution of glacier geometry, using Stokes dynamics, are already in common use.  Their designers apparently expect that each time-step problem, implicit or not, is well-posed, and they believe that computed surface elevations will converge to continuum solutions in some well-behaved manner.
+Theorem \ref{thm:regularizedwellposed} addresses only the well-posedness of a single time-step, over $[t_{n-1},t_n]$.  Its conclusion is certainly not sufficient to show well-posedness of the time-dependent VI problem corresponding to NCP \eqref{eq:ncp}, nor to show that implicit steps converge in the $\Delta t\to 0$ limit.  However, it is a first mathematical step in these directions.  Time-stepping numerical models for the evolution of glacier geometry, using Stokes dynamics, are already in common use.  Practitioners apparently expect that each time-step problem, implicit or not, is well-posed, and that computed surface elevations will converge to continuum solutions in some well-behaved manner.
 
 
 \section{Abstract error estimate for finite element approximation of VIs} \label{sec:abstractestimate}
