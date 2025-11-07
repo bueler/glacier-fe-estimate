@@ -1,0 +1,11 @@
+1.
+There are 3 decisive advances:  1)  Fully-implicit time-dependent numerical glacier models, with no restrictions on updated geometry, and with no shallow assumptions, are precisely formulated for the first time.  2) A new Falk/Cea-type a priori bound for finite element solutions of variational inequalities with nonlinear operators is proven.  3) Based on conjectural well-posedness of an implicit time-step problem, for the first time an a priori bound on surface elevation errors in glacier models is proven.
+
+2.
+The paper addresses fully-coupled free-surface Stokes problems, which relate to a variety of fluids of interest to SINUM readers.  The problem is central to the mathematics of the planet earth.
+
+3.
+A time-dependent, coupled, and non-shallow glacier model is put into mathematically-precise form for the first time, including a proposed function space for surface elevations.  Previous mathematical work in this area (namely: geometry-evolving glacier models) is for the shallow model, including by the author in SIAP (2012).  However, the shallow model is not adequate for scientific application.  The mathematical treatment of coupling is necessarily novel for the non-shallow case, and the a priori bound on finite element solutions of fully-nonlinear variational problems is new.
+
+4.
+The paper in current form, after much careful editing, is 26 pages.  This length is required because of the nontriviality and novelty of the continuum model.  While this model is in common numerical glacier modeling use, it has never been made precise in the literature, essentially because its coupled DAE/VI form is not understood by practitioners, and because a mathematical form of the coupled model is not meaningfully in textbooks etc.  The author needs a bit of space to fix that gap.

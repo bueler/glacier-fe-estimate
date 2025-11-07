@@ -54,7 +54,7 @@ publish.zip: estimate.pdf estimate.bbl
 	cp -f genfigs/gis/*.png publish/genfigs/gis/
 	mkdir publish/tikz/
 	cp -f tikz/*.tex publish/tikz/
-	cp -f siamart220329.cls siamplain.bst estimate.bib estimate.bbl estimate.tex publish/
+	cp -f siamart250211.cls siamplain.bst estimate.bib estimate.tex publish/
 	zip -r publish publish
 
 .PHONY: clean cropfigures _figures

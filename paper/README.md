@@ -1,3 +1,5 @@
 # glacier-fe-estimate/paper
 
-Submitted 19 September to SIAM Journal on Applied Mathematics.  The cover letter source is my private `UAFletter` repo.
+Submitted earlier to SIAM Journal on Applied Mathematics and M2AN.  Currently submitted to SIAM Journal on Numerical Analysis.
+
+Old cover letter source is my private `UAFletter` repo.
