@@ -1,0 +1,7 @@
+/cover_*.pdf
+*.aux
+*.out
+*.log
+*.synctex.gz
+*~
+

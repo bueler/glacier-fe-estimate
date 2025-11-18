@@ -1,0 +1,140 @@
+\documentclass[12pt]{amsart}
+%prepared in AMSLaTeX, under LaTeX2e
+\addtolength{\oddsidemargin}{-.6in}
+\addtolength{\evensidemargin}{-.6in}
+\addtolength{\topmargin}{-0.6in}
+\addtolength{\textwidth}{1.1in}
+\addtolength{\textheight}{1.3in}
+
+\renewcommand{\baselinestretch}{1.1}
+
+\usepackage{verbatim} % for "comment" environment
+
+\newcommand{\mtt}{\texttt}
+\usepackage{alltt,xspace}
+
+\usepackage[final]{graphicx}
+
+\usepackage[pdftex, colorlinks=true, plainpages=false, linkcolor=black, citecolor=red, urlcolor=red]{hyperref}
+
+% macros
+\usepackage{amssymb}
+\newcommand{\bA}{\mathbf{A}}
+\newcommand{\bB}{\mathbf{B}}
+\newcommand{\bE}{\mathbf{E}}
+\newcommand{\bF}{\mathbf{F}}
+\newcommand{\bJ}{\mathbf{J}}
+\newcommand{\br}{\mathbf{r}}
+\newcommand{\bx}{\mathbf{x}}
+\newcommand{\hbi}{\mathbf{\hat i}}
+\newcommand{\hbj}{\mathbf{\hat j}}
+\newcommand{\hbk}{\mathbf{\hat k}}
+\newcommand{\hbn}{\mathbf{\hat n}}
+\newcommand{\hbr}{\mathbf{\hat r}}
+\newcommand{\hbt}{\mathbf{\hat t}}
+\newcommand{\hbx}{\mathbf{\hat x}}
+\newcommand{\hby}{\mathbf{\hat y}}
+\newcommand{\hbz}{\mathbf{\hat z}}
+\newcommand{\hbphi}{\mathbf{\hat \phi}}
+\newcommand{\hbtheta}{\mathbf{\hat \theta}}
+\newcommand{\complex}{\mathbb{C}}
+\newcommand{\ppr}[1]{\frac{\partial #1}{\partial r}}
+\newcommand{\ppt}[1]{\frac{\partial #1}{\partial t}}
+\newcommand{\ppx}[1]{\frac{\partial #1}{\partial x}}
+\newcommand{\ppy}[1]{\frac{\partial #1}{\partial y}}
+\newcommand{\ppz}[1]{\frac{\partial #1}{\partial z}}
+\newcommand{\pptheta}[1]{\frac{\partial #1}{\partial \theta}}
+\newcommand{\ppphi}[1]{\frac{\partial #1}{\partial \phi}}
+\newcommand{\pp}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\ppp}[2]{\frac{\partial^2 #1}{\partial^2 #2}}
+\newcommand{\pppp}[3]{\frac{\partial^2 #1}{\partial #2 \partial #3}}
+\newcommand{\Div}{\ensuremath{\nabla\cdot}}
+\newcommand{\Curl}{\ensuremath{\nabla\times}}
+\newcommand{\curl}[3]{\ensuremath{\begin{vmatrix} \hbi & \hbj & \hbk \\ \partial_x & \partial_y & \partial_z \\ #1 & #2 & #3 \end{vmatrix}}}
+\newcommand{\cross}[6]{\ensuremath{\begin{vmatrix} \hbi & \hbj & \hbk \\ #1 & #2 & #3 \\ #4 & #5 & #6 \end{vmatrix}}}
+\newcommand{\eps}{\epsilon}
+\newcommand{\grad}{\nabla}
+\newcommand{\image}{\operatorname{im}}
+\newcommand{\integers}{\mathbb{Z}}
+\newcommand{\ip}[2]{\ensuremath{\left<#1,#2\right>}}
+\newcommand{\lam}{\lambda}
+\newcommand{\lap}{\triangle}
+\newcommand{\Matlab}{\textsc{Matlab}\xspace}
+\newcommand{\exers}[1]{\bigskip\noindent\textbf{Exercises} #1}
+\newcommand{\fexer}[2]{\bigskip\noindent\textbf{Lesson #1, \##2}\quad }
+\newcommand{\prob}[1]{\bigskip\noindent\textbf{#1} }
+\newcommand{\pts}[1]{(\emph{#1 pts}) }
+\newcommand{\epart}[1]{\medskip\noindent\textbf{(#1)}\quad }
+\newcommand{\ppart}[1]{\,\textbf{(#1)}\quad }
+\newcommand{\note}[1]{[\scriptsize #1 \normalsize]}
+\newcommand{\MatIN}[1]{\mtt{>> #1}}
+\newcommand{\onull}{\operatorname{null}}
+\newcommand{\rank}{\operatorname{rank}}
+\newcommand{\range}{\operatorname{range}}
+\renewcommand{\P}{\mathcal{P}}
+\newcommand{\real}{\mathbb{R}}
+\newcommand{\trace}{\operatorname{tr}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\Im}{\operatorname{Im}}
+\newcommand{\Arg}{\operatorname{Arg}}
+
+\newcommand{\pl}[2]{\item \emph{page #1, line #2}:\, }
+\newcommand{\pf}[2]{\item \emph{page #1, #2}:\, }
+
+
+
+\begin{document}
+\graphicspath{{../}}
+
+% note sighorizblack.pdf is derived from Math_Stats_sig_horiz_black.pdf by using pdfcrop
+\noindent \includegraphics[width=4.5in]{sighorizblack}
+
+\thispagestyle{empty}
+\vspace{0.2in}
+
+\hfill \today
+\medskip
+\bigskip
+
+\noindent To the Editor of the SIAM Journal on Applied Mathematics --
+
+\bigskip
+
+\noindent  Please consider this manuscript for publication in SIAP.  This is an original submission, though a preprint has been posted at \href{https://arxiv.org/abs/2408.06470}{arxiv.org/abs/2408.06470}.
+
+\medskip
+\noindent  The content here is somewhere in the convex hull of SIAP, SISC, and SINUM.  I believe that it is closest to SIAP, but I am happy to accept editorial guidance on this. 
+
+\medskip
+\noindent  Here is my reasoning for choosing SIAP.  On the one hand, the most original theorem is actually Theorem 6.3, new and general finite element quasi-optimality result for variational inequalities (VIs), and its glacier-specific corollary Theorem 7.2.  On the other hand, and more compelling regarding journal placement in my view, the most original \emph{content} is the new weak-form mathematical model for glacier evolution using non-shallow dynamics, namely VI (3.23) and the associated operator definition.  I make rigorous progress on the new model, but with well-posedness based on conjectural elements, something I make very clear.
+
+\medskip
+\noindent  There are relatively few mathematical glaciologists out there, but here are some referee suggestions, listed alphabetically, supposing it is appropriate:
+\begin{itemize}
+\item[] Josefin Ahlkrona, Stockholm University, Sweden, \href{mailto:ahlkrona@math.su.se}{ahlkrona@math.su.se}
+\item[] Ian Hewitt, Oxford University, UK, \href{mailto:hewitt@maths.ox.ac.uk}{hewitt@maths.ox.ac.uk}
+\item[] Guillaume Jouvet, University of Lausanne, Switzerland, \href{mailto:guillaume.jouvet@unil.ch}{guillaume.jouvet@unil.ch}
+\item[] Christian Schoof, University of British Columbia, Canada, \href{mailto:cschoof@eoas.ubc.ca}{cschoof@eoas.ubc.ca}
+\item[] Dan Shapero, University of Washington, \href{mailto:shapero@uw.edu}{shapero@uw.edu}
+\end{itemize}
+Only one of these, Jouvet, is a former co-author, but it has been a while.
+
+\medskip
+\noindent  Researchers with an interest in other VI and/or Stokes models are also in the target audience.  The VI here is very different from most literature because its operator requires the solution of a separate PDE problem (i.e.~evaluation of the surface trace from a Stokes solution).  I have made every effort in the manuscript to make this novel structure as clear as possible, which accounts for the manuscript length.
+
+\bigskip
+
+\noindent Best regards, and appreciatively,
+
+\medskip
+
+%\vspace{0.35in}
+\includegraphics[height=0.45in]{elb_sign}
+
+\small
+
+\noindent Ed Bueler, Professor of Mathematics (Applied)
+
+\noindent University of Alaska, Fairbanks, USA 99775-6660 \hfill \texttt{elbueler\@@alaska.edu}
+
+\end{document}
