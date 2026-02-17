@@ -88,47 +88,50 @@
 \renewcommand*{\thefootnote}{\fnsymbol{footnote}}
 
 
-\title{Finite element errors in Stokes models \\ of glacier evolution}
+\title{Finite element Stokes models of glacier evolution}
 
-\date{JMM 2025, Seattle}
+\subtitle{a mathematical modeling perspective}
+
+\date{Glaciology Lunch, UW, February 2026}
 
 \author{Ed Bueler, University of Alaska Fairbanks}
 
-\titlegraphic{\vspace{-1cm}\par\hspace{-1cm}\includegraphics[width=1.5\textwidth]{figs/polaris-overexposed.png}}
+\titlegraphic{\vspace{-1cm}\par\hspace{-1cm}\includegraphics[width=1.5\textwidth]{puget-fade}}
 
 \begin{document}
-\graphicspath{{figs/}{../NWG24/figs/}{../../paper/figs/}}
+\graphicspath{{figs/}{../../paper/figs/}}
 
 \maketitle
 
 
 \begin{frame}{Puget Sound glaciation}
 
-%\begin{center}
-\mbox{\hspace{-7mm} \,\includegraphics[width=1.1\textwidth]{puget}}
-%\end{center}
+% Define a fixed area for the figure
+\begin{overlayarea}{\textwidth}{75mm} % Adjust height
 
-\vspace{-4mm}
+\begin{center}
+\mbox{\includegraphics[height=75mm]{puget}}
+\end{center}
+
+\only<2>{\vspace{-55mm}
+
+\begin{center}
+\begin{minipage}{0.8\textwidth}
+{\Large
+
+\textbf{\emph{goal}: \alert{performant, time-dependent,}}
+
+\textbf{\alert{and non-shallow glacier simulations}}
+
+\textbf{\alert{with evolving glacial extent}}
+
+}
+\end{minipage}
+\end{center}%
+}
+\end{overlayarea}
 
 \hfill {\tiny Washington State Dept of Natural Resources}
-\end{frame}
-
-
-\begin{frame}{glacier evolution in space-time \only<2>{ \dots implicitly?}}
-
-\bigskip \bigskip
-
-\begin{columns}
-\begin{column}{0.28\textwidth}
-\begin{itemize}
-\item[a)] what is true within the {\color{RoyalBlue} ice}?
-\item[b)] what is true on {\color{OliveGreen} bare land}?
-\item[c)] what is true on {\color{Salmon} free boundary}?
-\end{itemize}\end{column}
-\begin{column}{0.72\textwidth}
-\only<1>{\includegraphics[height=65mm]{xtcrop}}\only<2>{\includegraphics[height=65mm]{implicitstep}}
-\end{column}
-\end{columns}
 \end{frame}
 
 
@@ -143,11 +146,50 @@
 
 \section{introduction to the standard glacier model}
 
-\begin{frame}{the 3 views}
+\begin{frame}{the usual view}
+\phantom{foo}
+
+\vspace{-10mm}
+
+\begin{center}
+\includegraphics[height=0.7\textheight]{sdusual}
+\end{center}
+
+\vspace{-7mm}
+
+{\small
+\begin{itemize}
+\item $a(t,x)$ is surface mass balance
+\item $b(x)$ is bed elevation
+\item $s(t,x)$ is surface elevation
+\item $\bu(t,x,z)$, $p(t,x,z)$ are velocity and pressure
+\end{itemize}
+}
+
+\phantom{foo}
+\end{frame}
+
+
+\begin{frame}{the map-plane view}
+
+\begin{center}
+\includegraphics[height=0.8\textheight]{mapplane}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{the space-time view}
+\begin{center}
+\includegraphics[height=0.8\textheight]{xtcrop}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{the 3 views (and the free boundaries)}
 
 \vspace{-2mm}
 \begin{center}
-\includegraphics[width=0.55\textwidth]{xtcrop}
+\includegraphics[width=0.5\textwidth]{xtcrop}
 \end{center}
 
 \vspace{-2mm}
@@ -155,18 +197,19 @@
 \begin{column}{0.43\textwidth}
 \includegraphics[width=0.9\textwidth]{mapplane}
 \end{column}
+
 \begin{column}{0.57\textwidth}
-\hfill \includegraphics[width=\textwidth]{stokesdomainOmega}
+\hfill \includegraphics[width=\textwidth]{stokesdomainpink}
 \end{column}
 \end{columns}
 \end{frame}
 
 
-\begin{frame}{what is true everywhere in $[0,T]\times\Omega$?}
+\begin{frame}{what is true everywhere in \only<1>{$\Omega$}\only<2>{$[0,T]\times\Omega$}?}
 
-\hfill \includegraphics[width=0.37\textwidth]{mapplane}
+\hfill \includegraphics<1>[height=38mm]{mapplane} \includegraphics<2>[height=38mm]{xtcrop}
 
-\vspace{-40mm}
+\vspace{-38mm}
 
 \begin{minipage}[t]{60mm}
 {\small
@@ -175,9 +218,9 @@
 \item $x = (x_1,x_2) \in \Omega$
 \item $a(t,x)$ surface mass balance (SMB)
 \item $b(x)$ bed elevation
-\item $s(t,x)$ \emph{solution} surface elevation
+\item \alert{$s(t,x)$ solution surface elevation}
 \item $\bn_s = (- \grad s,1)$ surface-normal vector
-\item $\bu|_s(t,x)$ surface value of ice velocity, extended by zero to bare land
+\item \alert{$\bu|_s(t,x)$} surface value of \alert{solution ice velocity}, extended by zero to bare land
 \end{itemize}
 }
 \end{minipage}
@@ -198,7 +241,7 @@ s - b &\ge 0 &&\phantom{x} \\
 \begin{itemize}
 \item surface kinematical equation (SKE) in glaciology:
    $$\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0$$
-\item our time-dependent, nonlinear complementarity problem (NCP) is the underlying \emph{free-boundary} meaning of the SKE:
+\item the time-dependent, nonlinear complementarity problem (NCP) gives the \emph{free-boundary} meaning of the SKE:
 \begin{align*}
 s - b &\ge 0 &&\phantom{x} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
@@ -206,32 +249,32 @@ s - b &\ge 0 &&\phantom{x} \\
 \end{align*}
 
     \begin{itemize}
-    \item[$\circ$] applies regardless of dynamical model within the ice
-    \item[$\circ$] this NCP appears in (Calvo et al 2003), but only for shallow ice
+    \item[$\circ$] this applies everywhere in $[0,T]\times \Omega$
+    \item[$\circ$] it applies regardless of dynamical model within the ice
+    \item[$\circ$] this appears first in (Calvo et al 2003), but only for shallow ice
     \end{itemize}
-\item state-of-the-art numerically: first-order explicit time-stepping
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{what is true within the ice?}
+\begin{frame}{the dynamical model within the ice}
 
-\hfill \includegraphics[width=0.55\textwidth]{stokesdomain}
+\hfill \includegraphics[width=0.55\textwidth]{stokesdomainOmega}
 
 \vspace{-5mm}
 
 \begin{itemize}
 \item fix $t$ and define:
     $$\Lambda(s) = \{(x,z)\,:\,b(x)<z<s(t,x)\} \qquad \subset \RR^3$$
-\item Glen-Stokes equations in $\Lambda(s)$ with $\pp = (\nn + 1)/\nn \approx 4/3$:
+\item<2-3> Glen-Stokes equations in $\Lambda(s)$ with $\pp = (\nn + 1)/\nn \approx 4/3$:
 \begin{align*}
 - \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg  \\
 \nabla \cdot \bu &= 0  \\
-\nu(D\bu) &= \nu_0 |D\bu|^{\pp-2} && \quad {\scriptsize \leftarrow \text{needs regularization}}
+\nu(D\bu) &= \nu_0 |D\bu|^{\pp-2} && \quad {\scriptsize \leftarrow \text{needs regularization?}}
 \end{align*}
 
 \vspace{-1mm}
-\item boundary conditions:
+\item<3> boundary conditions:
 \begin{align*}
 &\left(2 \nu(D\bu) D\bu - pI\right) \bn_s = \bzero   && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
 &\bu  = \bzero \text{ } \,\text{or } \,f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
@@ -256,7 +299,7 @@ s - b &\ge 0 & &\where{in $\Omega$} \\
 \newtheorem*{smodel}{standard model}
 
 \begin{smodel}
-an NCP in $[0,T]\times \Omega$, for fixed $\Omega \subset \RR^2$, coupled to a Glen-Stokes problem within the ice, in $\Lambda(s) \subset \RR^3$
+an NCP in $[0,T]\times \Omega$, for fixed domain $\Omega \subset \RR^2$, coupled to Glen-Stokes within the ice, in a time-dependent domain $\Lambda(s) \subset \RR^3$
 \end{smodel}
 \end{frame}
 
@@ -283,7 +326,7 @@ an inequality-constrained \textbf{differential algebraic system} in $\infty$ dim
 }
 
 
-\section{well-posed implicit steps?}
+\section{well-posedness?}
 
 \begin{frame}{implicit time-step problem is a variational inequality}
 
@@ -327,7 +370,7 @@ is well-posed for $s\in\cK$
 \begin{frame}{what's behind the conjecture? 1}
 
 \begin{center}
-\includegraphics[width=0.6\textwidth]{stokesdomain}
+\includegraphics[width=0.6\textwidth]{stokesdomainOmega}
 \end{center}
 
 \begin{theorem}[Jouvet \& Rappaz, 2011]
@@ -395,7 +438,7 @@ numerical ratios $\displaystyle \frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq}$
 \end{itemize}
 
 \vspace{-22mm}
-\hfill \includegraphics[width=0.3\textwidth]{smoothratios} \qquad
+\hfill FIXME %\includegraphics[width=0.3\textwidth]{smoothratios} \qquad
 \end{frame}
 
 
