@@ -1,5 +1,5 @@
-### Finite element Stokes models for glacier evolution: A mathematical modeling view
+Title: Finite element Stokes models for glacier evolution: A mathematical modeling perspective
 
 Author: Ed Bueler, University of Alaska Fairbanks
 
-Abstract: FIXME
+Abstract: The essential data which determine the evolution of glaciation are the bedrock elevation and the surface mass balance.  From these data a land-based glacier's geometry solves a free boundary problem which balances the time derivative of the surface elevation with the surface velocity from the flowing ice and the climatic mass balance rate.  Now, spatial finite elements are the natural tool for time-dependent simulations, but the problem is not yet known to be well-posed, despite some progress.  I will address how we might choose function spaces, especially for the unknown surface elevation, how the time-step problems can be posed, and which time-stepping schemes make sense--implicitness would be automatic except that it is hard.  From this basic modeling perspective I can then prove an a priori finite element bound for the evolving surface, which solves a variational inequality, with consequences for the improved design of glacier models.
