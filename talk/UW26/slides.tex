@@ -52,7 +52,7 @@
 \lstset{style=colorEX,
         basewidth = {.49em}}
 
-\newtheorem*{conjecture}{Conjecture}
+\newtheorem*{conjecture}{conjecture}
 \newtheorem*{cproblem}{continuum problem}
 \newtheorem*{smodel}{standard model}
 
@@ -105,7 +105,7 @@
 \maketitle
 
 
-\begin{frame}{Puget Sound glaciation}
+\begin{frame}{Puget Sound glaciation and de-glaciation}
 
 % Define a fixed area for the figure
 \begin{overlayarea}{\textwidth}{75mm} % Adjust height
@@ -173,9 +173,19 @@
 
 \begin{frame}{the map-plane view}
 
-\begin{center}
-\includegraphics[height=0.8\textheight]{mapplane}
-\end{center}
+\begin{columns}
+\begin{column}{0.6\textwidth}
+\includegraphics[width=1.1\textwidth]{mapplane}
+\end{column}
+\begin{column}{0.4\textwidth}
+{\small
+\begin{itemize}
+\item $b$ is bed elevation
+\item $s$ is surface elevation
+\end{itemize}
+}
+\end{column}
+\end{columns}
 \end{frame}
 
 
@@ -213,14 +223,14 @@
 \item $x = (x_1,x_2) \in \Omega$
 \item $a(t,x)$ surface mass balance (SMB)
 \item $b(x)$ bed elevation
-\item $s(t,x)$ surface elevation solution
+\item $s(t,x)$ surface elevation \alert{solution}
 \item $s$ must be \emph{admissible}:  \, $s\ge b$
 
 \vspace{-35mm}
 \hfill \includegraphics[height=35mm]{mapplane}
 
 \item $\bn_s = (- \grad s,1)$ surface-normal vector
-\item $\bu|_s(t,x)$ surface value of ice velocity solution, extended by zero to bare land
+\item $\bu|_s(t,x)$ surface value of ice velocity \alert{solution}, extended by zero to bare land
 \end{itemize}
 \end{frame}
 
@@ -262,7 +272,7 @@ s - b &\ge 0 &&\phantom{x} \\
 \end{frame}
 
 
-\begin{frame}{the dynamical model within the ice}
+\begin{frame}{Stokes is the dynamical model within the ice}
 
 \hfill \includegraphics[width=0.55\textwidth]{stokesdomainOmega}
 
@@ -270,8 +280,8 @@ s - b &\ge 0 &&\phantom{x} \\
 
 \begin{itemize}
 \item fix $t$ and define:
-    $$\Lambda(s) = \{(x,z)\,:\,b(x)<z<s(t,x)\} \qquad \subset \RR^3$$
-\item Glen-Stokes equations in $\Lambda(s)$ with $\pp = (\nn + 1)/\nn \approx 4/3$:
+    $$\alert{\Lambda(s) = \{(x,z)\,:\,b(x)<z<s(t,x)\}} \qquad \subset \RR^3$$
+\item Glen-Stokes equations \alert{in $\Lambda(s)$} with $\pp = (\nn + 1)/\nn \approx 4/3$:
 \begin{align*}
 - \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg  \\
 \nabla \cdot \bu &= 0  \\
@@ -303,8 +313,8 @@ s - b &\ge 0 & &\where{in $\Omega$} \\
 \bigskip
 
 \only<1>{
-\begin{smodel}[a suggested name]
-an \alert{NCP} in $[0,T]\times \Omega$, for fixed domain $\Omega \subset \RR^2$, \alert{coupled to Glen-Stokes within the ice}, in a time-dependent domain $\Lambda(s) \subset \RR^3$
+\begin{smodel}[a suggested name for the system above!]
+an \alert{NCP} in $[0,T]\times \Omega$, for fixed domain $\Omega \subset \RR^2$, \alert{coupled to Stokes within the ice}, in a time-dependent domain $\Lambda(s) \subset \RR^3$
 \end{smodel}
 }
 \only<2>{
@@ -322,9 +332,9 @@ an inequality-constrained \alert{differential algebraic equations} (DAE) system 
 \end{center}
 
 \begin{itemize}
-\item because DAE systems are infinitely stiff, implicit time discretization is expected
+\item DAE systems are stiff so implicit time discretization is expected
     \begin{itemize}
-    \item[$\circ$] stiff decay $n=1,2,3$-order BDF schemes, or Radau schemes
+    \item[$\circ$] stiff decay BDF schemes, or Radau schemes
     \end{itemize}
 \item for example, consider backward Euler on SKE $\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0$:
     $$\frac{s^k - s^{k-1}}{\Delta t} - \bu|_{s^k} \cdot \bn_{s^k} - \frac{1}{\Delta t}\int_{t_{k-1}}^{t_k} a(t)\,dt = 0$$
@@ -332,19 +342,10 @@ an inequality-constrained \alert{differential algebraic equations} (DAE) system 
 \end{frame}
 
 
-\AtBeginSection[]
-{
-  \begin{frame}<beamer>
-    \frametitle{Outline}
-    \tableofcontents[currentsection,hideallsubsections]
-  \end{frame}
-}
-
-
 \begin{frame}{implicit time-step problem is a variational inequality (VI)}
 
 \begin{itemize}
-\item VI = weak form of a NCP
+\item VI = (weak form of an NCP)
 \item let $\cX$ denote a Banach space of elevation functions on $\Omega$
 \item $b\in\cX$
 \item for $\Delta t > 0$ define:
@@ -358,37 +359,57 @@ F(s)[q] &= \int_\Omega (s - \Delta t\,\bu|_s \cdot \bn_s) q  \hspace{15mm} \text
 \end{itemize}
 
 \medskip
-\only<1>{
 \begin{block}{definition\footnote{{\scriptsize B. \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv:2408.06470}}}}
-the weak form \emph{backward Euler time-step problem}, for $t_k \in [0,T]$, is to find the surface elevation $s^k \approx s(t_k,x) \in \cK$ solving the VI
+the weak form \emph{backward Euler time-step problem}, for $t_k \in [0,T]$, is to find the new surface elevation $s^k \approx s(t_k,x) \in \cK$ solving the VI
 $$F(s^k)[r-s^k] \ge \ell^k[r-s^k] \quad \text{for all } r \in \cK$$
 \end{block}
-}
-\only<2>{
-\begin{block}{the main idea}
-the weak form \emph{backward Euler time-step problem}, for $t_k \in [0,T]$, is to figure out the map-plane domain covered by the glacier, and simultaneously to compute the updated surface elevation $s^k$
-\end{block}
-
-\vspace{5mm}
-}
 
 \medskip
 \end{frame}
 
 
-\section{well-posedness?}
+\begin{frame}{implicit time-step problem is a variational inequality (VI)}
 
-\begin{frame}{but maybe you came for the finite elements?}
+
+\begin{block}{the main idea}
+the weak form \emph{backward Euler time-step problem}
+    $$F(s^k)[r-s^k] \ge \ell^k[r-s^k] \quad \text{for all } r \in \cK$$
+\alert{simultaneously} computes
+\begin{itemize}
+\item the new map-plane domain covered by the glacier,
+\item the new surface elevation $s^k$ solving the SKE, and
+\item the new Stokes solution $\bu^k,p^k$ on $\Lambda(s^k) = \{b<z<s^k\} \subset \RR^3$
+\end{itemize}
+\end{block}
 
 \begin{itemize}
-\item why would we care about well-posedness?
-\item recall the canonical FE story about convergence:
+\item a key mechanism is the \alert{surface motion map}, from $s$ to the surface motion term in the SKE, using the solution of the stokes problem:
+	$$s \mapsto \bu_s\cdot \bn_s$$
+\end{itemize}
+\end{frame}
+
+
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Outline}
+    \tableofcontents[currentsection,hideallsubsections]
+  \end{frame}
+}
+
+\section{well-posedness?}
+
+\begin{frame}{why would we care about well-posedness?}
+
+\begin{itemize}
+\item (maybe you came for the finite elements?)
+\item recall the canonical story about convergence of the FEM, in which \alert{$u$} denotes the continuum solution:
 {\small
 \begin{align*}
 -\grad^2 \alert{u} &= f \\
 &\downarrow & &\text{\emph{to weak form}} \\
 a(\alert{u},v) &= \ell_f(v) \\
-&\downarrow & &\text{\emph{finite elements}} \\
+&\downarrow & &\text{\emph{finite elements (FE)}} \\
 a(u_h,v_h) &= \ell_f(v_h) \\
 &\downarrow & &\text{\emph{Cea's lemma}} \\
 \|u_h-\alert{u}\| &\le C \inf_{v_h} \|v_h-\alert{u}\| \\
@@ -396,48 +417,42 @@ a(u_h,v_h) &= \ell_f(v_h) \\
 \|u_h-\alert{u}\| &\le C h^q \|\alert{u}\|_{H^r}
 \end{align*}
 }
-\item well-posedness for $\alert{u}$ must be either proven, conjectured, or politely ignored, if you want to tell this story for glacier surface elevations
-    \begin{itemize}
-    \item[$\circ$] I am choosing ``conjectured''
-    \end{itemize}
+\item to tell this FEM story for glacier surface elevations, well-posedness must be either proven, conjectured, or politely ignored
+\item this talk chooses ``conjectured'' \dots because I don't know a proof
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{well-posedness is only conjectural}
 
-\hfill \includegraphics[width=0.35\textwidth]{mapplane}
-
 \begin{conjecture}
-for some $\qq>2$, with $\cX = W^{1,\qq}(\Omega)$, and defining the admissible surface elevation subset
-    $$\cK = \{r \ge b\} \subset \cX,$$
-the backward Euler time-step VI problem,
-    $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK,$$
-is well-posed for $s\in\cK$
+There exists a $\qq>2$ so that in the space $\cX = W^{1,\qq}(\Omega)$, for sufficiently small $\Delta t>0$, the backward Euler time-step VI problem
+    $$F(s^k)[r-s^k] \ge \ell^k[r-s^k] \quad \text{for all } r \in \cK,$$
+is well-posed for the new surface elevation $s^k\in\cK$ in the admissible subset $\cK = \{r \ge b\} \subset \cX$.
 \end{conjecture}
+
+\begin{columns}
+\begin{column}{0.65\textwidth}
+{\small
+\begin{itemize}
+\item recall
+\begin{align*}
+\ell^k(x) &= s^{k-1}(x) + \int_{t_{k-1}}^{t_k} a(t,x)\,dt \\
+F(s)[q] &= \int_\Omega (s - \Delta t\,\bu|_s \cdot \bn_s) q
+\end{align*}
+\end{itemize}
+}
+\end{column}
+\begin{column}{0.35\textwidth}
+\phantom{foo}
+
+\includegraphics[width=\textwidth]{implicitstep}
+\end{column}
+\end{columns}
 \end{frame}
 
 
 \begin{frame}{what's behind the conjecture? 1}
-
-\begin{center}
-\includegraphics[width=0.6\textwidth]{stokesdomainOmega}
-\end{center}
-
-\begin{theorem}[Jouvet \& Rappaz, 2011]
-over a fixed domain $\Lambda$, the Glen-Stokes problem
-\begin{align*}
-- \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda$} \\
-\nabla \cdot \bu &= 0 \\
-\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda$} \\
-\bu  = \bzero \quad \text{or} \quad f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda$}
-\end{align*}
-is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)$
-\end{theorem}
-\end{frame}
-
-
-\begin{frame}{what's behind the conjecture? 2}
 
 \bigskip
 \begin{center}
@@ -451,7 +466,7 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 \end{frame}
 
 
-\begin{frame}{what's behind the conjecture? 3}
+\begin{frame}{what's behind the conjecture? 2}
 
 \begin{center}
 \begin{tikzpicture}[scale=1.0]
@@ -463,24 +478,61 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Omega;\RR^3) \times L^{\pp'}(\Omega)
 
 \begin{itemize}
 \item the conjecture is that $s$ exists in $\cX = W^{1,\qq}(\Omega)$ for some $\qq>2$
-\item however, margin shape of glaciers is a hard modeling problem
+\item however, margin shape of glaciers is a hard modeling problem, which eventually departs the viscous theory
+\item I actually think the conjecture only makes sense with some SKE regularization
 \end{itemize}
+\end{frame}
+
+
+\begin{frame}{what's behind the conjecture? 3}
+
+\begin{center}
+\includegraphics[width=0.55\textwidth]{sdfixed}
+\end{center}
+
+\medskip
+\begin{theorem}[Jouvet \& Rappaz, 2011]
+over a \alert{fixed} Stokes domain $\Lambda \subset \RR^3$, the problem
+\begin{align*}
+- \nabla \cdot \left(2 \nu_0 |D\bu|^{\pp-2}\, D\bu\right) + \nabla p &= \rhoi \bg && \where{in $\Lambda$} \\
+\nabla \cdot \bu &= 0 \\
+\left(2 \nu(D\bu) D\bu - pI\right) \bn_s &= \bzero && \where{on $\Gamma_s \subset \partial\Lambda$} \\
+\bu  = \bzero \quad \text{or} \quad f(\bu,D\bu) &= 0 && \where{on $\Gamma_b \subset \partial\Lambda$}
+\end{align*}
+is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Lambda;\RR^3) \times L^{\pp'}(\Lambda)$
+\end{theorem}
 \end{frame}
 
 
 \begin{frame}{what's behind the conjecture? 4}
 
-\bigskip
-\begin{conjecture}[actual; B '24]
+shallow ice theory
+\end{frame}
+
+
+\begin{frame}{what's behind the conjecture? 5}
+
+uniqueness fails in steady state on arbitrary beds
+\end{frame}
+
+
+\begin{frame}{the precise conjecture}
+
+regularize
+
+\begin{conjecture}[B\footnote{{\scriptsize B. \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv:2408.06470}}}]
 For $s \in \cK = \{r \ge b\} \subset \cX = W^{1,\qq}(\Omega)$, for some $\qq>2$, let $\Lambda(s) = \{b<z<s\} \subset \RR^3$, and suppose $\bu$ solves Glen-Stokes over $\Lambda(s)$.  Define
 	$$\Phi(s) = - \bu|_s \cdot \bn_s,$$
 a map $\Phi:\cK \to \cX'$.  Then $\Phi$ is $\qq$-coercive: there is $\alpha>0$ so that
 	$$\left(\Phi(s) - \Phi(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq \qquad \text{for all } r,s\in\cK$$
 \end{conjecture}
+\end{frame}
 
-\bigskip
-\footnotesize
-\noindent \textbf{numerical evidence?}
+
+\begin{frame}{some numerical evidence}
+
+claiming
+	$$\left(\Phi(s) - \Phi(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq$$
 
 \begin{itemize}
 \item from surface elevation samples $r,s$, compute
@@ -521,22 +573,6 @@ find $s\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
 \end{itemize}
 
 \phantom{x}
-\end{frame}
-
-
-\begin{frame}{implementation \alert{\dots in progress}}
-
-\begin{itemize}
-\item extruded-mesh Stokes solver infrastructure: \href{https://github.com/bueler/stokes-extrude}{github.com/bueler/stokes-extrude}
-\item solver in Firedrake/PETSc:
-    \begin{itemize}
-    \item[$\circ$] VI-adapted, reduced-space Newton method
-    \item[$\circ$] for admissible surface elevation iterates $s_h^{(j)} \ge b_h$, \alert{each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$}
-    \end{itemize}
-\item accelerate using new FASCD nonlinear multigrid scheme (Bueler \& Farrell, 2024), using above solver as the smoother
-\end{itemize}
-
-\bigskip
 \end{frame}
 
 
@@ -597,6 +633,30 @@ B. \emph{Surface elevation errors in finite element {S}tokes models for glacier 
 \begin{frame}{references}
 
 {\footnotesize \input{references.tex}}
+\end{frame}
+
+
+\begin{frame}{extra slides}
+
+\begin{center}
+{\Huge extra slides}
+\end{center}
+\end{frame}
+
+
+\begin{frame}{implementation \alert{\dots in progress}}
+
+\begin{itemize}
+\item extruded-mesh Stokes solver infrastructure: \href{https://github.com/bueler/stokes-extrude}{github.com/bueler/stokes-extrude}
+\item solver in Firedrake/PETSc:
+    \begin{itemize}
+    \item[$\circ$] VI-adapted, reduced-space Newton method
+    \item[$\circ$] for admissible surface elevation iterates $s_h^{(j)} \ge b_h$, \alert{each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$}
+    \end{itemize}
+\item accelerate using new FASCD nonlinear multigrid scheme (Bueler \& Farrell, 2024), using above solver as the smoother
+\end{itemize}
+
+\bigskip
 \end{frame}
 
 \end{document}

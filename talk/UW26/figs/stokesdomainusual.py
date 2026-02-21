@@ -10,7 +10,7 @@ plt.rcParams["mathtext.fontset"] = "cm"
 fsize=18.0
 bigfsize=24.0
 
-def genbasicfig(xshift=0.0):
+def genbasicfig(xshift=0.0, icefrees=True):
     x = np.linspace(0.0,10.0,1001)
     # bed elevation
     b = 0.07*(x-3.0)**2 + 0.2*np.sin(2.0*x) - 0.1
@@ -21,10 +21,14 @@ def genbasicfig(xshift=0.0):
     firstshape = h0*(-0.2 + np.sqrt(np.maximum(0.0,1.0 - (x-5)**2/L**2)))
     thk = np.maximum(0.0, firstshape)
     # surface
+    xx = x + xshift
     s = b + thk
     offset = 0.1
-    plt.plot(x + xshift, s + offset, 'k', lw=3.0)
-    return x + xshift, s, b
+    if icefrees:
+        plt.plot(xx, s + offset, 'k', lw=3.0)
+    else:
+        plt.plot(xx[thk > 0], s[thk > 0] + 0.1 * offset, 'k', lw=3.0)
+    return xx, s, b
 
 def drawclimate(x,s):
     plt.text(x[10], s[10]+2.7, r'$a(t,x)$', fontsize=bigfsize, color='k')
@@ -57,3 +61,21 @@ yR = min(b) - 0.5
 plt.axis([0.0,10.0,yR,4.5])
 plt.axis('off')
 writeout('sdusual.png')
+
+# fixed-domain figure
+plt.figure(figsize=(10,5.5))
+x, s, b = genbasicfig(icefrees=False)
+plt.text(x[550] - 1.0, b[600] + 0.4 * s[600], r'$\Lambda$',
+         fontsize=bigfsize, color='k')
+#plt.text(x[550] - 2.0, b[600] + 0.4 * s[600], r'$\mathbf{u}(t,x,z),\,p(t,x,z)$',
+#         fontsize=bigfsize, color='k')
+#drawclimate(x,s)
+# mark top surface
+plt.text(x[160], s[300] + 0.7, r'$s$ given', fontsize=fsize, color='k')
+# mark bottom surface
+plt.text(x[650], b[650] - 0.5, r'$b$ given', fontsize=fsize, color='k')
+# show \Omega
+yR = min(b) - 0.5
+plt.axis([0.0,10.0,yR,4.5])
+plt.axis('off')
+writeout('sdfixed.png')
