@@ -54,6 +54,7 @@
 
 \newtheorem*{conjecture}{Conjecture}
 \newtheorem*{cproblem}{continuum problem}
+\newtheorem*{smodel}{standard model}
 
 \newcommand{\bg}{\mathbf{g}}
 \newcommand{\bn}{\mathbf{n}}
@@ -205,55 +206,59 @@
 \end{frame}
 
 
-\begin{frame}{what is true everywhere in \only<1>{$\Omega$}\only<2>{$[0,T]\times\Omega$}?}
+\begin{frame}{map-plane notation}
 
-\hfill \includegraphics<1>[height=38mm]{mapplane} \includegraphics<2>[height=38mm]{xtcrop}
-
-\vspace{-38mm}
-
-\begin{minipage}[t]{60mm}
-{\small
 \begin{itemize}
 \item $\Omega \subset \RR^2$ fixed simulation domain
 \item $x = (x_1,x_2) \in \Omega$
 \item $a(t,x)$ surface mass balance (SMB)
 \item $b(x)$ bed elevation
-\item \alert{$s(t,x)$ solution surface elevation}
-\item $\bn_s = (- \grad s,1)$ surface-normal vector
-\item \alert{$\bu|_s(t,x)$} surface value of \alert{solution ice velocity}, extended by zero to bare land
-\end{itemize}
-}
-\end{minipage}
+\item $s(t,x)$ surface elevation solution
+\item $s$ must be \emph{admissible}:  \, $s\ge b$
 
-\begin{itemize}
-\item nonlinear complementarity problem (NCP) in $[0,T] \times \Omega$:
-\begin{align*}
-s - b &\ge 0 &&\phantom{x} \\
-\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
-(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0
-\end{align*}
+\vspace{-35mm}
+\hfill \includegraphics[height=35mm]{mapplane}
+
+\item $\bn_s = (- \grad s,1)$ surface-normal vector
+\item $\bu|_s(t,x)$ surface value of ice velocity solution, extended by zero to bare land
 \end{itemize}
 \end{frame}
 
 
 \begin{frame}{the free-boundary problem for glacier surface elevation}
 
+\begin{columns}
+\begin{column}{0.75\textwidth}
+
 \begin{itemize}
 \item surface kinematical equation (SKE) in glaciology:
    $$\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0$$
-\item the time-dependent, nonlinear complementarity problem (NCP) gives the \emph{free-boundary} meaning of the SKE:
+\item a time-dependent, nonlinear complementarity problem (NCP) gives the \emph{free-boundary} meaning of the SKE:
+
+\vspace{-6mm}
+
 \begin{align*}
 s - b &\ge 0 &&\phantom{x} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \\
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0
 \end{align*}
 
+\vspace{-2mm}
     \begin{itemize}
-    \item[$\circ$] this applies everywhere in $[0,T]\times \Omega$
-    \item[$\circ$] it applies regardless of dynamical model within the ice
-    \item[$\circ$] this appears first in (Calvo et al 2003), but only for shallow ice
+    \item[$\circ$] applies everywhere in $[0,T]\times \Omega$
+    \item[$\circ$] applies for any ice dynamics model
+    \item[$\circ$] appears first in (Calvo et al 2003), but only for shallow ice
     \end{itemize}
 \end{itemize}
+
+\end{column}
+\begin{column}{0.30\textwidth}
+\includegraphics[width=\textwidth]{mapplane}
+
+\vspace{10mm}
+\hfill \includegraphics[width=0.9\textwidth]{xtcrop}
+\end{column}
+\end{columns}
 \end{frame}
 
 
@@ -266,7 +271,7 @@ s - b &\ge 0 &&\phantom{x} \\
 \begin{itemize}
 \item fix $t$ and define:
     $$\Lambda(s) = \{(x,z)\,:\,b(x)<z<s(t,x)\} \qquad \subset \RR^3$$
-\item<2-3> Glen-Stokes equations in $\Lambda(s)$ with $\pp = (\nn + 1)/\nn \approx 4/3$:
+\item Glen-Stokes equations in $\Lambda(s)$ with $\pp = (\nn + 1)/\nn \approx 4/3$:
 \begin{align*}
 - \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg  \\
 \nabla \cdot \bu &= 0  \\
@@ -274,7 +279,7 @@ s - b &\ge 0 &&\phantom{x} \\
 \end{align*}
 
 \vspace{-1mm}
-\item<3> boundary conditions:
+\item boundary conditions:
 \begin{align*}
 &\left(2 \nu(D\bu) D\bu - pI\right) \bn_s = \bzero   && \where{on $\Gamma_s \subset \partial\Lambda(s)$} \\
 &\bu  = \bzero \text{ } \,\text{or } \,f(\bu,D\bu)=0 && \where{on $\Gamma_b \subset \partial\Lambda(s)$}
@@ -283,7 +288,7 @@ s - b &\ge 0 &&\phantom{x} \\
 \end{frame}
 
 
-\begin{frame}{\underline{the} standard model for glacier evolution}
+\begin{frame}{the standard model for glacier evolution}
 
 \begin{align*}
 s - b &\ge 0 & &\where{in $\Omega$} \\
@@ -296,24 +301,34 @@ s - b &\ge 0 & &\where{in $\Omega$} \\
 \end{align*}
 
 \bigskip
-\newtheorem*{smodel}{standard model}
 
-\begin{smodel}
-an NCP in $[0,T]\times \Omega$, for fixed domain $\Omega \subset \RR^2$, coupled to Glen-Stokes within the ice, in a time-dependent domain $\Lambda(s) \subset \RR^3$
+\only<1>{
+\begin{smodel}[a suggested name]
+an \alert{NCP} in $[0,T]\times \Omega$, for fixed domain $\Omega \subset \RR^2$, \alert{coupled to Glen-Stokes within the ice}, in a time-dependent domain $\Lambda(s) \subset \RR^3$
 \end{smodel}
+}
+\only<2>{
+\begin{smodel}[as a dynamical system]
+an inequality-constrained \alert{differential algebraic equations} (DAE) system in $\infty$ dimensions
+\end{smodel}
+}
 \end{frame}
 
 
-\begin{frame}{the standard model wants ``fully-implicit'' time-stepping}
+\begin{frame}{the standard model wants implicit time-stepping}
 
 \begin{center}
-\includegraphics[width=0.6\textwidth]{implicitstep}
+\includegraphics[width=0.5\textwidth]{implicitstep}
 \end{center}
 
-\bigskip
-\begin{block}{standard model as a dynamical system}
-an inequality-constrained \textbf{differential algebraic system} in $\infty$ dimensions
-\end{block}
+\begin{itemize}
+\item because DAE systems are infinitely stiff, implicit time discretization is expected
+    \begin{itemize}
+    \item[$\circ$] stiff decay $n=1,2,3$-order BDF schemes, or Radau schemes
+    \end{itemize}
+\item for example, consider backward Euler on SKE $\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0$:
+    $$\frac{s^k - s^{k-1}}{\Delta t} - \bu|_{s^k} \cdot \bn_{s^k} - \frac{1}{\Delta t}\int_{t_{k-1}}^{t_k} a(t)\,dt = 0$$
+\end{itemize}
 \end{frame}
 
 
@@ -326,30 +341,66 @@ an inequality-constrained \textbf{differential algebraic system} in $\infty$ dim
 }
 
 
-\section{well-posedness?}
-
-\begin{frame}{implicit time-step problem is a variational inequality}
+\begin{frame}{implicit time-step problem is a variational inequality (VI)}
 
 \begin{itemize}
-\item weak form of time-discretized NCP; details found in preprint\footnote{Bueler (2024). \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv 2408.06470}}
-\item $\cX$ denotes Banach space of elevation functions on $\Omega$; $b\in\cX$
+\item VI = weak form of a NCP
+\item let $\cX$ denote a Banach space of elevation functions on $\Omega$
+\item $b\in\cX$
 \item for $\Delta t > 0$ define:
 
-\vspace{-7mm}
+\vspace{-5mm}
 \begin{align*}
 \cK &= \{r \in \cX\,:\, r \ge b \,\text{ a.e. } \Omega\} \\
-\ell^k(x) &= s(t_{k-1},x) + \int_{t_{k-1}}^{t_k} a(t,x)\,dt \\
-F(s)[q] &= \int_\Omega (s - \Delta t\,\bu|_s \cdot \bn_s) q 
+\ell^k(x) &= s^{k-1}(x) + \int_{t_{k-1}}^{t_k} a(t,x)\,dt \\
+F(s)[q] &= \int_\Omega (s - \Delta t\,\bu|_s \cdot \bn_s) q  \hspace{15mm} \text{{\scriptsize (note \, $F:\cK\to\cX'$)}}
 \end{align*}
 \end{itemize}
 
 \medskip
-\begin{definition}
-the \emph{backward Euler time-step problem}, for $t_k \in [0,T]$, is to find the surface elevation $s \approx s(t_k,x) \in \cK$ solving the variational inequality (VI)
-$$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
-\end{definition}
+\only<1>{
+\begin{block}{definition\footnote{{\scriptsize B. \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv:2408.06470}}}}
+the weak form \emph{backward Euler time-step problem}, for $t_k \in [0,T]$, is to find the surface elevation $s^k \approx s(t_k,x) \in \cK$ solving the VI
+$$F(s^k)[r-s^k] \ge \ell^k[r-s^k] \quad \text{for all } r \in \cK$$
+\end{block}
+}
+\only<2>{
+\begin{block}{the main idea}
+the weak form \emph{backward Euler time-step problem}, for $t_k \in [0,T]$, is to figure out the map-plane domain covered by the glacier, and simultaneously to compute the updated surface elevation $s^k$
+\end{block}
 
-\bigskip
+\vspace{5mm}
+}
+
+\medskip
+\end{frame}
+
+
+\section{well-posedness?}
+
+\begin{frame}{but maybe you came for the finite elements?}
+
+\begin{itemize}
+\item why would we care about well-posedness?
+\item recall the canonical FE story about convergence:
+{\small
+\begin{align*}
+-\grad^2 \alert{u} &= f \\
+&\downarrow & &\text{\emph{to weak form}} \\
+a(\alert{u},v) &= \ell_f(v) \\
+&\downarrow & &\text{\emph{finite elements}} \\
+a(u_h,v_h) &= \ell_f(v_h) \\
+&\downarrow & &\text{\emph{Cea's lemma}} \\
+\|u_h-\alert{u}\| &\le C \inf_{v_h} \|v_h-\alert{u}\| \\
+&\downarrow & &\text{\emph{interpolation theory}} \\
+\|u_h-\alert{u}\| &\le C h^q \|\alert{u}\|_{H^r}
+\end{align*}
+}
+\item well-posedness for $\alert{u}$ must be either proven, conjectured, or politely ignored, if you want to tell this story for glacier surface elevations
+    \begin{itemize}
+    \item[$\circ$] I am choosing ``conjectured''
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 
@@ -357,7 +408,7 @@ $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
 
 \hfill \includegraphics[width=0.35\textwidth]{mapplane}
 
-\begin{conjecture}[B '24]
+\begin{conjecture}
 for some $\qq>2$, with $\cX = W^{1,\qq}(\Omega)$, and defining the admissible surface elevation subset
     $$\cK = \{r \ge b\} \subset \cX,$$
 the backward Euler time-step VI problem,
