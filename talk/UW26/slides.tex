@@ -564,13 +564,13 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
 
 \begin{frame}{summary}
 \begin{itemize}
-\item implicit time-stepping makes sense for geometry-evolving, Stokes models for glaciers
+\item implicit time-stepping is appropriate for geometry-evolving, Stokes models for glaciers
     \begin{itemize}
     \item[$\circ$] both a differential-algebraic system and a free-boundary problem
     \end{itemize}
-\item \textbf{conjecture.} for some $\qq>2$, the surface motion $-\bu|_s\cdot \bn_s$ from the Glen-Stokes problem is $\qq$-coercive over admissible $s\in W^{1,\qq}(\Omega)$
-\item \textbf{theorem.} supposing $\qq$-coercivity, each continuous-space, backward Euler time step problem is well-posed
-\item \textbf{theorem.} supposing well-posedness, the surface elevation FE error is bounded by a sum of 3 terms:
+\item \textbf{conjecture.} a regularization of the surface motion $-\bu|_s\cdot \bn_s$, for $\bu$ solving the Stokes problem, is coercive over admissible $s\in W^{1,\qq}(\Omega)$
+\item \textbf{theorem.} supposing this coercivity, each continuous-space, backward Euler time step problem is well-posed
+\item \textbf{theorem.} assuming well-posedness, the surface elevation FE error is bounded by a sum of 3 terms:
     \begin{enumerate}
     \item discretizing the bed elevation ($b_h$ versus $b$)
     \item numerically solving the Stokes equations ($\bu_h$ versus $\bu$)
@@ -586,7 +586,7 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
 \end{column}
 \begin{column}{0.78\textwidth}
 {\small
-E.~Bueler (2024). \emph{Surface elevation errors in finite element {S}tokes models for glacier evolution}, \surl{https://arxiv.org/abs/2408.06470}{arxiv:2408.06470}
+B. \emph{Surface elevation errors in finite element {S}tokes models for glacier evolution}, \surl{https://arxiv.org/abs/2408.06470}{arxiv:2408.06470}
 }
 \end{column}
 \end{columns}
