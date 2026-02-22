@@ -137,7 +137,6 @@
 
 
 \begin{frame}{Outline}
-  \setbeamertemplate{section in toc}[sections numbered]
   \tableofcontents[hideallsubsections]
 \end{frame}
 
@@ -507,18 +506,44 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Lambda;\RR^3) \times L^{\pp'}(\Lambd
 \begin{frame}{what's behind the conjecture? 4}
 
 shallow ice theory
+
+(Jouvet \& Bueler, 2012)
 \end{frame}
 
 
 \begin{frame}{what's behind the conjecture? 5}
 
-uniqueness fails in steady state on arbitrary beds
+\begin{itemize}
+\item note the ``for sufficiently small $\Delta t$'' hypothesis
+\item the long time-step limit $\Delta t\to\infty$ is steady state
+\item in steady state the SKE is
+	$$- \bu|_s \cdot \bn_s - a = 0$$
+
+    \begin{itemize}
+    \item[$\circ$] the coercivity of the map $s\mapsto \bu|_s \cdot \bn_s$ must do all the work if well-posedness is to hold
+    \end{itemize}
+\item in fact, solution \alert{uniqueness can fail} in steady state
+    \begin{itemize}
+    \item[$\circ$] in any glacier model, even for elevation-independent climates
+    \item[$\circ$] specifically, for $a=0$ (identically), the two surfaces $s_1 \ne s_2$ below both solve the steady state problem on the same bed $b$:
+
+\bigskip
+\begin{center}
+\includegraphics[width=0.35\textwidth]{filled} \qquad \includegraphics[width=0.35\textwidth]{icefree}
+\end{center}
+
+\medskip
+    \item[$\circ$] long steps $\Delta t\to\infty$ can therefore be hard to solve?
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 
 \begin{frame}{the precise conjecture}
 
 regularize
+
+\setcounter{footnote}{0}
 
 \begin{conjecture}[B\footnote{{\scriptsize B. \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv:2408.06470}}}]
 For $s \in \cK = \{r \ge b\} \subset \cX = W^{1,\qq}(\Omega)$, for some $\qq>2$, let $\Lambda(s) = \{b<z<s\} \subset \RR^3$, and suppose $\bu$ solves Glen-Stokes over $\Lambda(s)$.  Define
@@ -547,25 +572,25 @@ numerical ratios $\displaystyle \frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq}$
 
 \section{finite element approximation}
 
-\begin{frame}{FE method}
+\begin{frame}{finite element method}
 
 \begin{center}
 \includegraphics[width=0.7\textwidth]{extruded}
 \end{center}
 
-\begin{cproblem}
-find $s\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
-   $$F(s)[r-s] \ge \ell^k[r-s] \quad \text{for all } r \in \cK$$
-\end{cproblem}
+\begin{block}{FE problem}
+find $s^k\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
+   $$F(s^k)[r-s^k] \ge \ell^k[r-s^k] \quad \text{for all } r \in \cK$$
+\end{block}
 
 \begin{itemize}
 \item proposed FE spaces:
    \begin{itemize}
-   \item[$\circ$] $b_h,s_h \in P_1$
-   \item[$\circ$] $\bu_h,p_h \in P_2 \times P_1$, on an extruded mesh \hfill {\scriptsize $\leftarrow$ one possibility}
+   \item[$\circ$] $b_h,s_h^k \in P_1$ \hfill {\scriptsize $\leftarrow$ so $\Lambda(s_h^k)$ is polygonal}
+   \item[$\circ$] $\bu_h^k,p_h^k \in P_2 \times P_1$, on an extruded mesh \hfill {\scriptsize $\leftarrow$ one possibility}
    \end{itemize}
-\item FE method for $s_h\in\cK_h = \{r_h \ge b_h\}$:
-   $$F_h(s_h)[r_h-s_h] \ge \ell^k[r_h-s_h] \quad \text{for all } r_h \in \cK_h$$
+\item FE method for $s_h^k\in\cK_h = \{r_h \ge b_h\}$:
+   $$F_h(s_h^k)[r_h-s_h^k] \ge \ell^k[r_h-s_h^k] \quad \text{for all } r_h \in \cK_h$$
 
    \begin{itemize}
    \item[$\circ$] mostly conforming, especially if one pretends $b_h=b$
@@ -580,13 +605,15 @@ find $s\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
 
 \noindent \includegraphics[width=0.6\textwidth]{extruded} \hfill \includegraphics[width=0.23\textwidth]{mapplane}
 
+\setcounter{footnote}{0}
+
 \medskip
-\begin{theorem}[B '24]
-Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact active set, and $\Pi_h$ the interpolation into $\cK_h = \{r_h \ge b_h\}$.  Then the FE error in the new ($t_k$) surface elevation is bounded by 3 terms:
+\begin{theorem}[B\footnote{{\scriptsize B. \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv:2408.06470}}}]
+Assume well-posedness.  Let $\Omega_A(s)$ be  the exact active set, and $\Pi_h$ be interpolation/truncation into $\cK_h = \{r_h \ge b_h\}$.  Then the FE error in the new surface elevation is bounded by 3 terms:
 \begin{align*}
-\|s_h-s\|_{W^{1,\qq}}^\qq &\le \, \frac{c_1}{\Delta t} \int_{\Omega_A(s)} (b - \ell^k) (b_h - b) \\
-   &\quad\, + C(s_h) \big\|\bu_h - \bu\big\|_{W^{1,\pp}} \\
-   &\quad\, + c_0 \|\Pi_h(s) - s\|_{W^{1,\qq}}^{\qq'}
+\|s_h-s\|_{W^{1,\qq}}^\qq &\le \, \frac{c_0}{\Delta t} \int_{\Omega_A(s)} (b - \ell^k) (b_h - b) \\
+   &\quad\, + C_1(s_h) \big\|\bu_h - \bu\big\|_{W^{1,\pp}} \\
+   &\quad\, + c_2 \|\Pi_h(s) - s\|_{W^{1,\qq}}^{\qq'}
 \end{align*}
 \end{theorem}
 
@@ -603,6 +630,7 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
 \item implicit time-stepping is appropriate for geometry-evolving, Stokes models for glaciers
     \begin{itemize}
     \item[$\circ$] both a differential-algebraic system and a free-boundary problem
+    \item[$\circ$] scaling argument suggests eventual dominance (B, 2023)
     \end{itemize}
 \item \textbf{conjecture.} a regularization of the surface motion $-\bu|_s\cdot \bn_s$, for $\bu$ solving the Stokes problem, is coercive over admissible $s\in W^{1,\qq}(\Omega)$
 \item \textbf{theorem.} supposing this coercivity, each continuous-space, backward Euler time step problem is well-posed
@@ -614,7 +642,7 @@ Make assumptions sufficient for well-posedness.  Let $\Omega_A(s)$ be  the exact
     \end{enumerate}
 \end{itemize}
 
-\vspace{-1mm}
+\vspace{-3mm}
 \noindent \hrulefill
 \begin{columns}
 \begin{column}{0.2\textwidth}
@@ -644,19 +672,33 @@ B. \emph{Surface elevation errors in finite element {S}tokes models for glacier 
 \end{frame}
 
 
-\begin{frame}{implementation \alert{\dots in progress}}
+\begin{frame}{implementation \alert{\dots in pieces but in progress}}
 
-\begin{itemize}
-\item extruded-mesh Stokes solver infrastructure: \href{https://github.com/bueler/stokes-extrude}{github.com/bueler/stokes-extrude}
-\item solver in Firedrake/PETSc:
+\noindent \underline{agenda:}
+\begin{enumerate}
+\item extruded-mesh Stokes solver infrastructure
+
+\hfill \href{https://github.com/bueler/stokes-extrude}{github.com/bueler/stokes-extrude}
+\item solver in Firedrake and PETSc using VI-adapted, reduced-space Newton method
     \begin{itemize}
-    \item[$\circ$] VI-adapted, reduced-space Newton method
-    \item[$\circ$] for admissible surface elevation iterates $s_h^{(j)} \ge b_h$, \alert{each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$}
+    \item[$\circ$] extruded mesh, algebraic multigrid Stokes solver (Isaac et al, 2015)
+    \item[$\circ$] free-surface stabilization algorithm (L{\"o}fgren et al, 2022) generates first Newton iterate for surface
+    \item[$\circ$] for admissible surface elevation iterates $s_h^{(j)} \ge b_h$, each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$
     \end{itemize}
-\item accelerate using new FASCD nonlinear multigrid scheme (Bueler \& Farrell, 2024), using above solver as the smoother
-\end{itemize}
+
+\hfill \href{https://github.com/bueler/stokes-implicit}{github.com/bueler/stokes-implicit}
+\item accelerate using full-approximation-scheme nonlinear multigrid for VIs (Bueler \& Farrell, 2024), using above solver as the smoother
+
+\hfill \href{https://bitbucket.org/pefarrell/fascd}{bitbucket.org/pefarrell/fascd}
+\end{enumerate}
 
 \bigskip
+\end{frame}
+
+
+\begin{frame}{more references}
+
+{\footnotesize \input{extraref.tex}}
 \end{frame}
 
 \end{document}
