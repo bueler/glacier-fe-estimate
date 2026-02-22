@@ -152,7 +152,7 @@
 \vspace{-10mm}
 
 \begin{center}
-\includegraphics[height=0.7\textheight]{sdusual}
+\includegraphics[height=0.6\textheight]{sdusual}
 \end{center}
 
 \vspace{-7mm}
@@ -174,7 +174,7 @@
 
 \begin{columns}
 \begin{column}{0.6\textwidth}
-\includegraphics[width=1.1\textwidth]{mapplane}
+\includegraphics[width=0.9\textwidth]{mapplane}
 \end{column}
 \begin{column}{0.4\textwidth}
 {\small
@@ -190,7 +190,7 @@
 
 \begin{frame}{the space-time view}
 \begin{center}
-\includegraphics[height=0.8\textheight]{xtcrop}
+\includegraphics[height=0.7\textheight]{xtcrop}
 \end{center}
 \end{frame}
 
@@ -541,7 +541,7 @@ shallow ice theory
 
 \begin{frame}{the precise conjecture}
 
-regularize
+FIXME regularize
 
 \setcounter{footnote}{0}
 
@@ -556,17 +556,40 @@ a map $\Phi:\cK \to \cX'$.  Then $\Phi$ is $\qq$-coercive: there is $\alpha>0$ s
 
 \begin{frame}{some numerical evidence}
 
-claiming
-	$$\left(\Phi(s) - \Phi(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq$$
-
+\begin{columns}
+\begin{column}{0.59\textwidth}
+{\small
 \begin{itemize}
-\item from surface elevation samples $r,s$, compute
+\item coercivity if $\exists \alpha>0$ s.t.
+	$$\left(\Phi(s) - \Phi(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq$$
+\item \alert{numerical experiment}:
+    \begin{itemize}
+    \item[$\circ$] 2 bed elevations $b$ (\emph{upper right})
+    \item[$\circ$] sample surface elevation pairs $r,s$, from time-dependent simulation
+    \item[$\circ$] compute ratios
 
-numerical ratios $\displaystyle \frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq}$
+$$\frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq} \in \RR$$
+
+    \item[$\circ$] show raw ratios as histograms
+    \item[$\circ$] coercivity = (ratios are bounded below by a positive constant)
+    \end{itemize}
+\item regularization \emph{is} needed (\emph{middle right)}
+\item $\eps=0.1$ regularization makes coercivity credible (\emph{lower right})
 \end{itemize}
+}
+\end{column}
+\begin{column}{0.50\textwidth}
+\includegraphics[width=\textwidth]{profiles}
 
-\vspace{-22mm}
-\hfill FIXME %\includegraphics[width=0.3\textwidth]{smoothratios} \qquad
+\vspace{10mm}
+
+\includegraphics[width=\textwidth]{badhist}
+
+\vspace{10mm}
+
+\includegraphics[width=\textwidth]{reghist}
+\end{column}
+\end{columns}
 \end{frame}
 
 
@@ -578,22 +601,22 @@ numerical ratios $\displaystyle \frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq}$
 \includegraphics[width=0.7\textwidth]{extruded}
 \end{center}
 
-\begin{block}{FE problem}
-find $s^k\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
-   $$F(s^k)[r-s^k] \ge \ell^k[r-s^k] \quad \text{for all } r \in \cK$$
-\end{block}
 
 \begin{itemize}
+\item spatially-continuum problem is to find $s^k\in\cK = \{r \ge b\}$ solving backward-Euler VI: \quad $F(s^k)[r-s^k] \ge \ell^k[r-s^k] \quad \text{for all } r \in \cK$
 \item proposed FE spaces:
    \begin{itemize}
-   \item[$\circ$] $b_h,s_h^k \in P_1$ \hfill {\scriptsize $\leftarrow$ so $\Lambda(s_h^k)$ is polygonal}
-   \item[$\circ$] $\bu_h^k,p_h^k \in P_2 \times P_1$, on an extruded mesh \hfill {\scriptsize $\leftarrow$ one possibility}
+   \item[$\circ$] $b_h,s_h^k \in P_1$ on mesh over $\Omega$ \hfill {\tiny $\leftarrow$ so $\Lambda(s_h^k)$ is polygonal}
+   \item[$\circ$] $\bu_h^k,p_h^k \in Q_2 \times Q_1$ on an extruded $\Lambda(s_h^k)$ mesh \hfill {\tiny $\leftarrow$ Taylor-Hood $=$ one possibility}
    \end{itemize}
-\item FE method for $s_h^k\in\cK_h = \{r_h \ge b_h\}$:
+
+\begin{block}{FE method}
+find $s_h^k\in\cK_h = \{r_h \ge b_h\}$ so that
    $$F_h(s_h^k)[r_h-s_h^k] \ge \ell^k[r_h-s_h^k] \quad \text{for all } r_h \in \cK_h$$
+\end{block}
 
    \begin{itemize}
-   \item[$\circ$] mostly conforming, especially if one pretends $b_h=b$
+   \item[$\circ$] conforming if one pretends $b_h=b$
    \end{itemize}
 \end{itemize}
 
@@ -601,7 +624,7 @@ find $s^k\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
 \end{frame}
 
 
-\begin{frame}{error theorem for a backward Euler step}
+\begin{frame}{\emph{a priori} error theorem, for a backward Euler step}
 
 \noindent \includegraphics[width=0.6\textwidth]{extruded} \hfill \includegraphics[width=0.23\textwidth]{mapplane}
 
@@ -609,15 +632,20 @@ find $s^k\in\cK = \{r \ge b\}$ which solves the backward-Euler step VI:
 
 \medskip
 \begin{theorem}[B\footnote{{\scriptsize B. \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv:2408.06470}}}]
-Assume well-posedness.  Let $\Omega_A(s)$ be  the exact active set, and $\Pi_h$ be interpolation/truncation into $\cK_h = \{r_h \ge b_h\}$.  Then the FE error in the new surface elevation is bounded by 3 terms:
+Assume well-posedness in $\cX = W^{1,\qq}(\Omega)$.  Let $\Omega_A(s^k)$ be  the exact active set.  Let $\Pi_h$ be interpolation into $\cK_h = \{r_h \ge b_h\}$.  Then the FE error in the new surface elevation is bounded by 3 terms:
 \begin{align*}
-\|s_h-s\|_{W^{1,\qq}}^\qq &\le \, \frac{c_0}{\Delta t} \int_{\Omega_A(s)} (b - \ell^k) (b_h - b) \\
-   &\quad\, + C_1(s_h) \big\|\bu_h - \bu\big\|_{W^{1,\pp}} \\
-   &\quad\, + c_2 \|\Pi_h(s) - s\|_{W^{1,\qq}}^{\qq'}
+\|s_h^k-s^k\|_{W^{1,\qq}}^\qq &\le \, \frac{c_0}{\Delta t} \int_{\Omega_A(s^k)} (b - \ell^k) (b_h - b) \\
+   &\quad\, + C_1(s_h^k) \big\|\bu_h^k - \bu^k\big\|_{W^{1,\pp}} \\
+   &\quad\, + c_2 \|\Pi_h(s^k) - s^k\|_{W^{1,\qq}}^{\qq'}
 \end{align*}
+
+\vspace{-2mm}
 \end{theorem}
 
+\vspace{-2mm}
 \noindent \emph{Proof.} Make the Falk (1974) technique for VIs fully nonlinear. \qed
+
+\bigskip
 \end{frame}
 
 
@@ -633,7 +661,7 @@ Assume well-posedness.  Let $\Omega_A(s)$ be  the exact active set, and $\Pi_h$ 
     \item[$\circ$] scaling argument suggests eventual dominance (B, 2023)
     \end{itemize}
 \item \textbf{conjecture.} a regularization of the surface motion $-\bu|_s\cdot \bn_s$, for $\bu$ solving the Stokes problem, is coercive over admissible $s\in W^{1,\qq}(\Omega)$
-\item \textbf{theorem.} supposing this coercivity, each continuous-space, backward Euler time step problem is well-posed
+\item \textbf{theorem.} supposing such coercivity, each continuous-space, backward Euler time step problem is well-posed
 \item \textbf{theorem.} assuming well-posedness, the surface elevation FE error is bounded by a sum of 3 terms:
     \begin{enumerate}
     \item discretizing the bed elevation ($b_h$ versus $b$)
@@ -674,19 +702,18 @@ B. \emph{Surface elevation errors in finite element {S}tokes models for glacier 
 
 \begin{frame}{implementation \alert{\dots in pieces but in progress}}
 
-\noindent \underline{agenda:}
 \begin{enumerate}
 \item extruded-mesh Stokes solver infrastructure
 
 \hfill \href{https://github.com/bueler/stokes-extrude}{github.com/bueler/stokes-extrude}
-\item solver in Firedrake and PETSc using VI-adapted, reduced-space Newton method
+\item solver in Firedrake and PETSc using a VI-adapted reduced-space Newton method
     \begin{itemize}
     \item[$\circ$] extruded mesh, algebraic multigrid Stokes solver (Isaac et al, 2015)
     \item[$\circ$] free-surface stabilization algorithm (L{\"o}fgren et al, 2022) generates first Newton iterate for surface
     \item[$\circ$] for admissible surface elevation iterates $s_h^{(j)} \ge b_h$, each residual evaluation $F(s_h^{(j)})$ requires solving the Glen-Stokes model on $\Lambda(s_h^{(j)})$ to get $\bu_h^{(j)}$
     \end{itemize}
 
-\hfill \href{https://github.com/bueler/stokes-implicit}{github.com/bueler/stokes-implicit}
+\hfill \href{https://github.com/bueler/stokes-implicit}{github.com/bueler/stokes-implicit} (\emph{very rough})
 \item accelerate using full-approximation-scheme nonlinear multigrid for VIs (Bueler \& Farrell, 2024), using above solver as the smoother
 
 \hfill \href{https://bitbucket.org/pefarrell/fascd}{bitbucket.org/pefarrell/fascd}
