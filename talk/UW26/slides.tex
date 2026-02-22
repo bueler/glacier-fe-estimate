@@ -280,7 +280,7 @@ s - b &\ge 0 &&\phantom{x} \\
 \begin{itemize}
 \item fix $t$ and define:
     $$\alert{\Lambda(s) = \{(x,z)\,:\,b(x)<z<s(t,x)\}} \qquad \subset \RR^3$$
-\item Glen-Stokes equations \alert{in $\Lambda(s)$} with $\pp = (\nn + 1)/\nn \approx 4/3$:
+\item isothermal Glen-Stokes equations \alert{in $\Lambda(s)$} with $\pp = (\nn + 1)/\nn \approx 4/3$:
 \begin{align*}
 - \nabla \cdot \left(2 \nu(D\bu)\, D\bu\right) + \nabla p &= \rhoi \bg  \\
 \nabla \cdot \bu &= 0  \\
@@ -505,23 +505,38 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Lambda;\RR^3) \times L^{\pp'}(\Lambd
 
 \begin{frame}{what's behind the conjecture? 4}
 
-shallow ice theory
+\begin{itemize}
+\item under a shallow limit $\eps = [\text{thickness}]/[\text{width}] \to 0$ the non-sliding Stokes $+$ SKE model becomes the \emph{shallow ice approximation} (SIA)
 
-(Jouvet \& Bueler, 2012)
+\medskip
+\begin{center}
+\includegraphics[width=0.8\textwidth,height=0.1\textheight]{sdfixed}
+\end{center}
+
+\medskip
+
+\item in the $\eps\to 0$ limit the surface motion trivializes to differential operators on $s$ and thickness $H=s-b$:
+    $$\bu|_s \cdot n_s = \gamma H^{\nn+1} |\grad s|^{\nn-1} + \Div \left(\Gamma H^{\nn+1} |\grad s|^{\nn-1} \grad s\right) \hspace{6mm} {\text{\tiny $\leftarrow$ \emph{isothermal case}}}$$
+
+\medskip
+\item and thus in that SIA limit, where the problem becomes a standard, \emph{but very nonlinear}, VI, we have the only known well-posedness results for glacier geometry:
+    \begin{itemize}
+    \item[$\circ$] Calvo et al (2003), Piersanti \& Temam (2023): if the bed is flat then time-dependent surface elevation problem is well-posed
+    \item[$\circ$] Jouvet \& B (2012): if the bed is general then solutions exist to the steady problem (\emph{but uniqueness was an open problem \dots})
+    \end{itemize}
+\end{itemize}
 \end{frame}
 
 
 \begin{frame}{what's behind the conjecture? 5}
 
 \begin{itemize}
-\item note the ``for sufficiently small $\Delta t$'' hypothesis
-\item the long time-step limit $\Delta t\to\infty$ is steady state
+\item there was a ``for sufficiently small $\Delta t$'' hypothesis in the conjecture
+\item note that the long time-step limit $\Delta t\to\infty$ \emph{is steady state}
 \item in steady state the SKE is
 	$$- \bu|_s \cdot \bn_s - a = 0$$
 
-    \begin{itemize}
-    \item[$\circ$] the coercivity of the map $s\mapsto \bu|_s \cdot \bn_s$ must do all the work if well-posedness is to hold
-    \end{itemize}
+\item thus the coercivity of the map $s\mapsto \bu|_s \cdot \bn_s$ must do all the work if well-posedness is to hold
 \item in fact, solution \alert{uniqueness can fail} in steady state
     \begin{itemize}
     \item[$\circ$] in any glacier model, even for elevation-independent climates
@@ -533,42 +548,51 @@ shallow ice theory
 \end{center}
 
 \medskip
-    \item[$\circ$] long steps $\Delta t\to\infty$ can therefore be hard to solve?
+    \item[$\circ$] long steps $\Delta t\to\infty$ should therefore be hard to solve?
     \end{itemize}
 \end{itemize}
 \end{frame}
 
 
-\begin{frame}{the precise conjecture}
+\begin{frame}{the actual, precise conjecture}
 
-FIXME regularize
+\begin{itemize}
+\item the previous conjecture is what I think is true, but a narrower conjecture suffices to set us up for a finite element error theorem
+\item recall the VI nonlinear operator is $F(s)[q] = \int_\Omega (s - \Delta t\,\bu|_s \cdot \bn_s) q$
+\item the important part is the surface motion $\Phi(s) = - \bu|_s \cdot \bn_s$
+\item does it respond \emph{coercively} to changes in $s$?
+\end{itemize}
 
 \setcounter{footnote}{0}
 
+{\small
 \begin{conjecture}[B\footnote{{\scriptsize B. \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv:2408.06470}}}]
-For $s \in \cK = \{r \ge b\} \subset \cX = W^{1,\qq}(\Omega)$, for some $\qq>2$, let $\Lambda(s) = \{b<z<s\} \subset \RR^3$, and suppose $\bu$ solves Glen-Stokes over $\Lambda(s)$.  Define
-	$$\Phi(s) = - \bu|_s \cdot \bn_s,$$
-a map $\Phi:\cK \to \cX'$.  Then $\Phi$ is $\qq$-coercive: there is $\alpha>0$ so that
-	$$\left(\Phi(s) - \Phi(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq \qquad \text{for all } r,s\in\cK$$
+For $s \in \cK \subset \cX = W^{1,\qq}(\Omega)$, suppose $\bu$ solves the Stokes problem over $\Lambda(s)$.  Fix a thickness $\eta_0>0$.  For $\eps\in(0,1)$ define the regularized surface motion
+    $$\Phi_\eps(s)[\omega] = \int_\Omega \Big(\big(u_1|_s,u_2|_s\big) \cdot \grad s - (1-\eps) w|_s\Big) \omega + \eps\, \Gamma \eta_0^4 |\grad s|^2 \grad s \cdot \grad \omega$$
+a map $\Phi_\eps:\cK \to \cX'$.  Then for some $\eps>0$, $\Phi_\eps$ is $\qq$-coercive, that is, there is $\alpha>0$ so that
+	$$\left(\Phi_\eps(s) - \Phi_\eps(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq \qquad \text{for all } r,s\in\cK$$
 \end{conjecture}
+}
+
+\medskip
 \end{frame}
 
 
 \begin{frame}{some numerical evidence}
 
 \begin{columns}
-\begin{column}{0.59\textwidth}
+\begin{column}{0.6\textwidth}
 {\small
 \begin{itemize}
-\item coercivity if $\exists \alpha>0$ s.t.
-	$$\left(\Phi(s) - \Phi(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq$$
+\item coercivity is: if $\exists \alpha>0$ s.t.
+	$$\left(\Phi_\eps(s) - \Phi_\eps(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq$$
 \item \alert{numerical experiment}:
     \begin{itemize}
     \item[$\circ$] 2 bed elevations $b$ (\emph{upper right})
     \item[$\circ$] sample surface elevation pairs $r,s$, from time-dependent simulation
     \item[$\circ$] compute ratios
 
-$$\frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq} \in \RR$$
+$$\frac{(\Phi_\eps(r)-\phi_\eps(s))[r-s]}{\|r-s\|_\cX^\qq} \in \RR$$
 
     \item[$\circ$] show raw ratios as histograms
     \item[$\circ$] coercivity = (ratios are bounded below by a positive constant)
@@ -593,7 +617,7 @@ $$\frac{(\Phi(r)-\phi(s))[r-s]}{\|r-s\|_\cX^\qq} \in \RR$$
 \end{frame}
 
 
-\section{finite element approximation}
+\section{finite element approximation, and an upper bound on error}
 
 \begin{frame}{finite element method}
 
@@ -677,18 +701,30 @@ Assume well-posedness in $\cX = W^{1,\qq}(\Omega)$.  Let $\Omega_A(s^k)$ be  the
 \includegraphics[width=\textwidth]{qrpreprint.png}
 \end{column}
 \begin{column}{0.78\textwidth}
-{\small
+{\footnotesize
 B. \emph{Surface elevation errors in finite element {S}tokes models for glacier evolution}, \surl{https://arxiv.org/abs/2408.06470}{arxiv:2408.06470}
 }
 \end{column}
 \end{columns}
-
 \end{frame}
 
 
 \begin{frame}{references}
 
-{\footnotesize \input{references.tex}}
+\begin{columns}
+\begin{column}{0.22\textwidth}
+\includegraphics[width=\textwidth]{figs/qrpreprint.png}
+\end{column}
+\begin{column}{0.78\textwidth}
+{\footnotesize
+B. \emph{Surface elevation errors in finite element {S}tokes models for glacier evolution}, \surl{https://arxiv.org/abs/2408.06470}{arxiv:2408.06470}
+}
+\end{column}
+\end{columns}
+
+\noindent \hrulefill
+
+{\scriptsize \input{references.tex}}
 \end{frame}
 
 
