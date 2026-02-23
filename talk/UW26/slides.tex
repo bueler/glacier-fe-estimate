@@ -401,7 +401,7 @@ the weak form \emph{backward Euler time-step problem}
 \begin{frame}{why would we care about well-posedness?}
 
 \begin{itemize}
-\item (maybe you came for the finite elements?)
+\item maybe you came for the finite elements?
 \item recall the canonical story about convergence of the FEM, in which \alert{$u$} denotes the continuum solution:
 {\small
 \begin{align*}
@@ -425,9 +425,9 @@ a(u_h,v_h) &= \ell_f(v_h) \\
 \begin{frame}{well-posedness is only conjectural}
 
 \begin{conjecture}
-There exists a $\qq>2$ so that in the space $\cX = W^{1,\qq}(\Omega)$, for sufficiently small $\Delta t>0$, the backward Euler time-step VI problem
+There exists a $\qq>2$ so that for sufficiently small $\Delta t>0$, the backward Euler time-step VI problem
     $$F(s^k)[r-s^k] \ge \ell^k[r-s^k] \quad \text{for all } r \in \cK,$$
-is well-posed for the new surface elevation $s^k\in\cK$ in the admissible subset $\cK = \{r \ge b\} \subset \cX$.
+is well-posed for the new surface elevation $s^k\in\cK$, in the admissible subset $\cK = \{r \ge b\} \subset \cX = W^{1,\qq}(\Omega)$.
 \end{conjecture}
 
 \begin{columns}
@@ -478,7 +478,7 @@ F(s)[q] &= \int_\Omega (s - \Delta t\,\bu|_s \cdot \bn_s) q
 \begin{itemize}
 \item the conjecture is that $s$ exists in $\cX = W^{1,\qq}(\Omega)$ for some $\qq>2$
 \item however, margin shape of glaciers is a hard modeling problem, which eventually departs the viscous theory
-\item I actually think the conjecture only makes sense with some SKE regularization
+\item I actually think the conjecture only makes sense with some surface motion regularization
 \end{itemize}
 \end{frame}
 
@@ -515,11 +515,11 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Lambda;\RR^3) \times L^{\pp'}(\Lambd
 
 \medskip
 
-\item in the $\eps\to 0$ limit the surface motion trivializes to differential operators on $s$ and thickness $H=s-b$:
+\item in this $\eps\to 0$ limit the surface motion trivializes to a differential operator on $s$ and thickness $H=s-b$:
     $$\bu|_s \cdot n_s = \gamma H^{\nn+1} |\grad s|^{\nn-1} + \Div \left(\Gamma H^{\nn+1} |\grad s|^{\nn-1} \grad s\right) \hspace{6mm} {\text{\tiny $\leftarrow$ \emph{isothermal case}}}$$
 
 \medskip
-\item and thus in that SIA limit, where the problem becomes a standard, \emph{but very nonlinear}, VI, we have the only known well-posedness results for glacier geometry:
+\item and thus in this SIA limit, where the problem becomes a standard, \emph{but very nonlinear}, VI, we have the only known well-posedness results for glacier geometry:
     \begin{itemize}
     \item[$\circ$] Calvo et al (2003), Piersanti \& Temam (2023): if the bed is flat then time-dependent surface elevation problem is well-posed
     \item[$\circ$] Jouvet \& B (2012): if the bed is general then solutions exist to the steady problem (\emph{but uniqueness was an open problem \dots})
@@ -537,10 +537,10 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Lambda;\RR^3) \times L^{\pp'}(\Lambd
 	$$- \bu|_s \cdot \bn_s - a = 0$$
 
 \item thus the coercivity of the map $s\mapsto \bu|_s \cdot \bn_s$ must do all the work if well-posedness is to hold
-\item in fact, solution \alert{uniqueness can fail} in steady state
+\item in fact, solution \alert{uniqueness can fail in steady state}
     \begin{itemize}
     \item[$\circ$] in any glacier model, even for elevation-independent climates
-    \item[$\circ$] specifically, for $a=0$ (identically), the two surfaces $s_1 \ne s_2$ below both solve the steady state problem on the same bed $b$:
+    \item[$\circ$] specifically, for $a=0$ (identically), the two surfaces $s_1 \ne s_2$ below each solve the steady state problem on the same bed $b$:
 
 \bigskip
 \begin{center}
@@ -557,9 +557,9 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Lambda;\RR^3) \times L^{\pp'}(\Lambd
 \begin{frame}{the actual, precise conjecture}
 
 \begin{itemize}
-\item the previous conjecture is what I think is true, but a narrower conjecture suffices to set us up for a finite element error theorem
+\item the previous broad conjecture is what I think is true, but a narrower conjecture permits a finite element error theorem
 \item recall the VI nonlinear operator is $F(s)[q] = \int_\Omega (s - \Delta t\,\bu|_s \cdot \bn_s) q$
-\item the important part is the surface motion $\Phi(s) = - \bu|_s \cdot \bn_s$
+\item the nontrivial part is the surface motion $\Phi(s) = - \bu|_s \cdot \bn_s$
 \item does it respond \emph{coercively} to changes in $s$?
 \end{itemize}
 
@@ -569,7 +569,7 @@ is well-posed for $(\bu,p) \in W^{1,\pp}_0(\Lambda;\RR^3) \times L^{\pp'}(\Lambd
 \begin{conjecture}[B\footnote{{\scriptsize B. \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv:2408.06470}}}]
 For $s \in \cK \subset \cX = W^{1,\qq}(\Omega)$, suppose $\bu$ solves the Stokes problem over $\Lambda(s)$.  Fix a thickness $\eta_0>0$.  For $\eps\in(0,1)$ define the regularized surface motion
     $$\Phi_\eps(s)[\omega] = \int_\Omega \Big(\big(u_1|_s,u_2|_s\big) \cdot \grad s - (1-\eps) w|_s\Big) \omega + \eps\, \Gamma \eta_0^4 |\grad s|^2 \grad s \cdot \grad \omega$$
-a map $\Phi_\eps:\cK \to \cX'$.  Then for some $\eps>0$, $\Phi_\eps$ is $\qq$-coercive, that is, there is $\alpha>0$ so that
+a map $\Phi_\eps:\cK \to \cX'$.  Then for some $\eps>0$, \alert{$\Phi_\eps$ is coercive}; there is $\alpha>0$ so that
 	$$\left(\Phi_\eps(s) - \Phi_\eps(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq \qquad \text{for all } r,s\in\cK$$
 \end{conjecture}
 }
@@ -578,7 +578,7 @@ a map $\Phi_\eps:\cK \to \cX'$.  Then for some $\eps>0$, $\Phi_\eps$ is $\qq$-co
 \end{frame}
 
 
-\begin{frame}{some numerical evidence}
+\begin{frame}{some numerical evidence for coercivity}
 
 \begin{columns}
 \begin{column}{0.6\textwidth}
@@ -586,13 +586,13 @@ a map $\Phi_\eps:\cK \to \cX'$.  Then for some $\eps>0$, $\Phi_\eps$ is $\qq$-co
 \begin{itemize}
 \item coercivity is: if $\exists \alpha>0$ s.t.
 	$$\left(\Phi_\eps(s) - \Phi_\eps(r)\right)[r-s] \ge \alpha \|r-s\|_\cX^\qq$$
-\item \alert{numerical experiment}:
+\item numerical experiment:
     \begin{itemize}
     \item[$\circ$] 2 bed elevations $b$ (\emph{upper right})
-    \item[$\circ$] sample surface elevation pairs $r,s$, from time-dependent simulation
+    \item[$\circ$] sample surface elevation pairs $r,s$, from time-dependent simulations
     \item[$\circ$] compute ratios
 
-$$\frac{(\Phi_\eps(r)-\phi_\eps(s))[r-s]}{\|r-s\|_\cX^\qq} \in \RR$$
+$$\frac{(\Phi_\eps(r)-\Phi_\eps(s))[r-s]}{\|r-s\|_\cX^\qq} \in \RR$$
 
     \item[$\circ$] show raw ratios as histograms
     \item[$\circ$] coercivity = (ratios are bounded below by a positive constant)
@@ -628,7 +628,7 @@ $$\frac{(\Phi_\eps(r)-\phi_\eps(s))[r-s]}{\|r-s\|_\cX^\qq} \in \RR$$
 
 \begin{itemize}
 \item spatially-continuum problem is to find $s^k\in\cK = \{r \ge b\}$ solving backward-Euler VI: \quad $F(s^k)[r-s^k] \ge \ell^k[r-s^k] \quad \text{for all } r \in \cK$
-\item proposed FE spaces:
+\item simplest reasonable FE spaces:
    \begin{itemize}
    \item[$\circ$] $b_h,s_h^k \in P_1$ on mesh over $\Omega$ \hfill {\tiny $\leftarrow$ so $\Lambda(s_h^k)$ is polygonal}
    \item[$\circ$] $\bu_h^k,p_h^k \in Q_2 \times Q_1$ on an extruded $\Lambda(s_h^k)$ mesh \hfill {\tiny $\leftarrow$ Taylor-Hood $=$ one possibility}
@@ -656,9 +656,9 @@ find $s_h^k\in\cK_h = \{r_h \ge b_h\}$ so that
 
 \medskip
 \begin{theorem}[B\footnote{{\scriptsize B. \emph{Surface elevation errors in finite element Stokes models for glacier evolution}, \href{https://www.arxiv.org/abs/2408.06470}{arxiv:2408.06470}}}]
-Assume well-posedness in $\cX = W^{1,\qq}(\Omega)$.  Let $\Omega_A(s^k)$ be  the exact active set.  Let $\Pi_h$ be interpolation into $\cK_h = \{r_h \ge b_h\}$.  Then the FE error in the new surface elevation is bounded by 3 terms:
+Assume well-posedness in $\cX = W^{1,\qq}(\Omega)$.  Let $\Psi(s^k)\subset \Omega$ be  the exact ice free subset.  Let $\Pi_h$ be interpolation into $\cK_h = \{r_h \ge b_h\}$.  Then the FE error in the new surface elevation is bounded by 3 terms:
 \begin{align*}
-\|s_h^k-s^k\|_{W^{1,\qq}}^\qq &\le \, \frac{c_0}{\Delta t} \int_{\Omega_A(s^k)} (b - \ell^k) (b_h - b) \\
+\|s_h^k-s^k\|_{W^{1,\qq}}^\qq &\le \, \frac{c_0}{\Delta t} \int_{\Psi(s^k)} (b - \ell^k) (b_h - b) \\
    &\quad\, + C_1(s_h^k) \big\|\bu_h^k - \bu^k\big\|_{W^{1,\pp}} \\
    &\quad\, + c_2 \|\Pi_h(s^k) - s^k\|_{W^{1,\qq}}^{\qq'}
 \end{align*}
@@ -698,11 +698,14 @@ Assume well-posedness in $\cX = W^{1,\qq}(\Omega)$.  Let $\Omega_A(s^k)$ be  the
 \noindent \hrulefill
 \begin{columns}
 \begin{column}{0.2\textwidth}
-\includegraphics[width=\textwidth]{qrpreprint.png}
+\includegraphics<2>[width=\textwidth]{qrpreprint.png}
 \end{column}
 \begin{column}{0.78\textwidth}
+\only<1>{\phantom{x} \\ \vspace{4mm} \alert{{\huge thank you for listening!}}}
+\only<2>{%
 {\footnotesize
 B. \emph{Surface elevation errors in finite element {S}tokes models for glacier evolution}, \surl{https://arxiv.org/abs/2408.06470}{arxiv:2408.06470}
+}
 }
 \end{column}
 \end{columns}
