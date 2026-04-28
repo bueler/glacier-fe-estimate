@@ -1,0 +1,157 @@
+\documentclass[hidelinks,onefignum,onetabnum,final]{siamart220329}  % for arxiv
+%\documentclass[review,hidelinks,onefignum,onetabnum,final]{siamart220329}  % for submission
+
+\usepackage{amsfonts,amssymb}
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.eps,.pdf,.png,.jpg}
+
+% Used for creating new theorem and remark environments
+\newsiamremark{remark}{Remark}
+%definition already defined \newsiamremark{definition}{Definition}
+\newsiamremark{hypothesis}{Hypothesis}
+\crefname{hypothesis}{Hypothesis}{Hypotheses}
+\newsiamthm{claim}{Claim}
+\newsiamremark{example}{Example}
+
+\usepackage{bm}
+
+%\usepackage{amsopn}
+%\usepackage{bm,bbm,empheq,verbatim,fancyvrb}
+%\usepackage{booktabs,multirow,xspace}
+
+\usepackage{tikz}
+\usetikzlibrary{decorations.pathreplacing}
+\usetikzlibrary{graphs,quotes}
+
+\usepackage[kw]{pseudo}
+\pseudoset{%
+left-margin=6mm,%
+topsep=5mm,%
+label=\footnotesize\arabic*,%
+idfont=\texttt,%
+ctfont=\textsl,%
+ct-left=\qquad\qquad(,%
+ct-right=),%
+}
+
+\newcommand{\eps}{\epsilon}
+\newcommand{\RR}{\mathbb{R}}
+
+\newcommand{\grad}{\nabla}
+\newcommand{\Div}{\nabla\cdot}
+
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bw}{\mathbf{w}}
+
+\newcommand{\bU}{\mathbf{U}}
+
+\newcommand{\bPhi}{\bm{\Phi}}
+\newcommand{\bzero}{\bm{0}}
+
+\newcommand{\dx}{\,dx}
+\newcommand{\bds}{\bm{ds}}
+
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cV}{\mathcal{V}}
+\newcommand{\cW}{\mathcal{W}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\cY}{\mathcal{Y}}
+\newcommand{\cZ}{\mathcal{Z}}
+
+\newcommand{\pp}{\mathrm{p}}
+\newcommand{\qq}{\mathrm{q}}
+
+\newcommand{\ip}[2]{\left<#1,#2\right>}
+\newcommand{\Bform}[2]{B\big(\left(#1\right),\left(#2\right)\big)}
+
+\DeclareMathOperator{\diag}{diag}
+
+\newcommand{\XX}{\ding{55}}
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+
+\newfloat{pseudofloat}{t}{xyz}[section]
+\floatname{pseudofloat}{Algorithm}
+
+\usepackage{todonotes}
+\newcommand{\elb}[1]{\todo[inline, color=blue!20]{EB: #1}}
+
+
+% Sets running headers as well as PDF title and authors
+%\headers{FIXME}{E. Bueler}
+
+\title{Snow piles on conveyor belts: \\ a simplified glacier evolution model}
+
+\author{Ed Bueler and Thomas Surowiec}
+
+%\date{\today}
+%\thanks{Department of Mathematics and Statistics, University of Alaska Fairbanks, USA (\email{elbueler@alaska.edu}).}
+
+\graphicspath{{figs/}}
+
+\begin{document}
+
+\maketitle
+
+%\begin{abstract}
+%FIXME
+%\end{abstract}
+%\begin{keywords}
+%FIXME
+%\end{keywords}
+%\begin{MSCcodes}
+%FIXME
+%\end{MSCcodes}
+
+Consider snow which falls at some rate $a=a(t,x,y)$, over a map-plane domain $(x,y) \in \Omega \subset \RR^2$ and a time interval $[0,\infty)$.  More precisely, suppose $a$ gives the signed surface mass balance rate \cite{Cogleyetal2011} in ice-equivalent meters per second, so that $a>0$ is the accumulation rate when snow is falling and $a<0$ is the rate of ice removal (ablation) when melt is occurring.  Suppose that the land is at elevation $b(x,y)$, assumed time-independent; this is the land surface elevation if the land is not ice-covered, and it is the bedrock elevation underneath the glacier.
+
+Let $s(t,x,y)$ be the surface elevation of an evolving glacier.  The surface kinematical equation (or condition \cite{GreveBlatter2009}) for the glacier applies at the surface $s$, but that surface can never go below the bed $b$, so part of the mathematical model for the evolution of $s$ is the following complementarity problem:\footnote{Complementarity problems are the strong forms corresponding to variational inequalities \cite{KinderlehrerStampacchia1980}.}
+\begin{equation}
+s - b \ge 0, \quad
+\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a \ge 0, \quad
+(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) = 0  \label{eq:ncp}
+\end{equation}
+Here $\bn_s = \left<-\partial s/\partial x,-\partial s/\partial y,1\right>$ is an upward surface-normal vector.
+
+In the above equations the motion of the upper surface of the glacier combines the surface mass balance $a$ with the surface-normal component of the ice flow velocity $\bu$, namely $\bu|_s \cdot \bn_s$.  In fact the ice flow velocity solves a Stokes-type problem for the ice below, so the full glacier evolution model couples \eqref{eq:ncp} with equations determining the 3D velocity and pressure fields.  See equations (1.1)--(1.6) in \cite{Bueler2025}; the above complementarity problem \eqref{eq:ncp} is system (1.3) in that reference.
+
+However, a simplified model arises if the coupled-solution velocity is replaced by a pre-determined 3D velocity field $\bu(t,x,y) \in \RR^3$ which is defined for every $(x,y)\in\Omega$ and $t\in [0,\infty)$.  In this note we consider the model
+\begin{equation}
+s - b \ge 0, \quad
+\frac{\partial s}{\partial t} - \bu \cdot \bn_s - a \ge 0, \quad
+(s - b) \left(\frac{\partial s}{\partial t} - \bu \cdot \bn_s - a\right) = 0  \label{eq:pilencpearly}
+\end{equation}
+in which $a,b,\bu$ are data and $s$ is the solution.
+
+Note that the interior condition of the above complementarity problem is an advection PDE.  Denote $\bu=\left<u,v,w\right>$ for the velocity in components, and now write partial derivatives with subscripts.  Let $c = w + a$.  The interior PDE, which applies at ice-covered locations, is
+\begin{equation}
+s_t + u s_x + v s_y = c \label{eq:pilepde}
+\end{equation}
+Here $u(t,x,y)$, $v(t,x,y)$, and $c(t,x,y)$ are scalar functions given as data.  With this same notation, the complementarity problem which we actually solve is
+\begin{subequations}
+\label{eq:pilencp}
+\begin{align}
+s - b &\ge 0 \\
+s_t + u s_x + v s_y - c &\ge 0 \\
+(s - b) \left(s_t + u s_x + v s_y - c\right) &= 0,
+\end{align}
+\end{subequations}
+in which $b(x,y)$ is an additional scalar function given as data.
+
+FIXME the interior condition \eqref{eq:pilepde} can be solved by characteristics for the 2D vector field $\left<u,v\right>$
+
+\begin{lemma}
+FIXME characteristics of \eqref{eq:pilepde}
+\end{lemma}
+
+FIXME now the idea in the Skorohod formula \cite[Lemma 6.14]{KaratzasShreve1991}, which has a connection to queuing theory \cite[section 1.4.1]{Stewart2011}, gives a solution of the complementarity problem \eqref{eq:pilencp}
+
+\begin{lemma}
+FIXME solution formula for \eqref{eq:pilencp}
+\end{lemma}
+
+\bibliographystyle{siamplain}
+\bibliography{pile}
+
+\end{document}
