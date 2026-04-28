@@ -94,9 +94,10 @@ ct-right=),%
 
 \maketitle
 
-%\begin{abstract}
-%FIXME
-%\end{abstract}
+\begin{abstract}
+This is a very preliminary note about whether we can solve the main complementarity problem for the surface elevation of a glacier, in the case where we replace the actual surface value of the ice-flow velocity by a fixed velocity field, via a Skorohod-type formula.
+\end{abstract}
+
 %\begin{keywords}
 %FIXME
 %\end{keywords}
@@ -116,40 +117,91 @@ Here $\bn_s = \left<-\partial s/\partial x,-\partial s/\partial y,1\right>$ is a
 
 In the above equations the motion of the upper surface of the glacier combines the surface mass balance $a$ with the surface-normal component of the ice flow velocity $\bu$, namely $\bu|_s \cdot \bn_s$.  In fact the ice flow velocity solves a Stokes-type problem for the ice below, so the full glacier evolution model couples \eqref{eq:ncp} with equations determining the 3D velocity and pressure fields.  See equations (1.1)--(1.6) in \cite{Bueler2025}; the above complementarity problem \eqref{eq:ncp} is system (1.3) in that reference.
 
-However, a simplified model arises if the coupled-solution velocity is replaced by a pre-determined 3D velocity field $\bu(t,x,y) \in \RR^3$ which is defined for every $(x,y)\in\Omega$ and $t\in [0,\infty)$.  In this note we consider the model
+However, a simplified model arises if the coupled-solution velocity is replaced by a pre-determined 3D velocity field $\bu(t,x,y) \in \RR^3$ which is defined for every $(x,y)\in\Omega$ and $t\in [0,\infty)$.  In this note we consider the model in which \emph{the velocity field $\bu$ is data}:
 \begin{equation}
 s - b \ge 0, \quad
 \frac{\partial s}{\partial t} - \bu \cdot \bn_s - a \ge 0, \quad
 (s - b) \left(\frac{\partial s}{\partial t} - \bu \cdot \bn_s - a\right) = 0  \label{eq:pilencpearly}
 \end{equation}
-in which $a,b,\bu$ are data and $s$ is the solution.
+In total, $\Omega,a(t,x,y),b(x,y),\bu(t,x,y)$ are data and $s(t,x,y)$ is the solution.
 
-Note that the interior condition of the above complementarity problem is an advection PDE.  Denote $\bu=\left<u,v,w\right>$ for the velocity in components, and now write partial derivatives with subscripts.  Let $c = w + a$.  The interior PDE, which applies at ice-covered locations, is
+The interior condition of the above complementarity problem is a linear advection PDE.  Denote $\bu=\left<u,v,w\right>$ for the velocity in components, and now write partial derivatives with subscripts.  Let $c = w + a$.  The interior PDE, which applies at ice-covered locations, is
 \begin{equation}
 s_t + u s_x + v s_y = c \label{eq:pilepde}
 \end{equation}
-Here $u(t,x,y)$, $v(t,x,y)$, and $c(t,x,y)$ are scalar functions given as data.  With this same notation, the complementarity problem which we actually solve is
+Here $u(t,x,y)$, $v(t,x,y)$, and $c(t,x,y)$ are scalar functions given as data.  With this same notation, complementarity problem \eqref{eq:pilencpearly} is written
 \begin{subequations}
 \label{eq:pilencp}
 \begin{align}
 s - b &\ge 0 \\
 s_t + u s_x + v s_y - c &\ge 0 \\
-(s - b) \left(s_t + u s_x + v s_y - c\right) &= 0,
+(s - b) \left(s_t + u s_x + v s_y - c\right) &= 0.
 \end{align}
 \end{subequations}
-in which $b(x,y)$ is an additional scalar function given as data.
 
-FIXME the interior condition \eqref{eq:pilepde} can be solved by characteristics for the 2D vector field $\left<u,v\right>$
+The interior condition \eqref{eq:pilepde} can be solved by characteristics \cite[section 3.2]{Evans2010}, so we state that result before modifying it to account for the inequalities in the complementarity problem.
 
 \begin{lemma}
-FIXME characteristics of \eqref{eq:pilepde}
+Suppose $u, v, c \in C^1([0,T] \times \Omega)$ and let $s_0 \in C^1(\Omega)$ be initial data.
+For each $(x_0,y_0) \in \Omega$, let $t \mapsto (X(t),Y(t)) = (X(t;x_0,y_0), Y(t;x_0,y_0))$ denote the
+solution of the characteristic ODE system
+\begin{equation}
+\frac{dX}{dt} = u(t,X,Y), \quad \frac{dY}{dt} = v(t,X,Y), \quad
+X(0) = x_0, \quad Y(0) = y_0. \label{eq:chars}
+\end{equation}
+Then the unique classical solution of \eqref{eq:pilepde} with $s(0,\cdot,\cdot) = s_0$ satisfies
+\begin{equation}
+s\!\left(t, X(t), Y(t)\right) = s_0(x_0,y_0)
+  + \int_0^t c\!\left(\tau, X(\tau), Y(\tau)\right) d\tau. \label{eq:charsol}
+\end{equation}
 \end{lemma}
+
+\begin{proof}
+Differentiate \eqref{eq:charsol} with respect to $t$ using the chain rule and
+\eqref{eq:chars}, and then verify \eqref{eq:pilepde} is satisfied.
+\end{proof}
+
+In the situation where the inequalities of \eqref{eq:pilencp} were absent, formula \eqref{eq:charsol} could become an explicit formula for $s(t,x,y)$ if the characteristics can be inverted.  That is, we get a formula for $s(t,x,y)$ if $x=X(t;x_0,y_0)$ and $y=Y(t;x_0,y_0)$ can be solved for $x_0,y_0$ in terms of $t,x,y$, in which case we could rewrite \eqref{eq:charsol} as
+\begin{equation}
+s(t,x,y) = s_0(x_0,y_0)
+  + \int_0^t c\!\left(\tau, X(\tau;x_0,y_0), Y(\tau;x_0,y_0)\right) d\tau \label{eq:charsolagain}
+\end{equation}
+where it is understood that $x_0=x_0(t,x,y)$ and $y_0=y_0(t,x,y)$.  In practice the domain $\Omega$ is bounded, thus the characteristic curves for the horizontal velocity field $\ip{u}{v}$ can either be followed back to time $t=0$ where they have location $(x_0,y_0)$, or they intersect with the boundary of $\Omega$ at a positive time, in which case boundary values for $s$ must supply the value at that ``stopping'' time.
 
 FIXME now the idea in the Skorohod formula \cite[Lemma 6.14]{KaratzasShreve1991}, which has a connection to queuing theory \cite[section 1.4.1]{Stewart2011}, gives a solution of the complementarity problem \eqref{eq:pilencp}
 
 \begin{lemma}
-FIXME solution formula for \eqref{eq:pilencp}
+Suppose the conditions of Lemma 1 hold, additionally $b \in C^1(\Omega)$, and
+$s_0 \ge b$ on $\Omega$.  For $(x_0,y_0) \in \Omega$, let $\sigma(t) = \sigma(t;x_0,y_0)$
+denote the unconstrained solution \eqref{eq:charsol} of \eqref{eq:pilepde}.  Define
+\begin{equation}
+\ell(t) = \max\!\left(0,\;
+    \sup_{0 \le r \le t}\!\left[b\!\left(X(r),Y(r)\right) - \sigma(r)\right]\right).
+\label{eq:skoro}
+\end{equation}
+Then $S(t) = \sigma(t) + \ell(t)$ is the unique solution along the characteristic
+satisfying
+\begin{equation}
+S - b(X,Y) \ge 0, \qquad \dot{S} - c \ge 0, \qquad
+\bigl(S - b(X,Y)\bigr)\,\dot{\ell} = 0,
+\label{eq:odencp}
+\end{equation}
+with $\ell$ non-decreasing and $\ell(0) = 0$.  In other words,
+\begin{equation}
+s(t,X(t),Y(t)) = \sigma(t) + \ell(t)
+\end{equation}
+solves \eqref{eq:pilencp} along each
+characteristic \eqref{eq:chars}.
 \end{lemma}
+\begin{proof}
+Apply the Skorohod reflection formula \cite[Lemma 6.14]{KaratzasShreve1991}
+to $h(t) = \sigma(t) - b(X(t),Y(t))$, the unconstrained ice thickness along the
+characteristic.  Since $s_0 \ge b$ we have $h(0) \ge 0$, and the Skorohod
+lemma yields a unique pair $(H,\ell)$ with $H = h + \ell \ge 0$, $\ell$
+non-decreasing, $\ell(0)=0$, and $H\,d\ell = 0$.  Setting
+$S = H + b(X,Y) = \sigma + \ell$ and using $\dot{\sigma} = c$ from
+\eqref{eq:charsol} gives \eqref{eq:odencp}.
+\end{proof}
 
 \bibliographystyle{siamplain}
 \bibliography{pile}
