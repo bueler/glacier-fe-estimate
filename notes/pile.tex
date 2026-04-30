@@ -95,7 +95,7 @@ ct-right=),%
 \maketitle
 
 \begin{abstract}
-This is a very preliminary note!  It considers how to solve the main complementarity problem for the surface elevation of a glacier, in the case where we replace the actual surface value of the ice-flow velocity by a fixed velocity field, via a Skorohod-type formula.
+This is a very preliminary note!  It considers how to solve the main complementarity problem for the surface elevation of a glacier, but in the case where the actual surface value of the ice-flow velocity is replaced by a fixed velocity field.  Under such a severe simplification, the snow accumulates or ablates at locations which move along pre-determined characteristic curves (thus the title).  The piles of snow, assumed to be of ice density, act like queues with a positive-length, i.e.~positive glacier thickness, inequality constraint, and so a Skorohod-type formula for the solutions along characteristics is available.
 \end{abstract}
 
 %\begin{keywords}
@@ -105,38 +105,43 @@ This is a very preliminary note!  It considers how to solve the main complementa
 %FIXME
 %\end{MSCcodes}
 
-Consider snow which falls at some rate $a(t,x,y)$, over a time interval $t\in [0,\infty)$ and for locations $(x,y)$ within a fixed map-plane domain $\Omega \subset \RR^2$.  More precisely, suppose $a$ gives the \emph{signed} instantaneous surface mass balance rate \cite{Cogleyetal2011} in ice-equivalent meters per second.  This means that $a>0$ when snow is falling ($a=$ accumulation rate) and $a<0$ when melt is occurring ($a=$ ablation rate).  While in actuality there is a time scale for the conversion of snow into maximal-density ice, in this note we suppose that process is instantaneous, so falling snow immediately becomes flowing ice in a glacier.  Also note that the time scale at which melt water runs off-glacier is sufficiently short that we also regard it as instantaneous.
+Consider snow which falls at some rate $a(t,x,y)$, over a time interval $t\in [0,\infty)$ and for locations $(x,y)$ within a fixed map-plane domain $\Omega \subset \RR^2$.  More precisely, suppose $a$ gives the \emph{signed} instantaneous surface mass balance rate \cite{Cogleyetal2011} in ice-equivalent meters per second.  This means that $a>0$ when snow is falling ($a=$ accumulation rate) and $a<0$ when melt is occurring ($a=$ ablation rate).  While in actuality there is a time scale for the conversion of snow into maximal-density ice, in this note we suppose the process is instantaneous, so falling snow immediately becomes flowing ice in a glacier.  Similarly, the time scale at which melt water runs off-glacier is sufficiently short that we also regard it as instantaneous.
 
-Suppose that the land is at elevation $b(x,y)$, which is assumed time-independent.  The value of $b$ is the bedrock elevation underneath the glacier, or it is the land surface elevation if the land is not ice-covered.  Under these conditions, as snow piles-up, according to the values $a$, it will form a glacier, which flows under the action of gravity, according to the shape of the mountains given by $b$.
+Suppose that the land is at elevation $b(x,y)$, which is assumed time-independent.  The value of $b$ is the bedrock elevation underneath the glacier, or it is the land surface elevation if the land is not ice-covered.
 
-Let $s(t,x,y)$ be the surface elevation of the evolving glacier.  A \emph{surface kinematical equation} (or ``condition'' \cite{GreveBlatter2009}) for the glacier applies at the surface $s$,
+Now our model is that as snow piles-up, according to values $a>0$, it will form a glacier, which flows under the action of gravity, according to the shape of the mountains given by $b$, but if it flows into regions where $a<0$ then it will decrease in thickness to zero.  To make this precise, let $s(t,x,y)$ be the upper surface elevation of the evolving glacier.  A \emph{surface kinematical equation} \cite{GreveBlatter2009} for the glacier applies at the surface,
 \begin{equation}
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0,  \label{eq:ske}
 \end{equation}
-but this is only true at points \emph{on the ice}.  Over the whole domain $\Omega$, including both ice-covered and ice-free locations, the surface can never go below the bed $b$.  Thus the mathematical model for the evolution of $s$ is the following complementarity problem:\footnote{Complementarity problems are the strong forms corresponding to variational inequalities \cite{KinderlehrerStampacchia1980}.}
+but this is only true at points \emph{on the ice}.  Over the whole domain $\Omega$, including both ice-covered and ice-free locations, the surface can never go below the bed $b$.  Thus the mathematical model for the evolution of $s$ is the following complementarity problem:
 \begin{equation}
 s - b \ge 0, \quad
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a \ge 0, \quad
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) = 0  \label{eq:ncp}
 \end{equation}
+Note that $h=s-b$ is the ice thickness, and this complementarity model can be re-phrased in terms of thickness, subject to the constraint $h\ge 0$ in particular.
 
-In the above equations $\bn_s = \left<-\partial s/\partial x,-\partial s/\partial y,1\right>$ is an upward surface-normal vector and $\bu|_s$ denotes the (upper) surface value of the ice flow velocity.  The surface kinematical equation \eqref{eq:ske} can be used to determine the vertical motion of the surface $\partial s/\partial t$ from the surface-normal component of the ice flow velocity $\bu|_s \cdot \bn_s$ and the surface mass balance $a$.
+In the above equations $\bu|_s$ denotes the (upper) surface value of the ice flow velocity, and
+\begin{equation}
+\bn_s = \left<-\frac{\partial s}{\partial x}, -\frac{\partial s}{\partial y}, 1\right> \label{eq:normal}
+\end{equation}
+is an upward surface-normal vector.  Conceptually, the surface kinematical equation \eqref{eq:ske} can be used to determine the vertical motion of the surface from the surface-normal component of the ice flow velocity and the surface mass balance $a$.
 
-In fact, the 3D ice flow velocity $\bu$ solves a Stokes-type problem within the ice, below the surface, which is a very-viscous fluid \cite{GreveBlatter2009}.  Thus a complete glacier evolution model would couple \eqref{eq:ncp} with equations determining the 3D velocity and pressure fields through a Stokes solution at every instant.  For such a model see equations (1.1)--(1.6) in \cite{Bueler2025}; complementarity problem \eqref{eq:ncp} is system (1.3) therein.
+However, in fact the 3D ice flow velocity $\bu$ solves a Stokes-type problem within the ice, below the surface, which is a very-viscous fluid \cite{GreveBlatter2009}.  Thus a complete glacier evolution model must couple \eqref{eq:ncp} with equations determining the 3D velocity and pressure fields through a Stokes solution at every instant.  For such a model see equations (1.1)--(1.6) in \cite{Bueler2025}; complementarity problem \eqref{eq:ncp} is (1.3) therein.
 
-However, a severely simplified model arises if the coupled-solution velocity is replaced by a pre-determined velocity field $\bu(t,x,y) \in \RR^3$ which is defined for every $t\in [0,\infty)$ and $(x,y)\in\Omega$.  In this note we consider such a model, in which the velocity field $\bu$ in the surface kinematical complementarity problem is given as \emph{data}:
+In this note we are considering a severely-simplified model which arises if the coupled-solution velocity is replaced by a pre-determined velocity field $\bu(t,x,y) \in \RR^3$ which is defined for every $t\in [0,\infty)$ and $(x,y)\in\Omega$.  Now the velocity field $\bu$ in the surface kinematical complementarity problem \eqref{eq:ncp} is given as data, along with the climatic input $a$:
 \begin{equation}
 s - b \ge 0, \quad
 \frac{\partial s}{\partial t} - \bu \cdot \bn_s - a \ge 0, \quad
 (s - b) \left(\frac{\partial s}{\partial t} - \bu \cdot \bn_s - a\right) = 0  \label{eq:pilencpearly}
 \end{equation}
-We will also suppose $s=b$ along $\partial \Omega$, that is, the glacier's thickness $H=s-b$ is forced to go to zero at the boundary of the computation domain.  In summary, $\Omega,a(t,x,y),b(x,y),\bu(t,x,y)$ are data for this problem, and $s(t,x,y)$ is the solution.
+We will also suppose $s=b$ along $\partial \Omega$, that is, the glacier's thickness $h=s-b$ is forced to go to zero at the boundary of the computation domain.  In summary, $\Omega,a(t,x,y),b(x,y),\bu(t,x,y)$ are data for this problem, and $s(t,x,y)$ is the solution.
 
-The interior condition of complementarity problem \eqref{eq:pilencpearly} is a linear advection PDE, that is, the surface kinematical equation \eqref{eq:ske} is now a linear advection.  Denote $\bu=\left<u,v,w\right>$ for the velocity components, and from now on denote partial derivatives with subscripts.  Let $c = w + a$; this is data.  Thus the interior PDE, which applies at ice-covered locations where $s>b$, is
+The interior condition \cite{KinderlehrerStampacchia1980} of complementarity problem \eqref{eq:pilencpearly} is a linear advection PDE, that is, equation \eqref{eq:ske} is now a linear advection.  Denote $\bu=\left<u,v,w\right>$ for the velocity components, and from now on denote partial derivatives with subscripts.  Let $c = w + a$; now this whole source term is data.  From \eqref{eq:normal}, the interior PDE, which applies at ice-covered locations where $s>b$, is
 \begin{equation}
 s_t + u s_x + v s_y = c \label{eq:pilepde}
 \end{equation}
-Here $u(t,x,y)$, $v(t,x,y)$, and $c(t,x,y)$ are scalar functions given as data.  With this same notation, complementarity problem \eqref{eq:pilencpearly} is written
+Here $u(t,x,y)$, $v(t,x,y)$, and $c(t,x,y)$ are scalar functions given as data, and complementarity problem \eqref{eq:pilencpearly} is written
 \begin{subequations}
 \label{eq:pilencp}
 \begin{align}
@@ -146,7 +151,9 @@ s_t + u s_x + v s_y - c &\ge 0 \\
 \end{align}
 \end{subequations}
 
-The interior condition \eqref{eq:pilepde} can be solved by characteristics \cite[section 3.2]{Evans2010}.  We state that result before modifying it to account for the inequalities in the complementarity problem.
+The linear advection \eqref{eq:pilepde} can be solved by characteristics \cite[section 3.2]{Evans2010}.  We state that result before modifying it to account for the inequalities in complementarity problem \eqref{eq:pilencp}.
+
+FIXME think regularity here
 
 \begin{lemma} \label{lem:chars}
 Suppose $u, v, c \in C^1([0,T] \times \Omega)$ and let $s_0 \in C^1(\Omega)$ be initial data.  For each $(x_0,y_0) \in \Omega$, let
@@ -221,264 +228,6 @@ Note that by the chain rule and \eqref{eq:chars},
 \end{align*}
 so \eqref{eq:odencp} is the same as \eqref{eq:pilencp}.
 
-\appendix
-
-\section{A fixed-point argument for the coupled Skorohod-Stokes problem}
-\label{app:fixedpoint}
-
-Lemma~\ref{lem:skoro} solves complementarity problem~\eqref{eq:pilencp}
-when the velocity $(u,v,w)$ is prescribed as data.  In the full glacier
-evolution model the velocity is not data---it solves a Stokes sub-model
-within the evolving ice domain, so the velocity and surface elevation
-are coupled.  This appendix sketches how one might build a fixed-point
-existence argument for the coupled problem using the Skorohod formula,
-and identifies the key analytical difficulties.  The tone is deliberately
-speculative; the goal is to record what would need to be proved.
-
-\subsection{The fixed-point map}
-
-Fix a time horizon $T>0$ and an exponent $r > 2$.  Define the admissible
-set of surface elevations
-\begin{equation}
-\cK = \left\{s \in W^{1,r}(\Omega) : s \ge b \;\text{on}\; \Omega,\;
-         s = b \;\text{on}\; \partial\Omega\right\}.
-\label{eq:app:admissible}
-\end{equation}
-Since $\Omega \subset \RR^2$ and $r > 2$, Sobolev's embedding theorem gives
-$W^{1,r}(\Omega) \hookrightarrow C(\bar\Omega)$, so each $s\in\cK$ is
-continuous.  For $s\in\cK$ define the 3D ice domain
-\begin{equation}
-\Lambda(s) = \{(x,y,z) : b(x,y) < z < s(x,y)\} \subset \Omega\times\RR;
-\label{eq:app:domain}
-\end{equation}
-continuity of $s$ and $b$ makes this a Lipschitz domain.
-
-Let $\cU$ be a Banach space of surface velocity fields
-$\bU = (u,v,w): [0,T]\times\Omega\to\RR^3$, to be specified.  Define
-$T = T_2 \circ T_1$, the composition of two steps:
-\begin{itemize}
-\item $T_1:\cU \to C([0,T];\cK)$: given $\bU \in \cU$, apply
-Lemmas~\ref{lem:chars} and~\ref{lem:skoro} to produce the surface
-elevation $s = T_1 \bU$.
-\item $T_2:C([0,T];\cK) \to \cU$: given $s\in C([0,T];\cK)$, for
-each $t\in[0,T]$ solve the non-Newtonian Stokes sub-model
-\cite{GreveBlatter2009} on the domain $\Lambda(s(t,\cdot))$,
-and return the surface-trace velocity $\bu|_s(t,\cdot)$ extended by
-zero to all of $\Omega$.
-\end{itemize}
-A fixed point $\bU = T\bU$ is a velocity field consistent with the
-full coupled Stokes--surface kinematical complementarity problem.
-
-\subsection{The Skorohod step \texorpdfstring{$T_1$}{T1}}
-
-\paragraph{Input regularity needed.}
-Lemma~\ref{lem:chars} requires $u,v \in C^1([0,T]\times\Omega)$ for
-the characteristic ODE \eqref{eq:chars} to be classically well-posed.
-A weaker sufficient condition is given by the DiPerna--Lions theory
-of renormalized flows \cite{DiPernaLions1989}: a unique Lagrangian
-flow exists for almost every initial point whenever
-$(u,v) \in L^1(0,T;W^{1,1}(\Omega))$ and
-$\mathrm{div}(u,v) \in L^1([0,T]\times\Omega)$.
-Stokes incompressibility ($\Div\bu=0$ inside $\Lambda$) will be
-relevant here.
-
-\paragraph{Spatial regularity of $s$.}
-The Jacobian of the characteristic flow map
-$\Phi_t:(x_0,y_0)\mapsto(X(t;x_0,y_0),Y(t;x_0,y_0))$ satisfies the
-Liouville identity
-\begin{equation}
-J(t) = \exp\!\left(\int_0^t \mathrm{div}(u,v)\big|_{\Phi_\tau} \, d\tau\right),
-\label{eq:app:jacobian}
-\end{equation}
-so $J(t)>0$ when $\mathrm{div}(u,v) \in L^1$, ensuring invertibility.
-When $(u,v)\in L^1(0,T;W^{1,r}(\Omega))$, regularity theory for ODE
-flows gives $\Phi_t \in W^{1,r}(\Omega)$, and then the reassembled
-surface elevation satisfies
-\begin{equation}
-s(t,\cdot) \in W^{1,r}(\Omega), \qquad
-\|s(t,\cdot)\|_{W^{1,r}} \le
-C\!\left(s_0,\, \|\bU\|_{L^1(0,T;\,W^{1,r})},\, \|a\|_{L^1(0,T;\,W^{1,r})}\right),
-\label{eq:app:T1bound}
-\end{equation}
-provided $s_0\in W^{1,r}(\Omega)$ and $c = w+a \in L^1(0,T;W^{1,r}(\Omega))$.
-
-\begin{remark}
-The Skorohod correction $\ell(t;x_0,y_0)$ defined by \eqref{eq:skoro}
-is a running maximum over $r\in[0,t]$, so its spatial regularity in
-$(x_0,y_0)$ requires extra care near times when the maximum is
-attained (i.e., where $S = b\circ\Phi$, the glacier margin).
-A complete proof of \eqref{eq:app:T1bound} would need to verify,
-for instance, that the contact set has measure-zero level sets,
-or work with distributional derivatives.
-\end{remark}
-
-\subsection{The Stokes step \texorpdfstring{$T_2$}{T2}}
-
-For $s\in\cK\subset W^{1,r}(\Omega)$ with $r>2$, the domain
-$\Lambda(s)$ is Lipschitz and the regularized non-Newtonian Stokes
-system is well-posed \cite{JouvetRappaz2011}.
-Let $\pp = (n+1)/n$ denote the Glen flow exponent; for
-$n=3$ one has $\pp=4/3$.  The solution velocity
-$\bu\in W_0^{1,\pp}(\Lambda;\RR^3)$ satisfies an a priori bound
-\begin{equation}
-\|\bu\|_{W^{1,\pp}(\Lambda)} \le C_1,  \label{eq:app:apriori}
-\end{equation}
-where $C_1$ depends on physical constants and the geometry of
-$\Lambda(s)$, in particular on $\|s\|_{W^{1,r}}$; see \cite{Bueler2025}.
-A trace inequality then gives
-\begin{equation}
-\int_{\Gamma_s} |\bu|_s|^{\pp} \, dS \le C_1,  \label{eq:app:trace}
-\end{equation}
-and extended by zero, the surface trace satisfies
-$\bu|_s(t,\cdot) \in L^{\pp}(\Omega;\RR^3)$ for each $t$.
-
-\paragraph{What $T_2$ delivers.}
-$T_2$ returns $\bu|_s \in L^{\pp}(\Omega;\RR^3)$, i.e.~velocity
-components in $L^{4/3}(\Omega)$ for $n=3$.
-Crucially, $T_2$ does \emph{not} directly deliver $W^{1,q}(\Omega)$
-regularity for any $q > 0$.
-
-\subsection{The regularity gap}
-
-For the cycle
-$\cU \xrightarrow{T_1} C([0,T];\cK) \xrightarrow{T_2} \cU$
-to close, $\cU$ must satisfy both the input requirement of $T_1$
-and the output property of $T_2$.  Since $T_1$ requires at minimum
-$(u,v)\in L^1(0,T;W^{1,1}(\Omega))$ (for DiPerna--Lions) but
-$T_2$ delivers only $\bu|_s \in L^1(0,T;L^{\pp}(\Omega))$
-with $\pp=4/3$, the cycle does not close:
-\[
-W^{1,r}\text{ velocity} \;\xrightarrow{T_1}\; W^{1,r}\text{ surface}
-\;\xrightarrow{T_2}\; L^{\pp}\text{ velocity}
-\;\not\hookrightarrow\; W^{1,1}\text{ velocity}.
-\]
-
-There is also an exponent tension.  The surface elevation space requires
-$r > 2$ (for $\Lambda(s)$ to be a Lipschitz domain via Sobolev
-embedding), while the Stokes law has exponent $\pp = 4/3 < 2$.
-Even if $\bu|_s \in W^{1,\pp}(\Omega)$ could be established, one has
-$W^{1,\pp} \not\subset W^{1,r}$ for $r > \pp$, so the input
-requirement of $T_1$ would still not be met by the output of $T_2$.
-
-\subsection{Hypotheses that would close the argument}
-
-Gaining spatial regularity of $\bu|_s$ beyond $L^{\pp}$ would
-require higher interior regularity of the Stokes velocity:
-$W^{2,\pp}$ regularity of $\bu$ inside $\Lambda(s)$ would give
-(by a trace theorem) $\bu|_s \in W^{1,\pp}(\Omega)$.
-Such $W^{2,\pp}$ regularity requires $\partial\Lambda(s)$ to be
-$C^{1,\alpha}$ \cite{JouvetRappaz2011}, i.e.~$s\in C^{1,\alpha}(\Omega)$,
-which in turn follows from $s\in W^{2,r}(\Omega)$ via Sobolev.
-So higher surface elevation regularity would bootstrap Stokes
-regularity, but the argument is circular without an independent
-source of that higher regularity.
-
-\begin{hypothesis}[Stokes surface trace regularity]
-\label{hyp:stokestraceW1}
-There exist exponents $r>2$ and $q>1$ such that for every
-$s\in\cK \subset W^{1,r}(\Omega)$ the Stokes velocity surface trace
-satisfies $\bu|_s \in W^{1,q}(\Omega;\RR^3)$, with
-\begin{equation}
-\|\bu|_s\|_{W^{1,q}(\Omega)} \le C\bigl(\|s\|_{W^{1,r}(\Omega)}\bigr).
-\label{eq:app:hyp1}
-\end{equation}
-\end{hypothesis}
-
-\noindent
-For \emph{Newtonian} ice ($n=1$, $\pp=2$) on a $C^{1,1}$ domain,
-classical $H^2$ regularity of the linear Stokes system gives
-$\bu|_s \in H^1(\Omega)$, so Hypothesis~\ref{hyp:stokestraceW1} holds
-with $q=2$ in that case.
-For shear-thinning ice ($\pp<2$) on a domain that is merely Lipschitz,
-this appears to be open.
-A related domain-dependence statement for the Stokes map is
-Conjecture~1 in \cite{Bueler2025}; that conjecture concerns
-Lipschitz continuity rather than regularity, but both ultimately
-rest on the same missing theory of how the Stokes solution varies
-with the domain.
-
-If Hypothesis~\ref{hyp:stokestraceW1} holds with $q\ge 1$, and if
-the surface trace $(u,v) = (\bu|_s)_{1,2}$ satisfies
-$\mathrm{div}(u,v) \in L^1$ (which follows from Stokes
-incompressibility via the relation $w|_s = -\int_b^s \Div(u,v)\,dz$,
-up to a boundary term at the margin), then the DiPerna--Lions
-theory \cite{DiPernaLions1989} applies to the characteristic ODE
-\eqref{eq:chars}, closing the regularity loop.
-
-\begin{hypothesis}[Lipschitz continuity of Stokes trace in $s$]
-\label{hyp:lipschitz}
-Under the conditions of Hypothesis~\ref{hyp:stokestraceW1}, for every
-$R>0$ there exists $C(R)>0$ such that for $s_1,s_2\in B_R\cap\cK$,
-\begin{equation}
-\|\bu|_{s_1} - \bu|_{s_2}\|_{W^{1,q}(\Omega)} \le
-C(R)\,\|s_1-s_2\|_{W^{1,r}(\Omega)}.  \label{eq:app:hyp2}
-\end{equation}
-\end{hypothesis}
-
-\noindent
-Hypothesis~\ref{hyp:lipschitz} with $W^{1,q}$ replaced by $L^{r'}$
-(where $1/r+1/r'=1$) is exactly Conjecture~1 in \cite{Bueler2025},
-which is also the key ingredient for well-posedness of the implicit
-time-step variational inequality in that reference.
-
-\paragraph{Invariant set.}
-For either the Schauder or Banach fixed-point theorem one needs a
-bounded closed convex set $K\subset\cU$ with $T(K)\subseteq K$.
-The a priori Stokes bound \eqref{eq:app:apriori} gives
-$C_1=C_1(R_s)$ with $R_s = \|s\|_{W^{1,r}}$, and
-\eqref{eq:app:T1bound} controls $R_s$ in terms of
-$R_\cU=\|\bU\|_\cU$.
-A self-consistent radius $R>0$ therefore exists if
-\begin{equation}
-C_1\bigl(C_{\mathrm{Sko}}(R,s_0,a)\bigr) \le R,
-\label{eq:app:selfconsistent}
-\end{equation}
-where $C_{\mathrm{Sko}}$ is the bound from \eqref{eq:app:T1bound}.
-For small time horizon $T$, or small forcing $a$, such a radius
-can always be found.
-
-\paragraph{Compactness vs.\ contraction.}
-Under Hypotheses~\ref{hyp:stokestraceW1} and~\ref{hyp:lipschitz},
-$T$ is continuous on bounded sets.
-A \emph{Schauder fixed point} additionally requires $T$ to be compact;
-compactness of $T_2$ follows from the uniform $W^{1,\pp}(\Lambda)$
-bound on $\bu$ together with the compact Sobolev embedding
-$W^{1,\pp}\hookrightarrow\hookrightarrow L^m$ for $m<\pp^*$,
-but propagating that compactness through $T_1$ requires further
-argument.
-A \emph{Banach contraction mapping} requires
-$\|T\bU_1-T\bU_2\|_\cU \le L\|\bU_1-\bU_2\|_\cU$ with $L<1$;
-this would follow from Hypothesis~\ref{hyp:lipschitz} combined with
-Gronwall-type ODE estimates for the Lipschitz continuity of $T_1$,
-provided $T$ (or the time-step $\Delta t$) is small enough.
-
-\subsection{Relation to the fully implicit approach in \cite{Bueler2025}}  \label{app:implicit}
-
-The framework in \cite{Bueler2025} avoids the above regularity cycle
-by formulating an \emph{implicit} time-step variational inequality (VI):
-find the new surface elevation $s\in\cK$ such that the Stokes velocity
-at $s$ and $s$ itself simultaneously satisfy the VI.
-Well-posedness of this implicit step is established in \cite{Bueler2025}
-(conditionally on two conjectures analogous to
-Hypotheses~\ref{hyp:stokestraceW1}--\ref{hyp:lipschitz}) using the
-theory of coercive monotone operators \cite{KinderlehrerStampacchia1980},
-without any Picard iteration between Skorohod and Stokes steps.
-
-The Skorohod-based iteration proposed here---alternating between
-the Skorohod formula (with given velocity) and the Stokes solve
-(with given surface)---is an alternative route to the same coupled
-solution.
-Convergence of the iteration follows when $T$ is a contraction; under
-uniqueness of the implicit VI solution
-(which follows from strict monotonicity under Conjecture~2 of
-\cite{Bueler2025}), the fixed-point limit and the implicit VI solution
-then coincide.
-
-In summary, the central open problem for either approach is
-Hypothesis~\ref{hyp:stokestraceW1}: that the Stokes velocity surface
-trace on a Lipschitz glacier domain has $W^{1,q}$ regularity as a
-function of the map-plane coordinates, with a bound that is Lipschitz
-in the surface elevation.
 
 \bibliographystyle{siamplain}
 \bibliography{pile}
