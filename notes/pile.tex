@@ -34,12 +34,7 @@ ct-left=\qquad\qquad(,%
 ct-right=),%
 }
 
-\newcommand{\eps}{\epsilon}
-\newcommand{\RR}{\mathbb{R}}
-
-\newcommand{\grad}{\nabla}
-\newcommand{\Div}{\nabla\cdot}
-
+\newcommand{\bb}{\mathbf{b}}
 \newcommand{\bn}{\mathbf{n}}
 \newcommand{\bu}{\mathbf{u}}
 \newcommand{\bw}{\mathbf{w}}
@@ -48,6 +43,12 @@ ct-right=),%
 
 \newcommand{\bPhi}{\bm{\Phi}}
 \newcommand{\bzero}{\bm{0}}
+
+\newcommand{\eps}{\epsilon}
+\newcommand{\RR}{\mathbb{R}}
+
+\newcommand{\grad}{\nabla}
+\newcommand{\Div}{\nabla\cdot}
 
 \newcommand{\dx}{\,dx}
 \newcommand{\bds}{\bm{ds}}
@@ -153,9 +154,9 @@ s_t + u s_x + v s_y - c &\ge 0 \\
 
 The linear advection \eqref{eq:pilepde} can be solved by characteristics \cite[section 3.2]{Evans2010}.  We state that result before modifying it to account for the inequalities in complementarity problem \eqref{eq:pilencp}.
 
-FIXME think regularity here
-
 \begin{lemma} \label{lem:chars}
+FIXME \cite{DiPernaLions1989} gives the data regularity hypotheses we need, so that e.g.~$\bb=\ip{u}{v}$ needs to have $\Div \bb \in L^1(0,T;L^\infty(\Omega))$
+
 Suppose $u, v, c \in C^1([0,T] \times \Omega)$ and let $s_0 \in C^1(\Omega)$ be initial data.  For each $(x_0,y_0) \in \Omega$, let
     $$t \mapsto (X(t),Y(t)) = (X(t;x_0,y_0), Y(t;x_0,y_0))$$
 denote the solution of the characteristic ODE system
