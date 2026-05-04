@@ -13,11 +13,8 @@
 \newsiamthm{claim}{Claim}
 \newsiamremark{example}{Example}
 
-\usepackage{bm}
-
-%\usepackage{amsopn}
-%\usepackage{bm,bbm,empheq,verbatim,fancyvrb}
-%\usepackage{booktabs,multirow,xspace}
+\usepackage{bm,empheq,fancyvrb,xspace}
+%\usepackage{booktabs,multirow}
 
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing}
@@ -44,15 +41,6 @@ ct-right=),%
 \newcommand{\bPhi}{\bm{\Phi}}
 \newcommand{\bzero}{\bm{0}}
 
-\newcommand{\eps}{\epsilon}
-\newcommand{\RR}{\mathbb{R}}
-
-\newcommand{\grad}{\nabla}
-\newcommand{\Div}{\nabla\cdot}
-
-\newcommand{\dx}{\,dx}
-\newcommand{\bds}{\bm{ds}}
-
 \newcommand{\cK}{\mathcal{K}}
 \newcommand{\cV}{\mathcal{V}}
 \newcommand{\cW}{\mathcal{W}}
@@ -63,13 +51,18 @@ ct-right=),%
 \newcommand{\pp}{\mathrm{p}}
 \newcommand{\qq}{\mathrm{q}}
 
+\newcommand{\eps}{\epsilon}
+\newcommand{\RR}{\mathbb{R}}
+
+\newcommand{\grad}{\nabla}
+\newcommand{\Div}{\nabla\cdot}
+
+\newcommand{\dx}{\,dx}
+\newcommand{\bds}{\bm{ds}}
+
 \newcommand{\ip}[2]{\left<#1,#2\right>}
-\newcommand{\Bform}[2]{B\big(\left(#1\right),\left(#2\right)\big)}
-
 \DeclareMathOperator{\diag}{diag}
-
 \newcommand{\XX}{\ding{55}}
-
 \DeclareMathOperator*{\argmin}{arg\,min}
 
 \newfloat{pseudofloat}{t}{xyz}[section]
@@ -80,7 +73,7 @@ ct-right=),%
 
 
 % Sets running headers as well as PDF title and authors
-%\headers{FIXME}{E. Bueler}
+%\headers{FIXME}{E. Bueler and T. Surowiec}
 
 \title{Snow piles on conveyor belts: \\ a simplified glacier evolution model}
 
@@ -152,41 +145,44 @@ s_t + u s_x + v s_y - c &\ge 0 \\
 \end{align}
 \end{subequations}
 
-The linear advection \eqref{eq:pilepde} can be solved by characteristics \cite[section 3.2]{Evans2010}.  We state that result before modifying it to account for the inequalities in complementarity problem \eqref{eq:pilencp}.
+% FIXME after a claude-assisted search the two glacier-related references which relate in any signficant manner to \eqref{eq:pilencpearly} are Bueler (2021) subsection 4.4 and POSSIBLY Diaz & Schiavi (1999)
+
+The linear advection \eqref{eq:pilepde} can be solved by characteristics \cite[section 3.2]{Evans2010}.  We recall this construction here, with sufficient regularity assumptions.
 
 \begin{lemma} \label{lem:chars}
-FIXME \cite{DiPernaLions1989} gives the data regularity hypotheses we need, so that e.g.~$\bb=\ip{u}{v}$ needs to have $\Div \bb \in L^1(0,T;L^\infty(\Omega))$
-
-Suppose $u, v, c \in C^1([0,T] \times \Omega)$ and let $s_0 \in C^1(\Omega)$ be initial data.  For each $(x_0,y_0) \in \Omega$, let
-    $$t \mapsto (X(t),Y(t)) = (X(t;x_0,y_0), Y(t;x_0,y_0))$$
+Suppose $u, v, c \in C^0([0,T] \times \bar\Omega)$, the time-dependent data, and suppose $c$ is Lipschitz in all variables.  Let $s_0 \in C^0(\bar\Omega)$ be the initial data.  Suppose $s \in C^1((0,T) \times \Omega)$ solves \eqref{eq:pilepde} in the classical and unconstrained sense, and $s(0,x,y)=s_0(x,y)$ for all $(x,y)\in \Omega$.  For each $(x_0,y_0) \in \Omega$, let
+    $$t \mapsto (X(t), Y(t)) = (X(t;x_0,y_0), Y(t;x_0,y_0))$$
 denote the solution of the characteristic ODE system
 \begin{equation}
-\frac{dX}{dt} = u(t,X,Y), \quad \frac{dY}{dt} = v(t,X,Y), \quad
-X(0) = x_0, \quad Y(0) = y_0. \label{eq:chars}
+\frac{dX}{dt} = u(t,X,Y), \qquad \frac{dY}{dt} = v(t,X,Y), \label{eq:chars}
 \end{equation}
-Then the unique classical solution of \eqref{eq:pilepde} satisfies
+with $X(0) = x_0$ and $Y(0) = y_0$.  Then
 \begin{equation}
 s\!\left(t, X(t), Y(t)\right) = s_0(x_0,y_0)
-  + \int_0^t c\!\left(\tau, X(\tau), Y(\tau)\right) d\tau. \label{eq:charsol}
+  + \int_0^t c\!\left(\tau, X(\tau), Y(\tau)\right) d\tau \label{eq:charsol}
 \end{equation}
+for all $t>0$ such that $(X(t), Y(t)) \in \Omega$.
 \end{lemma}
 
 \begin{proof}
-Differentiate \eqref{eq:charsol} with respect to $t$ using the chain rule and
-\eqref{eq:chars}, so that \eqref{eq:pilepde} is satisfied.
+For $(x_0,y_0)\in \Omega$, let $\tilde S(t)$ be defined by the right side of \eqref{eq:charsol}, so that $\tilde S(0)=s_0(x_0,y_0)$ and $\tilde S'(t)=c(t,X(t),Y(t))$.  On the other hand, let $S(t)=s\!\left(t, X(t), Y(t)\right)$, so $S(0)=s_0(x_0,y_0)$ in particular.  Differentiate $S(t)$ using the chain rule, then apply \eqref{eq:chars}, and then apply \eqref{eq:pilepde}, to see that $S'(t)=c(t,X(t),Y(t))$.  Since $\tilde S,S$ solve the same ODE problem, by the Cauchy-Lipschitz theorem they are equal.
 \end{proof}
 
-If we ignored the inequalities of \eqref{eq:pilencp} then formula \eqref{eq:charsol} could become an explicit formula for $s(t,x,y)$ supposing that the characteristics could be inverted.  That is, we get a formula for $s(t,x,y)$ if $x=X(t;x_0,y_0)$ and $y=Y(t;x_0,y_0)$ can be solved for $x_0,y_0$ in terms of $t,x,y$.  In that case we could rewrite \eqref{eq:charsol} as
+Continuing to ignor the inequalities of \eqref{eq:pilencp} for a moment, formula \eqref{eq:charsol} becomes an explicit formula for $s(t,x,y)$ supposing that the characteristics can be inverted.  That is, we get a formula for $s(t,x,y)$ if $x=X(t;x_0,y_0)$ and $y=Y(t;x_0,y_0)$ can be solved for $x_0,y_0$ in terms of $t,x,y$.  In that case we may rewrite \eqref{eq:charsol} as
 \begin{equation}
 s(t,x,y) = s_0(x_0,y_0)
   + \int_0^t c\!\left(\tau, X(\tau;x_0,y_0), Y(\tau;x_0,y_0)\right) d\tau \label{eq:charsolagain}
 \end{equation}
-where it is understood that $x_0=x_0(t,x,y)$ and $y_0=y_0(t,x,y)$.
-
-In practice the domain $\Omega$ is bounded, and the characteristic curves either be lead back to locations $(x_0,y_0) \in \Omega$ at time $t=0$, or they intersect with the boundary at a nonnegative time $t_0$: \, $(X(t_0),Y(t_0)) \in \partial\Omega$.  In the latter case some boundary value must supply the value for $s$ at that ``stopping'' time.  For simplicity we will assume zero thickness at the boundary:
+where it is understood that $x_0=x_0(t,x,y)$ and $y_0=y_0(t,x,y)$.  However, in practice the domain $\Omega$ is bounded, and the characteristic curves either lead back to locations $(x_0,y_0) \in \Omega$ at time $t=0$, or they intersect with the boundary at a nonnegative time $t_0$: \, $(X(t_0),Y(t_0)) \in \partial\Omega$.  In the latter case some boundary value must supply the value for $s$ at that ``stopping'' time.  For simplicity we will assume zero thickness at the boundary:
 \begin{equation}
-s(t_0,X(t_0),Y(t_0)) = b(X(t_0),Y(t_0)) \quad \text{ if } (X(t_0),Y(t_0)) \in \partial\Omega \text{ for } t_0\ge 0.  \label{eq:charbc}
+s(t,x,y) = b(x,y) \qquad \text{if } (x,y)\in\partial\Omega.  \label{eq:charbc}
 \end{equation}
+Under all these (strong) sufficient conditions we may regard the unconstrained boundary value problem \eqref{eq:pilepde}, \eqref{eq:charbc} as being solved by integration.
+
+Now our goals are to modify the solution by characteristics so as to account for the inequalities in complementarity problem \eqref{eq:pilencp}, and to adjust hypotheses to align with the expected regularity of the glacier data.
+
+FIXME \cite{DiPernaLions1989} gives the data regularity hypotheses we need, so that e.g.~$\bb=\ip{u}{v}$ needs to have $\Div \bb \in L^1(0,T;L^\infty(\Omega))$
+
 
 FIXME now the Skorohod formula \cite[Lemma 6.14]{KaratzasShreve1991}, from queuing theory \cite[section 1.4.1]{Stewart2011}?, gives a solution of the complementarity problem \eqref{eq:pilencp}
 
@@ -221,13 +217,6 @@ non-decreasing, $\ell(0)=0$, and $H\,d\ell = 0$.  Setting
 $S = H + b(X,Y) = \sigma + \ell$ and using $\dot{\sigma} = c$ from
 \eqref{eq:charsol} gives \eqref{eq:odencp}.
 \end{proof}
-
-Note that by the chain rule and \eqref{eq:chars},
-\begin{align*}
-\dot S(t) &= s_t(t,X(t),Y(t)) + u(t,X(t),Y(t))\, s_x(t,X(t),Y(t)) \\
-  &\hspace{29mm} + v(t,X(t),Y(t))\, s_y(t,X(t),Y(t)),
-\end{align*}
-so \eqref{eq:odencp} is the same as \eqref{eq:pilencp}.
 
 
 \bibliographystyle{siamplain}
