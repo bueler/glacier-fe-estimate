@@ -372,49 +372,16 @@ in the surface elevation.
 
 \section{Does Rodrigues use the Skor\-okhod formula?}
 
-<<<<<<< HEAD
 Rodrigues \cite{Rodrigues2004} is the closest prior work, but does not use the Skor\-okhod formula.  He treats the obstacle problem for a first-order operator $Hu = b\cdot\nabla u + b_0 u$ with constraint $u \ge \psi$, formulated as the complementarity problem (his eq.~(3.1)):
-=======
-Having read \cite{Rodrigues2004} in full, here is an honest comparison
-with the approach in pile.tex.
-
-Rodrigues is the closest prior work, but does not use the Skor\-okhod
-formula.  He treats the obstacle problem for a first-order operator
-$Hu = b\cdot\nabla u + b_0 u$
-with constraint $u \ge \psi$, formulated as the complementarity problem
-(his eq.~(3.1)):
->>>>>>> tmp-stuff
 \[
 u \ge \psi, \qquad Hu - f \ge 0, \qquad (Hu-f)(u-\psi) = 0
 \quad \text{a.e.\ in } Q.
 \]
-<<<<<<< HEAD
 This is structurally the Skor\-okhod condition distributed over the domain, but Rodrigues solves it via penalization and variational inequality methods (the Mignot--Puel 1976 framework), not via the running-supremum formula.
 
 The reason is that Rodrigues requires the coercivity condition $b_0 - \tfrac{1}{2}\nabla\cdot b \ge \beta > 0$ for $L^2$ well-posedness.  That zeroth-order damping breaks the clean characteristic reduction: along a characteristic $\dot X = b(X)$ the equation acquires an exponential weight, so it is no longer pure transport.
 
 For pure transport $\partial_t u + b\cdot\nabla u = f$ with $b_0=0$ and obstacle $u \ge 0$, along each characteristic $\dot X = b(X)$ the problem does collapse to the one-dimensional Skor\-okhod problem, and the solution is $u(X(t),t) = x(t) + \sup_{s\le t} x^-(s)$ fiber by fiber.  This appears not to have been stated explicitly in the literature: the argument is immediate from characteristics together with the Skor\-okhod formula, but the two communities (hyperbolic obstacle problems; stochastic reflection) have not been in contact on this point.
-=======
-This is structurally the Skor\-okhod condition distributed over the
-domain, but Rodrigues solves it via penalization and variational
-inequality methods (the Mignot--Puel 1976 framework), not via the
-running-supremum formula.
-
-The reason is that Rodrigues requires the coercivity condition
-$b_0 - \tfrac{1}{2}\nabla\cdot b \ge \beta > 0$
-for $L^2$ well-posedness.  That zeroth-order damping breaks the clean
-characteristic reduction: along a characteristic $\dot X = b(X)$ the
-equation acquires an exponential weight, so it is no longer pure
-transport.
-
-For pure transport $\partial_t u + b\cdot\nabla u = f$ with $b_0=0$
-and obstacle $u \ge 0$, along each characteristic $\dot X = b(X)$
-the problem does collapse to the one-dimensional Skor\-okhod problem,
-and the solution is $u(X(t),t) = x(t) + \sup_{s\le t} x^-(s)$ fiber
-by fiber.  This appears to be a folk theorem: the argument is immediate
-from characteristics together with the Skor\-okhod formula, but no
-paper states it explicitly by that name.
->>>>>>> tmp-stuff
 
 The foundational works cited in \cite{Rodrigues2004} are Mignot--Puel
 (1976) and Bensoussan--Lions (1973); for conservation law obstacle
