@@ -112,7 +112,7 @@ Daganzo (2005). "A variational formulation of kinematic waves," Transportation R
 
 Lions (1982). "Generalized Solutions of Hamilton-Jacobi Equations". does this treat obstacle problems for first-order equations?
 
-Díaz & Schiavi (1999). "On a degenerate parabolic/hyperbolic system in glaciology giving rise to a free boundary," Nonlinear Anal. 38, 649--671.  The one prior paper in glaciology that mixes hyperbolic structure with a free boundary. You need to know exactly what it does and doesn't do--specifically whether it ever uses characteristics or only weak/variational methods--so you can precisely characterize your contribution relative to it.
+Díaz \& Schiavi (1999). "On a degenerate parabolic/hyperbolic system in glaciology giving rise to a free boundary," Nonlinear Anal. 38, 649--671.  The one prior paper in glaciology that mixes hyperbolic structure with a free boundary. You need to know exactly what it does and doesn't do--specifically whether it ever uses characteristics or only weak/variational methods--so you can precisely characterize your contribution relative to it.
 
 \bigskip
 
@@ -369,6 +369,45 @@ Hypothesis~\ref{hyp:stokestraceW1}: that the Stokes velocity surface
 trace on a Lipschitz glacier domain has $W^{1,q}$ regularity as a
 function of the map-plane coordinates, with a bound that is Lipschitz
 in the surface elevation.
+
+\section{Does Rodrigues use the Skor\-okhod formula?}
+
+Having read \cite{Rodrigues2004} in full, here is an honest comparison
+with the approach in pile.tex.
+
+Rodrigues is the closest prior work, but does not use the Skor\-okhod
+formula.  He treats the obstacle problem for a first-order operator
+$Hu = b\cdot\nabla u + b_0 u$
+with constraint $u \ge \psi$, formulated as the complementarity problem
+(his eq.~(3.1)):
+\[
+u \ge \psi, \qquad Hu - f \ge 0, \qquad (Hu-f)(u-\psi) = 0
+\quad \text{a.e.\ in } Q.
+\]
+This is structurally the Skor\-okhod condition distributed over the
+domain, but Rodrigues solves it via penalization and variational
+inequality methods (the Mignot--Puel 1976 framework), not via the
+running-supremum formula.
+
+The reason is that Rodrigues requires the coercivity condition
+$b_0 - \tfrac{1}{2}\nabla\cdot b \ge \beta > 0$
+for $L^2$ well-posedness.  That zeroth-order damping breaks the clean
+characteristic reduction: along a characteristic $\dot X = b(X)$ the
+equation acquires an exponential weight, so it is no longer pure
+transport.
+
+For pure transport $\partial_t u + b\cdot\nabla u = f$ with $b_0=0$
+and obstacle $u \ge 0$, along each characteristic $\dot X = b(X)$
+the problem does collapse to the one-dimensional Skor\-okhod problem,
+and the solution is $u(X(t),t) = x(t) + \sup_{s\le t} x^-(s)$ fiber
+by fiber.  This appears to be a folk theorem: the argument is immediate
+from characteristics together with the Skor\-okhod formula, but no
+paper states it explicitly by that name.
+
+The foundational works cited in \cite{Rodrigues2004} are Mignot--Puel
+(1976) and Bensoussan--Lions (1973); for conservation law obstacle
+problems, L\'evi (M2AN, 2001).  None invoke Skor\-okhod by name.
+
 
 \bibliographystyle{siamplain}
 \bibliography{pile}
