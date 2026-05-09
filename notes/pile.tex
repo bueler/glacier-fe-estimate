@@ -13,7 +13,7 @@
 \newsiamthm{claim}{Claim}
 \newsiamremark{example}{Example}
 
-\usepackage{bm,empheq,fancyvrb,xspace}
+\usepackage{bm,dsfont,empheq,fancyvrb,xspace}
 %\usepackage{booktabs,multirow}
 
 \usepackage{tikz}
@@ -60,6 +60,8 @@ ct-right=),%
 \newcommand{\dx}{\,dx}
 \newcommand{\bds}{\bm{ds}}
 
+\newcommand{\one}{\mathds{1}}
+
 \newcommand{\ip}[2]{\left<#1,#2\right>}
 \DeclareMathOperator{\diag}{diag}
 \newcommand{\XX}{\ding{55}}
@@ -89,7 +91,7 @@ ct-right=),%
 \maketitle
 
 \begin{abstract}
-This is a very preliminary note!  It considers how to solve the main complementarity problem for the surface elevation of a glacier, but in the case where the actual surface value of the ice-flow velocity is replaced by a fixed velocity field.  Under such a severe simplification, the snow accumulates or ablates at locations which move along pre-determined characteristic curves (thus the title).  The piles of snow, assumed to be of ice density, act like queues with a positive-length, i.e.~positive glacier thickness, inequality constraint, and so a Skorohod-type formula for the solutions along characteristics is available.
+This is a very preliminary note!  It considers how to solve the main complementarity problem for the surface elevation of a glacier, in the notional case where the actual surface value of the ice-flow velocity is replaced by a fixed velocity field.  Under such a severe simplification, the snow accumulates or ablates at locations which then move along pre-determined characteristic curves (thus the title).  The piles of snow, assumed to have the density of ice, act like queues with a positive length, that is, the glacier thickness is positive.  A Skorohod-type formula for the solutions along characteristics solves the problem.
 \end{abstract}
 
 %\begin{keywords}
@@ -99,124 +101,199 @@ This is a very preliminary note!  It considers how to solve the main complementa
 %FIXME
 %\end{MSCcodes}
 
-Consider snow which falls at some rate $a(t,x,y)$, over a time interval $t\in [0,\infty)$ and for locations $(x,y)$ within a fixed map-plane domain $\Omega \subset \RR^2$.  More precisely, suppose $a$ gives the \emph{signed} instantaneous surface mass balance rate \cite{Cogleyetal2011} in ice-equivalent meters per second.  This means that $a>0$ when snow is falling ($a=$ accumulation rate) and $a<0$ when melt is occurring ($a=$ ablation rate).  While in actuality there is a time scale for the conversion of snow into maximal-density ice, in this note we suppose the process is instantaneous, so falling snow immediately becomes flowing ice in a glacier.  Similarly, the time scale at which melt water runs off-glacier is sufficiently short that we also regard it as instantaneous.
+\section{Introduction}
 
-Suppose that the land is at elevation $b(x,y)$, which is assumed time-independent.  The value of $b$ is the bedrock elevation underneath the glacier, or it is the land surface elevation if the land is not ice-covered.
+Consider snow which falls at some rate $a(t,x,y)$, over a time interval $t\in [0,T)$ and for locations $(x,y)$ within a fixed map-plane domain $\Omega \subset \RR^2$.  More precisely, suppose $a$ gives the \emph{signed} instantaneous surface mass balance rate \cite{Cogleyetal2011} in ice-equivalent meters per second.  This means that $a>0$ when snow is falling ($a=$ accumulation rate) and $a<0$ when melt is occurring ($a=$ ablation rate).
 
-Now our model is that as snow piles-up, according to values $a>0$, it will form a glacier, which flows under the action of gravity, according to the shape of the mountains given by $b$, but if it flows into regions where $a<0$ then it will decrease in thickness to zero.  To make this precise, let $s(t,x,y)$ be the upper surface elevation of the evolving glacier.  A \emph{surface kinematical equation} \cite{GreveBlatter2009} for the glacier applies at the surface,
+While in actuality there is a time scale for the conversion of snow into maximal-density ice, in this note we suppose the process is instantaneous, so falling snow immediately becomes flowing ice in a glacier.  Similarly, the time scale at which melt water runs off-glacier is sufficiently short that we also regard it as instantaneous.
+
+On the other hand, suppose that the land is at elevation $b(x,y)$, which is assumed time-independent.  (The extension to $b(t,x,y)$ is actually straightforward.)  The value of $b$ is the bedrock elevation underneath the glacier, or it is the land surface elevation if the land is not ice-covered.
+
+As snow piles-up, according to values $a>0$, it will form a glacier, which flows under the action of gravity, according to the shape of the land (e.g.~mountains) given by $b$.  However, as it flows into regions with melting conditions, where $a<0$, then it will decrease in thickness to zero.
+
+To make this precise, let $s(t,x,y)$ be the upper surface elevation of the evolving glacier.  A \emph{surface kinematical equation} \cite{GreveBlatter2009} for the glacier applies at the surface,
 \begin{equation}
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a = 0,  \label{eq:ske}
 \end{equation}
-but this is only true at points \emph{on the ice}.  Over the whole domain $\Omega$, including both ice-covered and ice-free locations, the surface can never go below the bed $b$.  Thus the mathematical model for the evolution of $s$ is the following complementarity problem:
+but this is only true at points \emph{on the ice}.  Over the whole domain $\Omega$, including both ice-covered and ice-free locations, the surface can never go below the bed $b$.  Thus the mathematical model for the evolution of $s$ is, in fact, the following complementarity problem \cite{Calvoetal2003,JouvetBueler2012}:
 \begin{equation}
 s - b \ge 0, \quad
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a \ge 0, \quad
 (s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) = 0  \label{eq:ncp}
 \end{equation}
-Note that $h=s-b$ is the ice thickness, and this complementarity model can be re-phrased in terms of thickness, subject to the constraint $h\ge 0$ in particular.
-
 In the above equations $\bu|_s$ denotes the (upper) surface value of the ice flow velocity, and
 \begin{equation}
 \bn_s = \left<-\frac{\partial s}{\partial x}, -\frac{\partial s}{\partial y}, 1\right> \label{eq:normal}
 \end{equation}
-is an upward surface-normal vector.  Conceptually, the surface kinematical equation \eqref{eq:ske} can be used to determine the vertical motion of the surface from the surface-normal component of the ice flow velocity and the surface mass balance $a$.
+is an upward surface-normal vector.  Equation \eqref{eq:ske} is understood by glaciologists as a way to determine the vertical motion of the surface from the surface-normal component of the ice flow velocity and the surface mass balance $a$.  Precisely-speaking equation \eqref{eq:ske} must be replaced by the complementarity problem \eqref{eq:ncp}, giving a free boundary where $s \searrow b$.  In observational practice, this free boundary is simply the location where a glaciologist will lose interest in the topic as they walk off the glacier.
 
-However, in fact the 3D ice flow velocity $\bu$ solves a Stokes-type problem within the ice, below the surface, which is a very-viscous fluid \cite{GreveBlatter2009}.  Thus a complete glacier evolution model must couple \eqref{eq:ncp} with equations determining the 3D velocity and pressure fields through a Stokes solution at every instant.  For such a model see equations (1.1)--(1.6) in \cite{Bueler2025}; complementarity problem \eqref{eq:ncp} is (1.3) therein.
+Note that $h=s-b$ is the ice thickness.  Clearly, complementarity model \eqref{eq:ncp} can be re-phrased in terms of thickness, constrained by $h\ge 0$.  Indeed, by the incompressibility of the ice, the corresponding complementarity problem has divergence form when stated in terms of the thickness \cite{Bueler2021,JouvetBueler2012}.  However, the surface elevation $s$ is generally smoother than the thickness $h$, because the latter inherits the low regularity of the bed elevation data $b$ \cite{Bueler2025}, and so in this note we use $s$ to parameterize glacier geometry.
 
-In this note we are considering a severely-simplified model which arises if the coupled-solution velocity is replaced by a pre-determined velocity field $\bu(t,x,y) \in \RR^3$ which is defined for every $t\in [0,\infty)$ and $(x,y)\in\Omega$.  Now the velocity field $\bu$ in the surface kinematical complementarity problem \eqref{eq:ncp} is given as data, along with the climatic input $a$:
+However, in a flowing glacier a 3D ice velocity field $\bu$ solves a Stokes-type problem within the ice, below the surface, which is a very-viscous fluid \cite{GreveBlatter2009}.  Thus a complete glacier evolution model must couple \eqref{eq:ncp} with equations determining the 3D velocity and pressure fields through a Stokes solution at every instant.  For such a model see equations (1.1)--(1.6) in \cite{Bueler2025}; complementarity problem \eqref{eq:ncp} is (1.3) therein.
+
+In this note we are considering the severely-simplified model which arises if the coupled-solution velocity is replaced by a pre-determined velocity field $\bu(t,x,y) \in \RR^3$ which is defined for every $t\in [0,\infty)$ and $(x,y)\in\Omega$.  Now the velocity field $\bu$ in the surface kinematical complementarity problem \eqref{eq:ncp} is given as data:
 \begin{equation}
 s - b \ge 0, \quad
 \frac{\partial s}{\partial t} - \bu \cdot \bn_s - a \ge 0, \quad
 (s - b) \left(\frac{\partial s}{\partial t} - \bu \cdot \bn_s - a\right) = 0  \label{eq:pilencpearly}
 \end{equation}
-We will also suppose $s=b$ along $\partial \Omega$, that is, the glacier's thickness $h=s-b$ is forced to go to zero at the boundary of the computation domain.  In summary, $\Omega,a(t,x,y),b(x,y),\bu(t,x,y)$ are data for this problem, and $s(t,x,y)$ is the solution.
+We will also suppose $s=b$ along $\partial \Omega$, that is, the glacier's thickness $h=s-b$ is forced to go to zero at the boundary of the computational domain.  In summary, $\Omega,a(t,x,y),b(x,y),\bu(t,x,y)$ are data for complementarity problem \eqref{eq:pilencpearly}, and $s(t,x,y)$ is the solution.
 
-The interior condition \cite{KinderlehrerStampacchia1980} of complementarity problem \eqref{eq:pilencpearly} is a linear advection PDE, that is, equation \eqref{eq:ske} is now a linear advection.  Denote $\bu=\left<u,v,w\right>$ for the velocity components, and from now on denote partial derivatives with subscripts.  Let $c = w + a$; now this whole source term is data.  From \eqref{eq:normal}, the interior PDE, which applies at ice-covered locations where $s>b$, is
+The interior condition \cite{KinderlehrerStampacchia1980} of complementarity problem \eqref{eq:pilencpearly} is a linear advection PDE, that is, equation \eqref{eq:ske} is now a linear advection.  Denote $\bu=\left<u,v,w\right>$ for the velocity components, and from now on denote partial derivatives with subscripts.  From \eqref{eq:normal}, the interior PDE, which applies at ice-covered locations where $s>b$, is
 \begin{equation}
-s_t + u s_x + v s_y = c \label{eq:pilepde}
+s_t + u s_x + v s_y = w + a \label{eq:pilepde}
 \end{equation}
-Here $u(t,x,y)$, $v(t,x,y)$, and $c(t,x,y)$ are scalar functions given as data, and complementarity problem \eqref{eq:pilencpearly} is written
+Here $u,v,w,a$ are scalar functions given as data, and complementarity problem \eqref{eq:pilencpearly} is written
 \begin{subequations}
 \label{eq:pilencp}
 \begin{align}
 s - b &\ge 0 \\
-s_t + u s_x + v s_y - c &\ge 0 \\
-(s - b) \left(s_t + u s_x + v s_y - c\right) &= 0.
+s_t + u s_x + v s_y - w - a &\ge 0 \\
+(s - b) \left(s_t + u s_x + v s_y - w - a\right) &= 0.
 \end{align}
 \end{subequations}
 
-% FIXME after a claude-assisted search the two glacier-related references which relate in any signficant manner to \eqref{eq:pilencpearly} are Bueler (2021) subsection 4.4 and POSSIBLY Diaz & Schiavi (1999)
 
-The linear advection \eqref{eq:pilepde} can be solved by characteristics \cite[section 3.2]{Evans2010}.  We recall this construction here, with sufficient regularity assumptions.
+\section{Solution of the strong form by characteristics}
 
-\begin{lemma} \label{lem:chars}
-Suppose $u, v, c \in C^0([0,T] \times \bar\Omega)$, the time-dependent data, and suppose $c$ is Lipschitz in all variables.  Let $s_0 \in C^0(\bar\Omega)$ be the initial data.  Suppose $s \in C^1((0,T) \times \Omega)$ solves \eqref{eq:pilepde} in the classical and unconstrained sense, and $s(0,x,y)=s_0(x,y)$ for all $(x,y)\in \Omega$.  For each $(x_0,y_0) \in \Omega$, let
-    $$t \mapsto (X(t), Y(t)) = (X(t;x_0,y_0), Y(t;x_0,y_0))$$
-denote the solution of the characteristic ODE system
+The linear advection PDE \eqref{eq:pilepde} can be solved by characteristics \cite[section 3.2]{Evans2010}, a classical construction which we now recall.  Here we do not need spatial boundary values for $s$.
+
+\begin{lemma} \label{lem:chars}  Suppose $\Omega \subset \RR^2$ is a bounded domain.  Suppose $u,v,w,a$ are in $C^0([0,T) \times \Omega)$, with $u,v$ Lipschitz in $(x,y)\in\Omega$.  Let $s_0 \in C^0(\Omega)$.  Suppose $s(t,x,y)$ is in $C^0([0,T)\times \Omega) \cap C^1((0,T)\times \Omega)$ and solves \eqref{eq:pilepde} in the classical (and unconstrained) sense, with $s(0,x,y)=s_0(x,y)$ for all $(x,y)\in \Omega$.  For each $(x_0,y_0) \in \Omega$, let
+    $$t \mapsto (X(t), Y(t)) = (X(t;x_0,y_0), Y(t;x_0,y_0)),$$
+denote the unique continuous characteristic curve solving the ODE system
 \begin{equation}
 \frac{dX}{dt} = u(t,X,Y), \qquad \frac{dY}{dt} = v(t,X,Y), \label{eq:chars}
 \end{equation}
-with $X(0) = x_0$ and $Y(0) = y_0$.  Then
+with $X(0) = x_0$ and $Y(0) = y_0$.  Let $t_s = \inf \{t\in [0,T)\,:\, (X(t),Y(t))\notin\Omega\}$, with the convention that $\inf\emptyset=T$.  Then
 \begin{equation}
 s\!\left(t, X(t), Y(t)\right) = s_0(x_0,y_0)
-  + \int_0^t c\!\left(\tau, X(\tau), Y(\tau)\right) d\tau \label{eq:charsol}
+  + \int_0^t \big[w\!\left(\tau, X(\tau), Y(\tau)\right) + a\!\left(\tau, X(\tau), Y(\tau)\right)\big] d\tau \label{eq:charsol}
 \end{equation}
-for all $t>0$ such that $(X(t), Y(t)) \in \Omega$.
+for $t\in[0,t_s)$.
 \end{lemma}
 
 \begin{proof}
-For $(x_0,y_0)\in \Omega$, let $\tilde S(t)$ be defined by the right side of \eqref{eq:charsol}, so that $\tilde S(0)=s_0(x_0,y_0)$ and $\tilde S'(t)=c(t,X(t),Y(t))$.  On the other hand, let $S(t)=s\!\left(t, X(t), Y(t)\right)$, so $S(0)=s_0(x_0,y_0)$ in particular.  Differentiate $S(t)$ using the chain rule, then apply \eqref{eq:chars}, and then apply \eqref{eq:pilepde}, to see that $S'(t)=c(t,X(t),Y(t))$.  Since $\tilde S,S$ solve the same ODE problem, by the Cauchy-Lipschitz theorem they are equal.
+For $(x_0,y_0)\in \Omega$, let $\tilde S(t)$ be defined by \eqref{eq:charsol}, so that $\tilde S\in C^1([0,t_s))$, $\tilde S(0)=s_0(x_0,y_0)$, and $\tilde S'(t)=e(t,X(t),Y(t))$, where $e=w+a$.  On the other hand, let $S(t)=s\!\left(t, X(t), Y(t)\right)$; note $S(0)=s_0(x_0,y_0)$.  Differentiate $S(t)$ using the chain rule, then apply \eqref{eq:chars}, and then apply \eqref{eq:pilepde}, to see that $S'(t)=e(t,X(t),Y(t))$.  Thus $\tilde S$ and $S$ are equal by the fundamental theorem of calculus.
 \end{proof}
 
-Continuing to ignor the inequalities of \eqref{eq:pilencp} for a moment, formula \eqref{eq:charsol} becomes an explicit formula for $s(t,x,y)$ supposing that the characteristics can be inverted.  That is, we get a formula for $s(t,x,y)$ if $x=X(t;x_0,y_0)$ and $y=Y(t;x_0,y_0)$ can be solved for $x_0,y_0$ in terms of $t,x,y$.  In that case we may rewrite \eqref{eq:charsol} as
+Formula \eqref{eq:charsol} becomes an explicit formula for $s(t,x,y)$ when the characteristics can be inverted.  That is, we get a formula for $s(t,x,y)$ solving the (unconstrained) PDE \eqref{eq:pilepde} if $x=X(t;x_0,y_0)$ and $y=Y(t;x_0,y_0)$ can be solved for $x_0,y_0$ in terms of $t,x,y$.  In that case we may rewrite \eqref{eq:charsol} as
 \begin{equation}
 s(t,x,y) = s_0(x_0,y_0)
-  + \int_0^t c\!\left(\tau, X(\tau;x_0,y_0), Y(\tau;x_0,y_0)\right) d\tau \label{eq:charsolagain}
+  + \int_0^t e\!\left(\tau, X(\tau;x_0,y_0), Y(\tau;x_0,y_0)\right) d\tau \label{eq:charsolagain}
 \end{equation}
-where it is understood that $x_0=x_0(t,x,y)$ and $y_0=y_0(t,x,y)$.  However, in practice the domain $\Omega$ is bounded, and the characteristic curves either lead back to locations $(x_0,y_0) \in \Omega$ at time $t=0$, or they intersect with the boundary at a nonnegative time $t_0$: \, $(X(t_0),Y(t_0)) \in \partial\Omega$.  In the latter case some boundary value must supply the value for $s$ at that ``stopping'' time.  For simplicity we will assume zero thickness at the boundary:
+where $e=w+a$, with it understood that $x_0=x_0(t,x,y)$ and $y_0=y_0(t,x,y)$.  However, some boundary value must supply the value for $s(t_s,X(t_s),Y(t_s))$ at the stopping time for that characteristic.  For simplicity we will assume, from now on, that the bed elevation is continuous up to the boundary, $b \in C^0(\bar\Omega)$, and that the ice thickness is zero at the boundary:
 \begin{equation}
 s(t,x,y) = b(x,y) \qquad \text{if } (x,y)\in\partial\Omega.  \label{eq:charbc}
 \end{equation}
-Under all these (strong) sufficient conditions we may regard the unconstrained boundary value problem \eqref{eq:pilepde}, \eqref{eq:charbc} as being solved by integration.
+Under all these conditions we may regard the unconstrained boundary value problem \eqref{eq:pilepde}, \eqref{eq:charbc} as being solved by integration.
 
-Now our goals are to modify the solution by characteristics so as to account for the inequalities in complementarity problem \eqref{eq:pilencp}, and to adjust hypotheses to align with the expected regularity of the glacier data.
+The main idea of this note is that we can modify the above unconstrained solution to account for the inequalities in complementarity problem \eqref{eq:pilencp}.  Along each characteristic we propose to regard this as a deterministic Skorohod problem, which arises for reflecting stochastic processes \cite{LionsSznitman1984} and in queuing theory \cite[section 1.4.1]{Stewart2011}.  The proof of the following applies \cite[Lemma 6.14]{KaratzasShreve1991}.  Note that we do \emph{not} require $b$ to be more regular than continuous.
 
-FIXME \cite{DiPernaLions1989} gives the data regularity hypotheses we need, so that e.g.~$\bb=\ip{u}{v}$ needs to have $\Div \bb \in L^1(0,T;L^\infty(\Omega))$
-
-
-FIXME now the Skorohod formula \cite[Lemma 6.14]{KaratzasShreve1991}, from queuing theory \cite[section 1.4.1]{Stewart2011}?, gives a solution of the complementarity problem \eqref{eq:pilencp}
-
-\begin{lemma} \label{lem:skoro}  FIXME NEEDS CHECKING IN MORE DETAIL
-
-Suppose the conditions of Lemma 1 hold, additionally $b \in C^1(\Omega)$, and
-$s_0 \ge b$ on $\Omega$.  For $(x_0,y_0) \in \Omega$, let $\sigma(t) = \sigma(t;x_0,y_0)$
-denote the unconstrained solution \eqref{eq:charsol} of \eqref{eq:pilepde}.  Define
+\begin{lemma} \label{lem:skoro}  Suppose the conditions of Lemma \ref{lem:chars} hold, additionally $b,s_0 \in C^0(\bar\Omega)$, and suppose $s_0 \ge b$ on $\bar\Omega$ with $s_0=b$ on $\partial \Omega$.  For $(x_0,y_0) \in \Omega$, let $X(t),Y(t)$ be the solution of \eqref{eq:chars}, for $t\in[0,t_s)$ with $t_s=t_s(x_0,y_0)$ defined to be the first time when the characteristic curve hits $\partial\Omega$.  Define
 \begin{equation}
-\ell(t) = \max\!\left(0,\;
-    \sup_{0 \le r \le t}\!\Big[b\!\left(X(r),Y(r)\right) - \sigma(r)\Big]\right),
-\label{eq:skoro}
+B(t) = b(X(t),Y(t)) \quad \text{and} \quad E(t)=w(X(t),Y(t)) + a(X(t),Y(t)), \label{eq:skorodefBE}
 \end{equation}
-so that $\ell$ is non-decreasing and $\ell(0) = 0$.  Then $S(t) = \sigma(t) + \ell(t)$ is the unique solution satisfying
+so that $B,E\in C^0([0,t_s))$.  Let $\sigma(t) = \sigma(t;x_0,y_0)$ denote the (unconstrained) solution \eqref{eq:charsol} of \eqref{eq:pilepde}, so that $\sigma \in C^0([0,t_s)) \cap C^1((0,t_s))$ and $\sigma(0)=s_0(x_0,y_0) \ge b(x_0,y_0) = B(0)$.  Define
 \begin{equation}
-S - b(X,Y) \ge 0, \qquad \dot{S} - c \ge 0, \qquad \big(S - b(X,Y)\big)\,\big(\dot{S} - c\big) = 0,
-\label{eq:odencp}
+k(t) = \max\!\left(0,\; \sup_{0 \le r \le t}\!\Big[B(r) - \sigma(r)\Big]\right),  \label{eq:skoro}
 \end{equation}
-In other words,
+so that $k$ is continuous, non-decreasing, and $k(0) = 0$.  In particular, $k$ is of bounded variation, thus differentiable a.e.~even when $B$ is not differentiable.  Then
 \begin{equation}
-s(t,X(t),Y(t)) = S(t) = \sigma(t) + \ell(t)
+S(t) = \sigma(t) + k(t)
 \end{equation}
-solves \eqref{eq:pilencp} along characteristic \eqref{eq:chars}.
+is continuous on $[0,t_s)$ and satisfies the complementarity problem
+\begin{equation}
+S - B \ge 0, \qquad S' - E \ge 0, \qquad \big(S - B\big)\,\big(S' - E\big) = 0  \label{eq:skoroncp}
+\end{equation}
+a.e.~$t\in [0,t_s)$.  In fact, $\sigma'=E$ for all $t$, thus $k'=S'-E$ a.e., and complementarity holds in the sense of the Stieltjes integral
+\begin{equation}
+\int_0^{t_s} \one_{\{t\,:\,S(t) > B(t)\}}(\tau) \,dk(\tau) = 0.  \label{eq:skorostieltjes}
+\end{equation}
 \end{lemma}
 
+% looking at Lemma 6.14 in KaratzasShreve1991:  y(t) is H(t)=\sigma(t)-B(t) here, k(t) is k(t) here, z=0, and x(t) is S(t) here; note: y(t)+k(t) = H(t)+k(t) = \sigma(t)-B(t)+k(t) = S(t)-B(t)
+
 \begin{proof}
-Apply the Skorohod reflection formula \cite[Lemma 6.14]{KaratzasShreve1991}
-to $h(t) = \sigma(t) - b(X(t),Y(t))$, the unconstrained ice thickness along the
-characteristic.  Since $s_0 \ge b$ we have $h(0) \ge 0$, and the Skorohod
-lemma yields a unique pair $(H,\ell)$ with $H = h + \ell \ge 0$, $\ell$
-non-decreasing, $\ell(0)=0$, and $H\,d\ell = 0$.  Setting
-$S = H + b(X,Y) = \sigma + \ell$ and using $\dot{\sigma} = c$ from
-\eqref{eq:charsol} gives \eqref{eq:odencp}.
+Apply the Skorohod reflection formula \cite[Lemma 6.14]{KaratzasShreve1991} to $H(t) = \sigma(t) - B(t)$, the unconstrained ice thickness along the characteristic, which is allowed to go negative.  That formula yields a unique function $k$ with $H + k \ge 0$, $k$ non-decreasing, $k(0)=0$, and $(H+k)\,dk = (S-B)\,dk = 0$.  Setting $S = H + k + B = \sigma + k$ and using $\sigma' = E$ from \eqref{eq:charsol} gives \eqref{eq:skoroncp}.  Note that $\{t\,:\,S(t) > B(t)\} = \{t\,:\,H(t)+k(t)>0\}$.
 \end{proof}
+
+Figure \ref{fig:skoro} illustrates the idea.  Bed elevations $B(t)=b(X(t),Y(t))$ (gray) are determined along the characteristic.  The unconstrained surface elevation $\sigma(t)$ (red, dashed) generally dips below $B(t)$.   In the case shown, at $t_1$ we enter an active set which ends at $t_2$ when $\sigma(t)$ reaches its minimum.  The non-decreasing correction $k(t)\ge 0$ (shaded) freezes at its maximum once $\sigma(t)$ increases.  The constrained surface elevation along the characteristic, namely $S(t)=\sigma(t)+k(t)$ (solid blue), satisfies $S\ge B$ everywhere, with $S=B$ on $[t_1,t_2]$ and $\dot S = E$ elsewhere.
+
+\begin{figure}[ht]
+\centering
+\begin{tikzpicture}[>=stealth, scale=1.2]
+  %% B(t) = 0.8 + 0.3*sin(pi*t/5),  sigma(t) = 2.0 - 1.7*sin(pi*t/5),  T=5
+  %% B - sigma = -1.2 + 2.0*sin(pi*t/5),  max = 0.8 at t2=2.5
+  %% t1: B=sigma => sin(pi*t1/5)=3/5, t1~1.02
+  %% S = sigma on [0,t1],  S = B on [t1,t2],  S = sigma+0.8 on [t2,T]
+
+  %% shaded region 1: [t1,t2], between sigma (below) and B=S (above)
+  \fill[blue!12]
+    plot[domain=1.02:2.5, samples=40, variable=\t]
+         (\t, {0.8 + 0.3*sin(deg(\t*pi/5))})
+    -- plot[domain=2.5:1.02, samples=40, variable=\t]
+         (\t, {2.0 - 1.7*sin(deg(\t*pi/5))})
+    -- cycle;
+  %% shaded region 2: [t2,T], between sigma (below) and S=sigma+0.8 (above)
+  \fill[blue!12]
+    plot[domain=2.5:5, samples=60, variable=\t]
+         (\t, {2.8 - 1.7*sin(deg(\t*pi/5))})
+    -- plot[domain=5:2.5, samples=60, variable=\t]
+         (\t, {2.0 - 1.7*sin(deg(\t*pi/5))})
+    -- cycle;
+
+  %% B(t): bed elevation along characteristic
+  \draw[thick, gray!80!black, domain=0:5, samples=100, variable=\t]
+    plot (\t, {0.8 + 0.3*sin(deg(\t*pi/5))});
+  \node[right, gray!80!black] at (5.1, 0.8) {$B(t)$};
+
+  %% sigma(t): unconstrained surface along characteristic
+  \draw[thick, red!60!black, dashed, domain=0:5, samples=100, variable=\t]
+    plot (\t, {2.0 - 1.7*sin(deg(\t*pi/5))});
+  \node[right, red!60!black] at (5.1, 2.0) {$\sigma(t)$};
+
+  %% S(t) = sigma+k: Skorohod solution (three segments)
+  \draw[very thick, blue!70!black, domain=0:1.02, samples=20, variable=\t]
+    plot (\t, {2.0 - 1.7*sin(deg(\t*pi/5))});
+  \draw[very thick, blue!70!black, domain=1.02:2.5, samples=30, variable=\t]
+    plot (\t, {0.8 + 0.3*sin(deg(\t*pi/5))});
+  \draw[very thick, blue!70!black, domain=2.5:5, samples=60, variable=\t]
+    plot (\t, {2.8 - 1.7*sin(deg(\t*pi/5))});
+  \node[right, blue!70!black] at (5.1, 2.8) {$S(t)$};
+
+  %% axes
+  \draw[->] (-0.2,0) -- (5.8,0) node[right] {$t$};
+  \draw[->] (0,-0.55) -- (0,3.1);
+
+  %% vertical guides at t1 and t2
+  \draw[thin, dashed, gray!60] (1.02,-0.45) -- (1.02,2.65);
+  \draw[thin, dashed, gray!60] (2.5,-0.45) -- (2.5,2.65);
+
+  %% axis labels
+  \draw (1.02, 0.06) -- (1.02,-0.06) node[below] {$t_1$};
+  \draw (2.5,  0.06) -- (2.5, -0.06) node[below] {$t_2$};
+  \draw (5,    0.06) -- (5,   -0.06) node[below] {$T$};
+  \draw[thin] (-0.05,2) -- (0.05,2);
+  \node[left] at (0,2) {\small $s_0$};
+  \fill (0,2) circle (1.5pt);
+
+  %% k double-arrow at t=4
+  \draw[<->] (4, {2.0 - 1.7*sin(deg(4*pi/5))})
+          -- (4, {2.8 - 1.7*sin(deg(4*pi/5))})
+    node[midway, right, font=\small, yshift=3pt] {$k$};
+
+  %% active set brace below x-axis
+  \draw[decorate, decoration={brace, amplitude=4pt, mirror}]
+    (1.02,-0.38) -- (2.5,-0.38)
+    node[midway, below=4pt, font=\small] {active set};
+\end{tikzpicture}
+\caption{Illustration of Lemma~\ref{lem:skoro}: the Skorohod formula gives the surface elevation $S(t)$, admissible relative to the bed elevation $B(t)$, along one characteristic $(X(t),Y(t))$.  The unconstrained surface elevation $\sigma(t)$ will go below the bed under sufficiently-negative surface mass balance.}
+\label{fig:skoro}
+\end{figure}
+
+FIXME we claim that $S(t)=s(t,X(t),Y(t))$ if $s$ solves \eqref{eq:pilencp}, that is, $S$ is the same as the solution of \eqref{eq:pilencp} along characteristic \eqref{eq:chars}.
+
+FIXME \cite{DiPernaLions1989} possibly gives data regularity hypotheses we need for the weak solution of the hyperbolic VI, so that e.g.~$\bb=\ip{u}{v}$ needs to have $\Div \bb \in L^1(0,T;L^\infty(\Omega))$.  I think we want to keep with $b\in C^0(\bar \Omega)$, because it should certainly have point values
 
 
 \bibliographystyle{siamplain}
