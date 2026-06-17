@@ -29,8 +29,6 @@ aposfrac = 0.75                   # fraction of domain on which positive SMB is 
 Nsamples = 1000                   # number of samples when evaluating minimal ratios
 
 # solution method
-zeroheight = 'indices'  # how should StokesExtrude handle zero-height columns;
-                        #   alternative is 'bounds', but it seems to do poorly?
 fssa = True             # use Lofgren et al (2022) FSSA technique in Stokes solve
 theta_fssa = 1.0        #   with this theta value
 
@@ -64,7 +62,6 @@ x, _ = SpatialCoordinate(se.mesh)
 # set up Stokes problem
 se.mixed_TaylorHood()
 #se.mixed_PkDG(kp=0) # = P2xDG0; seems to NOT be better; not sure about P2xDG1
-se.body_force(Constant((0.0, - rho * g)))
 se.dirichlet((1,2), Constant((0.0, 0.0)))      # consequences if ice advances to margin
 se.dirichlet(('bottom',), Constant((0.0, 0.0)))
 params = SolverParams['newton']
@@ -154,7 +151,7 @@ for aconst in SMBlist:
 
         # for saving with current geometry: solve Stokes on extruded mesh and extract surface trace
         stokesF = form_stokes(se, sR, pp=pp, mu0=mu0, fssa=False)
-        u, p = se.solve(F=stokesF, par=params, zeroheight=zeroheight)
+        u, p = se.solve(F=stokesF, par=params)
         ubm = trace_vector_to_p2(bm, se.mesh, u)  # surface velocity (m s-1)
 
         # optionally write t-dependent .pvd with 2D fields

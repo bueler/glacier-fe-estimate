@@ -19,7 +19,7 @@ def form_stokes(se, sR, pp=(1.0/nglen)+1.0, mu0=0.0, fssa=True, theta_fssa=1.0, 
     qqq = (pp - 2.0) / 2.0
     F = fd.inner(B3 * Du2**qqq * _D(u), _D(v)) * fd.dx(degree=4)  # correspondence with paper: nu_p = 0.5 B3
     F -= (p * fd.div(v) + fd.div(u) * q) * fd.dx
-    source = fd.inner(se.f_body, v) * fd.dx
+    source = fd.inner(fd.Constant((0.0, - rho * g)), v) * fd.dx
     if fssa:
         # see section 4.2 in Lofgren et al
         nsR = fd.as_vector([-sR.dx(0), fd.Constant(1.0)])
