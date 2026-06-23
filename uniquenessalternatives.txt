@@ -25,3 +25,45 @@ non-existence) is the other known family. The flat-fill construction is
 mechanistically distinct from both -- no flotation, no elevation feedback,
 just geometric degeneracy of the obstacle problem at bedrock minima under
 a identically 0.
+
+
+Jouvet & Rappaz (2011) exact assumptions on the sliding boundary condition
+-----------------------------------------------------------------------
+
+Domain split: boundary of Omega is Gamma_N (free surface) union Gamma_R
+(sliding) union Gamma_D (no-slip), with Gamma_N, Gamma_R assumed C^1 and
+Gamma_D nonempty.
+
+The sliding condition itself, on Gamma_R (their eq. 2.4-2.5):
+
+    u . n = 0,
+    2 mu(eps(u)) eps(u) . n . t_i = - alpha(|u|) u . t_i,
+
+i.e. no-penetration plus a nonlinear Robin (friction-type) law tangentially,
+with sliding coefficient
+
+    alpha(t) = c (t + t_0)^(1/n - 1),
+
+t = |u|, c > 0, n >= 1 Glen's exponent, and t_0 > 0 a regularization
+preventing alpha -> infinity as t -> 0. No-slip on Gamma_D is u = 0
+(Dirichlet), recovered formally as Gamma_R = empty set.
+
+Key structural assumption for uniqueness: the proof goes through a
+potential/minimization functional J with friction term N(x) = integral_0^x
+t alpha(t) dt added to the viscous term M(x) = integral_0^x s mu(s) ds.
+Uniqueness (their Theorem 3.8/3.10) rests on strict convexity of J, which
+in turn relies on alpha's specific power-law monotonicity (same Glen
+exponent structure as mu, via the regularized form
+alpha(t) = c(t+t_0)^(1/n-1)) -- i.e. alpha is not an arbitrary sliding law;
+it is tied to the same n and regularized the same way as the viscosity,
+which is what makes N strictly convex.
+
+So: their uniqueness theorem does cover sliding, not just no-slip -- but
+only for this specific regularized power-law sliding coefficient. A
+general/non-monotone sliding law (e.g. Schoof's Coulomb-type law, which
+they cite as an alternative in the introduction but do not analyze) is
+outside their hypotheses. This is the precise caveat for the "asterisk on
+Jouvet-Rappaz" point above: their fixed-geometry velocity uniqueness holds
+for this regularized nonlinear-Robin sliding law (and no-slip as the
+Gamma_R = empty set special case), not for arbitrary/non-monotone friction
+laws.
