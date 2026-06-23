@@ -67,3 +67,49 @@ Jouvet-Rappaz" point above: their fixed-geometry velocity uniqueness holds
 for this regularized nonlinear-Robin sliding law (and no-slip as the
 Gamma_R = empty set special case), not for arbitrary/non-monotone friction
 laws.
+
+
+Jouvet, Rappaz, Bueler, Blatter (2011) exact uniqueness claim
+---------------------------------------------------------------
+
+This is Jouvetetal2011 in the bib: J. Glaciol. 57(202):345-354,
+"Existence and stability of steady-state solutions of the shallow-ice-sheet
+equation by an energy-minimization approach." Ed Bueler is a co-author.
+
+On uniqueness, verbatim/paraphrased:
+- Theorem 1 proves existence of a minimizer eta of the energy functional J
+  on a flat bed, fixed margin, non-sliding, with mass balance
+  b(z) = a_m(z - z_ELA) linear in elevation (their case 1). Immediately
+  after: "our understanding of the calculus of variations ... fails to
+  resolve the uniqueness of eta because the function
+  eta -> -(alpha/q) eta^q + alpha eta is not convex." Uniqueness is
+  explicitly left open there, not proven, not claimed -- just an
+  acknowledged obstruction from lack of convexity.
+- Conclusions section reiterates: "Due to a lack of convexity, uniqueness
+  of the solution needs to be investigated by a different approach."
+- Numerically: "uniqueness of the steady solution is not proven
+  rigorously, [but] all steady solutions found by numerical iteration
+  yielded the same result, independent of the initial geometry" -- i.e.
+  empirical/numerical support only, for their fixed-margin, flat-bed,
+  elevation-dependent-SMB case.
+
+Bed/scope, consistent with the rest of this file: flat bed throughout,
+fixed margin (not a free-boundary obstacle problem) for the existence
+theorem. The free-margin version of the same (elevation-dependent) problem
+is proven to have NO solution -- the non-existence result already cited in
+the paper draft.
+
+Directly relevant: in the conclusions they flag almost exactly the open
+question the flat-fill construction now answers: "Further research is
+needed to resolve basic existence questions with sliding and/or non-flat
+bed, even in simpler cases where mass balance is independent of surface
+elevation." That is essentially naming the open problem -- general bed,
+elevation-independent SMB -- which the flat-fill construction (Proposition
+notunique) now answers in the negative (non-uniqueness, via local minima
+of a non-flat bed under a=0). Ed Bueler flagged this gap himself in 2011
+and is now closing it.
+
+Net: no rigorous uniqueness claim anywhere in Jouvetetal2011, for any
+case -- only a noted convexity obstruction and numerical-only support,
+plus an explicit acknowledgment that the general-bed / elevation-
+independent case was open.
