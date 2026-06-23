@@ -1,0 +1,27 @@
+Restricted strictly to steady-state geometry non-uniqueness, isothermal/temperate setting:
+
+- Schoof (2007) grounding-line hysteresis is a genuine steady-state-geometry
+  multiplicity result: for fixed external forcing (sea level, accumulation),
+  an overdeepened bed admits more than one steady grounding-line
+  position/profile. So this is a real peer to the flat-fill result, just via
+  flotation/bed-slope rather than via the flat-fill degeneracy. The land-only,
+  a=0 case is untouched by it.
+
+- Non-monotone sliding laws are set aside. That mechanism is about
+  non-uniqueness of velocity for a given fixed domain, not about multiple
+  steady geometries. It doesn't itself produce a second steady-state surface
+  unless that velocity bistability is then shown to feed back into the
+  continuity equation and pin down two different steady s. Nobody in the
+  literature surveyed does that. So it's not actually a competing steady-state
+  mechanism, just an asterisk on the Jouvet-Rappaz hypothesis (uniqueness of
+  velocity/pressure for known geometry) -- it should not be placed alongside
+  Schoof as if it were the same kind of claim.
+
+So, the only other mechanism in the literature for steady-state geometry
+non-uniqueness in the isothermal/temperate setting is Schoof/Weertman's
+overdeepened-bed grounding-line hysteresis (marine, flotation-driven).
+Elevation-accumulation feedback (Bodvarsson/Weertman 1961, Jouvet et al. 2011
+non-existence) is the other known family. The flat-fill construction is
+mechanistically distinct from both -- no flotation, no elevation feedback,
+just geometric degeneracy of the obstacle problem at bedrock minima under
+a identically 0.
