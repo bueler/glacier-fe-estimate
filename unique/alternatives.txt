@@ -13,7 +13,7 @@ Restricted strictly to steady-state geometry non-uniqueness, isothermal/temperat
   unless that velocity bistability is then shown to feed back into the
   continuity equation and pin down two different steady s. Nobody in the
   literature surveyed does that. So it's not actually a competing steady-state
-  mechanism, just an asterisk on the Jouvet-Rappaz hypothesis (uniqueness of
+  mechanism, just an asterisk on the Jouvet-Rappaz result (uniqueness of
   velocity/pressure for known geometry) -- it should not be placed alongside
   Schoof as if it were the same kind of claim.
 
@@ -77,7 +77,7 @@ This is Jouvetetal2011 in the bib: J. Glaciol. 57(202):345-354,
 equation by an energy-minimization approach." Ed Bueler is a co-author.
 
 On uniqueness, verbatim/paraphrased:
-- Theorem 1 proves existence of a minimizer eta of the energy functional J
+- Theorem 1 proves existence of a minimizer of the energy functional J
   on a flat bed, fixed margin, non-sliding, with mass balance
   b(z) = a_m(z - z_ELA) linear in elevation (their case 1). Immediately
   after: "our understanding of the calculus of variations ... fails to
