@@ -1,0 +1,60 @@
+
+\NeedsTeXFormat{LaTeX2e}
+
+% \documentclass[twocolumn]{igs}
+\documentclass[review,oneside]{igs}
+
+% other options are available
+%   authors printing on US letter size are advised 
+%   to use the slightly shorter [letterpaper] option
+% SINGLE COLUMN
+%   \documentclass{igs}              
+% SINGLE COLUMN, FEWER LINES/PAGE
+%   \documentclass[letterpaper]{igs} 
+% DOUBLE COLUMN, FEWER LINES/PAGE
+%   \documentclass[twocolumn,letterpaper]{igs} 
+
+  \usepackage{igsnatbib}
+
+% check if we are compiling under latex or pdflatex
+  \ifx\pdftexversion\undefined
+    \usepackage[dvips]{graphicx}
+  \else
+    \usepackage[pdftex]{graphicx}
+    \usepackage{epstopdf}
+    \epstopdfsetup{suffix=}
+  \fi
+
+\usepackage{lineno}
+
+% the default is for unnumbered section heads
+% if you really must have numbered sections, remove
+% the % from the beginning of the following command
+% and insert the level of sections you wish to be
+% numbered (up to 4):
+%   \setcounter{secnumdepth}{2}
+
+\begin{document}
+
+\title[On uniqueness for steady-stage glacier equations]{On uniqueness for steady-stage glacier equations}
+
+\author[Bueler]{Ed Bueler$^1$}
+
+\affiliation{%
+$^1$Department of Mathematics and Statistics, University of Alaska, Fairbanks, AK, USA}
+
+\abstract{FIXME}
+
+\maketitle
+
+\section{Introduction}
+FIXME
+\citep{LofgrenAhlkronaHelanow2022} \cite{Bodvardsson1955}
+
+\section{Discussion and Conclusion}
+FIXME
+
+\bibliography{unique}
+\bibliographystyle{igs}  % imposes IGS bibliography style on output
+
+\end{document}
