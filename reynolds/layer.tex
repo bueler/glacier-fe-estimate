@@ -4,86 +4,65 @@
 
 \newcommand{\Lam}{\Lambda}
 
-\begin{document}
-
-\section*{Question}
-
-What is the Reynolds transport
-theorem for time-dependent 3D sets of the form
-\[
-\Lam(t) = \{(x,y,z) : b(x,y) < z < s(t,x,y)\},
-\]
-where we are assuming that the boundary of $\Lam(t)$ is, up to a curve in
-3D which is a set of measure zero, only the lower surface $z=b(x,y)$ and
-the upper surface $z=s(t,x,y)$? There is an extra term which appears, but
-subject to admissibility $b \le s$. Does this make sense, and can it be
-formulated?
-
-\section*{Answer}
-
-\subsection*{Setup}
-
 \newcommand{\RR}{\mathbb{R}}
-\begin{itemize}
-\item fixed map-plane domain $\Omega \subset \RR^2$
-\item $b(x,y)$: fixed lower surface (time-independent).
-\item FIXME EXTEND BY $b$:  $s(t,x,y)$: upper surface, defined (as physically meaningful) only
-  where $s(t,x,y) \ge b(x,y)$.
-\item $D(t) = \{(x,y) : s(t,x,y) > b(x,y)\}$: the horizontal footprint
-  where the layer has positive thickness $h = s-b > 0$.
-\item $\Gamma(t) = \partial D(t) = \{(x,y) : s(t,x,y) = b(x,y)\}$: the
-  \emph{margin curve} (where thickness vanishes).
-\item $\Lam(t) = \{(x,y,z) : (x,y)\in D(t),\ b(x,y) < z < s(t,x,y)\}$.
-\end{itemize}
 
-Let $\pi(x,y,z,t) = \rho\phi$ be the density of whatever is being
-transported, and $F(t) = \int_{\Lam(t)} \pi \, dV$.
 
-\subsection*{Step 0: normal speed of the graph $z=s(t,x,y)$}
+\title{Reynold's transport theorem for evolving glaciers}
 
-Writing the surface as the level set $f(t,x,y,z) = z - s(t,x,y) = 0$,
-\[
-\nabla f = (-s_x,\,-s_y,\,1), \qquad
-|\nabla f| = \sqrt{1+s_x^2+s_y^2},
-\]
-so the upward unit normal is
-\[
-\hat n = \frac{(-s_x,\,-s_y,\,1)}{\sqrt{1+s_x^2+s_y^2}},
-\]
-and using $u_n = -\dfrac{\partial f/\partial t}{|\nabla f|}$ with
-$\partial f/\partial t = -s_t$,
-\[
-\boxed{u_n = \frac{s_t}{\sqrt{1+s_x^2+s_y^2}}}.
-\]
+\author{Ed Bueler}
 
-\emph{Why $u_n = -(\partial f/\partial t)/|\nabla f|$ holds:} a path
-$\vec x(t)$ tracking the surface satisfies $f(\vec x(t),t)\equiv 0$, so
-\[
-\frac{\partial f}{\partial t} + \nabla f \cdot \frac{d\vec x}{dt} = 0.
-\]
-Split $d\vec x/dt = u_n \hat n + \vec v_\parallel$ with $\vec v_\parallel$
-tangential. Since $\nabla f$ is normal to the surface,
-$\nabla f\cdot \vec v_\parallel = 0$ automatically (the tangential part is
-an arbitrary parametrization choice and never contributes), leaving
-$\partial f/\partial t + |\nabla f|\,u_n = 0$.
+\begin{document}
+\maketitle
 
-\subsection*{Step 1: reduce to an iterated integral}
+\abstract{We consider the form of Reynold's transport theorem for time-dependent 3D sets of the form
+    $$\Lam(t) = \{(x,y,z) : b(x,y) < z < s(t,x,y)\} \subset \RR^3$$
+that is, for a changing glacier set defined by a time-independent lower surface $z=b(x,y)$ and a time-dependent upper surface $z=s(t,x,y)$.  We are assuming that the boundary of $\Lam(t)$, up to a curve in 3D which is a set of measure zero, is made up only of a lower and an upper surface.  If part of the margin of the glacier is a cliff, we assume that part is negligible.
 
-\[
-F(t) = \int_{D(t)} \underbrace{\left[\int_{b(x,y)}^{s(t,x,y)} \pi \, dz\right]}_{=: g(t,x,y)} dx\,dy.
-\]
+\subsection*{Definitions for a moving glacier surface}  Consider a fixed map-plane domain $\Omega \subset \RR^2$.  All calculations to follow are defined within this set, or on proper subsets of it, or on three-dimensional sets defined upon it.
 
-\subsection*{Step 2: differentiate the inner ($z$) integral}
+Suppose that the bed elevation of the glacier is given by a continuous function $b(x,y)$, so it is time-independent.  This same function is the surface elevation in unglaciated areas.
 
-The lower limit $b$ is $t$-independent, so only the upper limit
-contributes (ordinary 1D Leibniz rule):
-\[
-\frac{\partial g}{\partial t} = \int_b^s \frac{\partial \pi}{\partial t}\,dz
-\;+\; \pi(x,y,s(t,x,y),t)\, s_t(t,x,y).
-\]
-No term from $z=b$: the fixed bed contributes nothing.
+We will allow the upper surface to change in time.  However, we will define the continuous surface function in the manner that is compatible with digital elevation models, that is, there is a single surface elevation which is the surface of the ice on ice-covered land, but otherwise it is the bed elevation:
+	$$s(t,x,y) = \begin{cases} s(t,x,y), & \text{if } s(t,x,y)>b(x,y) \text{ (glacier-covered)} \\
+	                           b(x,y), & \text{otherwise (ice-free)} \end{cases}$$
+Now both $b(x,y)$ and $s(t,x,y)$ are defined for any $(x,y)\in \Omega$.
 
-\subsection*{Step 3: differentiate over the moving domain $D(t)$}
+Let
+    $$D(t) = \{(x,y) : s(t,x,y) > b(x,y)\} \subset \Omega \subset \RR^2.$$
+This map-plane set is the horizontal footprint of the glacier, where the layer has positive thickness $h = s-b > 0$.  In alternative notation we might write $D(t) = \Lambda(t)^\top$, that is, $D(t)$ is the (open) vertical projection of $\Lambda(t)$.
+
+Finally, let $\Gamma(t) = \partial D(t) = \{(x,y) : s(t,x,y) = b(x,y)\}$.  This is the glacier margin curve along which the thickness first vanishes as one comes off the glacier.  We will assume that $\Gamma(t)$ has measure zero at every time, so that $\int_{\Gamma(t)} f\,dx\,dy = 0$ for any function $f$.
+
+Writing the surface as the level set function
+	$$f(t,x,y,z) = z - s(t,x,y),$$
+so that the upper surface is $f=0$.  Then $\nabla f = (-s_x,\,-s_y,\,1)$ is the spatial gradient and $|\nabla f| = \sqrt{1+s_x^2+s_y^2}$.  It follows that the upward unit normal on the surface is
+    $$\hat n = \frac{(-s_x,\,-s_y,\,1)}{\sqrt{1+s_x^2+s_y^2}},$$
+and using\footnote{Why does this hold?  Note that a path $\vec x(t)$ tracking the surface satisfies $f(t,\vec x(t)) = 0$, so $f_t + \nabla f \cdot \vec x' = 0$ by the chain rule.  Now split $\vec x' = u_n \hat n + \vec v_\parallel$ with $\vec v_\parallel$ tangential.  Since $\nabla f$ is normal to the surface, $\nabla f\cdot \vec v_\parallel = 0$ automatically, leaving $f_t + |\nabla f|\,u_n = 0$.  The tangential part of the (vector) velocity of the surface is an arbitrary parametrization choice, so it does not contribute to $u_n$.} $u_n = -f_t/|\nabla f|$ we have
+    $$u_n = \frac{s_t}{\sqrt{1+s_x^2+s_y^2}}$$
+for the (scalar) velocity of the surface in the direction normal to the surface.
+
+\subsection*{Reynold's transport theorem for glacier geometry}
+
+Now let $\rho(t,x,y,z)$ be the (potentially variable) ice density, and define
+	$$\pi(x,y,z,t) = \rho(t,x,y,z) \phi(t,x,y,z)$$
+be the specific (mass-weighted) density of whatever is being transported, where $\phi(t,x,y,z)$ is the volume density.  Note that $\phi$, thus $\pi$, can be a scalar, vector, or tensor.
+
+Define
+    $$F(t) = \int_{\Lam(t)} \pi(t,x,y,z) \, dx\,dy\,dz,$$
+or $F=\int_{\Lam} \pi \, dV$ for short.  This is the total amount of the quantity $\pi$ in the time-dependent glacier domain $\Lambda(t)$.
+
+Then by Fubini's theorem, $F = \int_{D} \left[\int_{b}^{s} \pi \, dz\right] dx\,dy$.  Let
+    $$g(t,x,y) = \int_{b(x,y)}^{s(t,x,y)} \pi(t,x,y,z) \, dz$$
+so that we can also write
+	$$F(t) = \int_{D(t)} g(t,x,y) dx\,dy,$$
+or $F=\int_{\Lam} g \, dA$ for short.  Note that $g$ can only be nonzero at $x,y \in D(t)$, that is, when we integrate over ice-filled columns; we will return to this fact below.
+
+Let us find the derivative of $g$.  Since the lower limit $b$ is $t$-independent, only the upper limit contributes, and it is calculated by the familiar Leibniz rule:  FIXME CONSISTENT DERIV NOTATION
+    $$\frac{\partial g}{\partial t} = \int_b^s \frac{\partial \pi}{\partial t}\,dz
+\;+\; \pi(x,y,s(t,x,y),t)\, s_t(t,x,y).$$
+There is no term from $z=b$: the fixed bed contributes nothing.
+
+FIXME differentiate over the moving domain $D(t)$
 
 $D(t)$ has a moving boundary $\Gamma(t)$, so the 2D transport theorem
 gives
@@ -94,7 +73,7 @@ gives
 where $U_n$ is the outward normal speed of the margin curve $\Gamma(t)$
 within the $(x,y)$-plane. This line integral is exactly the extra term.
 
-\subsection*{Step 4: the extra term vanishes exactly, by admissibility}
+FIXME the extra term vanishes exactly, by admissibility
 
 On $\Gamma(t)$, by definition $s=b$, so the inner integral collapses to a
 zero-length interval:
