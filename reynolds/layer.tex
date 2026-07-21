@@ -1,0 +1,154 @@
+\documentclass[11pt]{article}
+\usepackage{amsmath,amssymb}
+\usepackage[margin=1in]{geometry}
+
+\newcommand{\Lam}{\Lambda}
+
+\begin{document}
+
+\section*{Question}
+
+What is the Reynolds transport
+theorem for time-dependent 3D sets of the form
+\[
+\Lam(t) = \{(x,y,z) : b(x,y) < z < s(t,x,y)\},
+\]
+where we are assuming that the boundary of $\Lam(t)$ is, up to a curve in
+3D which is a set of measure zero, only the lower surface $z=b(x,y)$ and
+the upper surface $z=s(t,x,y)$? There is an extra term which appears, but
+subject to admissibility $b \le s$. Does this make sense, and can it be
+formulated?
+
+\section*{Answer}
+
+\subsection*{Setup}
+
+\newcommand{\RR}{\mathbb{R}}
+\begin{itemize}
+\item fixed map-plane domain $\Omega \subset \RR^2$
+\item $b(x,y)$: fixed lower surface (time-independent).
+\item FIXME EXTEND BY $b$:  $s(t,x,y)$: upper surface, defined (as physically meaningful) only
+  where $s(t,x,y) \ge b(x,y)$.
+\item $D(t) = \{(x,y) : s(t,x,y) > b(x,y)\}$: the horizontal footprint
+  where the layer has positive thickness $h = s-b > 0$.
+\item $\Gamma(t) = \partial D(t) = \{(x,y) : s(t,x,y) = b(x,y)\}$: the
+  \emph{margin curve} (where thickness vanishes).
+\item $\Lam(t) = \{(x,y,z) : (x,y)\in D(t),\ b(x,y) < z < s(t,x,y)\}$.
+\end{itemize}
+
+Let $\pi(x,y,z,t) = \rho\phi$ be the density of whatever is being
+transported, and $F(t) = \int_{\Lam(t)} \pi \, dV$.
+
+\subsection*{Step 0: normal speed of the graph $z=s(t,x,y)$}
+
+Writing the surface as the level set $f(t,x,y,z) = z - s(t,x,y) = 0$,
+\[
+\nabla f = (-s_x,\,-s_y,\,1), \qquad
+|\nabla f| = \sqrt{1+s_x^2+s_y^2},
+\]
+so the upward unit normal is
+\[
+\hat n = \frac{(-s_x,\,-s_y,\,1)}{\sqrt{1+s_x^2+s_y^2}},
+\]
+and using $u_n = -\dfrac{\partial f/\partial t}{|\nabla f|}$ with
+$\partial f/\partial t = -s_t$,
+\[
+\boxed{u_n = \frac{s_t}{\sqrt{1+s_x^2+s_y^2}}}.
+\]
+
+\emph{Why $u_n = -(\partial f/\partial t)/|\nabla f|$ holds:} a path
+$\vec x(t)$ tracking the surface satisfies $f(\vec x(t),t)\equiv 0$, so
+\[
+\frac{\partial f}{\partial t} + \nabla f \cdot \frac{d\vec x}{dt} = 0.
+\]
+Split $d\vec x/dt = u_n \hat n + \vec v_\parallel$ with $\vec v_\parallel$
+tangential. Since $\nabla f$ is normal to the surface,
+$\nabla f\cdot \vec v_\parallel = 0$ automatically (the tangential part is
+an arbitrary parametrization choice and never contributes), leaving
+$\partial f/\partial t + |\nabla f|\,u_n = 0$.
+
+\subsection*{Step 1: reduce to an iterated integral}
+
+\[
+F(t) = \int_{D(t)} \underbrace{\left[\int_{b(x,y)}^{s(t,x,y)} \pi \, dz\right]}_{=: g(t,x,y)} dx\,dy.
+\]
+
+\subsection*{Step 2: differentiate the inner ($z$) integral}
+
+The lower limit $b$ is $t$-independent, so only the upper limit
+contributes (ordinary 1D Leibniz rule):
+\[
+\frac{\partial g}{\partial t} = \int_b^s \frac{\partial \pi}{\partial t}\,dz
+\;+\; \pi(x,y,s(t,x,y),t)\, s_t(t,x,y).
+\]
+No term from $z=b$: the fixed bed contributes nothing.
+
+\subsection*{Step 3: differentiate over the moving domain $D(t)$}
+
+$D(t)$ has a moving boundary $\Gamma(t)$, so the 2D transport theorem
+gives
+\[
+\frac{d}{dt}\int_{D(t)} g\,dx\,dy = \int_{D(t)} \frac{\partial g}{\partial t}\,dx\,dy
+\;+\; \oint_{\Gamma(t)} g\, U_n \, d\ell,
+\]
+where $U_n$ is the outward normal speed of the margin curve $\Gamma(t)$
+within the $(x,y)$-plane. This line integral is exactly the extra term.
+
+\subsection*{Step 4: the extra term vanishes exactly, by admissibility}
+
+On $\Gamma(t)$, by definition $s=b$, so the inner integral collapses to a
+zero-length interval:
+\[
+g(t,x,y)\Big|_{\Gamma(t)} = \int_b^b \pi\,dz = 0.
+\]
+So $g\equiv 0$ pointwise along $\Gamma(t)$ for every $t$, and
+\[
+\oint_{\Gamma(t)} g\,U_n\,d\ell = 0 \quad \text{exactly}.
+\]
+This is the same mechanism as the 1D fact: if
+$F(t)=\int_{a(t)}^{b(t)} g\,dx$ with $g$ vanishing at both endpoints for
+all $t$, then $F'(t) = \int \partial_t g\,dx$ with no boundary-motion
+terms, even though $a(t),b(t)$ move --- the vanishing of the integrand at
+the moving boundary kills the boundary-motion contribution outright.
+
+The hypothesis this needs, made explicit --- the admissibility $b\le s$
+--- is that $h=s-b\ge 0$ (so $D(t)$ and $\Gamma(t)$ are sensibly defined
+at all) \emph{and} $\pi$ stays bounded as $h\to 0$ (so the vanishing
+integral argument is not defeated by an integrand blowing up faster than
+the interval shrinks). Given that, the margin contributes nothing.
+
+\subsection*{Result}
+
+\[
+\boxed{\frac{d}{dt}\int_{\Lam(t)} \pi\,dV \;=\; \int_{\Lam(t)} \frac{\partial \pi}{\partial t}\,dV
+\;+\; \int_{D(t)} \pi\big(x,y,s(t,x,y),t\big)\, s_t(t,x,y)\,dx\,dy},
+\]
+with \emph{no} margin/contact-line term, despite $D(t)$ genuinely moving.
+
+\subsection*{Cross-check against the general surface-integral RTT}
+
+Writing the last term as a true surface integral over the graph
+$S_{top}(t)$ of $s$: recall $u_n^{top} = s_t/\sqrt{1+s_x^2+s_y^2}$ and the
+area element satisfies $dA_{top} = \sqrt{1+s_x^2+s_y^2}\,dx\,dy$, so
+\[
+\pi\, s_t\, dx\,dy = \pi\, u_n^{top}\, dA_{top},
+\]
+recovering the standard form
+\[
+\frac{d}{dt}\int_{\Lam(t)}\pi\,dV = \int_{\Lam(t)}\partial_t\pi\,dV
++ \int_{S_{top}(t)} \pi\, u_n\, dA
++ \underbrace{\int_{S_{bot}}\pi\cdot 0\,dA}_{=0}
++ \underbrace{(\text{margin wall})}_{=0}.
+\]
+This matches the picture that $\partial\Lam(t)$ is top $\cup$ bottom
+$\cup$ (measure-zero curve): the bottom term vanishes because the bed is
+fixed ($u_n=0$), and the lateral/margin term vanishes as shown above,
+leaving only the top-surface flux.
+
+This is exactly the structure behind vertically-integrated conservation
+laws (e.g.\ thickness/mass-conservation equations for a layer with a
+wet/dry or grounding-line-type margin) --- one gets to treat the footprint
+as if it were not moving, for free, as long as the transported quantity is
+admissible (finite) at zero thickness.
+
+\end{document}
