@@ -28,7 +28,7 @@
 \begin{document}
 
 \begin{abstract}
-We consider the form of Reynold's transport theorem for time-dependent 3D sets
+We consider the form of Reynold's transport theorem \cite{Holmes2019} for time-dependent 3D sets
 \begin{equation}
 \Lam(t) = \{(x,y,z) : b(x,y) < z < s(t,x,y)\} \subset \RR^3  \label{eq:Lambda}
 \end{equation}
@@ -86,7 +86,7 @@ To find the ordinary derivative of $F$ we will need to differentiate $g$ with re
     $$g_t(t,x,y) = \int_{b(x,y)}^{s(t,x,y)} \pi_t(t,x,y,z)\,dz + \pi(t,x,y,s(t,x,y))\, s_t(t,x,y).$$
 This formula applies everywhere on $\Omega$, but note that at points $(x,y)$ outside of $D(t)$ we have $\int_b^s f \,dz=0$ (any $f$) and $s_t=0$.  In fact, $g$ and $g_t$ are zero outside of $D(t)$.
 
-However, the map-plane ice-covered domain $D(t) \subset \Omega$ changes with time, and it has a moving boundary $\gamma(t)$.  Now, the 2D form of Reynold's transport theorem, applied over $D(t)\subset \Omega$, gives
+However, the map-plane ice-covered domain $D(t) \subset \Omega$ changes with time, and it has a moving boundary $\gamma(t)$.  Now, the 2D form of Reynold's transport theorem \cite{Holmes2019}, applied over $D(t)\subset \Omega$, gives
 \begin{equation}
 \frac{d}{dt}\left(\int_{D(t)} g(t,x,y)\,dx\,dy\right) = \int_{D(t)} g_t(t,x,y)\,dx\,dy \;+\; \underbrace{\int_{\gamma(t)} g\, u_\gamma \, d\ell}_{\ast},  \label{eq:reynoldstwod}
 \end{equation}
@@ -98,7 +98,7 @@ For the above logic to be valid, $\pi(t,x,y,z)$ must stay bounded as we approach
     $$\lim_{(x,y) \to (x(\tau_0), y(\tau_0))} g(t_0,x,y) = \lim_{(x,y) \to (x(\tau_0), y(\tau_0))} \int_{b(x,y)}^{s(t,x,y)} \pi(t_0,x,y,z) \, dz = 0.$$
 Otherwise the above argument which justifies the vanishing of the line integral would be defeated by an integrand which blows up competitively.  A sufficient integrability assumption on $\pi$ is needed; it might be an assumption of continuity but it need not be that strong.
 
-At this point we have a useful result, namely a form of Reynold's transport theorem well-suited to continuum discussions of glaciers.
+At this point we have a useful result, namely a form of Reynold's transport theorem \cite{Holmes2019} well-suited to continuum discussions of glaciers.
 
 \begin{lem}  \label{lem:newreynolds}  With the above hypotheses,
 \begin{align*}
@@ -121,6 +121,8 @@ V'(t) = \int_{D(t)} s_t(t,x,y)\,dx\,dy. \label{eq:dVdt}
 \end{equation}
 which holds because the bed elevation is time independent.  Note, however, and in casual terms, that no volume flux is allowed to sneak through at the glacier margins!
 \end{ex*}
+
+FIXME combine Lemma 1 with SKE and re-interpret
 
 \section*{Applications}
 
