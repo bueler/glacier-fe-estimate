@@ -1,14 +1,21 @@
 \documentclass[11pt]{article}
+
 \usepackage{amsmath,amssymb}
 \usepackage[margin=1in]{geometry}
+\usepackage{enumerate,palatino,bm}
+\usepackage[final]{graphicx}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=red,urlcolor=blue]{hyperref}
+
+\newtheorem{thm}{Theorem}
+\newtheorem{lem}{Lemma}
+\newtheorem{lem*}{Lemma}
+
+\newtheorem{ex*}{Example}  % FIXME theoremstyle?
 
 \newcommand{\grad}{\nabla}
 \newcommand{\Lam}{\Lambda}
 
 \newcommand{\RR}{\mathbb{R}}
-
-
-\newtheorem{lem*}{Lemma}
 
 
 \title{Reynold's transport theorem for evolving glaciers}
@@ -19,97 +26,98 @@
 \maketitle
 
 \abstract{We consider the form of Reynold's transport theorem for time-dependent 3D sets of the form
-    $$\Lam(t) = \{(x,y,z) : b(x,y) < z < s(t,x,y)\} \subset \RR^3$$
-that is, for a changing glacier set defined by a time-independent lower surface $z=b(x,y)$ and a time-dependent upper surface $z=s(t,x,y)$.  We are assuming that the boundary of $\Lam(t)$, up to a curve in 3D which is a set of measure zero, is made up only of a lower and an upper surface.  (This neglects any cliffs along the margin of the glacier.)
+\begin{equation}
+\Lam(t) = \{(x,y,z) : b(x,y) < z < s(t,x,y)\} \subset \RR^3  \label{eq:Lambda}
+\end{equation}
+that is, for a time-dependent glacier ice domain defined by a time-independent lower surface $z=b(x,y)$ and a time-dependent upper surface $z=s(t,x,y)$.  We assume that the boundary of $\Lam(t)$ consists, up to a set of measure zero, only of a lower and an upper surface.  This neglects any cliffs along the margin of the glacier.
 
-\subsection*{Definitions for a moving glacier surface}  Consider a fixed map-plane domain $\Omega \subset \RR^2$.  All calculations to follow are defined within this set, or on proper subsets of it, or on three-dimensional sets defined over it.
+\subsection*{Definitions for a moving glacier domain}  Consider a fixed map-plane domain $\Omega \subset \RR^2$, an open and connected set.  (It is often something simple like a rectangle.)  All calculations to follow are defined within this set, or on proper subsets of it, or on three-dimensional sets defined over it.  Also, suppose that the bed elevation of the glacier is given by a continuous, time-independent function $b(x,y)$.
 
-Suppose that the bed elevation of the glacier is given by a continuous function $b(x,y)$, so it is time-independent.  This same function is the surface elevation in unglaciated areas.
+We will allow the upper surface $z=s(t,x,y)$ to change in time.  Both $b(x,y)$ and $s(t,x,y)$ are continuous and defined for any $(x,y)\in \Omega$, and for the latter, for every $t$ in some duration $[0,T]$ of interest.  However, we will define $s$ in a manner which is compatible with digital elevation models, that is, so that there is a single surface elevation which is the glacier surface on ice-covered land but which is the bed elevation otherwise.  That is, on ice-free land we have $s(t,x,y) = b(x,y)$.
 
-We will allow the upper surface to change in time.  However, we will define it in a manner which is compatible with digital elevation models, that is, so that there is a single surface elevation which is the glacier surface on ice-covered land but which is the bed elevation otherwise:
-	$$s(t,x,y) = \begin{cases} s(t,x,y), & \text{if } s(t,x,y)>b(x,y) \text{ (glacier-covered)} \\
-	                           b(x,y), & \text{otherwise (ice-free)} \end{cases}$$
-Now both $b(x,y)$ and $s(t,x,y)$ are defined for any $(x,y)\in \Omega$, and for every $t$ in some duration $[0,T]$ of interest.
+Definition \eqref{eq:Lambda} defines an open subset of $\RR^3$, the time-dependent ice domain.   In addition let
+\begin{equation}
+D(t) = \{(x,y) : s(t,x,y) > b(x,y)\} \subset \Omega \subset \RR^2.  \label{eq:D}
+\end{equation}
+This map-plane set is the time-dependent horizontal footprint of the glacier, the ice-covered area where the layer has positive thickness $h = s-b > 0$.  In alternative notation we might write $D(t) = \Lambda(t)^\top$, that is, $D(t)$ is the (open) vertical projection of $\Lambda(t)$.
 
-Let
-    $$D(t) = \{(x,y) : s(t,x,y) > b(x,y)\} \subset \Omega \subset \RR^2.$$
-This map-plane set is the horizontal footprint of the glacier, the time-dependent ice-covered area where the layer has positive thickness $h = s-b > 0$.  In alternative notation we might write $D(t) = \Lambda(t)^\top$, that is, $D(t)$ is the (open) vertical projection of $\Lambda(t)$.
-
-Finally, let $\gamma(t) = \partial D(t)$.  This is the glacier margin curve along which the thickness first vanishes as one comes off the glacier.  By continuity, $s=b$ at points of $\gamma(t)$.  Generally $\gamma(t)$ has measure zero at every time, so that $\int_{\gamma(t)} f\,dx\,dy = 0$ for any function $f$, but it turns out that we will not need this fact, though we do need the fact that $\gamma(t)$ is measurable, which follows from continuity of $b$ and $s$.
+Finally, let
+\begin{equation}
+\gamma(t) = \partial D(t) \subset \bar\Omega \subset \RR^2.  \label{eq:gamma}
+\end{equation}
+This is map-plane projection of the glacier margin curve.  Along $\gamma(t)$ the thickness first vanishes because, by continuity, $s=b$ at points of $\gamma(t)$.  Generally $\gamma(t)$ has measure zero at every time, so that $\int_{\gamma(t)} f\,dx\,dy = 0$ for any function $f$, but it turns out that we will not need this fact, though we do need the fact that $\gamma(t)$ is measurable, which follows from continuity of $b$ and $s$.
 
 We may write the surface using a level set function,
 	$$f(t,x,y,z) = z - s(t,x,y),$$
-so that the upper surface is $f=0$.  Then $\nabla f = (-s_x,\,-s_y,\,1)$ and $|\nabla f| = \sqrt{1+s_x^2+s_y^2}$.  It follows that, because the gradient of $f$ is orthogonal to its level surfaces, the upward unit normal on the surface is $\hat n = \grad f/|\grad f|$ or
+so that the upper surface is $f=0$.  From now one we will assume that $f$ and all of its partial derivatives are integrable; that is, we make the same assumption about $s$.  Then $\nabla f = (-s_x,\,-s_y,\,1)$ and $|\nabla f| = \sqrt{1+s_x^2+s_y^2}$.  It follows that, because the gradient of $f$ is orthogonal to its level surfaces, the upward unit normal vector on the upper surface of the glacier is $\hat n = \grad f/|\grad f|$ or
     $$\hat n = \frac{(-s_x,\,-s_y,\,1)}{\sqrt{1+s_x^2+s_y^2}}.$$
 
-We next consider the (scalar) velocity of the surface in the direction normal to the surface.  To derive this, note that a path $\vec x(t)$ tracking the surface, i.e.~of a non-material (conceptual) particle that is always on the surface, satisfies $f(t,\vec x(t)) = 0$ and thus $f_t + \nabla f \cdot \vec x' = 0$ by the chain rule.  We may split $\vec x' = u_n \hat n + \vec v_\parallel$ with $\vec v_\parallel$ tangential.  However, since $\nabla f$ is normal to the surface, $\nabla f\cdot \vec v_\parallel = 0$, and since $\hat n$ is parallel to $\grad f$ so $\grad f \cdot \hat n = |\grad f|$, this leaves $f_t + |\nabla f|\,u_n = 0$.  It follows that $u_n = -f_t/|\nabla f|$, so by differentiating the level set function $f$ from its definition we have
+We next consider the (scalar) velocity of the surface in the direction normal to the surface.  To derive this, consider a differentiable path $\vec x(t)$ tracking the surface, i.e.~of a non-material (conceptual) particle that is always on the surface.  It satisfies $f(t,\vec x(t)) = 0$ and thus $f_t + \nabla f \cdot \vec x' = 0$ by the chain rule.  We may split $\vec x' = u_n \hat n + \vec v_\parallel$ with $\vec v_\parallel$ tangential.  However, since $\nabla f$ is normal to the surface, $\nabla f\cdot \vec v_\parallel = 0$, and since $\hat n = \grad f/|\grad f|$ we have $\grad f \cdot \hat n = |\grad f|$.  This leaves $f_t + |\nabla f|\,u_n = 0$.  It follows that $u_n = -f_t/|\nabla f|$, and thus
     $$u_n = \frac{s_t}{\sqrt{1+s_x^2+s_y^2}}$$
-as the normal velocity of the surface.  The tangential part of the (vector) velocity of the surface is an arbitrary parametrization choice, so it does not contribute to $u_n$, and thus we need not define it carefully.
+is the desired normal velocity of the surface.  Observe in this calculation that the tangential part of the (vector) velocity of the surface is an arbitrary parametrization choice, so it does not contribute to $u_n$, and nor do we need to define it carefully.
 
 \subsection*{Reynold's transport theorem for glacier geometry}
 
-Now let $\rho(t,x,y,z)$ be the (variable) glacier density in mass-per-volume units.  Suppose
-	$$\pi(t,x,y,z) = \rho(t,x,y,z) \phi(t,x,y,z)$$
-is the physical quantity is being transported, an abstract density.  The abstract function $\phi$ might have no units (e.g.~we will use $\phi=1$ below in a first example), or units of energy-per-mass like (specific) enthalpy, so that $\pi$ is an energy density (energy-per-volume), and so on.  Note that $\phi$, thus $\pi$, can be a scalar, vector, or tensor.
+Suppose $\pi(t,x,y,z)$ is the density of some physical quantity which is being transported by the ice flow.  It might be a scalar, vector, or tensor.  It might be the (generally variable) ice mass density $\rho$, in mass-per-volume units, or it perhaps $\pi = \rho \phi$ for some specific quantity $\phi$ in per-mass units.  For example $\phi$ could be (specific) enthalpy \cite{Aschwandenetal2012} in energy-per-mass units so that $\pi$ is an energy density (energy-per-volume).
 
 Define
-    $$F(t) = \int_{\Lam(t)} \pi(t,x,y,z) \, dx\,dy\,dz,$$
-or $F=\int_{\Lam} \pi \, dV$ for short.  This is the total amount of the quantity $\pi$ in the time-dependent glacier domain $\Lambda(t)$.  Our goal is to understand and compute the derivative $F'(t)$.
+\begin{equation}
+F(t) = \int_{\Lam(t)} \pi(t,x,y,z) \, dx\,dy\,dz, \label{eq:F}
+\end{equation}
+or $F=\int_{\Lam} \pi \, dV$ for short.  This is the total amount of the quantity $\pi$ which is within the time-dependent glacier domain $\Lambda(t)$.  Our goal is to understand and compute $F'(t)$.
 
-By Fubini's theorem, $F = \int_{D} \left[\int_{b}^{s} \pi \, dz\right] dx\,dy$.  More precisely, if we let
-    $$g(t,x,y) = \int_{b(x,y)}^{s(t,x,y)} \pi(t,x,y,z) \, dz$$
-then we may write
+We may apply Fubini's theorem to the three-dimensional integral which defines $F$.  Let
+\begin{equation}
+g(t,x,y) = \int_{b(x,y)}^{s(t,x,y)} \pi(t,x,y,z) \, dz, \label{eq:g}
+\end{equation}
+so that
 	$$F(t) = \int_{D(t)} g(t,x,y) dx\,dy,$$
-from Fubini's theorem, or $F=\int_{\Lam} g \, dA$ for short.  Note that $g$ can only be nonzero at $x,y \in D(t)$, that is, it can only be nonzero in ice-filled columns where $s$ exceeds $b$; we will return to this idea below.
+or $F=\int_{\Lam} g \, dA$ for short.  Note that $g$ can only be nonzero at $x,y \in D(t)$, that is, it can only be nonzero in ice-filled columns where $s$ exceeds $b$; we will return to this idea below.
 
-To find the ordinary derivative of $F$ we need to differentiate $g$ with respect to $t$ (partial derivative).  Since the $b_t=0$, only the upper limit contributes a boundary term when we calculate the derivative by the familiar Leibniz rule:
+To find the ordinary derivative of $F$ we will need to differentiate $g$ with respect to $t$ (partial derivative), which we do using the familiar Leibniz rule.  Since $b_t=0$, only the upper limit contributes a boundary term:
     $$g_t(t,x,y) = \int_{b(x,y)}^{s(t,x,y)} \pi_t(t,x,y,z)\,dz + \pi(t,x,y,s(t,x,y))\, s_t(t,x,y).$$
 This formula applies everywhere on $\Omega$, but note that at points $(x,y)$ outside of $D(t)$ we have $\int_b^s f \,dz=0$ (any $f$) and $s_t=0$.  In fact, $g$ and $g_t$ are zero outside of $D(t)$.
 
 However, the map-plane ice-covered domain $D(t) \subset \Omega$ changes with time, and it has a moving boundary $\gamma(t)$.  Now, the 2D form of Reynold's transport theorem, applied over $D(t)\subset \Omega$, gives
-    $$\frac{d}{dt}\left(\int_{D(t)} g(t,x,y)\,dx\,dy\right) = \int_{D(t)} g_t(t,x,y)\,dx\,dy \;+\; \int_{\gamma(t)} g\, u_\gamma \, d\ell,$$
-where $u_\gamma$ is the outward normal velocity of the margin curve $\gamma(t)$ within the $(x,y)$-plane, i.e.~within $\Omega$.  It is a scalar function along this curve.\footnote{The scalar velocity $u_\gamma$---or ``speed'' but it can be of either sign---is well-defined even though the full vector velocity of $\gamma$ is not meaningful.  The latter would require a parameterization choice.}
+\begin{equation}
+\frac{d}{dt}\left(\int_{D(t)} g(t,x,y)\,dx\,dy\right) = \int_{D(t)} g_t(t,x,y)\,dx\,dy \;+\; \underbrace{\int_{\gamma(t)} g\, u_\gamma \, d\ell}_{\ast},  \label{eq:reynoldstwod}
+\end{equation}
+where $u_\gamma$ denotes the outward normal velocity of the margin curve $\gamma(t)$ within the $(x,y)$-plane, i.e.~within $\Omega$.  It is a scalar function along this curve.\footnote{Again we observe that the scalar velocity $u_\gamma$---we might say ``speed'' but it can be of either sign---is well-defined even though the full vector velocity of $\gamma$ is not meaningful.  The latter would require a parameterization choice.}
 
-The line integral over $\gamma(t)$ in the above equation is important to consider, but in fact it vanishes\footnote{This is the same mechanism as the following 1D fact: if $F(t)=\int_{a(t)}^{b(t)} g(t,x)\,dx$, with $g$ vanishing at both endpoints for all $t$, namely $g(t,a(t))=g(t,b(t))=0$, then $F'(t) = \int_{a(t)}^{b(t)} g_t(t,x)\,dx$ with no boundary-motion terms, even though $a(t),b(t)$ move.  The vanishing of the integrand at the moving boundary kills the boundary-motion contribution.} because the value of $g$ along $\gamma(t)$ is zero.  That is, $g(t,x,y)\big|_{\gamma(t)} = \int_b^b \pi\,dz = 0$.  The measure of $\gamma(t)$ is thus not important here, though the explicit hypothesis of admissibility, namely $s\ge b$, is needed, as is the continuity of $s$ and $b$.  Also, $\pi$ must stay bounded as we approach $\gamma(t)$, so that the vanishing integral argument is not defeated by an integrand which blows up competitively.  A sufficient integrability assumption on $\pi$ need not be as strong as assuming continuity.
+The line integral $\ast$ over $\gamma(t)$ in the above equation is important to consider, but in fact it vanishes because the value of $g$ along $\gamma(t)$ is zero.  That is, $g(t,x,y)\big|_{\gamma(t)} = 0$ because $s=b$ along $\gamma(t)$.  The measure of $\gamma(t)$ is thus not important here, though the explicit hypothesis of admissibility, namely $s\ge b$, is needed, as is the continuity of $s$ and $b$.  The reason the line integral vanishes is the same mechanism as the following 1D fact: if $F(t)=\int_{a(t)}^{b(t)} g(t,x)\,dx$, with $g$ vanishing at both endpoints for all $t$, namely $g(t,a(t))=g(t,b(t))=0$, then $F'(t) = \int_{a(t)}^{b(t)} g_t(t,x)\,dx$ with no boundary-motion terms, even though $a(t),b(t)$ move.  In summary, the vanishing of the integrand at the moving boundary kills the boundary-motion contribution.
 
-At this point we have a useful result.  It is a form of Reynold's theorem well-suited to continuum discussions of glaciers.  We see that despite the fact that $D(t)$ changes in time, and despite the motion of the glacier margin, the form of Reynold's transport theorem is actually the same as what holds for a glacier constrained by walls and subject to $s>b$ everywhere in $D(t)$.
+For the above logic to be valid, $\pi(t,x,y,z)$ must stay bounded as we approach $\gamma(t)$.  Formally, for fixed $t_0$, if we parameterize the set (curve) $\gamma(t_0)$ by $(x(\tau), y(\tau))$ and we consider a parameter value $\tau_0$ then $\pi$ must be well-behaved enough so that
+    $$\lim_{(x,y) \to (x(\tau_0), y(\tau_0))} g(t_0,x,y) = \lim_{(x,y) \to (x(\tau_0), y(\tau_0))} \int_{b(x,y)}^{s(t,x,y)} \pi(t_0,x,y,z) \, dz = 0.$$
+Otherwise the above argument which justifies the vanishing of the line integral would be defeated by an integrand which blows up competitively.  A sufficient integrability assumption on $\pi$ is needed; it might be an assumption of continuity but it need not be that strong.
 
-\begin{lem*}  With the above hypotheses,
+At this point we have a useful result, namely a form of Reynold's transport theorem well-suited to continuum discussions of glaciers.
+
+\begin{lem}  \label{lem:newreynolds}  With the above hypotheses,
 \begin{align*}
 \frac{d}{dt}\left(\int_{\Lam(t)} \pi(t,x,y,z)\,dx\,dy\,dz\right) &= \int_{\Lam(t)} \pi_t(t,x,y,z)\,dx\,dy\,dz \\
    &\qquad + \int_{D(t)} \pi(t,x,y,s(t,x,y))\, s_t(t,x,y)\,dx\,dy.
 \end{align*}
-With simpler notation, suppressing dependencies and the definition of $F$, we write
+With simpler notation, using the definition of $F$ and suppressing dependencies:
     $$F'(t) = \int_{\Lam} \pi_t\,dV
 + \int_{D} \pi|_s \, s_t\,dA.$$
-\end{lem*}
+\end{lem}
+
+Despite the fact that $D(t)$ changes in time, and even though the glacier margin is moving, the form of Reynold's theorem in Lemma \ref{lem:newreynolds} is actually the same as what holds for a glacier constrained by walls and subject to $s>b$ everywhere in $D(t)$.  This structure is compatible with vertically-integrated conservation laws, such as an equation of thickness/mass-conservation for a layer as in \cite{Bueler2021conservation}.  One gets to treat the footprint as if it were not moving, for free, as long as the transported quantity is admissible (finite) at zero thickness.
+
+\begin{ex*}  As a simplest example, suppose $\pi=1$ identically.  Noting that
+\begin{equation}
+V(t) = \int_{\Lambda(t)} 1\,dx\,dy\,dz \label{eq:V}
+\end{equation}
+is the ice volume by definition, we see that the first term in Lemma \ref{lem:newreynolds} vanishes ($1_t=0$) and we find the unremarkable fact
+	$$V'(t) = \int_{D(t)} s_t(t,x,y)\,dx\,dy$$
+which holds because the bed elevation is time independent.  Note, however, and in casual terms, that no volume flux is allowed to sneak through at the glacier margin!
+\end{ex*}
+
+\subsection*{Application: glacier mass for variable ice density}
 
 FIXME
 
-\subsection*{Cross-check against the general surface-integral RTT}
-
-Writing the last term as a true surface integral over the graph
-$S_{top}(t)$ of $s$: recall $u_n^{top} = s_t/\sqrt{1+s_x^2+s_y^2}$ and the
-area element satisfies $dA_{top} = \sqrt{1+s_x^2+s_y^2}\,dx\,dy$, so
-\[
-\pi\, s_t\, dx\,dy = \pi\, u_n^{top}\, dA_{top},
-\]
-recovering the standard form
-\[
-\frac{d}{dt}\int_{\Lam(t)}\pi\,dV = \int_{\Lam(t)}\partial_t\pi\,dV
-+ \int_{S_{top}(t)} \pi\, u_n\, dA
-+ \underbrace{\int_{S_{bot}}\pi\cdot 0\,dA}_{=0}
-+ \underbrace{(\text{margin wall})}_{=0}.
-\]
-This matches the picture that $\partial\Lam(t)$ is top $\cup$ bottom
-$\cup$ (measure-zero curve): the bottom term vanishes because the bed is
-fixed ($u_n=0$), and the lateral/margin term vanishes as shown above,
-leaving only the top-surface flux.
-
-This is exactly the structure behind vertically-integrated conservation
-laws (e.g.\ thickness/mass-conservation equations for a layer with a
-wet/dry or grounding-line-type margin) --- one gets to treat the footprint
-as if it were not moving, for free, as long as the transported quantity is
-admissible (finite) at zero thickness.
+\bibliography{layer}
+\bibliographystyle{siamplain}
 
 \end{document}
