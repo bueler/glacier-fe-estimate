@@ -1,6 +1,7 @@
 \documentclass[11pt]{amsart}
 
-\usepackage[margin=1in]{geometry}
+\usepackage[total={6.3in,9.0in},top=1.3in,left=1.1in]{geometry}
+
 \usepackage{enumerate,bm}
 \usepackage{palatino}
 \usepackage[final]{graphicx}
@@ -28,7 +29,7 @@
 \newcommand{\bzero}{\bm{0}}
 
 
-\title{Reynold's transport theorem for evolving glaciers}
+\title[Reynold's transport theorem for glaciers]{Reynold's transport theorem for glaciers, \\ and some applications}
 
 \author{Ed Bueler}
 
@@ -48,7 +49,7 @@ defined by a time-independent lower surface $z=b(x,y)$ and a time-dependent uppe
 
 \section{Basic theory}
 
-\subsection{Formulas for a moving glacier domain}  Consider a fixed map-plane domain $\Omega \subset \RR^2$, an open and connected set.  This set is often something simple like a rectangle around a single glacier, or around a glaciated region.  All calculations to follow are defined within this set, or on subsets of it, or on three-dimensional sets defined over it, such as \eqref{eq:Lambda}.  Also, suppose that the bed elevation of the glacier(s) is given by a continuous, time-independent function $b(x,y)$.
+\subsection{Geometrical formulas for a moving glacier domain}  Consider a fixed map-plane domain $\Omega \subset \RR^2$, an open and connected set.  This set is often something simple like a rectangle around a single glacier, or around a glaciated region.  All calculations to follow are defined within this set, or on subsets of it, or on three-dimensional sets defined over it, such as \eqref{eq:Lambda}.  Also, suppose that the bed elevation of the glacier(s) is given by a continuous, time-independent function $b(x,y)$.
 
 We will allow the upper surface elevation to change in time.  This function $s(t,x,y)$ is defined for any $(x,y)\in \Omega$, and for every $t$ in some duration $[0,T]$ of interest, and it is assumed to be continuous.  However, we use $s$ in a manner which is compatible with digital elevation models: there is a single surface elevation on $\Omega$.  It is the glacier surface on ice-covered land and it is the bed elevation otherwise; on ice-free land we have $s(t,x,y) = b(x,y)$.
 
@@ -134,7 +135,7 @@ which holds because the bed elevation is time independent.  Note, however, and i
 
 \section{Applications}
 
-\subsection{Total glacier mass, for variable ice density}  Suppose $\pi(t,x,y,z)=\rho(t,x,y,z)$ is the mass density of the glacier(s).  We assume this field is measurable and bounded.  In particular, there is a maximum density $\rho_0$ so that $0 < \rho(t,x,y,z) \le \rho_0$ at all points $(x,y,z) \in \Lambda(t)$.
+\subsection{Total glacier mass, for variable ice density}  Suppose $\pi(t,x,y,z)=\rho(t,x,y,z)$ is the mass density of the glacier(s) in SI units $\text{kg}\,\text{m}^{-3}$.  We assume this field is measurable and bounded.  In particular, there is a maximum density $\rho_0$ so that $0 < \rho(t,x,y,z) \le \rho_0$ at all points $(x,y,z) \in \Lambda(t)$.
 
 The total mass of the glacier(s) is
 \begin{equation}
@@ -150,13 +151,13 @@ where $\rho|_s(t,x,y) = \rho(t,x,y,s(t,x,y))$ is the surface trace of $\rho$.
 
 Each integral in \eqref{eq:dMdt} could be negative, zero, or positive.  For example, the first integral could be zero if the glacier was not changing shape but some part of the glacier was densifying ($\rho_t>0$) and an equal amount was becoming less dense ($\rho_t<0$).  Likewise, the second integral could be zero if the density at the surface was constant but the net raising ($s_t>0$) and lowering ($s_t<0$) of the glacier was balanced between different map-plane areas.  There are many possibilities.
 
-\subsection{Free-surface kinematical equation}  Suppose we are given a time- and space-dependent surface mass balance (SMB) rate function $a(t,x,y)$, provided in mass-per-area units, which is the climate of our land-based glacier or glaciated region.  By definition, the SMB is the balance between accumulating snow and the loss of melt water, through runoff, at the upper surface of the glacier \cite{Cogleyetal2011}.  Because a simulated glacier needs to be able to advance into unglaciated locations, we assume that the SMB $a$ is defined everywhere in $\Omega$, whether ice-covered or not.  In ice-free areas $a$ should have the value which an ice surface at elevation $b$ would experience, which can be computed, from precipitation and an energy balance model \cite{GreveBlatter2009}, by balancing snow accumulation minus the ablation which would follow from using the available energy for melt (if ice were present).
+\subsection{Free-surface kinematical equation}  Suppose we are given a time- and space-dependent surface mass balance (SMB) rate function $a(t,x,y)$, provided in mass flux units, i.e.~SI units $\text{kg}\,\text{m}^{-2}\,\text{s}^{-1}$.  This is the climate experienced by our land-based glacier or glaciated region.  By definition, the SMB is the balance between accumulating snow and the loss of melt water, through runoff, measured vertically at the upper surface of the glacier \cite{Cogleyetal2011}.  Because a simulated glacier needs to be able to advance into unglaciated locations, we assume that the SMB $a$ is defined everywhere in $\Omega$, whether ice-covered or not.  In ice-free areas $a$ should have the value which an ice surface at elevation $b$ would experience.  This can be computed from precipitation and an energy balance model \cite{GreveBlatter2009} by snow accumulation minus the ablation modeled using the available energy for melt (if ice were present).
 
-The ice in a glacier flows, of course, and the motion of the glacier surface is related both to the flow and to the SMB.  Two surface traces are needed to state this relationship.  Recall $\rho|_s(t,x,y) = \rho(t,x,y,s(t,x,y))$ as before.  The surface trace of the ice velocity is denoted $\bu|_s(t,x,y) = \bu(t,x,y,s(t,x,y))$ where $\bu(t,x,y,z)$ is the ice velocity within $\Lambda(t)$.  In these terms the free-surface (kinematical) equation holds:
+Glaciers flow, of course, and the motion of their surfaces relates both to the flow and to the SMB.  Surface traces are needed to state this relationship.  Recall $\rho|_s(t,x,y) = \rho(t,x,y,s(t,x,y))$ as before.  The surface trace of the ice velocity is $\bu|_s(t,x,y) = \bu(t,x,y,s(t,x,y))$, where $\bu(t,x,y,z)$ is the ice velocity within $\Lambda(t)$.  In these terms the free-surface equation holds:
 \begin{equation}
-s_t - \bu|_s \cdot \bn_s = a.  \label{eq:ske}
+\rho|_s \left(s_t - \bu|_s \cdot \bn_s\right) = a.  \label{eq:ske}
 \end{equation}
-This equation says that the (non-material) ice surface moves vertically according to the sum of an ice velocity component at the surface and the SMB.  It is a statement of mass conservation \cite{Aschwandenetal2012}, and it is a standard description of glacier geometry evolution \cite{GreveBlatter2009,SchoofHewitt2013}.
+Though commonly described as merely kinematical, it is really a statement of mass conservation \cite{Aschwandenetal2012}.  It is a standard description of glacier geometry evolution \cite{GreveBlatter2009,SchoofHewitt2013}, valid regardless of the density, and equivalent to the more familiar mass continuity equation under a constant density assumption.  It can be interpreted as saying that the (non-material) ice surface moves vertically according to the sum of a surface ice velocity component and the SMB.
 
 FIXME combine \eqref{eq:dMdt} with SKE and re-interpret
 
@@ -166,7 +167,7 @@ R(t) = \frac{M(t)}{V(t)}. \label{eq:R}
 \end{equation}
 This is well-defined for any glacier(s) whose total volume function $V(t)$ remains bounded below by a positive constant.  Next, following \cite{HussHugonnet2026}, for a time interval between $t$ and $t+\Delta t$, define the effective density during a volume and/or mass change as
 \begin{equation}
-R_{\Delta}(t;\Delta t) = \frac{\Delta M}{\Delta V} = \frac{M(t+\Delta t) - M(t)}{V(t+\Delta t) - V(t)}.  \label{eq:rhoDeltaearly}
+R_{\Delta}(t;\Delta t) = \frac{\Delta M}{\Delta V} = \frac{M(t+\Delta t) - M(t)}{V(t+\Delta t) - V(t)}.  \label{eq:RDeltaearly}
 \end{equation}
 This effective density has a small-interval limit as long as $M'(t)$ and $V'(t)$ exist; using the mean value theorem we have
 \begin{align*}
@@ -174,15 +175,17 @@ This effective density has a small-interval limit as long as $M'(t)$ and $V'(t)$
 \end{align*}
 With slight abuse of notation, we therefore define
 \begin{equation}
-R_{\Delta}(t) = \frac{M'(t)}{V'(t)}  \label{eq:rhoDelta}
+R_{\Delta}(t) = \frac{M'(t)}{V'(t)}  \label{eq:RDelta}
 \end{equation}
-so that $R_{\Delta}(t;\Delta t) = R_{\Delta}(t) + o(\Delta t)$.
+so that $R_{\Delta}(t;\Delta t) = R_{\Delta}(t) + o(\Delta t)$.  Here $o(\Delta t)$ denotes a quantity with $\lim_{\Delta t \to 0} o(\Delta t)/\Delta t = 0$.
 
-According to \cite{HussHugonnet2026}, glacier mass changes at global scale can be best informed by observations using estimates of the effective densities evaluated regionally.  Our goal for now is to express the effective density $\rho_\Delta$ using Reynold's theorem, to clarify its meaning.  First, reference \cite{Huss2013} write
-	$$R_{\Delta}(t;\Delta t) = V(t)\, \frac{R(t+\Delta t) - R(t)}{V(t+\Delta t) - V(t)} + R(t)$$
-for the effective density over an interval, or more simply $R_{\Delta} = V \frac{\Delta R}{\Delta V} + R$.  This turns out to be true up to $o(\Delta t)$ using our definitions above (Appendix \ref{app:hussverif}).  This form can be checked using the mean value theorem or equivalent; only the ordinary derivatives of $M(t)$ and $V(t)$ are involved in the verification.
+According to \cite{Huss2013,HussHugonnet2026}, glacier mass changes at global scale can be best informed by observations using estimates of the effective densities evaluated regionally.  Our goal for now is to express the effective density $\rho_\Delta$ using Reynold's theorem, to clarify its meaning.  First, equation (4) in reference \cite{Huss2013} claims
+\begin{equation}
+R_{\Delta} = V \frac{\Delta R}{\Delta V} + R. \hspace{10mm} (\emph{\text{approximate}})  \label{eq:RDeltaHuss}
+\end{equation}
+This turns out to be true up to lower-order terms $o(\Delta t)$ using our definitions above; see Appendix \ref{app:hussverif}.  This form can be checked using the mean value theorem or equivalent; only the ordinary derivatives of $M(t)$ and $V(t)$ are involved in the verification.
 
-By Lemma \ref{lem:newreynolds} the effective density $R_\Delta$ can be computed in terms of the detailed density and geometry changes for a single glacier or a well-observed glaciated region.  In particular, from expressions \eqref{eq:dVdt} and \eqref{eq:dMdt} we have
+By Lemma \ref{lem:newreynolds} the effective density $R_\Delta$ can be computed in terms of the detailed density and geometry changes for a single glacier or a well-observed glaciated region.  In particular, from definition \eqref{eq:RDelta}, expressions \eqref{eq:dVdt} and \eqref{eq:dMdt}  yield
 \begin{equation}
 R_\Delta(t) = \frac{\int_{\Lambda(t)} \rho_t\,dV + \int_{D(t)} \rho|_s\,s_t\,dA}{\int_{D(t)} s_t\,dA}
 \end{equation}
@@ -200,6 +203,20 @@ FIXME expand using SKE and talk about the terms
 
 \section{Verification of a formula from \cite{Huss2013}}  \label{app:hussverif}
 
-FIXME
+Recall definitions \eqref{eq:R} and \eqref{eq:RDeltaearly}.  This Appendix gives a brief calculation showing why \eqref{eq:RDeltaHuss} is correct up to lower order terms:
+	$$V(t)\, \frac{R(t+\Delta t) - R(t)}{V(t+\Delta t) - V(t)} + R(t) = R_{\Delta}(t) + o(\Delta t).$$
+We assume that $V(t)$ and $M(t)$ are continuous and differentiable.
 
+\begin{proof}  This is mostly a matter of finding common denominators and expanding using the mean value theorem.\footnote{Equivalently, Taylor's theorem with remainder.}  Start from the big fraction on the left:
+{\small
+\begin{align*}
+V(t)\, \frac{R(t+\Delta t) - R(t)}{V(t+\Delta t) - V(t)} &= V(t)\, \frac{\frac{M(t+\Delta t)}{V(t+\Delta t)} - \frac{M(t)}{V(t)}}{V'(t) \Delta t + o(\Delta t^2)} \\
+    &= \frac{V(t) M(t+\Delta t) - V(t+\Delta t) M(t)}{V'(t) \Delta t \, V(t+\Delta t) + o(\Delta t^2)} \\
+    &= \frac{V(t) \left[M(t+\Delta t)-M(t)\right] - \left[V(t+\Delta t) - V(t)\right] M(t)}{V'(t) \Delta t \, V(t) + o(\Delta t^2)} \\
+    &= \frac{V(t) M'(t)\Delta t - V'(t)\Delta t M(t) + o(\Delta t^2)}{V'(t) \Delta t \, V(t) + o(\Delta t^2)} \\
+    &= \frac{V(t) M'(t)}{V'(t) \, V(t) + o(\Delta t)} - \frac{V'(t) M(t)}{V'(t) \, V(t) + o(\Delta t)}  + o(\Delta t)\\
+    &= \frac{M'(t)}{V'(t)} - \frac{M(t)}{V(t)}  + o(\Delta t) = R_{\Delta}(t) - R(t) + o(\Delta t).
+\end{align*}
+}
+\end{proof}
 \end{document}
