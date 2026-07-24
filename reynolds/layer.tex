@@ -20,10 +20,19 @@
 
 \newcommand{\RR}{\mathbb{R}}
 
+\newcommand{\bn}{\mathbf{n}}
+\newcommand{\bu}{\mathbf{u}}
+\newcommand{\bv}{\mathbf{v}}
+\newcommand{\bx}{\mathbf{x}}
+
+\newcommand{\bzero}{\bm{0}}
+
 
 \title{Reynold's transport theorem for evolving glaciers}
 
 \author{Ed Bueler}
+
+\author{Romain Hugonnet}
 
 \begin{document}
 
@@ -37,36 +46,36 @@ defined by a time-independent lower surface $z=b(x,y)$ and a time-dependent uppe
 
 \maketitle
 
-\section*{Introduction}
+\section{Basic theory}
 
-\subsection*{Definitions for a moving glacier domain}  Consider a fixed map-plane domain $\Omega \subset \RR^2$, an open and connected set.  This set is often something simple like a rectangle over a single glacier, or over a glaciated region.  All calculations to follow are defined within this set, or on proper subsets of it, or on three-dimensional sets defined over it.  Also, suppose that the bed elevation of the glacier(s) is given by a continuous, time-independent function $b(x,y)$.
+\subsection{Formulas for a moving glacier domain}  Consider a fixed map-plane domain $\Omega \subset \RR^2$, an open and connected set.  This set is often something simple like a rectangle around a single glacier, or around a glaciated region.  All calculations to follow are defined within this set, or on subsets of it, or on three-dimensional sets defined over it, such as \eqref{eq:Lambda}.  Also, suppose that the bed elevation of the glacier(s) is given by a continuous, time-independent function $b(x,y)$.
 
-We will allow the upper surface $z=s(t,x,y)$ to change in time.  Both $b(x,y)$ and $s(t,x,y)$ are continuous and defined for any $(x,y)\in \Omega$, and for the latter, for every $t$ in some duration $[0,T]$ of interest.  However, we will define $s$ in a manner which is compatible with digital elevation models, that is, so that there is a single surface elevation which is the glacier surface on ice-covered land, but which is the bed elevation otherwise.  That is, on ice-free land we have $s(t,x,y) = b(x,y)$.
+We will allow the upper surface elevation to change in time.  This function $s(t,x,y)$ is defined for any $(x,y)\in \Omega$, and for every $t$ in some duration $[0,T]$ of interest, and it is assumed to be continuous.  However, we use $s$ in a manner which is compatible with digital elevation models: there is a single surface elevation on $\Omega$.  It is the glacier surface on ice-covered land and it is the bed elevation otherwise; on ice-free land we have $s(t,x,y) = b(x,y)$.
 
-Definition \eqref{eq:Lambda} defines an open subset of $\RR^3$, the time-dependent ice domain.   In addition let
+Definition \eqref{eq:Lambda} now determines an open subset of $\RR^3$ which is the time-dependent ice domain.   Let
 \begin{equation}
 D(t) = \{(x,y) : s(t,x,y) > b(x,y)\} \subset \Omega \subset \RR^2.  \label{eq:D}
 \end{equation}
-This map-plane set is the time-dependent horizontal footprint of the glacier, the ice-covered area where the layer has positive thickness $h = s-b > 0$.  In alternative notation we might write $D(t) = \Lambda(t)^\top$, that is, $D(t)$ is the (open) vertical projection of $\Lambda(t)$.  Note that, specifically if $\Omega$ covers a glaciated region, $D(t)$ may be disconnected or it may not be simply-connected.
+This map-plane set is the time-dependent horizontal footprint of the glacier, the ice-covered area where the layer has positive thickness $h = s-b > 0$.  We might write $D(t) = \Lambda(t)^\top$ because $D(t)=\{(x,y)\,:\, \text{there exists $z$ so that } (x,y,z) \in \Lambda(t)\}$.  That is, $D(t)$ is the (open) vertical projection of $\Lambda(t)$.  Note that $D(t)$ may be disconnected, or it may not be simply-connected.
 
 Finally, let
 \begin{equation}
 \gamma(t) = \partial D(t) \subset \bar\Omega \subset \RR^2.  \label{eq:gamma}
 \end{equation}
-This is map-plane projection of the marginal curve surrounding the glacier(s) at time $t$.  Along $\gamma(t)$ the thickness vanishes because, by continuity, $s=b$ at points of $\gamma(t)$.  Generally $\gamma(t)$ has measure zero at every time, so that $\int_{\gamma(t)} f\,dx\,dy = 0$ for any function $f$, but we will not need to assume this is so.  However, we do need the fact that $\gamma(t)$ is measurable, which follows from continuity of $b$ and $s$.
+This is the map-plane projection of the marginal curve surrounding the glacier(s) at time $t$.  Along $\gamma(t)$ the thickness vanishes because, by continuity, $s=b$ at points of $\gamma(t)$.  One would suppose that the set $\gamma(t)$ has measure zero at every time, so that $\int_{\gamma(t)} f\,dx\,dy = 0$ for any function $f$, but we will not actually need this.  However, we use the fact that $\gamma(t)$ is a measurable set, which follows from continuity of $b$ and $s$.
 
 We may write the surface using a level set function,
 	$$f(t,x,y,z) = z - s(t,x,y),$$
-so that the upper surface of the glacier(s) is $f=0$.  From now one we will assume that $f$ and all of its partial derivatives are integrable; that is, we make the same assumption about $s$.  Then $\nabla f = (-s_x,\,-s_y,\,1)$ and $|\nabla f| = \sqrt{1+s_x^2+s_y^2}$.  It follows that, because the gradient of $f$ is orthogonal to its level surfaces, the upward unit normal vector on the upper surface of the glacier is $\hat n = \grad f/|\grad f|$ or
-    $$\hat n = \frac{(-s_x,\,-s_y,\,1)}{\sqrt{1+s_x^2+s_y^2}}.$$
+so that the upper surface of the glacier(s) is $f=0$.  From now one we will assume that $f$ and all of its partial derivatives are integrable.  (In other words, we make the same assumption about $s$.)  Then $\nabla f = (-s_x,\,-s_y,\,1)$ and $|\nabla f| = \sqrt{1+s_x^2+s_y^2}$.  It follows that, because the gradient of $f$ is orthogonal to its level surfaces, the upward unit normal vector on the upper surface of the glacier is $\hat n = \grad f/|\grad f|$ or
+    $$\hat \bn_s = \frac{(-s_x,\,-s_y,\,1)}{\sqrt{1+s_x^2+s_y^2}}.$$
+The un-normalized vector $\bn_s = \grad f$ will also be used:
+    $$\bn_s = (-s_x,\,-s_y,\,1).$$
 
-We next consider the (scalar) velocity of the surface in the direction normal to the surface.  To derive this, consider a differentiable path $\vec x(t)$ tracking the surface, i.e.~of a non-material (conceptual) particle that is always on the surface.  It satisfies $f(t,\vec x(t)) = 0$ and thus $f_t + \nabla f \cdot \vec x' = 0$ by the chain rule.  We may split $\vec x' = u_n \hat n + \vec v_\parallel$ with $\vec v_\parallel$ tangential.  However, since $\nabla f$ is normal to the surface, $\nabla f\cdot \vec v_\parallel = 0$, and since $\hat n = \grad f/|\grad f|$ we have $\grad f \cdot \hat n = |\grad f|$.  This leaves $f_t + |\nabla f|\,u_n = 0$.  It follows that $u_n = -f_t/|\nabla f|$, and thus
-    $$u_n = \frac{s_t}{\sqrt{1+s_x^2+s_y^2}}$$
-is the desired normal velocity of the surface.  Observe in this calculation that the tangential part of the (vector) velocity of the surface is an arbitrary parametrization choice, so it does not contribute to $u_n$, and nor do we need to define it carefully.
+Consider the (scalar) velocity of the surface in the direction normal to the surface.  To derive a formula, let $\bx(t)$ be a differentiable path tracking the surface, i.e.~of a non-material (notional) point that is always on the surface.  It satisfies $f(t,\bx(t)) = 0$ and thus $f_t + \nabla f \cdot \bx' = 0$ by the chain rule.  We may split $\bx' = v_n \hat \bn_s + \bv_\parallel$ with $\bv_\parallel$ tangential to the surface.  However, since $\nabla f$ is normal to the surface, $\nabla f\cdot \bv_\parallel = 0$, and since $\hat \bn_s = \grad f/|\grad f|$ we have $\grad f \cdot \hat \bn_s = |\grad f|$.  This leaves $f_t + |\nabla f|\,v_n = 0$.  It follows that $v_n = -f_t/|\nabla f|$, and thus the desired normal velocity of the surface is
+    $$v_n = \frac{s_t}{\sqrt{1+s_x^2+s_y^2}}.$$
+Observe that the tangential part of the (vector) velocity of the surface involves an arbitrary parameterization choice.  We will not need it as it does not contribute to $v_n$.
 
-\subsection*{Reynold's transport theorem for glacier geometry}
-
-Suppose $\pi(t,x,y,z)$ is the density of some physical quantity which is being transported by the ice flow.  It might be a scalar, vector, or tensor.  It might be the (generally variable) ice mass density $\rho$, in mass-per-volume units, or it perhaps $\pi = \rho \phi$ for some specific quantity $\phi$ in per-mass units.  For example $\phi$ could be (specific) enthalpy \cite{Aschwandenetal2012} in energy-per-mass units so that $\pi$ is an energy density (energy-per-volume).
+\subsection{Reynold's transport theorem for glacier geometry}  Suppose $\pi(t,x,y,z)$ is the density of some physical quantity which is being transported by the ice flow.  It might be a scalar, vector, or tensor.  It might be the (generally variable) ice mass density $\rho$, in mass-per-volume units, or it perhaps $\pi = \rho \phi$ for some specific quantity $\phi$ in per-mass units.  For example $\phi$ could be (specific) enthalpy \cite{Aschwandenetal2012} in energy-per-mass units so that $\pi$ is an energy density (energy-per-volume).
 
 Define
 \begin{equation}
@@ -94,11 +103,11 @@ where $u_\gamma$ denotes the outward normal velocity of the margin curve $\gamma
 
 The line integral $\ast$ over $\gamma(t)$ in the above equation is important to consider, but in fact it vanishes because the value of $g$ along $\gamma(t)$ is zero.  That is, $g(t,x,y)\big|_{\gamma(t)} = 0$ because $s=b$ along $\gamma(t)$.  The measure of $\gamma(t)$ is thus not important here, though the explicit hypothesis of admissibility, namely $s\ge b$, is needed, as is the continuity of $s$ and $b$.  The reason the line integral vanishes is the same mechanism as the following 1D fact: if $F(t)=\int_{a(t)}^{b(t)} g(t,x)\,dx$, with $g$ vanishing at both endpoints for all $t$, namely $g(t,a(t))=g(t,b(t))=0$, then $F'(t) = \int_{a(t)}^{b(t)} g_t(t,x)\,dx$ with no boundary-motion terms, even though $a(t),b(t)$ move.  In summary, the vanishing of the integrand at the moving boundary kills the boundary-motion contribution.
 
-For the above logic to be valid, $\pi(t,x,y,z)$ must stay bounded as we approach $\gamma(t)$.  Formally, for fixed $t_0$, if we parameterize the set (curve) $\gamma(t_0)$ by $(x(\tau), y(\tau))$ and we consider a parameter value $\tau_0$ then $\pi$ must be well-behaved enough so that
-    $$\lim_{(x,y) \to (x(\tau_0), y(\tau_0))} g(t_0,x,y) = \lim_{(x,y) \to (x(\tau_0), y(\tau_0))} \int_{b(x,y)}^{s(t,x,y)} \pi(t_0,x,y,z) \, dz = 0.$$
-Otherwise the above argument which justifies the vanishing of the line integral would be defeated by an integrand which blows up competitively.  A sufficient integrability assumption on $\pi$ is needed; it might be an assumption of continuity but it need not be that strong.
+For the above logic to be valid, $\pi(t,x,y,z)$ must stay bounded as we approach $\gamma(t)$.  Formally, for fixed $t_0$, if we parameterize the curve $\gamma(t_0)$ by $(x(\tau), y(\tau))$ and choose any parameter value $\tau_0$ then $\pi$ must be well-behaved enough so that
+    $$\lim_{(x,y) \to (x(\tau_0), y(\tau_0))} g(t_0,x,y) = \lim_{(x,y) \to (x(\tau_0), y(\tau_0))} \int_{b(x,y)}^{s(t_0,x,y)} \pi(t_0,x,y,z) \, dz = 0.$$
+Otherwise the above argument which justifies the vanishing of the line integral would be defeated by an integrand which blows up competitively.  An integrability assumption on $\pi$ is needed; an assumption of continuity suffices but it need not be that strong.
 
-At this point we have a useful result, namely a form of Reynold's transport theorem \cite{Holmes2019} well-suited to continuum discussions of glaciers.
+At this point we have a useful result, namely a form of Reynold's transport theorem \cite{Holmes2019} suited to continuum discussions of glaciers.
 
 \begin{lem}  \label{lem:newreynolds}  With the above hypotheses,
 \begin{align*}
@@ -122,11 +131,10 @@ V'(t) = \int_{D(t)} s_t(t,x,y)\,dx\,dy. \label{eq:dVdt}
 which holds because the bed elevation is time independent.  Note, however, and in casual terms, that no volume flux is allowed to sneak through at the glacier margins!
 \end{ex*}
 
-FIXME combine Lemma 1 with SKE and re-interpret
 
-\section*{Applications}
+\section{Applications}
 
-\subsection*{Glacier mass, and mass changes, for variable ice density}  For a more substantial example, suppose $\pi(t,x,y,z)=\rho(t,x,y,z)$ is the mass density of the glacier(s).  We will make no assumptions about this field, though of course $\rho>0$ within $\Lambda(t)$.
+\subsection{Total glacier mass, for variable ice density}  Suppose $\pi(t,x,y,z)=\rho(t,x,y,z)$ is the mass density of the glacier(s).  We assume this field is measurable and bounded.  In particular, there is a maximum density $\rho_0$ so that $0 < \rho(t,x,y,z) \le \rho_0$ at all points $(x,y,z) \in \Lambda(t)$.
 
 The total mass of the glacier(s) is
 \begin{equation}
@@ -136,46 +144,62 @@ Applying Lemma \ref{lem:newreynolds} gives
 	$$M'(t) = \int_{\Lambda(t)} \rho_t(t,x,y,z)\,dx\,dy\,dz + \int_{D(t)} \rho(t,x,y,s(t,x,y))\,s_t(t,x,y)\,dx\,dy,$$
 which we write more compactly as
 \begin{equation}
-M'(t) = \int_{\Lambda(t)} \rho_t\,dV + \int_{D(t)} \rho|_s\,s_t\,dA. \label{eq:dMdt}
+M'(t) = \int_{\Lambda(t)} \rho_t\,dV + \int_{D(t)} \rho|_s\,s_t\,dA, \label{eq:dMdt}
 \end{equation}
+where $\rho|_s(t,x,y) = \rho(t,x,y,s(t,x,y))$ is the surface trace of $\rho$.
 
-Neither of the terms in expression \eqref{eq:dMdt} are intrinsically positive.  For example, the first term (integral over $\Lambda(t)$) would be zero if the glacier was not changing shape but some part of the glacier was densifying ($\rho_t>0$) and an equal amount was becoming less dense ($\rho_t<0$).  Likewise, the second term could be zero if the density at the surface was constant but the glacier was raising ($s_t>0$) and lowering ($s_t<0$) in equal map-plane areas.
+Each integral in \eqref{eq:dMdt} could be negative, zero, or positive.  For example, the first integral could be zero if the glacier was not changing shape but some part of the glacier was densifying ($\rho_t>0$) and an equal amount was becoming less dense ($\rho_t<0$).  Likewise, the second integral could be zero if the density at the surface was constant but the net raising ($s_t>0$) and lowering ($s_t<0$) of the glacier was balanced between different map-plane areas.  There are many possibilities.
 
-Denote the overall (average) glacier density by
+\subsection{Free-surface kinematical equation}  Suppose we are given a time- and space-dependent surface mass balance (SMB) rate function $a(t,x,y)$, provided in mass-per-area units, which is the climate of our land-based glacier or glaciated region.  By definition, the SMB is the balance between accumulating snow and the loss of melt water, through runoff, at the upper surface of the glacier \cite{Cogleyetal2011}.  Because a simulated glacier needs to be able to advance into unglaciated locations, we assume that the SMB $a$ is defined everywhere in $\Omega$, whether ice-covered or not.  In ice-free areas $a$ should have the value which an ice surface at elevation $b$ would experience, which can be computed, from precipitation and an energy balance model \cite{GreveBlatter2009}, by balancing snow accumulation minus the ablation which would follow from using the available energy for melt (if ice were present).
+
+The ice in a glacier flows, of course, and the motion of the glacier surface is related both to the flow and to the SMB.  Two surface traces are needed to state this relationship.  Recall $\rho|_s(t,x,y) = \rho(t,x,y,s(t,x,y))$ as before.  The surface trace of the ice velocity is denoted $\bu|_s(t,x,y) = \bu(t,x,y,s(t,x,y))$ where $\bu(t,x,y,z)$ is the ice velocity within $\Lambda(t)$.  In these terms the free-surface (kinematical) equation holds:
+\begin{equation}
+s_t - \bu|_s \cdot \bn_s = a.  \label{eq:ske}
+\end{equation}
+This equation says that the (non-material) ice surface moves vertically according to the sum of an ice velocity component at the surface and the SMB.  It is a statement of mass conservation \cite{Aschwandenetal2012}, and it is a standard description of glacier geometry evolution \cite{GreveBlatter2009,SchoofHewitt2013}.
+
+FIXME combine \eqref{eq:dMdt} with SKE and re-interpret
+
+\subsection{Effective density during a change}  Denote the overall (average) glacier density by\footnote{This lumped (i.e.~whole glacier) quantity is denoted ``$\rho$'' in \cite{Huss2013} and \cite{HussHugonnet2026}, and likewise our $R_\Delta$ is denoted ``$\rho_{\Delta V}$'' there, but we reserve the symbol $\rho$ for the extensive/local density already introduced.}
 \begin{equation}
 R(t) = \frac{M(t)}{V(t)}. \label{eq:R}
 \end{equation}
-This is well-defined for any glacier(s) whose total volume remains bounded below by a positive constant.
-
-Following \cite{HussHugonnet2026}, for a time interval between $t$ and $t+\Delta t$, define the effective density during a volume and/or mass change as
+This is well-defined for any glacier(s) whose total volume function $V(t)$ remains bounded below by a positive constant.  Next, following \cite{HussHugonnet2026}, for a time interval between $t$ and $t+\Delta t$, define the effective density during a volume and/or mass change as
 \begin{equation}
-\rho_{\Delta}(t;\Delta t) = \frac{\Delta M}{\Delta V} = \frac{M(t+\Delta t) - M(t)}{V(t+\Delta t) - V(t)}.  \label{eq:rhoDeltaearly}
+R_{\Delta}(t;\Delta t) = \frac{\Delta M}{\Delta V} = \frac{M(t+\Delta t) - M(t)}{V(t+\Delta t) - V(t)}.  \label{eq:rhoDeltaearly}
 \end{equation}
-This effective density has a small-time limit as long as $M'(t)$ and $V'(t)$ exist.  In fact, using the mean value theorem,
+This effective density has a small-interval limit as long as $M'(t)$ and $V'(t)$ exist; using the mean value theorem we have
 \begin{align*}
-\lim_{\Delta t\to 0} \rho_{\Delta}(t;\Delta t) &= \lim_{\Delta t\to 0}  \frac{M(t+\Delta t) - M(t)}{V(t+\Delta t) - V(t)} = \lim_{\Delta t\to 0} \frac{M'(t)\Delta t + o(\Delta t)}{V'(t)\Delta t + o(\Delta t)} = \frac{M'(t)}{V'(t)}.
+\lim_{\Delta t\to 0} R_{\Delta}(t;\Delta t) &= \lim_{\Delta t\to 0}  \frac{M(t+\Delta t) - M(t)}{V(t+\Delta t) - V(t)} = \lim_{\Delta t\to 0} \frac{M'(t)\Delta t + o(\Delta t)}{V'(t)\Delta t + o(\Delta t)} = \frac{M'(t)}{V'(t)}.
 \end{align*}
 With slight abuse of notation, we therefore define
 \begin{equation}
-\rho_{\Delta}(t) = \frac{M'(t)}{V'(t)}  \label{eq:rhoDelta}
+R_{\Delta}(t) = \frac{M'(t)}{V'(t)}  \label{eq:rhoDelta}
 \end{equation}
-so that $\rho_{\Delta}(t;\Delta t) = \rho_{\Delta}(t) + o(\Delta t)$.
+so that $R_{\Delta}(t;\Delta t) = R_{\Delta}(t) + o(\Delta t)$.
 
-According to \cite{HussHugonnet2026}, glacier mass changes at global scale can be best informed by observations using estimates of the effective densities evaluated regionally.  Our goal in this application section is to express the effective density $\rho_\Delta$ in several ways, to assist in understanding its meaning.
+According to \cite{HussHugonnet2026}, glacier mass changes at global scale can be best informed by observations using estimates of the effective densities evaluated regionally.  Our goal for now is to express the effective density $\rho_\Delta$ using Reynold's theorem, to clarify its meaning.  First, reference \cite{Huss2013} write
+	$$R_{\Delta}(t;\Delta t) = V(t)\, \frac{R(t+\Delta t) - R(t)}{V(t+\Delta t) - V(t)} + R(t)$$
+for the effective density over an interval, or more simply $R_{\Delta} = V \frac{\Delta R}{\Delta V} + R$.  This turns out to be true up to $o(\Delta t)$ using our definitions above (Appendix \ref{app:hussverif}).  This form can be checked using the mean value theorem or equivalent; only the ordinary derivatives of $M(t)$ and $V(t)$ are involved in the verification.
 
-Reference \cite{Huss2013} points out that we can write
-	$$\rho_{\Delta}(t;\Delta t) = V(t)\, \frac{R(t+\Delta t) - R(t)}{V(t+\Delta t) - V(t)} + R(t)$$
-for the effective density over an interval, or more simply as $\rho_{\Delta} = V \frac{\Delta R}{\Delta V} + R$, at least up to $o(\Delta t)$.  This form can be checked using the mean value theorem or equivalent; only the ordinary derivatives of $M(t)$ and $V(t)$ are involved.
-
-On the other hand, using Lemma \ref{lem:newreynolds} the effective density $\rho_\Delta$ can be computed in terms of the detailed density and geometry changes for a single glacier or a well-observed glaciated region.  In particular, from expressions \eqref{eq:dVdt} and \eqref{eq:dMdt} we have
+By Lemma \ref{lem:newreynolds} the effective density $R_\Delta$ can be computed in terms of the detailed density and geometry changes for a single glacier or a well-observed glaciated region.  In particular, from expressions \eqref{eq:dVdt} and \eqref{eq:dMdt} we have
 \begin{equation}
-\rho_\Delta(t) = \frac{\int_{\Lambda(t)} \rho_t\,dV + \int_{D(t)} \rho|_s\,s_t\,dA}{\int_{D(t)} s_t\,dA}
+R_\Delta(t) = \frac{\int_{\Lambda(t)} \rho_t\,dV + \int_{D(t)} \rho|_s\,s_t\,dA}{\int_{D(t)} s_t\,dA}
 \end{equation}
-FIXME
+
+FIXME expand using SKE and talk about the terms
+
+\subsection{Enthalpy transport} FIXME
 
 
 
 \bibliography{layer}
 \bibliographystyle{siamplain}
+
+\appendix
+
+\section{Verification of a formula from \cite{Huss2013}}  \label{app:hussverif}
+
+FIXME
 
 \end{document}
