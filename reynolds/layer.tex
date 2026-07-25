@@ -9,6 +9,7 @@
 
 \theoremstyle{theorem}
 \newtheorem{thm}{Theorem}
+\newtheorem{Cor}{Corollary}
 \newtheorem{lem}{Lemma}
 \newtheorem{lem*}{Lemma}
 
@@ -25,6 +26,8 @@
 \newcommand{\bu}{\mathbf{u}}
 \newcommand{\bv}{\mathbf{v}}
 \newcommand{\bx}{\mathbf{x}}
+\newcommand{\by}{\mathbf{y}}
+\newcommand{\bz}{\mathbf{z}}
 
 \newcommand{\bzero}{\bm{0}}
 
@@ -38,7 +41,7 @@
 \begin{document}
 
 \begin{abstract}
-We consider the form of Reynold's transport theorem \cite{Holmes2019} for time-dependent 3D sets which are defined by a time-independent lower surface $z=b(x,y)$ and a time-dependent upper surface $z=s(t,x,y)$.  Such sets are suitable for the time-dependent domains of glacier ice.  We assume that the boundary of $\Lam(t)$ consists, up to a set of measure zero, only of a lower and an upper surface, which neglects any cliffs along the margin of the glacier.  The theorem is applied to glacier mass, mass changes, the free-surface equation, and enthalpy transport.
+We consider the form of Reynold's transport theorem \cite{Holmes2019} for time-dependent 3D sets which are defined by a time-independent lower surface $z=b(x,y)$ and a time-dependent upper surface $z=s(t,x,y)$.  Such 3D sets are time-dependent domains of glacier ice.  The map-plane projections of such sets are the domains of glacier extent, and such changing map-plane sets can disconnect or reconnect over time.  We assume that the 3D boundary of the glacier ice domain consists, up to a set of measure zero, only of a lower and an upper surface; we neglect any cliffs along the margins of the glaciers.  The transport theorem is applied to the evolution of total glacier mass, mass changes, enthalpy, and linear momentum in a glaciated region.
 \end{abstract}
 
 \maketitle
@@ -82,7 +85,7 @@ Consider the (scalar) velocity of the surface in the direction normal to the sur
     $$v_n = \frac{s_t}{\sqrt{1+s_x^2+s_y^2}}.$$
 Observe that the tangential part of the (vector) velocity of the surface involves an arbitrary parameterization choice, but we will not need it anyway.
 
-\subsection{Reynold's transport theorem for glacier geometry}  Suppose $\phi(t,x,y,z)$ is the density of some physical quantity which is being transported by the ice flow.  It might be a scalar, vector, or tensor.  It might be the (variable) ice mass density $\rho$, in mass-per-volume units.  On the other hand, perhaps $\phi = \rho \psi$ for some specific quantity $\psi(t,x,y,z)$ in per-mass units.  For example $\psi$ could be (specific) enthalpy \cite{Aschwandenetal2012} in energy-per-mass units so that $\phi$ is an energy density with energy-per-volume units.
+\subsection{Reynold's transport theorem for glacier geometry}  Suppose $\phi(t,x,y,z)$ is the density of some physical quantity, in quantity-per-volume units, which is being transported by the ice flow.  The density could be a scalar, vector, or tensor field.  For example, it might be the (variable) ice mass density $\rho$, in mass-per-volume units.  On the other hand, perhaps $\phi = \rho \psi$ for some specific quantity $\psi(t,x,y,z)$ in per-mass units.  For example $\psi$ could be (specific) enthalpy \cite{Aschwandenetal2012} in energy-per-mass units so that $\phi$ is an energy density with energy-per-volume units.
 
 Define
 \begin{equation}
@@ -122,7 +125,9 @@ At this point we have derived a useful result, namely a form of Reynold's transp
    &\qquad + \int_{D(t)} \phi|_s(t,x,y)\, s_t(t,x,y)\,dx\,dy.
 \end{align*}
 With simpler notation, using the definition of $F(t)$ and suppressing dependencies, we have
-    $$F'(t) = \int_{\Lam(t)} \phi_t\,dV + \int_{D(t)} \phi|_s \, s_t\,dA,$$
+\begin{equation}
+F'(t) = \int_{\Lam(t)} \phi_t\,dV + \int_{D(t)} \phi|_s \, s_t\,dA, \label{eq:newreynolds}
+\end{equation}
 where $dV=dx\,dy\,dz$ and $dA=dx\,dy$.
 \end{thm}
 
@@ -142,7 +147,9 @@ which holds because the bed elevation is time independent.  However, no volume f
 
 \section{Applications}
 
-\subsection{Total glacier mass, for variable ice density}  Suppose $\phi(t,x,y,z)=\rho(t,x,y,z)$ is the mass density of the glacier(s) in SI units $\text{kg}\,\text{m}^{-3}$.  We assume this field is measurable and bounded; there is a maximum density $\rho_0$ so that $0 < \rho(t,x,y,z) \le \rho_0$ at all points $(x,y,z) \in \Lambda(t)$.  Now the total mass of the glacier(s) is
+The advantage of the above form of Reynold's transport theorem is that the rate of change of the total of a quantity within an identified map-plane region, the set $\Omega$, is related to observable surface fields even as the thickness \emph{and extent} of the glaciers within $\Omega$ change.  Thus, of the two integrals in \eqref{eq:newreynolds}, the one which is over $D(t) \subset \Omega$ is of primary interest in applications.
+
+\subsection{Total glacier mass, for variable ice density}  Suppose $\phi(t,x,y,z)=\rho(t,x,y,z)$ is the mass density of the glacier(s), in SI units $\text{kg}\,\text{m}^{-3}$.  We assume this field is measurable and bounded; there is a maximum density $\rho_0$ so that $0 < \rho(t,x,y,z) \le \rho_0$ at all points $(x,y,z) \in \Lambda(t)$.  The total mass of the glacier(s) is
 \begin{equation}
 M(t) = \int_{\Lambda(t)} \rho(t,x,y,z)\,dx\,dy\,dz. \label{eq:M}
 \end{equation}
@@ -156,7 +163,9 @@ Each integral in \eqref{eq:dMdt} could be negative, zero, or positive.  For exam
 
 \subsection{Free-surface equation}  In order to further study transport processes involving the glacier surface it makes sense to recall the way that surface moves.
 
-Suppose we are given a time- and space-dependent surface mass balance (SMB) rate function $a(t,x,y)$, provided in mass flux units, namely $\text{kg}\,\text{m}^{-2}\,\text{s}^{-1}$ in SI.  This is the climate experienced by our land-based glaciated region.  By definition, the SMB is the balance between accumulating snow and the loss of melt water, through runoff, measured vertically at the upper surface of the glacier \cite{Cogleyetal2011}.  Because a simulated glacier needs to be able to advance into unglaciated locations, we assume that the SMB $a$ is defined everywhere in $\Omega$, whether ice-covered or not.  In ice-free areas $a$ should have the value which an ice surface at elevation $b$ would experience.  This can be computed from precipitation and an energy balance model \cite{GreveBlatter2009} by snow accumulation minus the ablation modeled using the available energy for melt (if ice were present).
+Suppose we are given a time- and space-dependent surface mass balance (SMB) rate function $a(t,x,y)$, provided in mass flux units, namely $\text{kg}\,\text{m}^{-2}\,\text{s}^{-1}$ in SI.  This is the climate experienced by our land-based glaciated region.  By definition, the SMB is the balance between accumulating snow and the loss of melt water, through runoff, measured vertically at the upper surface of the glacier \cite{Cogleyetal2011}.
+
+Because a simulated glacier needs to be able to advance into unglaciated locations, in a time-dependent (prognostic) model we would assume that the SMB $a$ is defined everywhere in $\Omega$, whether ice-covered or not.  In ice-free areas $a$ should have the value which an ice surface at elevation $b$ would experience.  This can be computed from precipitation and an energy balance model \cite{GreveBlatter2009} by snow accumulation minus the ablation modeled using the available energy for melt (if ice were present).
 
 Glaciers flow, of course, and the motion of their surfaces is determined by a combination of the flow and the SMB.  To state this, recall the mass density surface trace $\rho|_s(t,x,y) = \rho(t,x,y,s(t,x,y))$.  If $\bu(t,x,y,z)$ denotes the ice velocity within $\Lambda(t)$ then the surface trace of the ice velocity is $\bu|_s(t,x,y) = \bu(t,x,y,s(t,x,y))$.  In these terms the free-surface equation holds:
 \begin{equation}
@@ -164,24 +173,27 @@ Glaciers flow, of course, and the motion of their surfaces is determined by a co
 \end{equation}  
 This equation says that the (non-material) ice surface moves vertically according to the sum of a surface ice velocity component and the SMB.  It is a standard description of glacier geometry evolution \cite{GreveBlatter2009,SchoofHewitt2013}, valid regardless of the density.  It is equivalent to the more familiar mass-continuity equation under an incompressibility (constant density) assumption.  Though commonly described as merely kinematical, it is really an important statement of mass conservation \cite[Section 3.3]{Aschwandenetal2012}.
 
-Let us return to the rate of change of the total glacier mass, namely $M'(t)$.  Equation \eqref{eq:ske} allows us to rewrite the second integral \eqref{eq:dMdt} as a combination of a classic mass flux across the boundary plus a SMB term computed by a map-plane integral:
+Let us return to the rate of change of the total glacier mass, namely $M'(t)$.  Define the curved upper surface of the glacier, as a set in 3D, by
+    $$\Gamma(t) = \{(x,y,z)\,:\,z = s(t,x,y)\} \subset \partial\Lambda(t).$$
+Then free-surface equation \eqref{eq:ske} allows us to rewrite the second integral \eqref{eq:dMdt} as a combination of three clear integrals:
 \begin{align}
 M'(t) &= \int_{\Lambda(t)} \rho_t\,dV + \int_{D(t)} \left(a + \rho|_s\,\bu|_s \cdot \bn_s\right)\,dA  \label{eq:dMdt:ske} \\
-  &= \int_{\Lambda(t)} \rho_t\,dV + \int_{D(t)} a \,dA + \int_{\Gamma_s(t)} (\rho\bu)|_s \cdot \hat \bn_s\,dS. \notag 
+  &= \int_{\Lambda(t)} \rho_t\,dV + \int_{D(t)} a \,dA + \int_{\Gamma(t)} (\rho\bu)|_s \cdot \hat \bn_s\,dS. \notag 
 \end{align}
+Note that the second integral in \eqref{eq:dMdt:ske} is written as a map-plane integral over $D(t)$, with $dA=dx\,dy$ as before, because the SMB is measured vertically and not surface-normal.
 
-The second integral in \eqref{eq:dMdt:ske} is written as a map-plane integral, with $dA=dx\,dy$ as before, because the SMB is measured vertically and not surface-normal.  However, the last integral uses
+The last integral is written using the element of surface area on $\Gamma(t)$:
     $$dS = \sqrt{1+s_x^2+s_y^2}\;dx\,dy$$
-to denote the element of surface area for the curved upper surface in 3D, namely for the set $\Gamma_s(t) = \{(x,y,z)\,:\,z = s(t,x,y)\} \subset \partial\Lambda(t)$.  Thus the last integral in \eqref{eq:dMdt:ske} is the true advective mass flux, caused by the ice flow velocity field $\bu$, through the glacier's non-material upper surface.  The last integral can also be written $\int_{D(t)} (\rho\bu)|_s \cdot \bn_s\,dA$.
+The last integral in \eqref{eq:dMdt:ske} is the advective mass flux, caused by the ice flow velocity field $\bu$, through the glacier's curved non-material upper surface $\Gamma(t)$ in 3D.  If desired it can be written over the map-plane region instead: $\int_{D(t)} (\rho\bu)|_s \cdot \bn_s\,dA$.
 
-So now equation \eqref{eq:dMdt:ske} describes the change in the total ice mass in the glaciated region through 3 clear mechanisms:\renewcommand{\labelenumi}{\roman{enumi}.}
+Equation \eqref{eq:dMdt:ske} describes the change in the total ice mass in the glaciated region through 3 clear mechanisms:\renewcommand{\labelenumi}{\roman{enumi}.}
 \begin{enumerate}
-\item $\int_{\Lambda(t)} \rho_t\,dV$ is the integral of the densification or rarefaction of the ice,
-\item $\int_{D(t)} a \,dA$ is the purely-climatic influence of the SMB, which is measured vertically so that the map-plane domain $D(t)$ appears, and
-\item $\int_{\Gamma_s(t)} (\rho\bu)|_s \cdot \hat \bn_s\,dS$ is the mass flux through the curved upper surface of the glacier, as a surface imbedded in 3D.
+\item $\int_{\Lambda(t)} \rho_t\,dV$ is the total densification or rarefaction of the ice,
+\item $\int_{D(t)} a \,dA$ is the total climatic influence of the SMB, and
+\item $\int_{\Gamma(t)} (\rho\bu)|_s \cdot \hat \bn_s\,dS$ is the total mass flux through the curved upper surface of the glacier.
 \end{enumerate}
 
-\subsection{Effective density of a mass change period}  Denote the overall (average) glacier density by\footnote{This lumped (i.e.~whole glacier) quantity is denoted ``$\rho$'' in \cite{Huss2013} and \cite{HussHugonnet2026}.  Likewise, our quantity $R_\Delta$ is denoted ``$\rho_{\Delta V}$'' there.  However, here we reserve the symbol $\rho$ for the extensive/local density $\rho(t,x,y,z)$ already introduced.}
+\subsection{Effective density of a mass change}  Denote the overall (average) glacier density by\footnote{This lumped (i.e.~whole glacier) quantity is denoted ``$\rho$'' in \cite{Huss2013} and \cite{HussHugonnet2026}.  Likewise, our quantity $R_\Delta$ is denoted ``$\rho_{\Delta V}$'' there.  However, here we reserve the symbol $\rho$ for the extensive/local density $\rho(t,x,y,z)$ already introduced.}
 \begin{equation}
 R(t) = \frac{M(t)}{V(t)}. \label{eq:R}
 \end{equation}
@@ -203,20 +215,23 @@ so that $R_{\Delta}(t;\Delta t) = R_{\Delta}(t) + o(\Delta t)$.
 
 According to \cite{Huss2013,HussHugonnet2026}, glacier mass changes at global scale can be best informed by observations using estimates of such effective densities, which are evaluated regionally.  Our goal for now is to express the effective density $R_\Delta$ using Reynold's theorem, to clarify its meaning.
 
-First, reference \cite[equation (4)]{Huss2013} claims
+First, reference \cite[equation (4)]{Huss2013} states
 \begin{equation}
-R_{\Delta} = V \frac{\Delta R}{\Delta V} + R. \hspace{10mm} (\emph{\text{approximate}})  \label{eq:RDeltaHuss}
+R_{\Delta} = V \frac{\Delta R}{\Delta V} + R. \hspace{7mm} (\emph{\text{approximate}})  \label{eq:RDeltaHuss}
 \end{equation}
 This turns out to be true up to lower-order terms $o(\Delta t)$ using our definitions above; see Appendix \ref{app:hussverif}.  This form can be checked using the mean value theorem or equivalent; only the ordinary derivatives of $M(t)$ and $V(t)$ are involved in the verification.
 
-By Theorem \ref{thm:newreynolds} the effective density $R_\Delta$ can be computed in terms of the spatially-distributed density and geometry changes for a well-observed glaciated region.  In particular, from definition \eqref{eq:RDelta}, expressions \eqref{eq:dVdt} and \eqref{eq:dMdt}  yield
-\begin{equation}
-R_\Delta(t) = \frac{\int_{\Lambda(t)} \rho_t\,dV + \int_{D(t)} \rho|_s\,s_t\,dA}{\int_{D(t)} s_t\,dA}
-\end{equation}
+By Theorem \ref{thm:newreynolds} the effective density $R_\Delta$ can be computed in terms of spatially-distributed density and geometry changes for a well-observed glaciated region.  In particular, starting from definition \eqref{eq:RDelta}, equations \eqref{eq:dVdt}, \eqref{eq:dMdt}, and \eqref{eq:dMdt:ske} yield these forms for the effective density:
+\begin{align}
+R_\Delta(t) &= \frac{\int_{\Lambda(t)} \rho_t\,dV + \int_{D(t)} \rho|_s\,s_t\,dA}{\int_{D(t)} s_t\,dA} \label{eq:RDelta:reynolds} \\
+    &= \frac{\int_{\Lambda(t)} \rho_t\,dV + \int_{D(t)} a \,dA + \int_{\Gamma(t)} (\rho\bu)|_s \cdot \hat \bn_s\,dS.}{\int_{D(t)} s_t\,dA} \notag
+\end{align}
 
-FIXME expand using SKE, equation \eqref{eq:dMdt:ske}, and talk about the terms
+Note that there is no apparent conceptual benefit of rewriting the denominators in \eqref{eq:RDelta:reynolds} using the free-surface equation; we may naturally regard $V'(t)$ as purely kinematical.
 
-\subsection{Enthalpy transport} FIXME
+Of the terms in the numerators in \eqref{eq:RDelta:reynolds}, presumably a firn densification model would inform the first integral over $\Lambda(t)$, and perhaps only over that portion of $\Lambda(t)$ which is close to the surface.  The integral of the SMB $a$ over $D(t)$ would be modeled as usual by precipitation and melt processes.  The last integral in the numerator, over $\Gamma(t)$, uses the 3D velocity of the ice at the ice surface, presumably modeled by a stress balance for the glacier ice.  However, the vertical component of the surface velocity, i.e.~$\bu|_s\cdot \hat\bz$, is generally hard to observe and/or separate from the geometrical rate $s_t$.
+
+\subsection{A regional view of total changes (e.g.~mass, enthalpy, and linear momentum)} FIXME
 
 
 
