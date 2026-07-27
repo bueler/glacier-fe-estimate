@@ -228,7 +228,7 @@ Neither equation \eqref{eq:dMdt} or \eqref{eq:dMdt:best} is new, but they give d
 \end{enumerate}
 However, even in the satellite era, the basal value of the ice velocity ($\bu|_b$) of a land-based glacier can hardly be regarded as a standard observable.
 
-\subsection{Effective density of a mass change}  \label{ssec:effdensity} FIXME Denote the overall (average) glacier density at time $t$ by\footnote{This lumped (i.e.~whole glacier) quantity is denoted ``$\rho$'' in \cite{Huss2013} and \cite{HussHugonnet2026}.  Likewise, our quantity $R_\Delta$ is denoted ``$\rho_{\Delta V}$'' there.  However, here we reserve the symbol $\rho$ for the extensive/local density $\rho(t,x,y,z)$ already introduced.}
+\subsection{Effective density of a mass change}  \label{ssec:effdensity}  Denote the overall (average) glacier density at time $t$ by\footnote{This lumped (i.e.~whole glacier) quantity is denoted ``$\rho$'' in \cite{Huss2013} and \cite{HussHugonnet2026}.  Likewise, our quantity $R_\Delta$ is denoted ``$\rho_{\Delta V}$'' there.  However, here we reserve the symbol $\rho$ for the local density $\rho(t,x,y,z)$.}
 \begin{equation}
 R(t) = \frac{M(t)}{V(t)}. \label{eq:R}
 \end{equation}
@@ -238,7 +238,7 @@ Next, following \cite{HussHugonnet2026}, define the effective density of a mass 
 \begin{equation}
 R_{\Delta}(t;\Delta t) = \frac{M(t+\Delta t) - M(t)}{V(t+\Delta t) - V(t)}.  \label{eq:RDeltaearly}
 \end{equation}
-This effective density has a small-interval limit as long as $M(t)$ and $V(t)$ are differentiable.  Using the mean value theorem we have
+If $M(t)$ and $V(t)$ are differentiable then this effective density has a small-duration limit.  Using the mean value theorem we have
 \begin{align*}
 \lim_{\Delta t\to 0} R_{\Delta}(t;\Delta t) &= \lim_{\Delta t\to 0}  \frac{M(t+\Delta t) - M(t)}{V(t+\Delta t) - V(t)} = \lim_{\Delta t\to 0} \frac{M'(t)\Delta t + o(\Delta t)}{V'(t)\Delta t + o(\Delta t)} = \frac{M'(t)}{V'(t)}.
 \end{align*}
@@ -248,32 +248,33 @@ R_{\Delta}(t) = \frac{M'(t)}{V'(t)}  \label{eq:RDelta}
 \end{equation}
 so that $R_{\Delta}(t;\Delta t) = R_{\Delta}(t) + o(\Delta t)$.
 
-According to \cite{Huss2013,HussHugonnet2026}, glacier mass changes at global scale can be best informed by observations using estimates of such effective densities, which are evaluated regionally.  Our goal for now is to express the effective density $R_\Delta$ using Reynold's theorem, to clarify its meaning.
-
-First, reference \cite[equation (4)]{Huss2013} states
+According to \cite{Huss2013,HussHugonnet2026}, glacier mass changes at global scale can be best informed by observations using estimates of such effective densities, which are evaluated regionally.  Note that reference \cite[equation (4)]{Huss2013} states
 \begin{equation}
 R_{\Delta} = V \frac{\Delta R}{\Delta V} + R. \hspace{7mm} (\emph{\text{approximate}})  \label{eq:RDeltaHuss}
 \end{equation}
-This turns out to be true up to lower-order terms $o(\Delta t)$ using our definitions above; see Appendix \ref{app:hussverif}.  This form can be checked using the mean value theorem or equivalent; only the ordinary derivatives of $M(t)$ and $V(t)$ are involved in the verification.
+This turns out to be true up to lower-order terms $o(\Delta t)$.  This can be checked using the mean value theorem or equivalent and our definitions above; see Appendix \ref{app:hussverif}; only the ordinary derivatives of $M(t)$ and $V(t)$ are involved in the verification.
 
-By Theorem \ref{thm:newreynolds} the effective density $R_\Delta$ can be computed in terms of spatially-distributed density and geometry changes for a well-observed glaciated region.  In particular, starting from definition \eqref{eq:RDelta}, equations \eqref{eq:dVdt}, \eqref{eq:dMdt}, and \eqref{eq:dMdt:ske} yield these forms for the effective density:
-\begin{align}
-R_\Delta(t) &= \frac{\int_{\Lambda(t)} \rho_t\,dV + \int_{\Pi(t)} \rho|_s\,s_t\,dA}{\int_{\Pi(t)} s_t\,dA} \label{eq:RDelta:reynolds} \\
-    &= \frac{\int_{\Lambda(t)} \rho_t\,dV + \int_{\Pi(t)} a \,dA + \int_{\Gamma(t)} (\rho\bu)|_s \cdot \hat \bn_s\,dS.}{\int_{\Pi(t)} s_t\,dA} \notag
-\end{align}
+Our goal for now is to expand on the meaning of the effective density $R_\Delta(t)$ by expressing it using Theorem \ref{thm:newreynolds}.  This computes it in terms of boundary fluxes over the glaciated region.  In particular, starting from definition \eqref{eq:RDelta}, equations \eqref{eq:dVdt} and \eqref{eq:dMdt:best} yield
+\begin{equation}
+R_\Delta(t) = \frac{\displaystyle \int_{\Pi(t)} a \,dA - \int_{\Xi(t)} (\rho\bu)|_b \cdot \hat \bn_b\,dS.}{\displaystyle \int_{\Pi(t)} s_t\,dA}  \label{eq:RDelta:reynolds}
+\end{equation}
 
-Note that there is no apparent conceptual benefit of rewriting the denominators in \eqref{eq:RDelta:reynolds} using the free-surface equation; we may naturally regard $V'(t)$ as purely kinematical.
-
-Of the terms in the numerators in \eqref{eq:RDelta:reynolds}, presumably a firn densification model would inform the first integral over $\Lambda(t)$, and perhaps only over that portion of $\Lambda(t)$ which is close to the surface.  The integral of the SMB $a$ over $\Pi(t)$ would be modeled as usual by precipitation and melt processes.  The last integral in the numerator, over $\Gamma(t)$, uses the 3D velocity of the ice at the ice surface, presumably modeled by a stress balance for the glacier ice.  However, the vertical component of the surface velocity, i.e.~$\bu|_s\cdot \hat\bz$, is generally hard to observe and/or separate from the geometrical rate $s_t$.
+Of the terms in the numerator in \eqref{eq:RDelta:reynolds}, the integral of the SMB $a$ over $\Pi(t)$ might be observed, or modeld via precipitation and an energy balance for melt processes.  The second integral in the numerator, over the ice base $\Xi(t)$, uses the trace of the 3D velocity $\bu$, presumably modeled by a stress balance for the glacier ice.  Note that there is no apparent conceptual benefit of rewriting the denominator in \eqref{eq:RDelta:reynolds} using the free-surface equation; we naturally regard $V'(t)$ as purely kinematical.
 
 
 \section{Other applications}  \label{sec:otherapp}
 
-\subsection{Enthalpy.}  \label{ssec:enthalpy}  Suppose the ice is regarded as a mixture of solid-phase ice and liquid water.  Let $\phi=\rho \eta$ where $\eta$ is the (specific) internal energy of the mixture.  Because the phases have different densities and the mixture fraction varies in space and time, the ice is now a variable-density fluid; it makes up temperate ice and polythermal glaciers \cite{GreveBlatter2009}.  The mixture theory which supports these concepts is laid out for glaciers in \cite{Aschwandenetal2012}.
+In this section we apply Theorem \ref{thm:newreynolds} to the transport of fields other than mass density.
 
-The internal energy $\eta$, from now on called the (specific) enthalpy, is the energy excluding only the kinetic energy.  It has units of energy-per-mass, $\text{J}\,\text{kg}^{-1}$ in SI, so $\phi=\rho\eta$ has units of energy-per-volume ($\text{J}\,\text{m}^{-3}$).
+\subsection{Enthalpy.}  \label{ssec:enthalpy}  Suppose the ice is regarded as a mixture of solid-phase ice and liquid water, everywhere in local equilibrium, such that the amount of internal energy in a unit volume determines the temperature and the liquid water fraction.  The liquid water fraction is zero in cold ice and positive in temperate ice.  (The mixture theory which supports these glacier-specific internal energy concepts is laid out in \cite{Aschwandenetal2012}.)  Let $\phi=\rho \eta$ where $\rho$ is the mass density of the mixture and $\eta$ is the (specific) internal energy of the mixture with units of energy per mass, $\text{J}\,\text{kg}^{-1}$ in SI.  Thus $\phi=\rho\eta$ has units of energy-per-volume ($\text{J}\,\text{m}^{-3}$).  We call $\eta$ the (specific) enthalpy and $\phi$ the enthalpy density.  Note that enthalpy denotes all internal energy, excluding the kinetic energy.
 
-Consider the total enthalpy (internal energy) $E(t)=\int_{\Lambda(t)} \rho\eta\,dV$.  Applying Theorem \ref{thm:newreynolds} and free-surface equation \eqref{eq:ske} we find
+Because the solid and liquid phases of water have different densities, and the mixture fraction varies in space and time, temperate ice is a variable-density fluid.  Both temperate and polythermal glaciers generally have variable density and variable liquid water fraction \cite{GreveBlatter2009}.  By contrast, everywhere-cold glaciers can be regarded as constant density and single phase, at least below the depth of any firn.
+
+Consider the total enthalpy (internal energy)
+\begin{equation}
+E(t)=\int_{\Lambda(t)} \rho\eta\,dV, \label{eq:E}
+\end{equation}
+with units of Joules.  Applying Theorem \ref{thm:newreynolds} and free-surface equation \eqref{eq:ske} we find
 \begin{equation}
 E'(t) = \int_{\Lambda(t)} (\rho\eta)_t\,dV + \int_{\Pi(t)} a\eta|_s \,dA + \int_{\Gamma(t)} (\rho\eta\bu)|_s \cdot \hat \bn_s\,dS.  \label{eq:dEdt}
 \end{equation}
