@@ -7,7 +7,6 @@
 \usepackage[final]{graphicx}
 \usepackage[colorlinks=true,citecolor=blue,linkcolor=red,urlcolor=blue]{hyperref}
 
-\theoremstyle{theorem}
 \newtheorem{thm}{Theorem}
 \newtheorem{Cor}{Corollary}
 \newtheorem{lem}{Lemma}
@@ -34,7 +33,7 @@
 \newcommand{\bzero}{\bm{0}}
 
 
-\title[Transport in glaciated regions]{Transport in glaciated regions}
+\title[Transport within glaciated regions]{Transport within glaciated regions}
 
 \author{Ed Bueler}
 
@@ -43,7 +42,7 @@
 \begin{document}
 
 \begin{abstract}
-We consider the form that Reynold's transport theorem \cite{Holmes2019} takes for time-dependent 3D sets defined by a fixed lower surface $z=b(x,y)$ and a time-dependent upper surface $z=s(t,x,y)$, with $(x,y)$ in a fixed domain $\Omega\subset\RR^2$.  Thus we focus on the time-dependent spatial sets describing the glacier geometry within a glaciated region.  The 2D map-plane projection of such a 3D set, namely the time-dependent glacier extent, can have any outline or connectedness.  We assume that the 3D boundary of the glacier ice domain consists, up to a set of measure zero, only of these lower and upper surfaces; we neglect any cliffs along the margins of the glaciers.  The new form of the transport theorem is first applied to the evolution of total regional glacier mass, and mass changes, for general density fields.  That is, we make no assumption of constant ice density.  We also consider enthalpy, age, and linear momentum as examples.
+We consider the form that Reynold's transport theorem \cite{Holmes2019} takes for time-dependent 3D sets defined by a fixed lower surface $z=b(x,y)$ and a time-dependent upper surface $z=s(t,x,y)$, with $(x,y)$ in a fixed domain $\Omega\subset\RR^2$.  Thus we focus on time-dependent spatial, 3D sets describing the glacier ice geometry within a glaciated region.  The 2D map-plane projection of such a 3D set, namely the time-dependent glacier extent, can have any outline or connectedness.  We assume that the 3D boundary of the glacier ice domain consists, up to a set of measure zero, only of these lower and upper surfaces; we neglect any cliffs along the margins of the glaciers.  The new form of the transport theorem is first applied to the evolution of total regional glacier mass, and mass changes, for general density fields.  That is, we make no assumption of constant ice density.  We also apply the theorem to enthalpy, as another example of the idea.
 \end{abstract}
 
 \maketitle
@@ -76,7 +75,6 @@ FIXME: SHOW CARTOON OF $\Omega$, $\Lambda(t)$, $\Pi(t)$, $\gamma(t)$
 \caption{Over a fixed map-plane region $\Omega$ we define three time-dependent sets for the glaciers: the 3D ice domain $\Lambda(t)$, its map-plane projection $\Pi(t)$, and the map-plane curve $\gamma(t)$ for the margin of the glaciers.}
 \end{figure}
 
-
 We may write the surface using a level set function,
 	$$f(t,x,y,z) = z - s(t,x,y),$$
 so that the upper surface of the glacier(s) is the level surface $f=0$, that is, $z=s(t,x,y)$.  We will assume that $f$ and its partial derivatives exist and are integrable, equivalently we make these assumption about $s$.  Then $\nabla f = (-s_x,\,-s_y,\,1)$ and $|\nabla f| = \sqrt{1+s_x^2+s_y^2}$.
@@ -96,7 +94,7 @@ Observe that the (vector) tangential portion of the surface velocity, namely $\b
 
 \subsection{Reynold's transport theorem for regional glacier geometry}  Now we address transport in glaciers, and not just their geometry.
 
-Suppose $\phi(t,x,y,z)$ is the density of some physical quantity, in per-volume units, which is being transported by the ice flow.  The density could be a scalar, vector, or tensor field.  For example, it might be the (variable) ice mass density $\rho$, in mass-per-volume units (Section \ref{sec:massapp}).  On the other hand, perhaps $\phi = \rho \psi$ for some specific quantity $\psi(t,x,y,z)$ in per-mass units.  For example $\psi$ could be (specific) enthalpy \cite{Aschwandenetal2012} in energy-per-mass units so that $\phi$ is an energy density with energy-per-volume units (Section \ref{sec:otherapp}).  It might be the vector-valued velocity itself, or the linear momentum (Section \ref{sec:otherapp}).
+Suppose $\phi(t,x,y,z)$ is the density of some physical quantity, in per-volume units, which is being transported by the ice flow.  The density could be a scalar, vector, or tensor field.  For example, it might be the (variable) ice mass density $\rho$, in mass-per-volume units (Section \ref{sec:apps}).  On the other hand, perhaps $\phi = \rho \psi$ for some specific quantity $\psi(t,x,y,z)$ in per-mass units.  For example, $\psi$ could be (specific) enthalpy \cite{Aschwandenetal2012} in energy-per-mass units so that $\phi$ is an energy density with energy-per-volume units (subsection \ref{ssec:enthalpy}).
 
 Define
 \begin{equation}
@@ -141,7 +139,7 @@ At this point we have derived a useful result, namely a form of Reynold's transp
 \frac{d}{dt}\left(\int_{\Lambda(t)} \phi(t,x,y,z)\,dx\,dy\,dz\right) &= \int_{\Lambda(t)} \phi_t(t,x,y,z)\,dx\,dy\,dz \\
    &\qquad + \int_{\Pi(t)} \phi|_s(t,x,y)\, s_t(t,x,y)\,dx\,dy.
 \end{align*}
-With simpler notation, using definition \eqref{eq:F} and suppressing dependencies, we have
+With simpler notation, using definition \eqref{eq:F} and suppressing dependencies in the integrands, we have
 \begin{equation}
 F'(t) = \int_{\Lambda(t)} \phi_t\,dV + \int_{\Pi(t)} \phi|_s \, s_t\,dA, \label{eq:newreynolds}
 \end{equation}
@@ -164,9 +162,9 @@ Despite the fact that the glaciated area $\Pi(t)$ changes in time, and even thou
 The assumption of time-independent bed elevation ($b_t=0$) makes the Theorem statement simpler, but Appendix \ref{app:general} generalizes it to time-dependent bed elevation.  However, the statement of Theorem \ref{thm:newreynolds} is correct as stated even if there is basal sliding or a basal melt rate.  All we have assumed is that the lower surface of $\Lambda(t)$ \emph{is not moving}; this does not represent an assumption on the basal value of the ice density or of the ice velocity.
 
 
-\section{Mass applications}  \label{sec:massapp}
+\section{Applications}  \label{sec:apps}
 
-The above form of Reynold's transport theorem expresses the rate of change of the total of a quantity, within a fixed map-plane region $\Omega$, even as the thickness \emph{and extent} of the glaciers change.  In this section we apply Theorem \ref{thm:newreynolds} to mass transport within a glaciated region, for a completely-general ice mass density field.
+The above form of Reynold's transport theorem expresses the rate of change of the total of a quantity, within a fixed map-plane region $\Omega$, even as the thickness \emph{and extent} of the glaciers change.  In this section we apply Theorem \ref{thm:newreynolds} to mass transport within a glaciated region, for a completely-general ice mass density field, as its primary application.  This leads to considering the 2D mass continuity equation, the free-surface equation, and the effective density associated to a mass change, giving various possibly-new forms.  At the end we also apply Theorem \ref{thm:newreynolds} to enthalpy (subsection \ref{ssec:enthalpy}).
 
 \subsection{Total glacier mass, for variable ice density}  \label{ssec:mass} Suppose $\phi(t,x,y,z)=\rho(t,x,y,z)$ is the mass density of the glacier(s), in SI units $\text{kg}\,\text{m}^{-3}$.  We assume this field is measurable and bounded; there is a maximum density $\rho_0$ so that $0 < \rho(t,x,y,z) \le \rho_0$ at all points $(x,y,z) \in \Lambda(t)$.
 
@@ -272,18 +270,15 @@ Our goal for now is to expand on the meaning of the effective density $R_\Delta(
 R_\Delta(t) = \frac{\displaystyle \int_{\Pi(t)} a \,dA - \int_{\Xi(t)} (\rho\bu)|_b \cdot \hat \bn_b\,dS.}{\displaystyle \int_{\Pi(t)} s_t\,dA}  \label{eq:RDelta:reynolds}
 \end{equation}
 
-Of the terms in the numerator in \eqref{eq:RDelta:reynolds}, the integral of the SMB $a$ over $\Pi(t)$ might be observed, or modeld via precipitation and an energy balance for melt processes.  The second integral in the numerator, over the ice base $\Xi(t)$, uses the trace of the 3D velocity $\bu$, presumably modeled by a stress balance for the glacier ice.  Note that there is no apparent conceptual benefit of rewriting the denominator in \eqref{eq:RDelta:reynolds} using the free-surface equation; we naturally regard $V'(t)$ as purely kinematical.
+Of the terms in the numerator in \eqref{eq:RDelta:reynolds}, the integral of the SMB $a$ over $\Pi(t)$ might be observed, or modeled via precipitation and an energy balance for melt processes.  The second integral in the numerator, over the ice base $\Xi(t)$, uses the trace of the 3D velocity $\bu$, presumably modeled by a stress balance for the glacier ice.  Note that there is no apparent conceptual benefit of rewriting the denominator in \eqref{eq:RDelta:reynolds} using the free-surface equation; we naturally regard $V'(t)$ as purely kinematical.
 
+\subsection{Enthalpy.}  \label{ssec:enthalpy}  We can apply Theorem \ref{thm:newreynolds} to the transport of fields other than mass density.  As an example, we apply it to enthalpy.
 
-\section{Other applications}  \label{sec:otherapp}
-
-In this section we apply Theorem \ref{thm:newreynolds} to the transport of fields other than mass density.
-
-\subsection{Enthalpy.}  \label{ssec:enthalpy}  Suppose the ice is regarded as a mixture of solid-phase ice and liquid water, everywhere in local equilibrium, such that the amount of internal energy in a unit volume determines the temperature and the liquid water fraction.  Note that the liquid water fraction is zero in cold ice and positive in temperate ice.  The mixture theory which supports these glacier-specific internal energy concepts is laid out in \cite{Aschwandenetal2012}.
+Suppose the ice is regarded as a mixture of solid-phase ice and liquid water, everywhere in local equilibrium, such that the amount of internal energy in a unit volume determines the temperature and the liquid water fraction.  Note that the liquid water fraction is zero in cold ice and positive in temperate ice.  The mixture theory which supports these glacier-specific internal energy concepts is laid out in \cite{Aschwandenetal2012}.
 
 Because the solid and liquid phases of water have different densities, and the mixture fraction varies in space and time, temperate ice is a variable-density fluid.  Both temperate and polythermal glaciers generally have variable density and variable liquid water fraction \cite{GreveBlatter2009}.  By contrast, at least below the depth of any firn, everywhere-cold glaciers are often regarded as constant density and single phase.
 
-Let $\phi=\rho \eta$ where $\rho$ is the mass density of the mixture and $\eta$ is its (specific) internal energy, with units of energy per mass, $\text{J}\,\text{kg}^{-1}$ in SI.  Thus $\phi=\rho\eta$ has units of energy-per-volume ($\text{J}\,\text{m}^{-3}$).  We call $\eta$ the (specific) enthalpy\footnote{Reference \cite{Aschwandenetal2012} denotes the specific enthalpy by ``$H$'', but we use $\eta$ here because $h,H$ are used for ice thickness.} and $\phi$ the enthalpy density.  Note that enthalpy denotes all internal energy but it excludes the kinetic energy and the potential energy associated to gravity \cite{Aschwandenetal2012}.
+Let $\phi=\rho \eta$ where $\rho$ is the mass density of the mixture and $\eta$ is its (specific) internal energy, with units of energy per mass, $\text{J}\,\text{kg}^{-1}$ in SI.  Thus $\phi=\rho\eta$ has units of energy-per-volume ($\text{J}\,\text{m}^{-3}$).  We call $\eta$ the (specific) enthalpy\footnote{Reference \cite{Aschwandenetal2012} denotes the specific enthalpy by ``$H$'', but we use $\eta$ here because $h,H$ are used for ice thickness.} and $\phi$ the enthalpy density.  Enthalpy includes all internal energy, but it excludes the kinetic energy and the potential energy associated to gravity \cite{Aschwandenetal2012}.
 
 Let $d\eta/dt = \eta_t + \bu \cdot \grad \eta$ be the total (material) derivative of enthalpy, following the ice flow.  The fundamental evolution equation for enthalpy is equation (20) in \cite{Aschwandenetal2012},
 \begin{equation}
@@ -317,14 +312,14 @@ On the upper surface the advective portion of the enthalpy flux, namely $\rho\et
 
 % FIXME interesting to explore using equation equation (3.5) in Tominec et al (revised); but here this needs the compressible Stokes model, presumably with $\rho = f(\eta)$ as a closure, in addition to mass continuity \eqref{eq:mc} and the rest of the Stokes weak form; in any case this allows us to exploit the fact that $\int_{\Lambda(t)} Q \,dV = 2 \|\sqrt{\mu} D\bu\|_{L^2}^2$ which follows from using the viscosity form $\tau = 2 \mu D\bu$
 
-\subsection{Ice age.}  \label{ssec:age}  FIXME
+% FIXME applying to age left me no the wiser; the natural question here is about the average age of the whole glacier; if it is area weighted then we might want $A'(t)$ where $A(t) = \frac{1}{M(t)} \int_{\Lambda(t)} \rho \alpha\,dV$ where $\alpha(t,x,y,z)$ is the age-since-deposition of the ice; then $\alpha$ solves $d\alpha/dt = \alpha_t + \bu\cdot \grad \alpha = 1$; but expression for $A'(t)$ is pretty messy \dots at least its leading term is 1, which makes sense
 
-\subsection{Linear momentum.}  \label{ssec:momentum}  Finally, suppose that the density $\phi$ is the vector-valued linear momentum, namely $\bpi = \rho \bu$.  Then  FIXME
+% FIXME what about linear momentum where $\phi = \rho\bu$ is a vector? here the natural equation solved by the field is compressible Navier-Stokes.  but then for a glacier $(\rho\bu)_t$ is supposed to be relatively small; what to say?
 
 
 \section{Summary: regional views of total quantities}
 
-The main advantage of using Reynold's transport theorem in the new form, Theorem \ref{thm:newreynolds}, is that the rate of change of the total of a quantity, defined across a fixed map-plane region, can be computed by integrating well-defined spatially-distributed fields even as the glaciated area changes in time.
+The main advantage of a transport theorem in a new form, Theorem \ref{thm:newreynolds}, is that the rate of change of the total of a quantity across an entire map-plane region can be computed by integrating well-defined spatially-distributed fields, even as the glaciated area changes in time.
 
 
 \bibliography{layer}
@@ -334,18 +329,22 @@ The main advantage of using Reynold's transport theorem in the new form, Theorem
 
 \section{Verification of a formula from \cite{Huss2013}}  \label{app:hussverif}
 
-Recall definitions \eqref{eq:R} and \eqref{eq:RDeltaearly}.  This Appendix gives a brief calculation showing why our equation \eqref{eq:RDeltaHuss}, which is stated as exact in \cite{Huss2013}, is at least correct up to lower order terms.  That is, we verify that
+Recall definitions \eqref{eq:R} and \eqref{eq:RDeltaearly}.  This Appendix gives a brief calculation showing why our equation \eqref{eq:RDeltaHuss}, which is stated as exact in \cite{Huss2013}, is at least correct up to lower order terms.
+
+We assume that $V(t)$ and $M(t)$ are continuous and differentiable, and we verify that
 \begin{equation}
 V(t)\, \frac{R(t+\Delta t) - R(t)}{V(t+\Delta t) - V(t)} + R(t) = R_{\Delta}(t) + o(\Delta t).  \label{eq:fromHuss}
 \end{equation}
-We assume that $V(t)$ and $M(t)$ are continuous and differentiable.
 
-\begin{proof}  Find common denominators, and expand $t+\Delta t$ values using the mean value theorem, or equivalently Taylor's theorem with remainder.  Start from the fraction on the left of \eqref{eq:fromHuss}:
+\begin{proof}  Starting from the fraction on the left of \eqref{eq:fromHuss} we find common denominators and then add and subtract a term in the numerator:  
 \begin{align*}
-V(t)\, \frac{R(t+\Delta t) - R(t)}{V(t+\Delta t) - V(t)} &= V(t)\, \frac{\frac{M(t+\Delta t)}{V(t+\Delta t)} - \frac{M(t)}{V(t)}}{V'(t) \Delta t + o(\Delta t^2)} \\
-    &= \frac{V(t) M(t+\Delta t) - V(t+\Delta t) M(t)}{V'(t) \Delta t \, V(t+\Delta t) + o(\Delta t^2)} \\
-    &= \frac{V(t) \left[M(t+\Delta t)-M(t)\right] - \left[V(t+\Delta t) - V(t)\right] M(t)}{V'(t) \Delta t \, V(t) + o(\Delta t^2)} \\
-    &= \frac{V(t) M'(t)\Delta t - V'(t)\Delta t M(t) + o(\Delta t^2)}{V'(t) \Delta t \, V(t) + o(\Delta t^2)} \\
+V(t)\, \frac{R(t+\Delta t) - R(t)}{V(t+\Delta t) - V(t)} &= V(t)\, \frac{\frac{M(t+\Delta t)}{V(t+\Delta t)} - \frac{M(t)}{V(t)}}{V(t+\Delta t) - V(t))} \\
+    &= \frac{V(t) M(t+\Delta t) - V(t+\Delta t) M(t)}{\left[V(t+\Delta t) - V(t)\right] \, V(t+\Delta t)} \\
+    &= \frac{V(t) \left[M(t+\Delta t)-M(t)\right] - \left[V(t+\Delta t) - V(t)\right] M(t)}{\left[V(t+\Delta t) - V(t)\right] \, V(t+\Delta t)}.
+\end{align*}
+Now expand the square-bracketed differences, and also $V(t+\Delta t)$ in the denominator, to first order; then cancel terms:
+\begin{align*}
+V(t)\, \frac{R(t+\Delta t) - R(t)}{V(t+\Delta t) - V(t)} &= \frac{V(t) M'(t)\Delta t - V'(t)\Delta t M(t) + o(\Delta t^2)}{V'(t) \Delta t \, V(t) + o(\Delta t^2)} \\
     &= \frac{V(t) M'(t)}{V'(t) \, V(t) + o(\Delta t)} - \frac{V'(t) M(t)}{V'(t) \, V(t) + o(\Delta t)}  + o(\Delta t)\\
     &= \frac{M'(t)}{V'(t)} - \frac{M(t)}{V(t)}  + o(\Delta t) = R_{\Delta}(t) - R(t) + o(\Delta t). \qedhere
 \end{align*}
@@ -354,6 +353,6 @@ V(t)\, \frac{R(t+\Delta t) - R(t)}{V(t+\Delta t) - V(t)} &= V(t)\, \frac{\frac{M
 
 \section{Formulas with time-dependent bed elevation}  \label{app:general}
 
-FIXME
+FIXME: FILL IN THIS CONTENT
 
 \end{document}
