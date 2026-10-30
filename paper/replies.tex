@@ -1,0 +1,112 @@
+\documentclass[11pt,reqno]{amsart}
+%prepared in AMSLaTeX, under LaTeX2e
+\addtolength{\oddsidemargin}{-.65in}
+\addtolength{\evensidemargin}{-.65in}
+\addtolength{\topmargin}{-.3in}
+\addtolength{\textwidth}{1.5in}
+\addtolength{\textheight}{.6in}
+
+\renewcommand{\baselinestretch}{1.1}
+
+\usepackage{verbatim} % for "comment" environment
+
+\usepackage[pdftex, colorlinks=true, plainpages=false, linkcolor=blue, citecolor=red, urlcolor=blue]{hyperref}
+
+\usepackage[final]{graphicx}
+
+\usepackage{amssymb, enumitem}
+
+\usepackage[T1, OT1]{fontenc}
+
+% macros
+\newcommand{\bq}{\mathbf{q}}
+\newcommand{\cK}{\mathcal{K}}
+\newcommand{\cX}{\mathcal{X}}
+\newcommand{\grad}{\nabla}
+
+\newcommand{\reply}[2]{%
+\medskip
+\item \emph{#1}
+
+\medskip
+\noindent #2
+}
+
+
+\title{Author's replies to reviews}
+
+\author{Ed Bueler}
+
+\date{\today; Ms.~Ref.~No.~\textbf{CAMWA-D-26-00326} \emph{Surface elevation errors in finite element Stokes models for glacier evolution}}
+
+\begin{document}
+\maketitle
+
+\thispagestyle{empty}
+
+
+I thank both anonymous reviewers for helpful comments on, and questions about, the manuscript.  I believe I have addressed them all satisfactorily, and in any case they have improved the paper.
+
+
+\subsection*{Reviewer \#1}
+
+\begin{itemize}[itemindent=0mm, labelsep=5mm]
+\reply{Bedrock elevation and surface mass balance are the core data governing glacial evolution. Given these data on fixed land domains, glacier geometry satisfies a free boundary problem balancing surface elevation change, ice Stokes flow velocity, and surface mass balance. Restricted to surface elevations above bedrock, this problem becomes a variational inequality weak formulation. With preliminary Stokes flow theory, author hypothesizes proper regularization of the surface kinematic equation renders the continuous implicit time-step variational inequality well-posed, backed by physical reasoning and numerical results. A universal error bound theorem is derived for finite element discretizations of Banach-space nonlinear variational inequalities, consisting of distinct inequality-specific error components. Applied to the implicit glacial model, the bound contains three terms: bed elevation discretization error, Stokes velocity computation error, and a quasi-optimal finite element error for surface elevation.}
+{This summary is accurate.}
+
+\reply{The results are interesting and deserve the publication in Computers and Mathematics with Applications.}
+{This recommendation is also appreciated.}
+\end{itemize}
+
+
+\subsection*{Reviewer \#2}
+
+\begin{itemize}[itemindent=0mm, labelsep=5mm]
+\reply{Brief description.  The manuscript \dots proposes, analyses, and establishes the approximation error of a glacier ice model.  This is represented by a coupled problem composed of the p-Stokes equations with mixed boundary conditions and a free boundary problem representing the glacier’s geometry. The problem to be solved is presented as a variational inequality, which involves a nonlinear operator. Based on some conjectures and assumptions made throughout the manuscript, the approximation error is analysed for a weak formulation modelling glacier evolution using non-shallow Stokes dynamics. That is, an a priori error analysis is reported.}
+{This brief description is accurate.}
+
+\reply{Personal comments.  The manuscript represents, to this referee, a substantial contribution in the field of glaciers mathematical modeling, combining in turn various areas of the mathematics, such as measure theory, functional analysis for variational inequalities, finite element methods, among others.  In addition, the ideas written in the paper are presented in a clear manner, making it easy to read and allowing the reader to follow the analysis performed. \\ Paper considerations.  This referee recommends acceptance of the paper, but some questions must be answered and minor modifications made before.}
+{This recommendation is appreciated, and the questions/modifications are addressed below.}
+
+\reply{1. In (1.6) $\Gamma_b(t)$ is time-dependent. I assume (hopefully correctly) that this boundary is set on the bedrock elevation, but this one has been parametrised by $z = b(x)$ which is not time-dependent. Is that correct?}
+{x}
+
+\reply{2. The second parenthesis in (1.7) has typo. The term $s$ should be $s^n$.}
+{x}
+
+\reply{3. Figure 1 shows a sketch of the free boundary problems. Then, eq. (1.6) is set in $\Lambda(t)$, with boundary conditions on $\Gamma_s(t)$ and $\Gamma_b(t)$.  Nevertheless, in Standard Assumptions 6.1, the notation $\partial\Omega$ is utilised, even though this has not been defined previously. It would be more enlightening either detailing a possible $\partial\Omega$ in Figure 1 or defining what $\partial\Omega$ represents in the free-boundary problem.}
+{x}
+
+\reply{4. Throughout the manuscript the surface evolution is set as a NCP. How does the author justify the transition of boundary conditions on the interface bedrock-surface to the variational
+inequalities over the active/inactive set, and what computational challenges could be observed
+when the free boundary is numerically localised?}
+{x}
+
+\reply{5. Regarding the definition $\ell^n = s^{n-1} + \int_{t_{n-1}}^{t_n} a(t,x)\,dt$, in my own computation the term $\Delta t a^n$ appears instead of the integral. So, what are the theoretical, computational or mass conservation advantages were observed to utilise the exact time-weighted average of the SMB instead of another pointwise evaluation?}
+{foo}
+
+\reply{6. When you define the admissible set $\cK$, you assume that the elevation forms a closed cone with $b \in C(\overline{\Omega})$.  How could it affect the existence of the solution if the real rock bed has discontinuities or unbounded gradients?}
+{foo}
+
+\reply{7. The argument of coercivity is based on the relation $\bq \sim -\grad s$. How much does the non-Newtonian rheology affect this near-coercivity property in areas with significant strain rates?}
+{foo}
+
+\reply{8. The bound in the Theorem 6.3, the term $\|s_h\|_{\cX}$ appears in the right-hand side as part of $G(\|s_h\|_{\cX})$. How can it be analytically guaranteed the stability $\|s_h\|_{\cX} \le C$ to ensure that this constant does not blow up when $h\to 0$?}
+{foo}
+
+\reply{9. In the identity (6.8), the error of the velocity restricted to $s_h$ impacts directly on the elevation.  How do you go about selecting finite element pairs to ensure the inf-sup condition? Does any stabilisation techniques work?}
+{foo}
+
+\reply{10. The author highlights that if $s\in W^{2,\mu}$ would impose an unrealistic contact angle between the glacier and the bedrock. Given that the regularity is just $s \in W^{1,4}$, what alternative tools (beyond the theory of interpolation in FEM) does the author consider promising to derive an explicit rate of convergence $\mathcal{O}(h^\alpha)$.}
+{foo}
+
+\reply{11. As this is the first reported work where a rigorous functional framework for non-shallow Stokes models, what does the author consider as the main theoretical obstacles to extending this single-implicit time-step bound to a global, accumulated error estimate in multi-year simulations?}
+{foo}
+\end{itemize}
+
+
+\subsection*{Author's corrections}
+
+FIXME
+
+\end{document}
