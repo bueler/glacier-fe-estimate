@@ -202,7 +202,7 @@ if writepng:
 
 # process _slist from all three SMB cases, with and without regularization
 # writes .csv files with data which allows reconstruction of ratios
-eps = [0.0, 0.1]
+eps = [0.0, 0.01]  # KEY PARAMETER eps HERE
 epsstr = ['NOREG', 'REG__']
 for j in range(2):
     root = dirroot + epsstr[j] + '/'
