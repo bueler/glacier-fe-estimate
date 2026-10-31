@@ -19,15 +19,16 @@ def form_stokes(se, sR, pp=(1.0/nglen)+1.0, mu0=0.0, fssa=True, theta_fssa=1.0, 
     qqq = (pp - 2.0) / 2.0
     F = fd.inner(B3 * Du2**qqq * _D(u), _D(v)) * fd.dx(degree=4)  # correspondence with paper: nu_p = 0.5 B3
     F -= (p * fd.div(v) + fd.div(u) * q) * fd.dx
-    source = fd.inner(fd.Constant((0.0, - rho * g)), v) * fd.dx
+    f_body = fd.Constant((0.0, - rho * g))
+    source = fd.inner(f_body, v) * fd.dx
     if fssa:
         # see section 4.2 in Lofgren et al
         nsR = fd.as_vector([-sR.dx(0), fd.Constant(1.0)])
         nunit = nsR / fd.sqrt(sR.dx(0)**2 + 1.0)
-        F -= theta_fssa * dt_fssa * fd.inner(u, nunit) * fd.inner(se.f_body, v) * fd.ds_t
+        F -= theta_fssa * dt_fssa * fd.inner(u, nunit) * fd.inner(f_body, v) * fd.ds_t
         aR = extend_p1_from_basemesh(se.mesh, smb_fssa)
         zvec = fd.Constant(fd.as_vector([0.0, 1.0]))
-        source += theta_fssa * dt_fssa * aR * fd.inner(zvec, nunit) * fd.inner(se.f_body, v) * fd.ds_t
+        source += theta_fssa * dt_fssa * aR * fd.inner(zvec, nunit) * fd.inner(f_body, v) * fd.ds_t
     F -= source
     return F
 
