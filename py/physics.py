@@ -57,22 +57,27 @@ def p_hydrostatic(se, sR, P1):
 Gamma = 2.0 * A3 * (rho * g)**nglen / (nglen + 2)
 
 # Compute the regularized surface motion operator Phi = - <u,w>|_s . n_s.
-# If eps>0 then we regularize with SIA vertical velocity diffusivity:
-#   w|_s --> (1 - eps) w|_s + eps w_SIA
-# The vertical velocity in the shallow ice approximation has strong form:
-#   w_SIA = Div(Gamma H0^{n+1} |grad(s)|^{n-1} grad s),
-# but when computing with this we integrate by parts:
-#   w_SIA[q] = - Gamma H0^{n+1} |grad(s)|^{n-1} grad s . grad q
-# Since n_s = <-s_x,1>, the regularized formula is:
-#   Phi = + u|_s s_x - (1 - eps) w|_s - eps w_SIA
+# If eps>0 then we regularize with SIA surface motion:
+#   Phi(s)[q] --> (1 - eps) Phi(s)[q] + eps Phi_SIA(s)[q]
+# The shallow ice approximation has this surface motion:
+#   Phi_SIA(s)[q] = - \int_Omega u_SIA|_s . n_s q dx
+#                 = - \int_Omega q_SIA(s) . grad(q) dx  # see (4.4) in paper
+#                 = \int_Omega D_SIA grad(s) . grad(q) dx
+# where
+#   q_SIA = - D_SIA grad(s)
+# and
+#   D_SIA = Gamma H^{n+2} |grad(s)|^{n-1}
+# When computing this we impose the thickness regularization as well:
+#   H = H0
+# The result is p-Laplacian regularization with p = n+1 = 4.
 # This function returns a UFL expression, so q can be a TestFunction
 # or a Function.
 def Phi(s, us, q, eps=0.0, H0=1000.0):
-    ns = fd.as_vector([-s.dx(0), fd.Constant(1.0 - eps)])
+    ns = fd.as_vector([-s.dx(0), 1.0])
     Phi = - fd.dot(us, ns) * q
     if eps > 0.0:
-        C = Gamma * H0**(nglen + 1)
-        gsnorm = fd.dot(fd.grad(s), fd.grad(s))
-        zpow = (nglen - 1.0) / 2.0
-        Phi += eps * C * fd.inner(gsnorm**zpow * fd.grad(s), fd.grad(q))
+        C = Gamma * H0**(nglen + 2.0)
+        DSIA = C * fd.dot(fd.grad(s), fd.grad(s)) ** ((nglen - 1.0) / 2.0)
+        PhiSIA = fd.inner(DSIA * fd.grad(s), fd.grad(q))
+        Phi = (1.0 - eps) * Phi + eps * PhiSIA
     return Phi
