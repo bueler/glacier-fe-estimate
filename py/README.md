@@ -25,9 +25,7 @@ bash show.sh
 
 This run takes several minutes.  It produces a directory `result/` with subdirectories `azero/`, `aneg/`, and `apos/` for the three SMB cases.  Within these subdirectories are time-dependent `.png` states which can be regarded as movies for the SMB cases.
 
-At the end of the simulations, coercivity ratios are sampled from the many stored states.  Image files are written into `result/`: `badcoercive-T1-T2.png` showing cases where the coercivity ratio was negative, `snaps.png` showing a few states, and `Phiratios.png` showing a histogram like that in the paper.
-
-There is also a file `ratios.txt` which includes the basic statistics for the coercivity ratios reported in the paper.
+At the end of the simulations, coercivity ratios are sampled from the many stored states.  Image file `snaps.png` showing a few states is written into `result/`.  We also append to a file `ratios.txt` which includes the basic statistics for the coercivity ratios reported in the paper.  And we write `smooth*.png` files showing histograms like that in the paper.
 
 ## reproduce the results shown in the paper
 
