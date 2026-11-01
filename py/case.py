@@ -22,6 +22,10 @@ writepvd = (len(argv) > 8)
 if writepvd:
     pvdroot = argv[8]
 
+# regularization parameter
+EPSREG = 0.01
+# FIXME H0 is only set inside physics.py, and called by codes in measure.py
+
 # experiment parameters
 L = 100.0e3                       # domain is (-L,L)
 SMBlist = [0.0, -2.5e-7, 1.0e-7]  # m s-1; values of aconst used in experiments
@@ -202,7 +206,7 @@ if writepng:
 
 # process _slist from all three SMB cases, with and without regularization
 # writes .csv files with data which allows reconstruction of ratios
-eps = [0.0, 0.01]  # KEY PARAMETER eps HERE
+eps = [0.0, EPSREG]  # KEY PARAMETER eps HERE
 epsstr = ['NOREG', 'REG__']
 for j in range(2):
     root = dirroot + epsstr[j] + '/'
