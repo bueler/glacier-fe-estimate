@@ -29,10 +29,9 @@ At the end of the simulations, coercivity ratios are sampled from the many store
 
 ## reproduce the results shown in the paper
 
-The full study takes something like 6 hours.  It does 2 bed cases (flat, rough), 3 SMB cases (neg, zero, pos), and 3 resolutions (2000m, 1000m, 500m).  It produces subdirectories and files similar to those described above:
+The full study takes something like 6 hours.  It does 2 bed cases (flat, rough), 3 SMB cases (neg, zero, pos), and 3 resolutions (2000m, 1000m, 500m).  It produces subdirectories and files similar to those described above.  First edit study.sh to set `generate=TRUE`.  Then
 
 ```bash
-cd reproduce/
 bash study.sh
 ```
 
