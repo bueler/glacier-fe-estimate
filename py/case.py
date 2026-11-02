@@ -212,7 +212,7 @@ for j in range(2):
     root = dirroot + epsstr[j] + '/'
     mkdir(root)
     dfilename = root + 'data.csv'
-    maxcont, rats = sampleratios(dfilename, _slist, bm, b, N=Nsamples, Lsc=L, epsreg=eps[j])
+    maxcont, rats = sampleratios(dfilename, _slist, bm, N=Nsamples, Lsc=L, epsreg=eps[j])
     if j == 0:
         printpar(f'  max continuity ratio:               {maxcont:.3e}')
     pos = rats[rats > 0.0]

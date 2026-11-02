@@ -46,7 +46,7 @@ def _us_ratio(slist, k, l, rpow, Lsc):
     dsnorm = norm_w1r_sc(ds, rpow, Lsc)
     return dunorm / dsnorm
 
-def _Phi_ratio_parts(slist, k, l, rpow, Lsc, b, epsreg=0.0):
+def _Phi_ratio_parts(slist, k, l, rpow, Lsc, epsreg=0.0):
     # compute the parts of the ratio
     #   (Phi(r)-Phi(s))[r-s] / |r-s|_W1r^q
     # the parts are:  Phi(r)[r-s], Phi(r)[r-s], |r-s|_W1r
@@ -58,7 +58,7 @@ def _Phi_ratio_parts(slist, k, l, rpow, Lsc, b, epsreg=0.0):
     dsnorm = norm_w1r_sc(r - s, rpow, Lsc)
     return Phi_r, Phi_s, dsnorm
 
-def sampleratios(dfilename, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0, epsreg=0.0):
+def sampleratios(dfilename, slist, basemesh, N=10, Lsc=100.0e3, aconst=0.0, epsreg=0.0):
     # measure 4-coercivity over W^{1,4}
     rpow = nglen + 1.0
     qpow = rpow  # motivated by coercivity for p-Laplacian implicit step in Bueler 2021
@@ -88,7 +88,7 @@ def sampleratios(dfilename, slist, basemesh, b, N=10, Lsc=100.0e3, aconst=0.0, e
             continue
         # measure ratios
         usrat = _us_ratio(slist, i1, i2, rpow, Lsc)
-        Phi_r, Phi_s, dsnorm = _Phi_ratio_parts(slist, i1, i2, rpow, Lsc, b, epsreg=epsreg)
+        Phi_r, Phi_s, dsnorm = _Phi_ratio_parts(slist, i1, i2, rpow, Lsc, epsreg=epsreg)
         Phirat = (Phi_r - Phi_s) / dsnorm**qpow
         if Phirat == np.inf:
             print(RED % '*', end='')
