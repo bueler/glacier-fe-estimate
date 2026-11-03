@@ -591,18 +591,23 @@ For unilateral obstacle problems and $P_1$ or $Q_1$ elements we may force $\cK_h
 \end{equation}
 If $b_h=R_h^{\oplus} b$ then $b_h(x)\ge b(x)$ for all $x\in \Omega$ (Figure \ref{fig:nonadmissible}; right), thus $\cK_h\subset \cK$ and the ``\,$\inf_{v\in\cK}$'' term can be removed from the bound.
 
-We can rewrite other parts of bound \eqref{eq:abstractestimate} in the case of a unilateral obstacle problem over scalar functions $\cX=W^{1,\rr}(\Omega)$, because then the residual $f(u)-\ell\in \cX'$ is a positive measure $d\mu_u$ \cite[Theorem II.6.9]{KinderlehrerStampacchia1980}.  It is supported in the active set $A_u=\{x\in\Omega\,:\,u(x)=b(x)\}$.  Then $(f(u) - \ell)[w] = \int_\Omega w\,d\mu_u = \int_{A_u} w\,d\mu_u$ for $w\in \cX$.  This form will be used in Section \ref{sec:application}.
+We can rewrite portions of bound \eqref{eq:abstractestimate} in the case of a unilateral obstacle problem over scalar functions $\cX=W^{1,\rr}(\Omega)$, because then the residual $f(u)-\ell\in \cX'$ is a positive measure $d\mu_u$ \cite[Theorem II.6.9]{KinderlehrerStampacchia1980}.  It is supported in the active set $A_u=\{x\in\Omega\,:\,u(x)=b(x)\}$.  Then $(f(u) - \ell)[w] = \int_\Omega w\,d\mu_u = \int_{A_u} w\,d\mu_u$ for $w\in \cX$.  This form will be used in Section \ref{sec:application}.
 
-The original result by Falk \cite{Falk1974}, which computes residual norms, loses the active-set information in Corollary \ref{cor:abstractwithmeasure}.  The next Corollary makes this historical connection by applying a norm-based approach.  It recovers the Falk result \cite{Falk1974} when $\cX,\cB$ are Hilbert spaces, and $f(v)[w]=f_h(v)[w]=a(v,w)$ is bilinear, uniformly-elliptic, and continuous.  (The definition of uniform ellipticity coincides with definition \eqref{eq:qcoercive} of $2$-coercive, and continuity implies \eqref{eq:liponbounded}.)  With these simplifications, Corollary \ref{cor:abstractestimate:Bnorm} below reduces to Theorem 1 in \cite{Falk1974}.
+The original \emph{a priori} VI bound by Falk \cite{Falk1974} computes residual norms, and thus loses the active-set information in the residual $f(u)-\ell \in \cX'$ (measure $d\mu_u$).  The following Corollary makes the connection, recovering \cite[Theorem 1]{Falk1974} when $\cX,\cB$ are Hilbert spaces, the operator $f(v)[w]=a(v,w)$ is bilinear, continuous, and uniformly-elliptic, and the discrete problem is conforming $f=f_h$.  (In which case uniform ellipticity coincides with $2$-coercivity \eqref{eq:qcoercive}, and continuity implies \eqref{eq:liponbounded}.)
 
-\begin{corollary}  \label{cor:abstractestimate:Bnorm}  Suppose that $\cX$ continuously and densely embeds into a larger Banach space: $\cX \hookrightarrow \cB$, $\bar{\cX} = \cB$, and $\cB' \subset \cX'$.  Suppose $f:\cK\to\cB'$ and $\ell\in\cB'$.  Under the assumptions of Theorem \ref{thm:abstractestimate} we have
-\begin{align}
-\|u-u_h\|^\qq &\le \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \left( \inf_{v\in\cK} \|v-u_h\|_{\cB} +   \inf_{v_h\in\cK_h} \|v_h-u\|_{\cB} \right) \label{eq:abstractestimate:Bnorm} \\
-   &\qquad + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] + c\,\inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}. \notag
-\end{align}
+\begin{corollary}  \label{cor:abstractestimate:Bnorm}  Suppose that $\cX$ continuously and densely embeds into a larger Banach space: $\cX \hookrightarrow \cB$, $\bar{\cX} = \cB$, and $\cB' \subset \cX'$, and suppose $\cK_h\subset \cK$.  Suppose $f:\cK\to\cB'$ and $\ell\in\cB'$.  Under the assumptions of Theorem \ref{thm:abstractestimate} we have
+{\small
+\begin{equation*}
+\|u-u_h\|^\qq \le \inf_{v_h\in\cK_h} \left\{ \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \|v_h-u\|_{\cB} + \frac{2}{\alpha} \|\delta_h\|_{\cB'} \|u_h - v_h\|_{\cB} + C \|v_h - u\|^{\qq'} \right\}.
+\end{equation*}
+}
 \end{corollary}
 
-Note that if $u$ is in the interior of $\cK$, and if $f=f_h$, then all bounds \eqref{eq:abstractestimate}, \eqref{eq:abstractwithmeasure}, and \eqref{eq:abstractestimate:Bnorm} reduce to their last error term.  Thus we get Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002}, but in a Banach space and for a coercive nonlinear operator.  For glaciers this case occurs when the entire domain $\Omega$ is covered by ice.  In summary, Theorem \ref{thm:abstractestimate} is a powerful and nontrivial generalization of Falk's bound \cite{Falk1974} and Cea's lemma.
+The appearance of a consistency error $\delta_h = f(u_h)-f_h(u_h)$ in bound \eqref{eq:abstractestimate}, evaluated at $u_h\in \cK_h$, suggests Strang's first lemma \cite[Theorem 4.1.1]{Ciarlet2002}, but here in a nonlinear case.  In the glacier application this term will be related to the maximum error made in approximating the (Stokes) ice velocity; see Theorem \ref{thm:glacierapp}.
+
+If $\cK_h\subset \cK$, $u$ is in the interior of $\cK$ (thus $f(u)-\ell=0$), and $f=f_h$, then bound \eqref{eq:abstractestimate} reduces to its final term.  Thus we get Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002}, but in a Banach space and for a $q$-coercive nonlinear operator.  For glaciers the interior condition occurs when the entire domain $\Omega$ is covered by ice.
+
+In summary, Theorem \ref{thm:abstractestimate} is a nonlinear and VI generalization of Falk's bound, Strang's lemma, and Cea's lemma.  It is well-suited for the glacier application in the next section.
 
 
 \section{Application to numerical glacier models} \label{sec:application}
