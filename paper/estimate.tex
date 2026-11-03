@@ -492,7 +492,7 @@ This regularizes the Stokes surface motion \eqref{eq:definePhi} using a small am
 The numerical experiments in Appendix \ref{app:numerical} use values $\eps=0.01$ and $\eta_0=500$ meters in \eqref{eq:phisia} and \eqref{eq:regularizedPhi}.  The observed effect is that negative coercivity ratios \eqref{eq:ratios} disappear at high spatial resolution, and the distribution of ratios is bounded away from zero.  However, we are not able to \emph{prove} that $\Phi^\eps$ in \eqref{eq:regularizedPhi} is $4$-coercive.  A proof would seem to depend on novel insights into the glaciological Stokes problem.  Thus the numerical analysis in Section \ref{sec:application} will be based on the following second conjecture.
 
 \begin{conjecture}[Regularized surface motion $\Phi^\eps(s)$ is $4$-coercive on $\cK\subset W^{1,4}$] \label{conj:regcoercive}
-Let $\cX = W^{1,4}(\Omega)$.  Fix $b\in C^1(\bar\Omega)$ and let $\cK=\{\sigma\in\cX\,:\,\sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$.  Suppose Conjecture \ref{conj:lipschitz} holds for $\rr=4$.  There exists $\eps \in (0,1)$ and $H_0>0$, and $\alpha>0$, so that
+Let $\cX = W^{1,4}(\Omega)$.  Fix $b\in C^1(\bar\Omega)$ and let $\cK=\{\sigma\in\cX\,:\,\sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$.  Suppose Conjecture \ref{conj:lipschitz} holds for $\rr=4$.  There exists $\eps \in (0,1)$ and $\eta_0>0$, and $\alpha>0$, so that
 \begin{equation}
 \left(\Phi^\eps(\sigma) - \Phi^\eps(s)\right)[\sigma-s] \ge \alpha \|\sigma-s\|_{\cX}^4 \qquad \text{for all } \sigma,s\in\cK. \label{eq:regcoercive}
 \end{equation}
