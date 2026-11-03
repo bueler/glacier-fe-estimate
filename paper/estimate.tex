@@ -518,27 +518,30 @@ Theorem \ref{thm:regularizedwellposed} addresses only the well-posedness of a si
 
 \section{Abstract error estimate for finite element approximation of VIs} \label{sec:abstractestimate}
 
-In this Section we consider the FE approximation of an abstract VI problem in a Banach space.  We will return to the glaciological problem \eqref{eq:regularizedvi} in Section \ref{sec:application}.
+In this Section we consider the FE approximation of an abstract VI problem in a Banach space.  We will return to glaciological problem \eqref{eq:regularizedvi} in Section \ref{sec:application}.
 
 Let $\cX$ be a real, reflexive Banach space with norm $\|\cdot\|$ and topological dual space $\cX'$.  Denote the dual pairing of $\ell \in \cX'$ and $v\in\cX$ by $\ell[v]$, and define $\|\ell\|_{\cX'} = \sup_{\|v\|=1} \big|\ell[v]\big|$.  Let $\cK \subset \cX$ be a nonempty, closed, and convex subset, the admissible set.  For a continuous and (generally) nonlinear operator $f:\cK \to \cX'$, and a source functional $\ell\in \cX'$, the VI problem is to find $u\in \cK$ such that
 \begin{equation}
 f(u)[v-u] \ge \ell[v-u] \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
-While \eqref{eq:regularizedvi} is in this form, the best known example is the obstacle problem for the Laplacian operator; see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis.  If $f:\cK \to \cX'$ is monotone and coercive (Definition \ref{def:monotonecoercive}), and continuous on finite-dimensional subspaces, then problem \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}, and if $f$ is strictly monotone then the solution is unique.  If $f$ is $\qq$-coercive then it coercive and strictly monotone, and if $f$ is Lipschitz on bounded subsets (Definition \ref{def:lipshitz}) then it is continuous.  Recall that $f(u)-\ell \in \cX'$ is generally nonzero if $u$ solves \eqref{eq:vi}, but $f(u)-\ell=0$ when $u$ is in the interior of $\cK$.  Under sufficient regularity assumptions, an NCP strong form generally follows from \eqref{eq:vi}.
+Problem \eqref{eq:regularizedvi} is in this form, while the best known example for \eqref{eq:vi} is the obstacle problem for the Laplacian operator; see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis.
 
-Now suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, typically some FE space of continuous, piecewise-polynomial functions defined on a mesh.  Let $\cK_h\subset \cX_h$ be a closed and convex subset, and suppose $f_h:\cK_h\to\cX'$ is an approximation of $f$.  Generally $\cK_h \nsubset \cK$---we will \emph{not} assume initially that FE states are continuum admissible---and generally $f_h\ne f$ because of quadrature and other approximations.  In fact, in standard FE Stokes-type glacier simulations both $\cK_h \nsubset \cK$ and $f_h\ne f$ apply for practical reasons, though in Section \ref{sec:application} we arrange that $\cK_h\subset\cK$.
+If $f:\cK \to \cX'$ is monotone and coercive (Definition \ref{def:monotonecoercive}), and continuous on finite-dimensional subspaces, then problem \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}, and if $f$ is strictly monotone then the solution is unique.  If $f$ is $\qq$-coercive then it coercive and strictly monotone, and if $f$ is Lipschitz on bounded subsets (Definition \ref{def:lipshitz}) then it is continuous.  Recall that $f(u)-\ell \in \cX'$ is generally nonzero if $u$ solves \eqref{eq:vi}, but $f(u)-\ell=0$ if $u$ is in the interior of $\cK$.  Under sufficient regularity assumptions, an NCP strong form follows from \eqref{eq:vi}.
+
+Now suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, an FE space of continuous, piecewise-polynomial functions defined on a mesh.  Let $\cK_h\subset \cX_h$ be a closed and convex subset, and suppose $f_h:\cK_h\to\cX'$ is an approximation of $f$.  Generally $\cK_h \nsubset \cK$---we will \emph{not} assume initially that FE states are continuum admissible---and generally $f_h\ne f$ because of quadrature and other approximations.  In fact, in standard FE Stokes-type glacier simulations both $\cK_h \nsubset \cK$ and $f_h\ne f$ apply for practical reasons, though in Section \ref{sec:application} we arrange that $\cK_h\subset\cK$ by construction of the meshed bed elevation.
 
 The FE method for \eqref{eq:vi} is the finite-dimensional VI problem
 \begin{equation}
 f_h(u_h)[v_h-u_h] \ge \ell[v_h-u_h] \quad \text{for all } v_h\in \cK_h. \label{eq:fe:vi}
 \end{equation}
-We will assume that this problem has a solution $u_h\in\cK_h$.  The following \emph{a priori} estimation theorem extends the well-known result of Falk \cite{Falk1974}; see also Theorem 5.1.1 in \cite{Ciarlet2002}.  We assume that $f$ is coercive and Lipschitz on an (unnamed) larger set than $\cK$, which contains the FE solution $u_h$, a technical assumption permiting a clean and general result.  However, we do \emph{not} assume any of the following: $\cK_h \subset \cK$, $f$ is linear, $f_h=f$, $f_h$ is continuous, $f_h$ is $\qq$-coercive, or that the solution of \eqref{eq:fe:vi} is unique.
+We will assume that this problem has a solution $u_h\in\cK_h$.  The following \emph{a priori} estimation theorem extends the well-known result of Falk \cite{Falk1974}; see also Theorem 5.1.1 in \cite{Ciarlet2002}.  We assume that $f$ is coercive and Lipschitz on some superset of $\cK$ which also contains the FE solution $u_h$; this technical assumption permits a clean and general result.  However, we do \emph{not} assume any of the following: $\cK_h \subset \cK$, $f$ is linear, $f_h=f$, $f_h$ is continuous, $f_h$ is $\qq$-coercive, or even that the solution of \eqref{eq:fe:vi} is unique.
 
-\begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  For $\qq>1$, with conjugate exponent $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive, with constant $\alpha>0$, on a set which contains $\cK$ and the numerical solution $u_h$.  Assume $f$ is Lipschitz on bounded subsets of the same set.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $c(R_h,\alpha)>0$, not otherwise depending on $u$ or $u_h$, so that
+\begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  For $\qq>1$, with conjugate exponent $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive, with constant $\alpha>0$, on a set which contains $\cK$ and the numerical solution $u_h$.  Assume $f$ is Lipschitz on bounded subsets of the same set.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $C=C(R_h,\alpha)>0$, not otherwise depending on $u$ or $u_h$, so that
 \begin{align}
-\|u-u_h\|^\qq &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \left(f(u)-\ell\right)[v-u_h] + \inf_{v_h\in\cK_h} \left(f(u)-\ell\right)[v_h-u]\right)\label{eq:abstractestimate} \\
-   &\quad\, + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] + c(R_h,\alpha) \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}. \notag
+\|u-u_h\|^\qq &\le \inf_{v\in\cK} \frac{2}{\alpha} \left(f(u)-\ell\right)[v-u_h] \label{eq:abstractestimate} \\
+   &\quad\, + \inf_{v_h\in\cK_h} \bigg\{ \frac{2}{\alpha} \left(f(u)-\ell\right)[v_h-u] + \frac{2}{\alpha} \delta_h[u_h-v_h] + C \|v_h - u\|^{\qq'} \bigg\}, \notag
 \end{align}
+where $\delta_h = f(u_h)-f_h(u_h) \in \cX'$ is a consistency error at the discrete solution.
 \end{theorem}
 
 \begin{proof}  It follows from $\qq$-coercivity of $f$ that
@@ -549,10 +552,10 @@ We will assume that this problem has a solution $u_h\in\cK_h$.  The following \e
 \end{align}
 Next, for arbitrary $v\in\cK$ and $v_h\in\cK_h$, rewrite \eqref{eq:vi} as $f(u)[u]     \le f(u)[v] + \ell[u-v]$ and \eqref{eq:fe:vi} as $f_h(u_h)[u_h] \le f_h(u_h)[v_h] + \ell[u_h-v_h]$.  Then
 \begin{align}
-\alpha \|u-u_h\|^\qq &\le f(u)[v] + \ell[u-v] + f(u_h)[v_h] + \ell[u_h-v_h] \label{eq:abstract:two} \\
+\alpha \|u-u_h\|^\qq &\le f(u)[v] + \ell[u-v] + f_h(u_h)[v_h] + \ell[u_h-v_h] \label{eq:abstract:two} \\
   &\qquad - f(u)[u_h] - f(u_h)[u] + \left(f(u_h)-f_h(u_h)\right)[u_h] \notag \\
   &= \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u] \notag \\
-  &\qquad + \left(f(u)-f(u_h)\right)[u-v_h] + \left(f(u_h)-f_h(u_h)\right)[u_h] \notag
+  &\qquad + \left(f(u)-f(u_h)\right)[u-v_h] + \left(f(u_h)-f_h(u_h)\right)[u_h - v_h]. \notag
 \end{align}
 Since $u,u_h\in B_{R_h}$, by the Lipschitz assumption there is $C(R_h)>0$ so that
 \begin{equation}
@@ -562,27 +565,17 @@ Noting $1<\qq<\infty$, use Young's inequality with $\eps>0$ \cite[Appendix B.2]{
 \begin{align}
 \alpha \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u]  \label{eq:abstract:four} \\
   &\qquad + C(R_h) \left(\eps\|u-u_h\|^\qq + \tilde C(\eps) \|u-v_h\|^{\qq'}\right) \notag \\
-  &\qquad + \left(f(u_h)-f_h(u_h)\right)[u_h], \notag
+  &\qquad + \left(f(u_h)-f_h(u_h)\right)[u_h - v_h], \notag
 \end{align}
 where $\tilde C(\eps) = (\eps \qq)^{-\qq'/\qq} {\qq'}^{-1}$.  Choose $\eps>0$ so that $C(R_h) \eps \le \alpha/2$, and subtract:
 \begin{align}
 \frac{\alpha}{2} \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u]  \label{eq:abstract:five} \\
-  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^{\qq'} + \left(f(u_h)-f_h(u_h)\right)[u_h] \notag
+  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^{\qq'} + \left(f(u_h)-f_h(u_h)\right)[u_h - v_h] \notag
 \end{align}
 Take infimums to show \eqref{eq:abstractestimate}.
 \end{proof}
 
-We can significantly refine the estimate in the case of a unilateral obstacle problem, where $\cX$ are scalar functions.  In this case the residual $f(u)-\ell\in \cX'$ is a positive measure $d\mu_u$ supported in the active set \cite[Theorem II.6.9]{KinderlehrerStampacchia1980}.
-
-\begin{corollary}  \label{cor:abstractwithmeasure}  Suppose $\cX=W^{1,\rr}(\Omega)$ over a domain $\Omega\subset\RR^d$, and suppose $\cK\subset\cX$ is defined as in \eqref{eq:be:admissible} for an obstacle $b$.  Let $A_u=\{x\in\Omega\,:\,u(x)>b(x)\}$ be the active set.  Under the assumptions of Theorem \ref{thm:abstractestimate} we have the bound
-\begin{align}
-\|u-u_h\|^\qq &\le \frac{2}{\alpha} \left(\inf_{v\in\cK} \int_{A_u} v - u_h\,d\mu_u + \inf_{v_h\in\cK_h} \int_{A_u} v_h - b\,d\mu_u\right)
-  \label{eq:abstractwithmeasure} \\
-   &\quad\, + \frac{2}{\alpha} \left(f(u_h)-f_h(u_h)\right)[u_h] + c \inf_{v_h\in\cK_h} \|v_h - u\|^{\qq'}. \notag
-\end{align}
-\end{corollary}
-
-The ``$\inf_{v\in\cK}$'' terms in bound \eqref{eq:abstractwithmeasure} is generally nonzero when $\cK_h \not\subset \cK$.  To see how this can occur even for an arbitrarily smooth obstacle, with $\cK$ defined as in \eqref{eq:be:admissible}, suppose $b_h=\pi_h b$ is the FE interpolant of $b$, and define $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge b_h \text{ and } v_h|_{\partial\Omega}=b_h|_{\partial\Omega}\}$.  While $b_h(x_j)=b(x_j)$ for the interpolation nodes $x_j$, generally $b_h(x) \ge b(x)$ will not hold for all $x\in\Omega$ (Figure \ref{fig:nonadmissible}; compare \cite[Figure 5.1.3]{Ciarlet2002}).  That is, nodal admissibility does not imply admissibility.
+The ``$\inf_{v\in\cK}$'' terms in bound \eqref{eq:abstractestimate} is generally nonzero when $\cK_h \not\subset \cK$.  To see how this can occur in an obstacle problem even for arbitrarily smooth data, with $\cK$ defined as in \eqref{eq:be:admissible}, suppose $b_h=\pi_h b$ is the FE interpolant of $b$, and define $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge b_h \text{ and } v_h|_{\partial\Omega}=b_h|_{\partial\Omega}\}$.  While $b_h(x_j)=b(x_j)$ for the interpolation nodes $x_j$, generally $b_h(x) \ge b(x)$ will not hold for all $x\in\Omega$ (Figure \ref{fig:nonadmissible}; compare \cite[Figure 5.1.3]{Ciarlet2002}).  That is, nodal admissibility does not imply admissibility.
 
 \begin{figure}[ht]
 \begin{center}
@@ -596,7 +589,9 @@ For unilateral obstacle problems and $P_1$ or $Q_1$ elements we may force $\cK_h
 \begin{equation}
 (R_h^{\oplus}b)(x_i) = \sup_{x \in N_i} b(x). \label{eq:monotoneop}
 \end{equation}
-If $b_h=R_h^{\oplus} b$ then $b_h(x)\ge b(x)$ for all $x\in \Omega$ (Figure \ref{fig:nonadmissible}; right), thus $\cK_h\subset \cK$ and the ``\,$\inf_{v\in\cK}$'' term vanishes from the bounds.
+If $b_h=R_h^{\oplus} b$ then $b_h(x)\ge b(x)$ for all $x\in \Omega$ (Figure \ref{fig:nonadmissible}; right), thus $\cK_h\subset \cK$ and the ``\,$\inf_{v\in\cK}$'' term can be removed from the bound.
+
+We can rewrite other parts of bound \eqref{eq:abstractestimate} in the case of a unilateral obstacle problem over scalar functions $\cX=W^{1,\rr}(\Omega)$, because then the residual $f(u)-\ell\in \cX'$ is a positive measure $d\mu_u$ \cite[Theorem II.6.9]{KinderlehrerStampacchia1980}.  It is supported in the active set $A_u=\{x\in\Omega\,:\,u(x)=b(x)\}$.  Then $(f(u) - \ell)[w] = \int_\Omega w\,d\mu_u = \int_{A_u} w\,d\mu_u$ for $w\in \cX$.  This form will be used in Section \ref{sec:application}.
 
 The original result by Falk \cite{Falk1974}, which computes residual norms, loses the active-set information in Corollary \ref{cor:abstractwithmeasure}.  The next Corollary makes this historical connection by applying a norm-based approach.  It recovers the Falk result \cite{Falk1974} when $\cX,\cB$ are Hilbert spaces, and $f(v)[w]=f_h(v)[w]=a(v,w)$ is bilinear, uniformly-elliptic, and continuous.  (The definition of uniform ellipticity coincides with definition \eqref{eq:qcoercive} of $2$-coercive, and continuity implies \eqref{eq:liponbounded}.)  With these simplifications, Corollary \ref{cor:abstractestimate:Bnorm} below reduces to Theorem 1 in \cite{Falk1974}.
 
