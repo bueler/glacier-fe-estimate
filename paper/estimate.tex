@@ -667,39 +667,43 @@ We assume this FE configuration:
 \end{enumerate}
 \end{stdass}
 
-For the continuum solution $s\in\cK$ (Theorem \ref{thm:regularizedwellposed}), application of Theorem \ref{thm:abstractestimate} with $\qq=4$ yields the following Lemma.  Because $s_h\in\cK_h\subset \cK$, the first term in \eqref{eq:abstractestimate} disappears and the technical set construction in Theorem \ref{thm:abstractestimate} is not needed.
+Because $s_h\in\cK_h\subset \cK$ by Assumption \ref{item:goodbh}, the first term in \eqref{eq:abstractestimate} disappears and the technical superset assumption in Theorem \ref{thm:abstractestimate} is bypassed.  For the continuum solution $s\in\cK$ (Theorem \ref{thm:regularizedwellposed}), application of Theorem \ref{thm:abstractestimate} with $\qq=4$ now yields the following Lemma.
 
-\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions, and assume Conjecture \ref{conj:lipschitz} holds for $\rr=4$, and assume Conjecture \ref{conj:regcoercive} holds for parameters $\eps\in(0,1)$, $\eta_0>0$, and $\alpha>0$.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  For $\Delta t>0$ let $s\in\cK$ be the unique surface elevation satisfying the regularized implicit time-step VI problem \eqref{eq:regularizedvi}, and assume that $s_h\in\cK_h$ is any solution of numerical problem \eqref{eq:fe:regularizedvi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $c_0=c_0(R_h,\alpha\Delta t)>0$ so that
+\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions, and assume Conjecture \ref{conj:lipschitz} holds for $\rr=4$, and assume Conjecture \ref{conj:regcoercive} holds for parameters $\eps\in(0,1)$, $\eta_0>0$, and $\alpha>0$.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  For $\Delta t>0$ let $s\in\cK$ be the unique surface elevation satisfying the regularized implicit time-step VI problem \eqref{eq:regularizedvi}, and assume that $s_h\in\cK_h$ solves numerical problem \eqref{eq:fe:regularizedvi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $C=C(R_h,\alpha\Delta t)>0$ so that
 \begin{align}
-\|s-s_h\|_\cX^4 &\le \quad \frac{2}{\alpha \Delta t} \inf_{\sigma_h\in\cK_h} \left(F^\eps_{\Delta t}(s)-\ell^n\right)[\sigma_h-s] \label{eq:preglacierestimate} \\
-   &\quad\, + \frac{2}{\alpha \Delta t} \left(F^\eps_{\Delta t}(s_h)-F^{\eps,h}_{\Delta t}(s_h)\right)[s_h] \notag \\
-   &\quad\, + c_0 \inf_{\sigma_h\in\cK_h} \|\sigma_h - s\|_{\cX}^{4/3}. \notag
+\|s-s_h\|_\cX^4 &\le \inf_{\sigma_h\in\cK_h} \bigg\{\frac{2}{\alpha \Delta t} \left(F^\eps_{\Delta t}(s)-\ell^n\right)[\sigma_h-s] + \frac{2}{\alpha \Delta t} \delta_h[s_h-\sigma_h] \label{eq:preglacierestimate} \\
+&\hspace{17mm} + C \|\sigma_h - s\|_{\cX}^{4/3}\bigg\} \notag
 \end{align}
+where $\delta_h = F^\eps_{\Delta t}(s_h)-F^{\eps,h}_{\Delta t}(s_h) \in \cX'$ is a consistency error at $s_h$.
 \end{lemma}
 
-The meaning of each term in bound \eqref{eq:preglacierestimate} turns out to be reasonably clear, especially in the refined form from the next Theorem.  Recall that $\cV=W_0^{1,\pp}(\Lambda(s_h); \RR^3)$ is the velocity space for Stokes problem \eqref{eq:glenstokes:weak}.  For $\omega\in\cX$ define $\Pi_h(\omega)\in\cX_h$ by
+The next theorem replaces $\sigma_h$ with an interpolant of the exact solution $s$, and then the meaning of each term in bound \eqref{eq:preglacierestimate} becomes clear.  For $\omega\in\cX = W^{1,4}(\Omega)$ define $\Pi_h(\omega)\in\cX_h$ by
 \begin{equation}
 \Pi_h(\omega)(x_j) = \max \,\{b_h(x_j), \omega(x_j)\}, \label{eq:definePi}
 \end{equation}
-over nodes $x_j \in \cT_h$.  If $\sigma\in \cK$ then $\Pi_h(\sigma) \in \cK_h$ because nodal admissibility implies admissibility under assumption \ref{item:pone}.
+over nodes $x_j \in \cT_h$; thus $\Pi_h$ both interpolates and truncates.  If $\sigma\in \cK$ then $\Pi_h(\sigma) \in \cK_h$ because nodal admissibility implies admissibility under Assumption \ref{item:pone}.  Also, recall that $\cV=W_0^{1,\pp}(\Lambda(b_h,s_h); \RR^3)$ is the velocity space for Stokes problem \eqref{eq:glenstokes:weak}, the numerical solution of which gives $\bu_h|_{s_h}$.
+
+FIXME plan is to first express $\delta_h[w]$ as numerical velocity error (but $s_h$, $s$ are computed using different Stokes domains $\Lambda(b_h,s_h)$, $\Lambda(b,s)$, resp.), then use Strang type argument on $\delta_h[\dots]$, then substitute $s_h = \Pi_h(s)$.  certainly term 2 loses $w$ part.  then explain meaning
 
 \begin{theorem} \label{thm:glacierapp}  Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Define
 \begin{equation}
 \Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\},
 \end{equation}
-the closed ice-free region (active set) for the exact solution.  Then
+the closed active set for the exact solution, the ice-free region at $t_n$.  Then
 \begin{align}
-\|s_h-s\|_\cX^4 &\le \quad \frac{2}{\alpha \Delta t} \int_{\Omega_A(s)}  (b_h - b) (b - \ell^n) &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
+\|s_h-s\|_\cX^4 &\le \quad FIXME FROM HERE \frac{2}{\alpha \Delta t} \int_{\Omega_A(s)}  (b_h - b) (b - \ell^n) &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
    &\quad\, + \frac{2G}{\alpha} \big\|\bu_h - \bu\big\|_{\cV} + \frac{2\eps}{\alpha} \left\|(w^h - w)|_{s_h}\right\|_{L^\pp} \|s_h\|_{L^{\pp'}} &&\text{\textnormal{[term 2]}} \notag \\
    &\quad\, + c_0 \|\Pi_h(s) - s\|_\cX^{4/3}, &&\text{\textnormal{[term 3]}} \notag
 \end{align}
 where the coefficient $G=G(\|s_h\|_{\cX})$ is derived in the proof.
 \end{theorem}
 
-\begin{proof}  Because $s$ solves \eqref{eq:regularizedvi}, the residual $F^\eps_{\Delta t}(s)-\ell^n \in \cX'$ is represented by a positive Borel measure $\mu$ \cite[Theorem 6.22]{LiebLoss1997}.  However, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in $\Omega_A(s)$, and it has density $b-\ell^n$ (Section \ref{sec:model}; argument leading to \eqref{eq:be:viearly}).  Apply Lemma \ref{lem:preglacierapp} and note that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.  Set $\sigma_h = b_h \in \cK_h$ to give term 1 in \eqref{eq:preglacierestimate}:
+\begin{proof}  Because $s$ solves \eqref{eq:regularizedvi}, the residual $F^\eps_{\Delta t}(s)-\ell^n \in \cX'$ is represented by a positive Borel measure $\mu$ \cite[Theorem 6.22]{LiebLoss1997}.  However, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in $\Omega_A(s)$, and it has density $b-\ell^n$; see Section \ref{sec:model} and the argument leading to \eqref{eq:be:viearly}.  Noting that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$, for the first term in \eqref{eq:preglacierestimate} we have
 \begin{equation}
-\left(F^\eps_{\Delta t}(s)-\ell^n\right)[b_h-s] = \int_\Omega (b_h - s) \,d\mu = \int_{\Omega_A(s)} (b_h - b) (b - \ell^n).
+\left(F^\eps_{\Delta t}(s)-\ell^n\right)[\sigma_h-s] = \int_{\Omega_A(s)} (b - \ell^n) (\sigma_h - s). \label{eq:pretermone}
 \end{equation}
+
+FIXME  Set $\sigma_h = b_h \in \cK_h$ to give term 1 in \eqref{eq:preglacierestimate}:
 
 For term 2, first expand \eqref{eq:regularizedF} and \eqref{eq:fe:regularizedF}:
 \begin{align}
