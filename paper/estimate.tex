@@ -114,7 +114,7 @@
 \maketitle
 
 \begin{abstract}
-The primary data which determine the evolution of glaciation are the bedrock elevation and the surface mass balance.  From this data, which we assume is defined over a fixed land region, the glacier's geometry solves a free boundary problem which balances the time derivative of the surface elevation, the surface velocity from the Stokes flow of the ice, and the surface balance rate.  This problem can be posed in weak form as a variational inequality over a cone of admissible surface elevation functions, those which are above the bedrock topography.  After some preparatory theory for the Stokes problem, we conjecture that the corresponding continuous-space, implicit time-step variational inequality problem is well-posed if the surface kinematical equation is appropriately regularized.  This conjecture is supported by physical arguments and numerical evidence.  We then prove a general theorem which bounds the numerical error made by finite element approximations of nonlinear-operator variational inequalities in Banach spaces.  This bound is a sum of error terms of different types, special to variational inequalities.  When it is applied to the implicit time-step glacier problem there are three terms in the bound: an error from discretizing the bed elevation, an error from numerically solving for the Stokes velocity, and finally an expected error which is quasi-optimal in the finite element space representation of the surface elevation.  The design of glacier models is then reconsidered based on this \emph{a priori} error analysis.
+The primary data which determine the evolution of glaciation are the bedrock elevation and the surface mass balance.  From this data, which we assume is defined over a fixed land region, the glacier's geometry solves a free boundary problem which balances the time derivative of the surface elevation, the surface velocity from the Stokes flow of the ice, and the surface mass balance rate.  This problem can be posed in weak form as a variational inequality over a cone of admissible surface elevation functions, those which are above the bedrock topography.  After some preparatory theory for the Stokes problem, we conjecture that the corresponding continuous-space, implicit time-step variational inequality problem is well-posed if the surface kinematical equation is appropriately regularized.  This conjecture is supported by physical arguments and numerical evidence.  We then prove a general theorem which bounds the numerical error made by finite element approximations of nonlinear-operator variational inequalities in Banach spaces.  This bound is a sum of error terms of different types, special to variational inequalities.  When it is applied to the implicit time-step glacier problem there are three terms in the bound: an error from discretizing the bed elevation, an error from numerically solving for the Stokes velocity, and finally an expected error which is quasi-optimal in the finite element space representation of the surface elevation.  The design of glacier models is then reconsidered based on this \emph{a priori} error analysis.
 \end{abstract}
 
 \begin{keywords}
@@ -761,7 +761,7 @@ All terms in the Theorem \ref{thm:glacierapp} bound will be reduced by increased
 \appendix
 \section{Proof of Lemma \ref{lem:stokesapriori}} \label{app:provestokesapriori}
 
-The proof below of Lemma \ref{lem:stokesapriori} is hinted in \cite{JouvetRappaz2011}, and it is standard.  It requires the following Poincar\'e's and Korn's inequalities, which can be proven by (7.44) in \cite{GilbargTrudinger2001} for \eqref{eq:poincare}, and by setting $F(x)$ to the identity in Corollary 4.1 of \cite{Pompe2003} for \eqref{eq:korns}.
+The needed Poincar\'e's and Korn's inequalities, written next for completeness, can be proven using (7.44) in \cite{GilbargTrudinger2001} for \eqref{eq:poincare}, and by setting $F(x)$ to the identity in Corollary 4.1 of \cite{Pompe2003} for \eqref{eq:korns}.
 
 \begin{lemma} \label{lem:poincarekorns}
 There exist dimensionless constants $C$, depending on the geometry of $\Lambda$, so that for all $\bv \in \cV$,
@@ -773,6 +773,8 @@ thus $\|\bv\|_{\cV}^\pp \le (C + 1) [H]^\pp \int_\Lambda |\grad\bv|^\pp$, and
 \int_\Lambda |\grad\bv|^\pp \le C \int_\Lambda |D\bv|^\pp. \label{eq:korns}
 \end{equation}
 \end{lemma}
+
+The following proof is hinted-at in \cite{JouvetRappaz2011}; it takes a standard approach.
 
 \begin{proof}[Proof of Lemma \ref{lem:stokesapriori}]
 From \eqref{eq:glenstokes:weak} and $\bu \in\Vdiv$ it follows that
