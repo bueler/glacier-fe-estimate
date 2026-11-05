@@ -24,7 +24,7 @@ if writepvd:
 
 # regularization parameter
 EPSREG = 0.01
-# FIXME H0 is only set inside physics.py, and called by codes in measure.py
+# note H0 is only set inside physics.py, and called by codes in measure.py
 
 # experiment parameters
 L = 100.0e3                       # domain is (-L,L)
