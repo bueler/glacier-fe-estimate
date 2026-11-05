@@ -626,18 +626,16 @@ We will assume that the original bed elevation $b$ is well-behaved, $b\in C^1(\b
 
 From these geometrical and discrete-space choices, recall the regularised VI problem \eqref{eq:regularizedvi}, with $F^\eps_{\Delta t}$ defined by \eqref{eq:regularizedPhi} and \eqref{eq:regularizedF}.  Approximate evaluation of $F^\eps_{\Delta t}(s_h)$ requires the numerical solution of the power-law Stokes problem \eqref{eq:glenstokes:weak} over a meshed 3D domain $\Lambda(b_h,s_h)$ (see \eqref{eq:domainfroms}), the lower and upper surfaces of which are given by admissible FE functions $b_h\in\cX_h$ and $s_h \in \cK_h$, respectively.  Solvability of this Stokes problem using inf-sup stable elements is addressed by \cite{Belenkietal2012,JouvetRappaz2011}.  The numerical velocity from solving \eqref{eq:glenstokes:weak} over $\Lambda(b_h,s_h)$ is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  (Note that $\bu_h$ is \emph{not} the exact solution of that Stokes problem.)  We make no assumptions on the solution process for \eqref{eq:glenstokes:weak}, except that it must generate $\bu_h|_{s_h}$.
 
-These preliminaries allow us to define the regularized and numerical operator.  Following \eqref{eq:definePhi}, \eqref{eq:phisia}, \eqref{eq:regularizedPhi}, and \eqref{eq:regularizedF}, with parameters $\Delta t>0$, $0<\eps\ll 1$, $\eta_0>0$, and for $s_h \in \cK_h$ and $\omega_h\in\cX_h$ we define
+These preliminaries allow us to define the numerical operator and VI problem.  Following \eqref{eq:definePhi}, \eqref{eq:phisia}, \eqref{eq:regularizedPhi}, and \eqref{eq:regularizedF}, with parameters $\Delta t>0$, $0<\eps\ll 1$, $\eta_0>0$, and for $s_h \in \cK_h$ and $\omega_h\in\cX_h$ we define
 \begin{align}
-F^{\eps,h}_{\Delta t}(s_h)[\omega_h] &= -\Delta t (1-\eps)\,\int_\Omega \left(\bu_h|_{s_h} \cdot \bn_{s_h}\right) \omega_h + \Delta t \,\eps\,\Gamma \eta_0^5 \, \int_\Omega |\grad s_h|^2 \grad s_h \cdot \grad \omega_h \label{eq:fe:regularizedF} \\
-&\qquad + \int_\Omega s_h \omega_h. \notag
+F^{\eps,h}_{\Delta t}(s_h)[\omega_h] &= -\Delta t (1-\eps)\,\int_\Omega \left(\bu_h|_{s_h} \cdot \bn_{s_h}\right) \omega_h  \label{eq:fe:regularizedF} \\
+&\qquad + \Delta t \,\eps\,\Gamma \eta_0^5 \, \int_\Omega |\grad s_h|^2 \grad s_h \cdot \grad \omega_h + \int_\Omega s_h \omega_h. \notag
 \end{align}
-Note that this numerical formula uses the FE function $s_h$ directly, namely in the derivatives $\grad s_h$ and $\bn_{s_h}$, and indirectly, to define the Stokes problem domain for $\bu_h$.
-
-Corresponding to the continuum VI \eqref{eq:regularizedvi}, we seek $s_h\in\cK_h$ solving
+This numerical formula uses the FE function $s_h$ directly, namely in the derivatives $\grad s_h$ and $\bn_{s_h}$, and indirectly, to define the Stokes problem domain for $\bu_h$.  Corresponding to the continuum VI \eqref{eq:regularizedvi}, we seek $s_h\in\cK_h$ solving
 \begin{equation}
 F^{\eps,h}_{\Delta t}(s_h)[\sigma_h-s_h] \ge \ell^n[\sigma_h-s_h] \quad \text{for all } \sigma_h \in \cK_h. \label{eq:fe:regularizedvi}
 \end{equation}
-The source term $\ell^n$ is defined exactly as in \eqref{eq:be:source}; small adjustments apply if quadrature is used in that integral.
+The source term $\ell^n$ is defined exactly as in \eqref{eq:be:source}.
 
 Collecting everything above, the following standard assumptions regarding the data and function spaces are used when solving \eqref{eq:regularizedvi} by numerical scheme \eqref{eq:fe:regularizedvi}.
 
@@ -665,12 +663,12 @@ We assume this FE configuration:
 \end{enumerate}
 \end{stdass}
 
-Because $s_h\in\cK_h\subset \cK$ by Assumption \ref{item:goodbh}, the first term in \eqref{eq:abstractestimate} disappears and the technical superset assumption in Theorem \ref{thm:abstractestimate} is bypassed.  For the continuum solution $s\in\cK$ (Theorem \ref{thm:regularizedwellposed}), application of Theorem \ref{thm:abstractestimate} with $\qq=4$ now yields the following Lemma.
+Consider the application of Theorem \ref{thm:abstractestimate}.  Because $s_h\in\cK_h\subset \cK$ by Assumption \ref{item:goodbh}, the first term in \eqref{eq:abstractestimate} disappears and the technical superset assumption is bypassed.  Application of the Theorem with $\qq=4$ yields the following Lemma.
 
 \begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions, and assume Conjecture \ref{conj:lipschitz} holds for $\rr=4$, and assume Conjecture \ref{conj:regcoercive} holds for parameters $\eps\in(0,1)$, $\eta_0>0$, and $\alpha>0$.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  For $\Delta t>0$ let $s\in\cK$ be the unique surface elevation satisfying the regularized implicit time-step VI problem \eqref{eq:regularizedvi}, and assume that $s_h\in\cK_h$ solves numerical problem \eqref{eq:fe:regularizedvi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $C=C(R_h,\alpha\Delta t)>0$ so that
 \begin{align}
-\|s-s_h\|_\cX^4 &\le \inf_{\sigma_h\in\cK_h} \bigg\{\frac{2}{\alpha \Delta t} \left(F^\eps_{\Delta t}(s)-\ell^n\right)[\sigma_h-s] + \frac{2}{\alpha \Delta t} \delta_h[s_h-\sigma_h] \label{eq:preglacierestimate} \\
-&\hspace{17mm} + C \|\sigma_h - s\|_{\cX}^{4/3}\bigg\} \notag
+\frac{\alpha \Delta t}{2} \|s-s_h\|_\cX^4 &\le \inf_{\sigma_h\in\cK_h} \bigg\{\left(F^\eps_{\Delta t}(s)-\ell^n\right)[\sigma_h-s] + \delta_h[s_h-\sigma_h] \label{eq:preglacierestimate} \\
+&\hspace{17mm} + C \|\sigma_h - s\|_{\cX}^{4/3}\bigg\}, \notag
 \end{align}
 where $\delta_h = F^\eps_{\Delta t}(s_h)-F^{\eps,h}_{\Delta t}(s_h) \in \cX'$ is a consistency error at $s_h$.
 \end{lemma}
@@ -681,46 +679,49 @@ The next theorem replaces $\sigma_h$ with an interpolant of the exact solution $
 \end{equation}
 over nodes $x_j \in \cT_h$; thus $\Pi_h$ both interpolates and truncates.  If $\sigma\in \cK$ then $\Pi_h(\sigma) \in \cK_h$ because nodal admissibility implies admissibility under Assumption \ref{item:pone}.  Also, recall that $\cV=W_0^{1,\pp}(\Lambda(b_h,s_h); \RR^3)$ is the velocity space for Stokes problem \eqref{eq:glenstokes:weak}, the numerical solution of which gives $\bu_h|_{s_h}$.
 
-FIXME plan is to first express $\delta_h[w]$ as numerical velocity error (but $s_h$, $s$ are computed using different Stokes domains $\Lambda(b_h,s_h)$, $\Lambda(b,s)$, resp.), then use Strang type argument on $\delta_h[\dots]$, then substitute $s_h = \Pi_h(s)$.  certainly term 2 loses $w$ part.  then explain meaning
-
 \begin{theorem} \label{thm:glacierapp}  Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Define
 \begin{equation}
 \Omega_A(s) = \left\{x\in\Omega\,:\,s(x)=b(x)\right\},
 \end{equation}
 the closed active set for the exact solution, the ice-free region at $t_n$.  Then
 \begin{align}
-\|s_h-s\|_\cX^4 &\le \quad FIXME FROM HERE \frac{2}{\alpha \Delta t} \int_{\Omega_A(s)}  (b_h - b) (b - \ell^n) &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
-   &\quad\, + \frac{2G}{\alpha} \big\|\bu_h - \bu\big\|_{\cV} + \frac{2\eps}{\alpha} \left\|(w^h - w)|_{s_h}\right\|_{L^\pp} \|s_h\|_{L^{\pp'}} &&\text{\textnormal{[term 2]}} \notag \\
-   &\quad\, + c_0 \|\Pi_h(s) - s\|_\cX^{4/3}, &&\text{\textnormal{[term 3]}} \notag
+\frac{\alpha\Delta t}{4} \|s_h-s\|_\cX^4 &\le \quad \int_{\Omega_A(s)} (\Pi_h(s) - s)\,d\mu_s &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
+   &\quad\, + FIXME &&\text{\textnormal{[term 2]}} \notag \\
+   &\quad\, + C \|\Pi_h(s) - s\|_\cX^{4/3}, &&\text{\textnormal{[term 3]}} \notag
 \end{align}
 where the coefficient $G=G(\|s_h\|_{\cX})$ is derived in the proof.
 \end{theorem}
 
-\begin{proof}  Because $s$ solves \eqref{eq:regularizedvi}, the residual $F^\eps_{\Delta t}(s)-\ell^n \in \cX'$ is represented by a positive Borel measure $\mu$ \cite[Theorem 6.22]{LiebLoss1997}.  However, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in $\Omega_A(s)$, and it has density $b-\ell^n$; see Section \ref{sec:model} and the argument leading to \eqref{eq:be:viearly}.  Noting that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$, for the first term in \eqref{eq:preglacierestimate} we have
-\begin{equation}
-\left(F^\eps_{\Delta t}(s)-\ell^n\right)[\sigma_h-s] = \int_{\Omega_A(s)} (b - \ell^n) (\sigma_h - s). \label{eq:pretermone}
-\end{equation}
+% FIXME plan is to first express $\delta_h[w]$ as numerical velocity error (but $s_h$, $s$ are computed using different Stokes domains $\Lambda(b_h,s_h)$, $\Lambda(b,s)$, resp.), then use Strang type argument on $\delta_h[\dots]$, then substitute $s_h = \Pi_h(s)$.  certainly term 2 loses $w$ part.  then explain meaning
 
+\begin{proof}  First consider the consistency error $\delta_h$ in the second term in \eqref{eq:preglacierestimate}.  For any $r_h\in\cX_h$, this resolves to velocity traces, using the difference of \eqref{eq:regularizedF} and \eqref{eq:fe:regularizedF}:
+\begin{equation}
+\delta_h[r_h] = \left(F^\eps_{\Delta t}(s_h)-F^{\eps,h}_{\Delta t}(s_h)\right)[r_h] = \Delta t (1-\eps) \int_\Omega \left(\bu_h|_{s_h} - \bu|_{s_h}\right) \cdot \bn_{s_h} \,r_h.
+\end{equation}
+We estimate the maximum consistency error using H\"older's and Sobolev's inequalities, via the exact solution $s$:
+\begin{align}
+\big|\delta_h[r_h]\big| &\le \Delta t \int_\Omega \Big|\bu_h|_{s_h} - \bu|_{s_h}\Big| \left(1 + |\grad s_h|\right) |r_h| \\
+  &\le \Delta t \big\|\bu_h|_{s_h} - \bu|_{s_h}\big\|_{L^{4/3}(\Omega)} \left(1 + C [L]^{-1} \|s_h\|_{\cX}\right) \|r_h\|_{\cX}. \notag
+\end{align}
+Defining $\|\delta_h\|_{\ast} = \sup_{0\ne r_h\in\cX_h} \big|\delta_h[r_h]\big| / \|r_h\|_{\cX}$, for the second term we have
+\begin{align}
+FIXME
+\end{align}
+
+Let $G(\|s_h\|_{\cX}) = 2\alpha^{-1}$
 FIXME  Set $\sigma_h = b_h \in \cK_h$ to give term 1 in \eqref{eq:preglacierestimate}:
 
-For term 2, first expand \eqref{eq:regularizedF} and \eqref{eq:fe:regularizedF}:
-\begin{align}
-\frac{1}{\Delta t} &\big(F^\eps_{\Delta t}(s_h)-F^{\eps,h}_{\Delta t}(s_h)\big)[s_h] = \int_\Omega \Big(\big(u_1|_{s_h},u_2|_{s_h}\big) \cdot \grad s_h - (1-\eps) w|_{s_h}\Big) s_h \label{eq:techythm} \\
-&\hspace{45mm} - \int_\Omega \Big(\big(u^h_1|_{s_h},u^h_2|_{s_h}\big) \cdot \grad s_h - (1-\eps) w^h|_{s_h}\Big) s_h \notag \\
-&\qquad = - \int_\Omega \left(\bu|_{s_h} - \bu_h|_{s_h}\right) \cdot \bn_{s_h} \,s_h + \eps \int_\Omega \left(w|_{s_h} - w^h|_{s_h}\right) s_h \notag
-\end{align}
-(This form assumes that quadrature for $\cX_h$ is such that the integrals in \eqref{eq:fe:regularizedF} are computed exactly.)  For the first of these integrals, apply the triangle inequality, the H\"older inequality (twice), the trace inequality (Lemma \ref{lem:trace}), and a Sobolev inequality:
-\begin{align}
-\Big|\int_\Omega \left(\bu|_{s_h} - \bu_h|_{s_h}\right) \cdot &\bn_{s_h} \,s_h\Big| \le \int_\Omega \Big|\bu|_{s_h} - \bu_h|_{s_h}\Big| |\bn_{s_h}|^{1/\pp} |\bn_{s_h}|^{1/\pp'} |s_h| \\
- &\le \left(\int_\Omega \Big|\bu|_{s_h} - \bu_h|_{s_h}\Big|^\pp |\bn_{s_h}|\right)^{1/\pp} \left(\int_\Omega |\bn_{s_h}| |s_h|^{\pp'}\right)^{1/\pp'} \notag \\
-  &\le \left(\int_{\Gamma_{s_h}} \big|\bu - \bu_h\big|^\pp\right)^{1/\pp} \left(\int_\Omega |\bn_{s_h}|^4\right)^{1/(4\pp')} \|s_h\|_{L^{4\pp'/3}} \notag \\
-  &\le C \|\bu - \bu_h\|_{\cV} \left(\int_\Omega 1 + |\grad s_h|^4\right)^{1/(4\pp')} \|s_h\|_{\cX}  \notag \\
-  &= G(\|s_h\|_{\cX}) \|\bu - \bu_h\|_{\cV}.  \notag
-\end{align}
-(Also recall that $|\bn_{s_h}|\,dx$ is the area element for $\Gamma_{s_h} \subset \partial \Lambda(s_h)$.)  Note that $C$ depends nontrivially on $\Lambda(s_h)$, and and that $G(\|s_h\|_{\cX})$ simply collects the factors shown.  H\"older applied the second integral from \eqref{eq:techythm} completes term 2.
+Because $s$ solves \eqref{eq:regularizedvi}, the residual $F^\eps_{\Delta t}(s)-\ell^n \in \cX'$ is represented by a positive Borel measure $\mu_s$ \cite[Theorem 6.22]{LiebLoss1997}.  However, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in $\Omega_A(s)$, so for the first term in \eqref{eq:preglacierestimate} we have
+\begin{equation}
+\left(F^\eps_{\Delta t}(s)-\ell^n\right)[\sigma_h-s] = \int_{\Omega_A(s)} (\sigma_h - s) \,d\mu_s \label{eq:pretermone}
+\end{equation}
+
+FIXME
 
 Term 3 follows by substituting $\sigma_h=\Pi_h(s)$ into the last term in \eqref{eq:preglacierestimate}.
 \end{proof}
+
+FIXME for first term, unregularized $\mu_s$ has density $b-\ell^n$; see Section \ref{sec:model} and the argument leading to \eqref{eq:be:viearly}; note that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$
 
 Now we consider the meaning of each term in the bound \eqref{eq:glacierestimate}:
 
