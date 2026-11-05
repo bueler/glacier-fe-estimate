@@ -538,8 +538,8 @@ We will assume that this problem has a solution $u_h\in\cK_h$.  The following \e
 
 \begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  For $\qq>1$, with conjugate exponent $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive, with constant $\alpha>0$, on a set which contains $\cK$ and the numerical solution $u_h$.  Assume $f$ is Lipschitz on bounded subsets of the same set.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $C=C(R_h,\alpha)>0$, not otherwise depending on $u$ or $u_h$, so that
 \begin{align}
-\|u-u_h\|^\qq &\le \inf_{v\in\cK} \frac{2}{\alpha} \left(f(u)-\ell\right)[v-u_h] \label{eq:abstractestimate} \\
-   &\quad\, + \inf_{v_h\in\cK_h} \bigg\{ \frac{2}{\alpha} \left(f(u)-\ell\right)[v_h-u] + \frac{2}{\alpha} \delta_h[u_h-v_h] + C \|v_h - u\|^{\qq'} \bigg\}, \notag
+\frac{\alpha}{2} \|u-u_h\|^\qq &\le \inf_{v\in\cK} \left(f(u)-\ell\right)[v-u_h] \label{eq:abstractestimate} \\
+   &\quad\, + \inf_{v_h\in\cK_h} \bigg\{ \left(f(u)-\ell\right)[v_h-u] + \delta_h[u_h-v_h] + C \|v_h - u\|^{\qq'} \bigg\}, \notag
 \end{align}
 where $\delta_h = f(u_h)-f_h(u_h) \in \cX'$ is a consistency error at the discrete solution.
 \end{theorem}
@@ -596,11 +596,9 @@ We can rewrite portions of bound \eqref{eq:abstractestimate} in the case of a un
 The original \emph{a priori} VI bound by Falk \cite{Falk1974} computes residual norms, and thus loses the active-set information in the residual $f(u)-\ell \in \cX'$ (measure $d\mu_u$).  The following Corollary makes the connection, recovering \cite[Theorem 1]{Falk1974} when $\cX,\cB$ are Hilbert spaces, the operator $f(v)[w]=a(v,w)$ is bilinear, continuous, and uniformly-elliptic, and the discrete problem is conforming $f=f_h$.  (In which case uniform ellipticity coincides with $2$-coercivity \eqref{eq:qcoercive}, and continuity implies \eqref{eq:liponbounded}.)
 
 \begin{corollary}  \label{cor:abstractestimate:Bnorm}  Suppose that $\cX$ continuously and densely embeds into a larger Banach space: $\cX \hookrightarrow \cB$, $\bar{\cX} = \cB$, and $\cB' \subset \cX'$, and suppose $\cK_h\subset \cK$.  Suppose $f:\cK\to\cB'$ and $\ell\in\cB'$.  Under the assumptions of Theorem \ref{thm:abstractestimate} we have
-{\small
 \begin{equation*}
-\|u-u_h\|^\qq \le \inf_{v_h\in\cK_h} \left\{ \frac{2}{\alpha} \|f(u)-\ell\|_{\cB'} \|v_h-u\|_{\cB} + \frac{2}{\alpha} \|\delta_h\|_{\cB'} \|u_h - v_h\|_{\cB} + C \|v_h - u\|^{\qq'} \right\}.
+\frac{\alpha}{2} \|u-u_h\|^\qq \le \inf_{v_h\in\cK_h} \left\{ \|f(u)-\ell\|_{\cB'} \|v_h-u\|_{\cB} + \|\delta_h\|_{\cB'} \|u_h - v_h\|_{\cB} + C \|v_h - u\|^{\qq'} \right\}.
 \end{equation*}
-}
 \end{corollary}
 
 The appearance of a consistency error $\delta_h = f(u_h)-f_h(u_h)$ in bound \eqref{eq:abstractestimate}, evaluated at $u_h\in \cK_h$, suggests Strang's first lemma \cite[Theorem 4.1.1]{Ciarlet2002}, but here in a nonlinear case.  In the glacier application this term will be related to the maximum error made in approximating the (Stokes) ice velocity; see Theorem \ref{thm:glacierapp}.
