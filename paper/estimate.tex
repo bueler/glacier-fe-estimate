@@ -810,20 +810,22 @@ Now let $z=\|\bu\|_\cV$.  We have proved that $z^\pp \le c_0 + c_1 z$ for $\pp>1
 
 \section{The surface motion map is not strictly monotone} \label{app:noncoercive}
 
-It is reasonable to suppose that a glacier flow model will produce no flow for an admissible surface elevation $s\in \cX=W^{1,\rr}(\Omega)$ which is horizontal everywhere on the ice.  In terms of the inactive set $\Omega_I=\{x\in\Omega\,:\,s(x)>b(x)\}$ and the domain $\Lambda(b,s)$ from \eqref{eq:domainfroms}, this property says that if $\grad s=0$ a.e.~in $\Omega_I$ then $\bu=\bzero$ on $\Lambda(b,s)$.  This holds for the non-sliding Stokes model considered in the paper, but it would also hold for most sliding laws, and in shallow ice approximation models \cite{JouvetBueler2012} as well.
+It is reasonable to suppose that a glacier flow model will produce no flow for an admissible surface elevation $s\in \cX=W^{1,\rr}(\Omega)$ which is horizontal everywhere on the ice.  In terms of the inactive set $\Omega_I=\{x\in\Omega\,:\,s(x)>b(x)\}$ and the domain $\Lambda(b,s)$ from \eqref{eq:domainfroms}, this property says that if $\grad s=0$ a.e.~in $\Omega_I$ then $\bu=\bzero$ on $\Lambda(b,s)$.
+
+This property holds for the non-sliding Stokes model considered in the paper because $\bu=\bzero$ and $p=\rhoi |\bg| (s-z)$ (i.e.~hydrostatic) solve the model, and the solution is unique.  The property also holds for most sliding laws, and in shallow ice approximation models \cite{JouvetBueler2012}.
 
 \begin{figure}[ht]
 \begin{center}
 \mbox{\includegraphics[width=0.4\textwidth]{genfigs/filled.pdf} \qquad \includegraphics[width=0.4\textwidth]{genfigs/icefree.pdf}}
 \end{center}
-\caption{For a smooth bedrock elevation $b$ with local minima, one surface elevation state $s_1$ fills-in the minima with flat ice (left), while the other is ice-free $s_2=b$ (right).  Because neither state generates flow, $\bu|_{s_i}=\bzero$, the surface motion map $\Phi$ in equation \eqref{eq:definePhi} cannot be strictly monotone.}
+\caption{For a smooth bedrock elevation $b$ with strict local minima, one surface elevation state $s_1$ fills in the minima with flat ice (left), while the other is ice-free $s_2=b$ (right).  Because neither state generates flow, $\bu|_{s_i}=\bzero$, the surface motion map $\Phi$ in equation \eqref{eq:definePhi} cannot be strictly monotone.}
 \label{fig:noncoercive}
 \end{figure}
 
-Using this property, for any bedrock elevations $b$ possessing strict local minima we can construct distinct surface elevations $s_1,s_2\in \cX$, $\|s_1-s_2\|_{\cX}>0$, with zero surface velocity $\bu|_{s_i}=\bzero$ \eqref{eq:defineus}, and therefore zero surface motion from \eqref{eq:definePhi}: $\Phi(s_i)=0$.  The construction (Figure \ref{fig:noncoercive}) simply fills-in the local minima with flat ice for surface $s_1$, and leaves $s_2=b$ as bare ground.  Note that $s_1$ can be constructed with any number of local minima filled-in, and/or with the minima only partially-filled, so generally there are infinitely-many surfaces of this type.  Two consequences of this construction are as follows.
+Using this property, for any bedrock elevation $b$ possessing strict local minima in the interior of $\Omega$ we can construct distinct surface elevations $s_1,s_2\in \cK$, $\|s_1-s_2\|_{\cX}>0$, with zero surface velocity $\bu|_{s_i}=\bzero$ \eqref{eq:defineus}, and therefore zero surface motion from \eqref{eq:definePhi}: $\Phi(s_i)=0$.  The construction (Figure \ref{fig:noncoercive}) simply fills in the local minima with flat ice for surface $s_1$, and leaves $s_2=b$ as bare ground.  Note that $s_1$ can be constructed with any number of local minima filled in, and/or with the minima only partially filled, so generally there are infinitely many surfaces of this type.  Two consequences of this construction are as follows.
 
 \begin{proposition} \label{prop:noncoercive}
-The surface motion map $\Phi$ defined in \eqref{eq:definePhi} is not $\qq$-coercive, for any $\qq$, nor is it strictly-monotone.  (See Definition \ref{def:monotonecoercive}.)
+The surface motion map $\Phi$ defined in \eqref{eq:definePhi} is not $\qq$-coercive, for any $\qq$, nor is it strictly monotone.  (See Definition \ref{def:monotonecoercive}.)
 \end{proposition}
 
 \begin{proof}
@@ -831,16 +833,16 @@ Note $(\Phi(s_1) - \Phi(s_2))[s_1-s_2]=0$ while $\|s_1-s_2\|_\cX > 0$.
 \end{proof}
 
 \begin{proposition} \label{prop:notunique}
-When the SMB is identically zero, $a=0$, there are smooth bedrock elevations for which the steady-state version of a glacier geometry model \eqref{eq:ncp} will have more than one solution.
+When the SMB is identically zero, $a=0$, there are smooth bedrock elevations for which the steady-state version of the glacier geometry model \eqref{eq:ncp}, or of any other model with the same no-flow property (above), will have more than one solution.
 \end{proposition}
 
 \begin{proof}
 The strong (NCP) form of the steady-state and $a=0$ model is
-	$$s - b \ge 0, \quad - \bu|_s \cdot \bn_s \ge 0, \quad (s - b) \left(- \bu|_s \cdot \bn_s\right) = 0,$$
-with corresponding weak form VI similar to \eqref{eq:be:vi}.  If $b$ is a smooth function with local minima then the above construction of $s_1$ and $s_2$ gives distinct solutions.
+	$$s - b \ge 0, \quad - \bu|_s \cdot \bn_s \ge 0, \quad (s - b) \left(- \bu|_s \cdot \bn_s\right) = 0.$$
+If $b$ is a smooth function with strict local minima then the above construction of $s_1$ and $s_2$ gives distinct solutions.
 \end{proof}
 
-Proposition \ref{prop:notunique} answers negatively, via a surprisingly-simple construction which seems not to appear in the literature, the uniqueness question for the general-bed, steady-state shallow ice approximation.  This question has been open since the proof of existence  \cite{JouvetBueler2012}.  Non-uniqueness here is for an elevation-\emph{in}dependent SMB function, namely $a=0$, so it is very different from the better-known non-uniqueness \cite{Bodvardsson1955} and non-existence \cite{Jouvetetal2011} results for certain elevation-dependent SMB models.
+Proposition \ref{prop:notunique} answers negatively, via a surprisingly simple construction which seems not to appear in the literature, the uniqueness question for the general-bed, steady-state shallow ice approximation, at least for certain elevation-\emph{in}dependent SMB functions.  (The counter-example needs only $a=0$ on the filled basins and $a\le 0$ elsewhere.)  This question has apparently been open since the proof of existence \cite{JouvetBueler2012} for that model, which applies to general $a(x)$.  Non-uniqueness here is very different from the better-known non-uniqueness \cite{Bodvardsson1955} and non-existence \cite{Jouvetetal2011} results for certain elevation-dependent SMB models.
 
 
 \section{Experiments on coercivity of the surface motion map} \label{app:numerical}
