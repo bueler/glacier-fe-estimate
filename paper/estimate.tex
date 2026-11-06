@@ -162,7 +162,7 @@ Now the glacier geometry evolution model says that an infinite-dimensional nonli
 \begin{align}
 s - b &\ge 0 \label{eq:ncp:constraint} \\
 \frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a &\ge 0 \label{eq:ncp:residualpos} \\
-(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0
+(s - b) \left(\frac{\partial s}{\partial t} - \bu|_s \cdot \bn_s - a\right) &= 0.
 \end{align}
 \end{subequations}
 Using \eqref{eq:defineus}, this system implies that either a location is ice free ($s=b$), where the climate is locally ablating ($a\le 0$), or the surface kinematical equation holds:
@@ -213,13 +213,13 @@ Observe that NCP \eqref{eq:ncp} is the only part of the model where a time deriv
 
 Furthermore, to the author's knowledge all existing evolution models using Stokes dynamics, or with any other form of a longitudinal stress balance, use an explicit or semi-implicit time-stepping scheme for the geometry \cite[for examples]{Brinkerhoff2023, Bueler2023, Durandetal2009, Jouvetetal2008, LofgrenAhlkronaHelanow2022, WirbelJarosch2020}, with a recent exception which is fully-implicit on a fixed map-plane region \cite{AhlkronaLofgrenHenry2025}.  Specifically, when implicitness is applied in these implementations the portion of $\RR^2$ covered by (solution) ice is not general.  Many schemes limit margin advance or retreat to one cell from the previous time step, though there is no physical justification for such a restriction.  The current paper considers a single time step of glacier evolution, without restrictions on the new (solution) ice-covered area.
 
-For finite-dimensional DAE systems, implicit schemes are the standard choice, that is, to handle unbounded stiffness \cite{AscherPetzold1998}.  In our infinite-dimensional case, where NCP \eqref{eq:ncp} is constrained by the ``algebraic'' Stokes problem \eqref{eq:glen}--\eqref{eq:stokes}, implicit schemes are also the natural choice.  We consider a backward Euler semi-discretization for simplicity.  For a time step $\Delta t > 0$, and times $\{t_n\}$ with $t_n-t_{n-1}=\Delta t$, this scheme applied to \eqref{eq:ncp} yields a new NCP for the updated surface elevation $s^n \approx s(t_n,x)$:%
+For finite-dimensional DAE systems, implicit schemes are the standard choice because they handle unbounded stiffness \cite{AscherPetzold1998}.  In our infinite-dimensional case, where NCP \eqref{eq:ncp} is constrained by the ``algebraic'' Stokes problem \eqref{eq:glen}--\eqref{eq:stokes}, implicit schemes are also the natural choice.  We consider a backward Euler semi-discretization for simplicity.  For a time step $\Delta t > 0$, and times $\{t_n\}$ with $t_n-t_{n-1}=\Delta t$, this scheme applied to \eqref{eq:ncp} yields a new NCP for the updated surface elevation $s^n \approx s(t_n,x)$:%
 \begin{subequations}
 \label{eq:be:ncp}
 \begin{align}
 s^n - b &\ge 0 \label{eq:be:ncp:constraint} \\
 s^n - \Delta t\,\bu|_{s^n} \cdot \bn_{s^n} - \ell^n &\ge 0 \label{eq:be:ncp:residualpos} \\
-(s^n - b) \left(s^n - \Delta t\,\bu|_{s^n} \cdot \bn_{s^n} - \ell^n\right) &= 0 \label{eq:be:ncp:complementarity}
+(s^n - b) \left(s^n - \Delta t\,\bu|_{s^n} \cdot \bn_{s^n} - \ell^n\right) &= 0. \label{eq:be:ncp:complementarity}
 \end{align}
 \end{subequations}
 For clarity we have collected a source term\footnote{Quadrature could be used on the integral of SMB, e.g.~$\int_{t_{n-1}}^{t_n} a(t,x)\,dt \approx \Delta t\,a(t_n,x)$, but the integral form is preferred because of fast temporal variation in $a$; compare \cite{Cogleyetal2011}.} $\ell^n(x) = s^{n-1}(x) + \int_{t_{n-1}}^{t_n} a(t,x)\,dt$.  In Section \ref{sec:model} we will re-write the coupled NCP problem \eqref{eq:glen}--\eqref{eq:be:ncp} as a weak-form variational inequality (VI) for $s^n$ in an admissible subset of a Banach space.
@@ -330,7 +330,7 @@ It remains to identify a Sobolev space $\cX$ suitable for surface elevations.  H
 
 However, all major numerical models ignore overhangs \cite{IsaacStadlerGhattas2015,Jouvetetal2008,LofgrenAhlkronaHelanow2022,WirbelJarosch2020}, and fractures do not occur within the viscous-fluid physics of Stokes models.  The current work follows these patterns.  Future models might allow fractures, supplementing momentum conservation with an advected damage variable and a stress-failure criterion \cite{PralongFunk2005}, and the emergent macroscopic margin shapes might suggest a regularity assumption and Sobolev space for surface elevations in the viscous theory.
 
-We now attempt to choose $\cX$ based on mathematical considerations within the viscous theory.  Well-posedness of the fixed-domain Stokes problem \eqref{eq:glenstokes:weak}, and the surface trace bound in Lemma  \ref{lem:surfacetracebound}, generates a well-defined map from an admissible surface elevation $s\in \cK$ to the surface motion term $\bu|_s\cdot \bn_s$ in \eqref{eq:be:viearly}.  To clarify this map we use domain notation which emphasizes dependence on the elevation functions:
+We now attempt to choose $\cX$ based on mathematical considerations within the viscous theory.  Well-posedness of the fixed-domain Stokes problem \eqref{eq:glenstokes:weak}, and the surface trace bound in Lemma  \ref{lem:surfacetracebound}, generate a well-defined map from an admissible surface elevation $s\in \cK$ to the surface motion term $\bu|_s\cdot \bn_s$ in \eqref{eq:be:viearly}.  To clarify this map we use domain notation which emphasizes dependence on the elevation functions:
 \begin{equation}
 \Lambda(b,s) = \left\{(x,z)\,:\,b(x) < z < s(x)\right\} \subset \Omega \times \RR. \label{eq:domainfroms}
 \end{equation}
@@ -382,7 +382,7 @@ However, for well-posedness of VI \eqref{eq:be:viearly} we must conjecture that 
 \begin{conjecture}[Surface velocity is Lipschitz in the surface elevation] \label{conj:lipschitz}
 There exists $2 < \rr \le \infty$ so that if $R>0$ then there is $C(R)>0$ so that for $\sigma,s\in B_R \cap \cK = \{w \in \cK \,:\, \|w\|_{\cX} \le R\}$ we have
 \begin{equation}
-\big\|\bu|_\sigma - \bu|_s\big\|_{L^{\rr'}} \le C(R) \|\sigma-s\|_{\cX} \label{eq:ulipschitz}
+\big\|\bu|_\sigma - \bu|_s\big\|_{L^{\rr'}} \le C(R) \|\sigma-s\|_{\cX}. \label{eq:ulipschitz}
 \end{equation}
 \end{conjecture}
 
@@ -402,7 +402,7 @@ For $R>0$ recall $B_R = \{v\in \cX\,:\,\|v\|\le R\}$.  We say that a map $f:\cK 
 \begin{align}
 \Big|\Phi(\sigma)[\omega] - \Phi(s)[\omega]\Big| &\le \int_\Omega \Big|\bu|_\sigma - \bu|_s\Big| |\bn_\sigma| |\omega|\,dx + \int_\Omega \big|\bu|_s\big| |\bn_\sigma-\bn_s| |\omega|\,dx \\
     &\le \int_\Omega \Big|\bu|_\sigma - \bu|_s\Big| |\omega|\,dx + \int_\Omega \Big|\bu|_\sigma - \bu|_s\Big| |\grad \sigma| |\omega|\,dx \notag \\
-    &\qquad\qquad + \int_\Omega \big|\bu|_s\big| |\grad \sigma-\grad s| |\omega|\,dx \notag
+    &\qquad\qquad + \int_\Omega \big|\bu|_s\big| |\grad \sigma-\grad s| |\omega|\,dx. \notag
 \end{align}
 By applying H\"older's inequality to each of these integrals we have
 \begin{align}
@@ -440,7 +440,7 @@ A future existence result for \eqref{eq:be:vi} is possible, but we will regulari
 
 \section{Conjectural well-posedness for the regularized problem} \label{sec:conjectural}
 
-Theorem \ref{thm:glacierapp}, the main result to come, is numerical.  It bounds the FE surface elevation error by applying Theorem \ref{thm:abstractestimate} (next section), which uses the concepts of monotonicity \cite{Minty1963} and coercivity \cite[Chapter III]{KinderlehrerStampacchia1980}.
+Theorem \ref{thm:glacierapp}, the main result to come, bounds numerical error.  It bounds the FE surface elevation error by applying Theorem \ref{thm:abstractestimate} (next section), which uses the concepts of monotonicity \cite{Minty1963} and coercivity \cite[Chapter III]{KinderlehrerStampacchia1980}.
 
 \begin{definition} \label{def:monotonecoercive}
 Suppose $\cX$ is a Banach space, with norm $\|\cdot\|$, and $\cK\subset \cX$ is closed and convex.  A generally-nonlinear operator $f:\cK \to \cX'$ is called \emph{monotone} if
@@ -455,7 +455,7 @@ and \emph{strictly monotone} if equality implies $v=w$.  It is \emph{coercive} i
 
 Note that $\qq$-coercivity \cite{Bueler2021conservation} implies coercivity and strict monotonicity, and that $2$-coercivity is sometimes called \emph{strong monotonicity} \cite{Chow1989}.
 
-Theorem \ref{thm:abstractestimate} applies to operators $f:\cK\to\cX'$ which are $\qq$-coercive.  We would like to apply it to $F_{\Delta t}$, defined by \eqref{eq:be:Fdefine}, over the admissible subset $\cK \subset W^{1,\rr}(\Omega)$.  However, examples\footnote{These apparently-new examples also negatively resolve a previously open question of uniqueness, for elevation-independent SMB, in the SIA.} in Appendix \ref{app:noncoercive} show that, for any bedrock $b$ possessing local minima, the surface motion map $\Phi$ \eqref{eq:definePhi} alone is not $\qq$-coercive, nor strictly monotone, over $W^{1,\rr}(\Omega)$ for any $\rr$.  (However, since $F_{\Delta t}$ adds the integral $\int_\Omega s\omega$ to the surface motion term $\Delta t\,\Phi(s)[\omega]$, lack of coercivity for $\Phi$ does not dis-prove it for $F_{\Delta t}$.)
+Theorem \ref{thm:abstractestimate} applies to operators $f:\cK\to\cX'$ which are $\qq$-coercive.  We would like to apply it to $F_{\Delta t}$, defined by \eqref{eq:be:Fdefine}, over the admissible subset $\cK \subset W^{1,\rr}(\Omega)$.  However, examples\footnote{These apparently-new examples also negatively resolve a previously open question of uniqueness, for elevation-independent SMB, in the SIA.} in Appendix \ref{app:noncoercive} show that, for any bedrock $b$ possessing strict local minima in the interior of $\Omega$, the surface motion map $\Phi$ \eqref{eq:definePhi} alone is not $\qq$-coercive, nor strictly monotone, over $W^{1,\rr}(\Omega)$ for any $\rr$.  (However, since $F_{\Delta t}$ adds the integral $\int_\Omega s\omega$ to the surface motion term $\Delta t\,\Phi(s)[\omega]$, lack of coercivity for $\Phi$ does not dis-prove it for $F_{\Delta t}$.)
 
 The numerical experiments in Appendix \ref{app:numerical} show that the surface motion operator $\Phi$ is nonetheless \emph{nearly} $\qq$-coercive.  In these experiments thousands of high-resolution surface pairs $\sigma,s\in \cK\subset W^{1,\rr}(\Omega)$ were generated from glacier simulations over $\Omega \subset \RR^1$.  Coercivity ratios for $\Phi$ were computed with exponent $\rr=\qq=4$,
 \begin{equation}
@@ -568,7 +568,7 @@ Noting $1<\qq<\infty$, use Young's inequality with $\eps>0$ \cite[Appendix B.2]{
 where $\tilde C(\eps) = (\eps \qq)^{-\qq'/\qq} {\qq'}^{-1}$.  Choose $\eps>0$ so that $C(R_h) \eps \le \alpha/2$, and subtract:
 \begin{align}
 \frac{\alpha}{2} \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u]  \label{eq:abstract:five} \\
-  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^{\qq'} + \left(f(u_h)-f_h(u_h)\right)[u_h - v_h] \notag
+  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^{\qq'} + \left(f(u_h)-f_h(u_h)\right)[u_h - v_h]. \notag
 \end{align}
 For the first term note that $(f(u)-\ell)[v-u_h] = (f(u)-\ell)[v-u] + (f(u)-\ell)[u-u_h] \ge (f(u)-\ell)[u-u_h]$ by \eqref{eq:vi}; the VI implies that the infimum over $v\in\cK$ is achieved by $u$.  Take infimum over $\cK_h$ to show \eqref{eq:abstractestimate}.
 \end{proof}
@@ -610,7 +610,7 @@ If $\cK_h\subset\cK$ then the first term is zero.
 \begin{proof}  From the end of the proof of Theorem \ref{thm:abstractestimate}, recall that by \eqref{eq:vi}, $(f(u)-\ell)[u-u_h] = \min_{v\in\cK} (f(u)-\ell)[v-u_h]$.  Bound each dual pairing in \eqref{eq:abstractestimate} by $\|f(u)-\ell\|_{\cB'}$ times a $\cB$ norm, and use $\delta_h=0$.
 \end{proof}
 
-For an obstacle problem, consider the case where the inactive set for $u$ is all of $\Omega$, thus $f(u)-\ell=0$.  (For glaciers this situation occurs when the entire domain $\Omega$ is covered by ice.)  If also $\cK_h\subset \cK$ and $f=f_h$ then bounds \eqref{eq:abstractestimate} and \eqref{eq:Bnorm} reduce to their final terms.  Thus we get a Cea-type bound $\|u-u_h\| \le C \inf_{v_h\in\cK_h} \|v_h-u\|^{1/(\qq-1)}$, in a Banach space and for a $\qq$-coercive nonlinear operator, which is Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002} when $\qq=2$.
+For an obstacle problem, consider the case where the inactive set for $u$ is all of $\Omega$, thus $f(u)-\ell=0$.  (For glaciers this situation occurs when the entire domain $\Omega$ is covered by ice.)  If also $f=f_h$ then bounds \eqref{eq:abstractestimate} and \eqref{eq:Bnorm} reduce to their final terms.  Thus we get a Cea-type bound $\|u-u_h\| \le C \inf_{v_h\in\cK_h} \|v_h-u\|^{1/(\qq-1)}$, in a Banach space and for a $\qq$-coercive nonlinear operator, which is Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002} when $\qq=2$.
 
 In summary, Theorem \ref{thm:abstractestimate} generalizes Falk's bound, Strang's lemma, and Cea's lemma.  It is well-suited for the glacier application in the next section.
 
