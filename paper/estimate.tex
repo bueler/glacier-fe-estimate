@@ -149,9 +149,9 @@ The solution ice velocity $\bu(t,x,z)$ and pressure $p(t,x,z)$ are defined only 
 \begin{equation}
 \Lambda(t) = \left\{(x,z)\,:\,b(x) < z < s(t,x)\right\} \subset \Omega \times \RR. \label{eq:icydomain}
 \end{equation}
-This aspect of glacier modeling deserves emphasis:  The time-dependent 3D domain $\Lambda(t)$, on which the velocity and pressure are meaningful, is determined by the evolving surface elevation $s$, which is itself part of the coupled model solution.  The surface trace of the ice velocity---a Sobolev space for this field appears in Section \ref{sec:stokes}---is extended by zero, so that it is defined for all $t,x \in [0,T]\times\Omega$:
+This aspect of glacier modeling deserves emphasis:  The time-dependent 3D domain $\Lambda(t)$, on which the velocity and pressure are meaningful, is determined by the evolving surface elevation $s$, which is itself part of the coupled model solution.  The surface trace of the ice velocity---a Sobolev space for this field appears in Section \ref{sec:stokes}---is extended by zero, so that it is defined for all $(t,x) \in [0,T]\times\Omega$:
 \begin{equation}
-\bu|_s(t,x) = \begin{cases} \bu(t,x,s(t,x)), & s(t,x)>b(t,x) \\
+\bu|_s(t,x) = \begin{cases} \bu(t,x,s(t,x)), & s(t,x)>b(x) \\
                             \bzero, & \text{otherwise} .\end{cases} \label{eq:defineus}
 \end{equation}
 Compare flux extension by zero in \cite{SchoofHewitt2013}.
@@ -189,7 +189,7 @@ In the Stokes model the velocity and pressure solve the following equations:%
 \bu  &= \bzero && \text{non-sliding on $\Gamma_b(t)$} \label{eq:stokes:noslide}
 \end{align}
 \end{subequations}
-The density of ice $\rhoi$ and the acceleration of gravity $\bg$ are here assumed constant.  This Stokes problem \eqref{eq:glen}, \eqref{eq:stokes} is commonly discretized using finite elements (FEs) \cite{IsaacStadlerGhattas2015,Jouvetetal2008,Pattynetal2008}, and we will return to its FE approximation in Chapter \ref{sec:application}.
+The density of ice $\rhoi$ and the acceleration of gravity $\bg$ are here assumed constant.  This Stokes problem \eqref{eq:glen}, \eqref{eq:stokes} is commonly discretized using finite elements (FEs) \cite{IsaacStadlerGhattas2015,Jouvetetal2008,Pattynetal2008}, and we will return to its FE approximation in Section \ref{sec:application}.
 
 In summary at this point, this work considers an evolving free-surface flow for a glacier, subject to a signed climate which can add or remove ice, simultaneously with a non-Newtonian Stokes problem which must be solved within the evolving 3D domain of ice.  This coupled initial-boundary value problem, in strong form as \eqref{eq:icydomain}--\eqref{eq:stokes}, requires data $b(x)$ and $a(t,x)$, plus an initial surface elevation $s(0,x)$.  The solution variables are $s(t,x)$, which is defined everywhere over $[0,T]\times \Omega$ and subject to $s \ge b$, and $\bu(t,x,z)$ and $p(t,x,z)$, which are defined on $\Lambda(t)$ given by \eqref{eq:icydomain}.
 
@@ -219,7 +219,7 @@ For finite-dimensional DAE systems, implicit schemes are the standard choice, th
 \begin{align}
 s^n - b &\ge 0 \label{eq:be:ncp:constraint} \\
 s^n - \Delta t\,\bu|_{s^n} \cdot \bn_{s^n} - \ell^n &\ge 0 \label{eq:be:ncp:residualpos} \\
-(s^n - b) \left(s - \Delta t\,\bu|_{s^n} \cdot \bn_{s^n} - \ell^n\right) &= 0 \label{eq:be:ncp:complementarity}
+(s^n - b) \left(s^n - \Delta t\,\bu|_{s^n} \cdot \bn_{s^n} - \ell^n\right) &= 0 \label{eq:be:ncp:complementarity}
 \end{align}
 \end{subequations}
 For clarity we have collected a source term\footnote{Quadrature could be used on the integral of SMB, e.g.~$\int_{t_{n-1}}^{t_n} a(t,x)\,dt \approx \Delta t\,a(t_n,x)$, but the integral form is preferred because of fast temporal variation in $a$; compare \cite{Cogleyetal2011}.} $\ell^n(x) = s^{n-1}(x) + \int_{t_{n-1}}^{t_n} a(t,x)\,dt$.  In Section \ref{sec:model} we will re-write the coupled NCP problem \eqref{eq:glen}--\eqref{eq:be:ncp} as a weak-form variational inequality (VI) for $s^n$ in an admissible subset of a Banach space.
@@ -228,7 +228,7 @@ Backward Euler scheme \eqref{eq:be:ncp} is merely the simplest implicit choice. 
 
 Regarding simulation performance, one can make a case for implicit time-stepping based on a computational complexity analysis \cite{Bueler2023}.  Whether it leads to actual performance improvements will depend on positive answers to key questions:  Is the implicit-step VI problem well-posed?  Can it be solved accurately and efficiently?  Does the (coupled) implicit scheme have unconditional stability?  In the current paper we conjecture well-posedness and address FE accuracy.  Time-stepping stability, time-dependent convergence, and solver efficiency are all topics for further research.
 
-This paper is organized as follows.  Section \ref{sec:stokes} recalls the theory of the power-law Stokes problem, on a fixed 3D domain, for which we give a new bound on the surface trace of the velocity solution (Lemma \ref{lem:surfacetracebound}).  In Section \ref{sec:model} we re-formulate the coupled, implicit-step NCP problem \eqref{eq:glen}--\eqref{eq:be:ncp} as a VI weak form.  The key coupling is the surface motion term in \eqref{eq:be:ncp}, so in Section \ref{sec:conjectural} we hypothesize the coercivity of a regularized version (Conjecture \ref{conj:regcoercive}).  Physical and modeling experience, along with new numerical results (Appendix \ref{app:numerical}), support this conjecture.  Section \ref{sec:abstractestimate} considers the FE approximation of the temporally-discrete, but spatially-continuous, model, namely regularized VI problem \eqref{eq:regularizedvi}.  An error estimate for FE solutions of VI problems is proven (Theorem \ref{thm:abstractestimate}).  Though it makes coercivity and Lipshitz assumptions, this apparently-new bound permits nonlinear operators on Banach spaces, so it significantly extends a classical bilinear result by Falk \cite{Falk1974}.  In Section \ref{sec:application} we apply Theorem \ref{thm:abstractestimate} to the glacier problem, yielding our main result, Theorem \ref{thm:glacierapp}, which is a bound on FE error when solving \eqref{eq:regularizedvi}.  Meanings for each term in the bound, and consequences for glacier model and FE method choices, are addressed in Sections \ref{sec:application} and \ref{sec:conclusion}.  Note that we will use only six abbreviations which are standard in their fields: DAE (differential-algebraic equations), FE (finite element), NCP (nonlinear complementarity problem), PDE (partial differential equation), SMB (surface mass balance), and VI (variational inequality).
+This paper is organized as follows.  Section \ref{sec:stokes} recalls the theory of the power-law Stokes problem, on a fixed 3D domain, for which we give a new bound on the surface trace of the velocity solution (Lemma \ref{lem:surfacetracebound}).  In Section \ref{sec:model} we re-formulate the coupled, implicit-step NCP problem \eqref{eq:glen}--\eqref{eq:be:ncp} as a VI weak form.  The key coupling is the surface motion term in \eqref{eq:be:ncp}, so in Section \ref{sec:conjectural} we hypothesize the coercivity of a regularized version (Conjecture \ref{conj:regcoercive}).  Physical and modeling experience, along with new numerical results (Appendix \ref{app:numerical}), support this conjecture.  Section \ref{sec:abstractestimate} considers the FE approximation of the temporally-discrete, but spatially-continuous, model, namely regularized VI problem \eqref{eq:regularizedvi}.  An error estimate for FE solutions of VI problems is proven (Theorem \ref{thm:abstractestimate}).  Though it makes coercivity and Lipschitz assumptions, this apparently-new bound permits nonlinear operators on Banach spaces, so it significantly extends a classical bilinear result by Falk \cite{Falk1974}.  In Section \ref{sec:application} we apply Theorem \ref{thm:abstractestimate} to the glacier problem, yielding our main result, Theorem \ref{thm:glacierapp}, which is a bound on FE error when solving \eqref{eq:regularizedvi}.  Meanings for each term in the bound, and consequences for glacier model and FE method choices, are addressed in Sections \ref{sec:application} and \ref{sec:conclusion}.  Note that we will use only six abbreviations which are standard in their fields: DAE (differential-algebraic equations), FE (finite element), NCP (nonlinear complementarity problem), PDE (partial differential equation), SMB (surface mass balance), and VI (variational inequality).
 
 
 \section{Surface velocity from the Stokes sub-model} \label{sec:stokes}
@@ -342,7 +342,7 @@ For this to be well-defined, $s\in\cK\subset\cX$ must be sufficiently-regular.  
 \begin{equation}
 \|\omega\|_{W^{1,\rr}} = \left(\int_\Omega |\omega|^\rr + [L]^\rr \int_\Omega |\grad \omega|^\rr\right)^{1/\rr}. \label{eq:norm:Omega}
 \end{equation}
-(These are integrals over a fixed 2D domain, not over $\Lambda(b,s) \subset \RR^3$.)  We now show that if $r\ge 2$ and $s\in W^{1,\rr}(\Omega)$ then the measurable function $\bu|_s\cdot \bn_s$ is in the dual space $(W^{1,\rr}(\Omega))'$.
+(These are integrals over a fixed 2D domain, not over $\Lambda(b,s) \subset \RR^3$.)  We now show that if $\rr\ge 2$ and $s\in W^{1,\rr}(\Omega)$ then the measurable function $\bu|_s\cdot \bn_s$ is in the dual space $(W^{1,\rr}(\Omega))'$.
 
 \begin{lemma}[Surface motion is in the dual space] \label{lem:phibound}  Suppose $2 \le \rr \le \infty$ and that $s\in W^{1,\rr}(\Omega)$ satisfies $s\ge b$ and $s=b$ on $\partial\Omega$.  Then there is a constant $C>0$, depending on $\|s\|_{W^{1,\rr}}$, so that for all  $\omega\in W^{1,\rr}(\Omega)$,
 \begin{equation}
@@ -380,7 +380,7 @@ The admissible subset $\cK \subset \cX$ for surface elevations was already defin
 However, for well-posedness of VI \eqref{eq:be:viearly} we must conjecture that a norm of $\bu|_s$ is Lipschitz as a function of $s$.  Proving this would apparently require additional, detailed knowledge about Stokes problem \eqref{eq:glenstokes:weak}.  The dependence of scalar Laplacian-type equations on the domain is addressed in some literature, for example \cite{Daners2003}, but such results for Stokes problems are not known to this author.
 
 \begin{conjecture}[Surface velocity is Lipschitz in the surface elevation] \label{conj:lipschitz}
-There exists $2 < \rr \le \infty$ so that if $R>0$ then there is $C(R)>0$ so that for $\sigma,s\in B_R \cap \cK = \{t\in \cK\,:\,\|t\|_{\cX} \le R\}$ we have
+There exists $2 < \rr \le \infty$ so that if $R>0$ then there is $C(R)>0$ so that for $\sigma,s\in B_R \cap \cK = \{w \in \cK \,:\, \|w\|_{\cX} \le R\}$ we have
 \begin{equation}
 \big\|\bu|_\sigma - \bu|_s\big\|_{L^{\rr'}} \le C(R) \|\sigma-s\|_{\cX} \label{eq:ulipschitz}
 \end{equation}
@@ -388,8 +388,8 @@ There exists $2 < \rr \le \infty$ so that if $R>0$ then there is $C(R)>0$ so tha
 
 This Conjecture implies that $\Phi$ is Lipschitz, as follows.
 
-\begin{definition} \label{def:lipshitz}
-For $R>0$ let $B_R = \{v\in \cX\,:\,\|v\|\le R\}$.  We say that a map $f:\cK \to \cX'$ is \emph{Lipshitz on bounded subsets of $\cK$} if for every $R>0$ there is $C(R)>0$ so that
+\begin{definition} \label{def:lipschitz}
+For $R>0$ let $B_R = \{v\in \cX\,:\,\|v\|\le R\}$.  We say that a map $f:\cK \to \cX'$ is \emph{Lipschitz on bounded subsets of $\cK$} if for every $R>0$ there is $C(R)>0$ so that
 \begin{equation}
 \|f(v)-f(w)\|_{\cX'} \le C(R) \|v-w\|_{\cX} \quad \text{ for all } v,w \in B_R \cap \cK.  \label{eq:liponbounded}
 \end{equation}
@@ -461,7 +461,7 @@ The numerical experiments in Appendix \ref{app:numerical} show that the surface 
 \begin{equation}
 \frac{(\Phi(\sigma) - \Phi(s))[\sigma - s]}{\|\sigma-s\|_{W^{1,4}}^{4}}, \label{eq:ratios}
 \end{equation}
-using surface velocities from a numerical Stokes model when evaluating $\Phi$.  By definition \eqref{eq:qcoercive}, if $\Phi$ were $4$-coercive over $\cX=W^{1,4}(\Omega)$, and if computations were exact, then these ratios would all exceed a constant $\alpha>0$.  Appendix \ref{app:numerical} shows that pairs yielding negative ratios do exist but that, under mesh refinement, they become rare.  Standard presentations of Stokes models for glaciers give no direct reason to expect these ratios should prefer positive values, but we see that the mean and median ratios are decidely positive, and under refinement they stabilize away from zero.
+using surface velocities from a numerical Stokes model when evaluating $\Phi$.  By definition \eqref{eq:qcoercive}, if $\Phi$ were $4$-coercive over $\cX=W^{1,4}(\Omega)$, and if computations were exact, then these ratios would all exceed a constant $\alpha>0$.  Appendix \ref{app:numerical} shows that pairs yielding negative ratios do exist but that, under mesh refinement, they become less common.  Standard presentations of Stokes models for glaciers give no direct reason to expect these ratios should prefer positive values, but we see that the mean and median ratios are decidedly positive, and under refinement they stabilize away from zero.
 
 To suggest why coercivity might occur, we can rewrite the surface motion $\Phi(s)$ in a different manner.  Extend $\omega\in \cX$ to $\Lambda(b,s)$ as $\tilde\omega(x,z)=\omega(x)$, i.e.~independent of $z$, and define the glaciological ice flux $\bq(s) = \int_b^s \bU\,dz$ \cite{SchoofHewitt2013}, where $\bU=(u_1,u_2)$ is the horizontal velocity in $\bu=(u_1,u_2,w)$.  Definition \eqref{eq:definePhi}, the non-sliding assumption ($\bu|_{\Gamma_b}=\bzero$), the divergence theorem, and incompressibility yields
 \begin{align}
@@ -526,7 +526,7 @@ f(u)[v-u] \ge \ell[v-u] \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
 Problem \eqref{eq:regularizedvi} is in this form, while the best known example for \eqref{eq:vi} is the obstacle problem for the Laplacian operator; see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis.
 
-If $f:\cK \to \cX'$ is monotone and coercive (Definition \ref{def:monotonecoercive}), and continuous on finite-dimensional subspaces, then problem \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}, and if $f$ is strictly monotone then the solution is unique.  If $f$ is $\qq$-coercive then it is coercive and strictly monotone, and if $f$ is Lipschitz on bounded subsets (Definition \ref{def:lipshitz}) then it is continuous.  Recall that $f(u)-\ell \in \cX'$ is generally nonzero if $u$ solves \eqref{eq:vi}, but $f(u)-\ell=0$ if $u$ is in the interior of $\cK$.  Under sufficient regularity assumptions, an NCP strong form follows from \eqref{eq:vi}.
+If $f:\cK \to \cX'$ is monotone and coercive (Definition \ref{def:monotonecoercive}), and continuous on finite-dimensional subspaces, then problem \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}, and if $f$ is strictly monotone then the solution is unique.  If $f$ is $\qq$-coercive then it is coercive and strictly monotone, and if $f$ is Lipschitz on bounded subsets (Definition \ref{def:lipschitz}) then it is continuous.  Recall that $f(u)-\ell \in \cX'$ is generally nonzero if $u$ solves \eqref{eq:vi}, but $f(u)-\ell=0$ if $u$ is in the interior of $\cK$.  Under sufficient regularity assumptions, an NCP strong form follows from \eqref{eq:vi}.
 
 Now suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, an FE space of continuous, piecewise-polynomial functions defined on a mesh.  Let $\cK_h\subset \cX_h$ be a closed and convex subset, and suppose $f_h:\cK_h\to\cX'$ is an approximation of $f$.  Generally $\cK_h \nsubset \cK$---we will \emph{not} assume initially that FE states are continuum admissible---and generally $f_h\ne f$ because of quadrature and other approximations.  In fact, in standard FE Stokes-type glacier simulations both $\cK_h \nsubset \cK$ and $f_h\ne f$ apply for practical reasons, though in Section \ref{sec:application} we arrange that $\cK_h\subset\cK$ by construction of the meshed bed elevation.
 
@@ -620,13 +620,13 @@ Practical models for glaciers, based on unstructured meshes in the 2D map-plane,
 \begin{center}
 \includegraphics[width=0.7\textwidth]{genfigs/extruded.pdf}
 \end{center}
-\caption{The numerical Stokes problem computes the velocity $\bu_h$ on 3D polygonal domain between $P_1$ functions $b_h$ and $s_h$.  Evaluating $F_{\Delta t}^{\eps,h}$, formula \eqref{eq:regularizedF}, uses the surface trace $\bu_h|_{s_h}$.}
+\caption{The numerical Stokes problem computes the velocity $\bu_h$ on 3D polygonal domain between $P_1$ functions $b_h$ and $s_h$.  Evaluating $F_{\Delta t}^{\eps,h}$, formula \eqref{eq:fe:regularizedF}, uses the surface trace $\bu_h|_{s_h}$.}
 \label{fig:fe:domain}
 \end{figure}
 
-We will assume that the original bed elevation $b$ is well-behaved, $b\in C^1(\bar\Omega)$.  (In practice the data $b$ is a high-resolution map derived from ice-penetrating radar \cite{Morlighemetal2017}, often over a much finer mesh than $\cT_h$.)  For the discrete bed $b_h\in\cT_h$ we suppose $b_h=b$ along $\partial\Omega$.  By application of monotone restriction, $b_h = R_h^{\oplus} b$ \eqref{eq:monotoneop}, or otherwise, we achieve $b_h \ge b$; this eliminates a bound term when Theorem \ref{thm:abstractestimate} is applied below.  Following \eqref{eq:be:admissible}, we define $\cK_h=\{\sigma_h \in \cX_h\,:\,\sigma_h|_{\partial\Omega}=b_h|_{\partial\Omega} \text{ and } \sigma_h\ge b_h\}$, so that $\cK_h\subset\cK \subset \cX$ where $\cX = W^{1,4}(\Omega)$.
+We will assume that the original bed elevation $b$ is well-behaved, $b\in C^1(\bar\Omega)$.  (In practice the data $b$ is a high-resolution map derived from ice-penetrating radar \cite{Morlighemetal2017}, often over a much finer mesh than $\cT_h$.)  For the discrete bed $b_h\in\cX_h$ we suppose $b_h=b$ along $\partial\Omega$.  By application of monotone restriction, $b_h = R_h^{\oplus} b$ \eqref{eq:monotoneop}, or otherwise, we achieve $b_h \ge b$; this eliminates a bound term when Theorem \ref{thm:abstractestimate} is applied below.  Following \eqref{eq:be:admissible}, we define $\cK_h=\{\sigma_h \in \cX_h\,:\,\sigma_h|_{\partial\Omega}=b_h|_{\partial\Omega} \text{ and } \sigma_h\ge b_h\}$, so that $\cK_h\subset\cK \subset \cX$ where $\cX = W^{1,4}(\Omega)$.
 
-From these geometrical and discrete-space choices, recall the regularised VI problem \eqref{eq:regularizedvi}, with $F^\eps_{\Delta t}$ defined by \eqref{eq:regularizedPhi} and \eqref{eq:regularizedF}.  Approximate evaluation of $F^\eps_{\Delta t}(s_h)$ requires the numerical solution of the power-law Stokes problem \eqref{eq:glenstokes:weak} over a meshed 3D domain $\Lambda(b_h,s_h)$ (see \eqref{eq:domainfroms}), the lower and upper surfaces of which are given by admissible FE functions $b_h\in\cX_h$ and $s_h \in \cK_h$, respectively.  Solvability of this Stokes problem using inf-sup stable elements is addressed by \cite{Belenkietal2012,JouvetRappaz2011}.  The numerical velocity from solving \eqref{eq:glenstokes:weak} over $\Lambda(b_h,s_h)$ is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  (Note that $\bu_h$ is \emph{not} the exact solution of that Stokes problem.)  We make no assumptions on the solution process for \eqref{eq:glenstokes:weak}, except that it must generate $\bu_h|_{s_h}$.
+From these geometrical and discrete-space choices, recall the regularized VI problem \eqref{eq:regularizedvi}, with $F^\eps_{\Delta t}$ defined by \eqref{eq:regularizedPhi} and \eqref{eq:regularizedF}.  Approximate evaluation of $F^\eps_{\Delta t}(s_h)$ requires the numerical solution of the power-law Stokes problem \eqref{eq:glenstokes:weak} over a meshed 3D domain $\Lambda(b_h,s_h)$ (see \eqref{eq:domainfroms}), the lower and upper surfaces of which are given by admissible FE functions $b_h\in\cX_h$ and $s_h \in \cK_h$, respectively.  Solvability of this Stokes problem using inf-sup stable elements is addressed by \cite{Belenkietal2012,JouvetRappaz2011}.  The numerical velocity from solving \eqref{eq:glenstokes:weak} over $\Lambda(b_h,s_h)$ is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  (Note that $\bu_h$ is \emph{not} the exact solution of that Stokes problem.)  We make no assumptions on the solution process for \eqref{eq:glenstokes:weak}, except that it must generate $\bu_h|_{s_h}$.
 
 These preliminaries allow us to define the numerical operator and VI problem.  Following \eqref{eq:definePhi}, \eqref{eq:phisia}, \eqref{eq:regularizedPhi}, and \eqref{eq:regularizedF}, with parameters $\Delta t>0$, $0<\eps\ll 1$, $\eta_0>0$, and for $s_h \in \cK_h$ and $\omega_h\in\cX_h$ we define
 \begin{align}
@@ -797,7 +797,7 @@ Now let $z=\|\bu\|_\cV$.  We have proved that $z^\pp \le c_0 + c_1 z$ for $\pp>1
 
 \section{The surface motion map is not strictly monotone} \label{app:noncoercive}
 
-It is reasonable to suppose that a glacier flow model will produce no flow for an admissible surface elevation $s\in \cX=W^{1,r}(\Omega)$ which is horizontal everywhere on the ice.  In terms of the inactive set $\Omega_I=\{x\in\Omega\,:\,s(x)>b(x)\}$ and the domain $\Lambda(b,s)$ from \eqref{eq:domainfroms}, this property says that if $\grad s=0$ a.e.~in $\Omega_I$ then $\bu=\bzero$ on $\Lambda(b,s)$.  This holds for the non-sliding Stokes model considered in the paper, but it would also hold for most sliding laws, and in shallow ice approximation models \cite{JouvetBueler2012} as well.
+It is reasonable to suppose that a glacier flow model will produce no flow for an admissible surface elevation $s\in \cX=W^{1,\rr}(\Omega)$ which is horizontal everywhere on the ice.  In terms of the inactive set $\Omega_I=\{x\in\Omega\,:\,s(x)>b(x)\}$ and the domain $\Lambda(b,s)$ from \eqref{eq:domainfroms}, this property says that if $\grad s=0$ a.e.~in $\Omega_I$ then $\bu=\bzero$ on $\Lambda(b,s)$.  This holds for the non-sliding Stokes model considered in the paper, but it would also hold for most sliding laws, and in shallow ice approximation models \cite{JouvetBueler2012} as well.
 
 \begin{figure}[ht]
 \begin{center}
