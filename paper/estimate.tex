@@ -365,7 +365,7 @@ Note that if $\alpha\ge 0$ then $(1+\alpha)^{\rr/2} \le 2^{(\rr-2)/2} (1+\alpha^
 \left|\int_\Omega \bu|_s\cdot \bn_s \, \omega\,dx\right| &\le C \left(2^{(\rr-2)/2} \int_\Omega 1 + |\grad s|^\rr\,dx\right)^{1/(\pp'\rr)} \|\omega\|_{L^{\pp'\rr'}} \label{eq:phibound:one} \\
   &\le C \left(|\Omega| + [L]^{-\rr}\|s\|_{W^{1,\rr}}^\rr\right)^{1/(\pp'\rr)} \|\omega\|_{L^{\pp'\rr'}}. \notag
 \end{align}
-Since $2 \le \pp' \le \pp'\rr' < \infty$, by Sobolev's inequality, e.g.~Theorem 8.8 from \cite{LiebLoss1997} using $n=2$, $k=m=1$, $p=\rr$, and $\omega=\pp'\rr'$, we have $\|\omega\|_{L^{\pp'\rr'}} \le C \|\omega\|_{W^{1,\rr}}$, thus \eqref{eq:phibound:early}.
+Since $2 \le \pp' \le \pp'\rr' < \infty$, by Sobolev's inequality \cite[Theorem 8.8, for example]{LiebLoss1997}, we have $\|\omega\|_{L^{\pp'\rr'}} \le C \|\omega\|_{W^{1,\rr}}$, thus \eqref{eq:phibound:early}.
 \end{proof}
 
 Because $\Omega\subset \RR^2$, if additionally $\rr>2$ then $W^{1,\rr}(\Omega) \hookrightarrow C(\bar\Omega)$.  Note that in Section \ref{sec:application} the FE approximation $s_h\approx s$ will be continuous and piecewise-linear.  Thus for $2 < \rr \le \infty$ we define from now on
@@ -487,7 +487,7 @@ For $0<\eps \ll 1$ and $\omega \in \cX$, define this convex combination:
 \begin{equation} \label{eq:regularizedPhi}
 \Phi^\eps(s)[\omega] = (1-\eps) \Phi(s)[\omega] + \eps \PhiSIA(s)[\omega].
 \end{equation}
-This regularizes the Stokes surface motion \eqref{eq:definePhi} using a small amount of the SIA formula \eqref{eq:phisia}.  If $\Phi$ is Lipschitz on bounded subsets of $\cK$ (Lemma \ref{lem:philipschitz}) then so is $\Phi^\eps$.  It is reasonable to suppose $\Phi^\eps$ is a $4$-coercive operator over $W^{1,4}(\Omega)$ because of properties of the $\pp$-Laplacian operator \cite[for example]{ChoeLewis1991}; with $\nn=3$ and $\eta_0>0$ the regularization is a multiple of the $4$-Laplacian, which is $4$-coercive over $W^{1,4}(\Omega)$.
+This regularizes the Stokes surface motion \eqref{eq:definePhi} using a small amount from formula \eqref{eq:phisia}.  If $\Phi$ is Lipschitz on bounded subsets of $\cK$ (Lemma \ref{lem:philipschitz}) then so is $\Phi^\eps$.  It is reasonable to suppose $\Phi^\eps$ is a $4$-coercive operator over $W^{1,4}(\Omega)$ because of properties of the $\pp$-Laplacian operator \cite[for example]{ChoeLewis1991}; with $\nn=3$ and $\eta_0>0$ the regularization is a multiple of the $4$-Laplacian, which is $4$-coercive over $W^{1,4}(\Omega)$.
 
 The numerical experiments in Appendix \ref{app:numerical} use values $\eps=0.01$ and $\eta_0=500$ meters in \eqref{eq:phisia} and \eqref{eq:regularizedPhi}.  The observed effect is that negative coercivity ratios \eqref{eq:ratios} disappear at high spatial resolution, and the distribution of ratios is bounded away from zero.  However, we are not able to \emph{prove} that $\Phi^\eps$ in \eqref{eq:regularizedPhi} is $4$-coercive.  A proof would seem to depend on novel insights into the glaciological Stokes problem.  Thus the numerical analysis in Section \ref{sec:application} will be based on the following second conjecture.
 
@@ -597,15 +597,20 @@ If $b_h=R_h^{\oplus} b$ then $b_h(x)\ge b(x)$ for all $x\in \Omega$ (Figure \ref
 
 The appearance of a consistency error $\delta_h = f(u_h)-f_h(u_h)$ in bound \eqref{eq:abstractestimate}, evaluated at $u_h\in \cK_h$, suggests Strang's first lemma \cite[Theorem 4.1.1]{Ciarlet2002}, but here in a nonlinear case.  In the glacier application this term will be related to the maximum error made in approximating the (Stokes) ice velocity; see Theorem \ref{thm:glacierapp}.
 
-The original \emph{a priori} VI bound by Falk \cite{Falk1974} computes residual norms, and thus loses the active-set information implicit in the residual $f(u)-\ell \in \cX'$.  The following Corollary makes the connection, recovering \cite[Theorem 1]{Falk1974} when $\cX,\cB$ are Hilbert spaces, the operator $f(v)[w]=a(v,w)$ is bilinear, continuous, and uniformly-elliptic, and the discrete operator is conforming ($f=f_h$).  Here uniform ellipticity coincides with $2$-coercivity \eqref{eq:qcoercive}, and continuity implies \eqref{eq:liponbounded}.
+The original \emph{a priori} VI bound by Falk \cite{Falk1974} computes residual norms, and thus loses the active-set information implicit in the residual $f(u)-\ell \in \cX'$.  The following Corollary makes the connection, recovering \cite[Theorem 1]{Falk1974} when $\cX,\cB$ are Hilbert spaces (e.g.~$\cB=L^2(\Omega)$), the operator $f(v)[w]=a(v,w)$ is bilinear, continuous, and uniformly-elliptic, and the discrete operator is conforming ($f=f_h$).  Here uniform ellipticity coincides with $2$-coercivity \eqref{eq:qcoercive}, and continuity implies \eqref{eq:liponbounded}.
 
-\begin{corollary}  \label{cor:abstractestimate:Bnorm}  Suppose that $\cX$ continuously and densely embeds into a larger Banach space: $\cX \hookrightarrow \cB$, $\bar{\cX} = \cB$, and $\cB' \subset \cX'$, and suppose $\cK_h\subset \cK$.  Suppose $f:\cK\to\cB'$, $\ell\in\cB'$, and $f_h=f$.  Under the assumptions of Theorem \ref{thm:abstractestimate} we have
-\begin{equation}
-\frac{\alpha}{2} \|u-u_h\|^\qq \le \inf_{v_h\in\cK_h} \Big\{ \|f(u)-\ell\|_{\cB'} \|v_h-u\|_{\cB} + C \|v_h - u\|^{\qq'} \Big\}. \label{eq:Bnorm}
-\end{equation}
+\begin{corollary}  \label{cor:abstractestimate:Bnorm}  Suppose that $\cX$ continuously and densely embeds into a larger Banach space: $\cX \hookrightarrow \cB$, $\bar{\cX} = \cB$, and $\cB' \subset \cX'$.  Suppose $f:\cK\to\cB'$, $\ell\in\cB'$, and $f_h=f$.  Under the assumptions of Theorem \ref{thm:abstractestimate} we have
+\begin{align}
+\frac{\alpha}{2} \|u-u_h\|^\qq &\le \|f(u)-\ell\|_{\cB'} \inf_{v\in\cK} \|v-u_h\|_{\cB} \label{eq:Bnorm} \\
+   &\qquad + \inf_{v_h\in\cK_h} \Big\{ \|f(u)-\ell\|_{\cB'} \|v_h-u\|_{\cB} + C \|v_h - u\|^{\qq'} \Big\}. \notag
+\end{align}
+If $\cK_h\subset\cK$ then the first term is zero.
 \end{corollary}
 
-For an obstacle problem, consider the case where the active set for $u$ is all of $\Omega$, thus $f(u)-\ell=0$.  If also $\cK_h\subset \cK$ and $f=f_h$ then bounds \eqref{eq:abstractestimate} and \eqref{eq:Bnorm} reduce to their final terms.  Thus we get Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002}, but in a Banach space and for a $q$-coercive nonlinear operator.  For glaciers this situation occurs when the entire domain $\Omega$ is covered by ice.
+\begin{proof}  From the end of the proof of Theorem \ref{thm:abstractestimate}, recall that by \eqref{eq:vi}, $(f(u)-\ell)[u-u_h] = \min_{v\in\cK} (f(u)-\ell)[v-u_h]$.  Bound each dual pairing in \eqref{eq:abstractestimate} by $\|f(u)-\ell\|_{\cB'}$ times a $\cB$ norm, and use $\delta_h=0$.
+\end{proof}
+
+For an obstacle problem, consider the case where the inactive set for $u$ is all of $\Omega$, thus $f(u)-\ell=0$.  (For glaciers this situation occurs when the entire domain $\Omega$ is covered by ice.)  If also $\cK_h\subset \cK$ and $f=f_h$ then bounds \eqref{eq:abstractestimate} and \eqref{eq:Bnorm} reduce to their final terms.  Thus we get Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002}, but in a Banach space and for a $\qq$-coercive nonlinear operator.
 
 In summary, Theorem \ref{thm:abstractestimate} generalizes Falk's bound, Strang's lemma, and Cea's lemma.  It is well-suited for the glacier application in the next section.
 
