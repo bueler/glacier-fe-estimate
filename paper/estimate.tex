@@ -473,21 +473,19 @@ where $\hat\bn$ is the outward unit normal and $dS$ is the area element along $\
 \newcommand{\bqSIA}{\bq^{\text{SIA}}}
 \newcommand{\PhiSIA}{\Phi^{\text{SIA}}}
 
-To enhance coercivity of the surface motion $\Phi$, coming from the Stokes surface velocity, consider the isothermal shallow ice approximation \cite{GreveBlatter2009}.  It yields an expression for the ice flux:
+To enhance coercivity of the surface motion $\Phi$, coming from the Stokes surface velocity, consider the ice flux in the isothermal shallow ice approximation \cite{GreveBlatter2009}:
 \begin{equation} \label{eq:qsia}
 \bqSIA(s) = - \Gamma (s-b)^{\nn+2} |\grad s|^{\nn-1} \grad s.
 \end{equation}
-Here $\nn$ is Glen's exponent and $\Gamma>0$ is an ice softness constant computable from the viscosity scale $\nu_\pp$ in \eqref{eq:glen}.  By argument \eqref{eq:fluxformPhi}, the surface motion in the shallow ice approximation therefore has the form
+Here $\nn$ is Glen's exponent and $\Gamma>0$ is an ice softness constant computable from the viscosity scale $\nu_\pp$ in \eqref{eq:glen}.  Formula \eqref{eq:qsia} does \emph{not} describe the ice flux in the full Stokes model; we will only use it for regularization.  Because it degenerates at the glacier margin as the ice thickness goes to zero, we replace $s-b$ with a fixed value $\eta_0>0$.  Via an argument like \eqref{eq:fluxformPhi}, the corresponding surface motion has the form
 \begin{equation}
-\PhiSIA(s)[\omega] = -\int_\Omega \bqSIA(s)\cdot \grad \omega = \Gamma \int_\Omega (s-b)^{\nn+2} |\grad s|^{\nn-1} \grad s \cdot \grad \omega \label{eq:phisia}
+\PhiSIA(s)[\omega] = \Gamma \eta_0^{\nn+2} \int_\Omega |\grad s|^{\nn-1} \grad s \cdot \grad \omega \label{eq:phisia}
 \end{equation}
-for $\omega \in \cX$.  Formulas \eqref{eq:qsia} and \eqref{eq:phisia} do \emph{not} describe the ice flux and surface motion, respectively, in the full Stokes model; we will only use them for regularization.  Because they degenerate at the glacier margin, where the ice thickness $s-b$ goes to zero, below we will apply them using a fixed ice thickness $\eta_0>0$, replacing $s-b$ with $\eta_0>0$.
-
-For $0<\eps \ll 1$ and $\omega \in \cX$, define this convex combination:
+for $\omega \in \cX$.  Now for $0<\eps \ll 1$, the regularization is this convex combination:
 \begin{equation} \label{eq:regularizedPhi}
 \Phi^\eps(s)[\omega] = (1-\eps) \Phi(s)[\omega] + \eps \PhiSIA(s)[\omega].
 \end{equation}
-This regularizes the Stokes surface motion \eqref{eq:definePhi} using a small amount from formula \eqref{eq:phisia}.  If $\Phi$ is Lipschitz on bounded subsets of $\cK$ (Lemma \ref{lem:philipschitz}) then so is $\Phi^\eps$, at least when $\rr\ge\nn+1$, because then $|\grad s|^{\nn-1}\grad s \in L^{\rr/\nn}(\Omega) \subset L^{\rr'}(\Omega)$.  It is reasonable to suppose $\Phi^\eps$ is a $4$-coercive operator over $\cK\subset W^{1,4}(\Omega)$ because of properties of the $4$-Laplacian operator \cite[for example]{ChoeLewis1991}; with $\nn=3$ and $\eta_0>0$ the regularization is a multiple of the $4$-Laplacian, which is $4$-coercive over $\cK$ because differences $\sigma-s$ of elements of $\cK$ have zero trace on $\partial\Omega$.
+This regularizes the Stokes surface motion \eqref{eq:definePhi} using a small amount from formula \eqref{eq:phisia}.  If $\Phi$ is Lipschitz on bounded subsets of $\cK$ (Lemma \ref{lem:philipschitz}) then so is $\Phi^\eps$, at least when $\rr\ge\nn+1$, because then $|\grad s|^{\nn-1}\grad s \in L^{\rr/\nn}(\Omega) \subset L^{\rr'}(\Omega)$.  It is reasonable to suppose $\Phi^\eps$ is a $4$-coercive operator over $\cK\subset W^{1,4}(\Omega)$ because of properties of the $4$-Laplacian operator \cite[for example]{ChoeLewis1991}; with $\nn=3$ and $\eta_0>0$, $\PhiSIA$ in \eqref{eq:phisia} is a multiple of the $4$-Laplacian, which is $4$-coercive over $\cK$ because differences $\sigma-s$ of elements of $\cK$ have zero trace on $\partial\Omega$.
 
 The numerical experiments in Appendix \ref{app:numerical} use values $\eps=0.01$ and $\eta_0=500$ meters in \eqref{eq:phisia} and \eqref{eq:regularizedPhi}.  The observed effect is that negative values of the regularized coercivity ratios, i.e.~\eqref{eq:ratios} with $\Phi^\eps$ in place of $\Phi$, disappear at high spatial resolution, and the distribution of ratios is bounded away from zero.  However, we are not able to \emph{prove} that $\Phi^\eps$ in \eqref{eq:regularizedPhi} is $4$-coercive.  A proof would seem to depend on novel insights into the glaciological Stokes problem.  Thus the numerical analysis in Section \ref{sec:application} will be based on the following second conjecture.
 
