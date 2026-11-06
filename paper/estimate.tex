@@ -342,9 +342,9 @@ For this to be well-defined, $s\in\cK\subset\cX$ must be sufficiently-regular.  
 \begin{equation}
 \|\omega\|_{W^{1,\rr}} = \left(\int_\Omega |\omega|^\rr + [L]^\rr \int_\Omega |\grad \omega|^\rr\right)^{1/\rr}. \label{eq:norm:Omega}
 \end{equation}
-(These are integrals over a fixed 2D domain, not over $\Lambda(b,s) \subset \RR^3$.)  We now show that if $\rr\ge 2$ and $s\in W^{1,\rr}(\Omega)$ then the measurable function $\bu|_s\cdot \bn_s$ is in the dual space $(W^{1,\rr}(\Omega))'$.
+(These are integrals over a fixed 2D domain, not over $\Lambda(b,s) \subset \RR^3$.)  We now show that if $\rr\ge 2$, $s\in W^{1,\rr}(\Omega)$, and $\Lambda(b,s)$ is Lipschitz, then the measurable function $\bu|_s\cdot \bn_s$ is in the dual space $(W^{1,\rr}(\Omega))'$.
 
-\begin{lemma}[Surface motion is in the dual space] \label{lem:phibound}  Suppose $2 \le \rr \le \infty$ and that $s\in W^{1,\rr}(\Omega)$ satisfies $s\ge b$ and $s=b$ on $\partial\Omega$.  Then there is a constant $C>0$, depending on $\|s\|_{W^{1,\rr}}$, so that for all  $\omega\in W^{1,\rr}(\Omega)$,
+\begin{lemma}[Surface motion is in the dual space] \label{lem:phibound}  Suppose $2 \le \rr \le \infty$ and that $s\in W^{1,\rr}(\Omega)$ satisfies $s\ge b$ and $s=b$ on $\partial\Omega$, and that $\Lambda(b,s)$ is a bounded Lipschitz domain.  Then there is a constant $C>0$, depending on $\|s\|_{W^{1,\rr}}$ and on the geometry of $\Lambda(b,s)$ through Lemma \ref{lem:surfacetracebound}, so that for all  $\omega\in W^{1,\rr}(\Omega)$,
 \begin{equation}
 \left|\int_\Omega \bu|_s\cdot \bn_s \,\omega\,dx\right| \le C\, \|\omega\|_{W^{1,\rr}}. \label{eq:phibound:early}
 \end{equation}
@@ -485,12 +485,12 @@ for $\omega \in \cX$.  Now for $0<\eps \ll 1$, the regularization is this convex
 \begin{equation} \label{eq:regularizedPhi}
 \Phi^\eps(s)[\omega] = (1-\eps) \Phi(s)[\omega] + \eps \PhiSIA(s)[\omega].
 \end{equation}
-This regularizes the Stokes surface motion \eqref{eq:definePhi} using a small amount from formula \eqref{eq:phisia}.  If $\Phi$ is Lipschitz on bounded subsets of $\cK$ (Lemma \ref{lem:philipschitz}) then so is $\Phi^\eps$, at least when $\rr\ge\nn+1$, because then $|\grad s|^{\nn-1}\grad s \in L^{\rr/\nn}(\Omega) \subset L^{\rr'}(\Omega)$.  It is reasonable to suppose $\Phi^\eps$ is a $4$-coercive operator over $\cK\subset W^{1,4}(\Omega)$ because of properties of the $4$-Laplacian operator \cite[for example]{ChoeLewis1991}; with $\nn=3$ and $\eta_0>0$, $\PhiSIA$ in \eqref{eq:phisia} is a multiple of the $4$-Laplacian, which is $4$-coercive over $\cK$ because differences $\sigma-s$ of elements of $\cK$ have zero trace on $\partial\Omega$.
+This regularizes the Stokes surface motion \eqref{eq:definePhi} using a small amount from formula \eqref{eq:phisia}.  If $\Phi$ is Lipschitz on bounded subsets of $\cK$ (Lemma \ref{lem:philipschitz}) then so is $\Phi^\eps$, at least when $\rr\ge\nn+1$.  This follows from the inequality $\big||\xi|^{\nn-1}\xi - |\zeta|^{\nn-1}\zeta\big| \le \nn (|\xi|+|\zeta|)^{\nn-1}|\xi-\zeta|$ for $\xi,\zeta\in\RR^2$, and H\"older's inequality with exponents $\rr/(\nn-1)$, $\rr$, $\rr$, whose reciprocals sum to $(\nn+1)/\rr \le 1$.  It is reasonable to suppose $\Phi^\eps$ is a $4$-coercive operator over $\cK\subset W^{1,4}(\Omega)$ because of properties of the $4$-Laplacian operator \cite[for example]{ChoeLewis1991}; with $\nn=3$ and $\eta_0>0$, $\PhiSIA$ in \eqref{eq:phisia} is a multiple of the $4$-Laplacian, which is $4$-coercive over $\cK$ because differences $\sigma-s$ of elements of $\cK$ have zero trace on $\partial\Omega$.
 
 The numerical experiments in Appendix \ref{app:numerical} use values $\eps=0.01$ and $\eta_0=500$ meters in \eqref{eq:phisia} and \eqref{eq:regularizedPhi}.  The observed effect is that negative values of the regularized coercivity ratios, i.e.~\eqref{eq:ratios} with $\Phi^\eps$ in place of $\Phi$, disappear at high spatial resolution, and the distribution of ratios is bounded away from zero.  However, we are not able to \emph{prove} that $\Phi^\eps$ in \eqref{eq:regularizedPhi} is $4$-coercive.  A proof would seem to depend on novel insights into the glaciological Stokes problem.  Thus the numerical analysis in Section \ref{sec:application} will be based on the following second conjecture.
 
 \begin{conjecture}[Regularized surface motion $\Phi^\eps(s)$ is $4$-coercive on $\cK\subset W^{1,4}$] \label{conj:regcoercive}
-Let $\cX = W^{1,4}(\Omega)$.  Fix $b\in C^1(\bar\Omega)$ and let $\cK=\{\sigma\in\cX\,:\,\sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$.  Suppose Conjecture \ref{conj:lipschitz} holds for $\rr=4$.  There exists $\eps \in (0,1)$ and $\eta_0>0$, and $\alpha>0$, so that
+Let $\cX = W^{1,4}(\Omega)$ and $\nn=3$ in \eqref{eq:phisia}.  Fix $b\in C^1(\bar\Omega)$ and let $\cK=\{\sigma\in\cX\,:\,\sigma\ge b \text{ and } \sigma|_{\partial\Omega}=b|_{\partial\Omega}\}$.  Suppose Conjecture \ref{conj:lipschitz} holds for $\rr=4$.  There exists $\eps \in (0,1)$ and $\eta_0>0$, and $\alpha>0$, so that
 \begin{equation}
 \left(\Phi^\eps(\sigma) - \Phi^\eps(s)\right)[\sigma-s] \ge \alpha \|\sigma-s\|_{\cX}^4 \qquad \text{for all } \sigma,s\in\cK. \label{eq:regcoercive}
 \end{equation}
