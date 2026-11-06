@@ -585,15 +585,17 @@ However, when $\cK_h \not\subset \cK$ the first term can be positive.  This can 
 \begin{center}
 \input{tikz/nonadmissible.tex} \quad \input{tikz/monoadmissible.tex}
 \end{center}
-\caption{Left: If $b_h=\pi_h b$ is the interpolant of $b$ then generally $\cK_h\nsubset\cK$.  Right: Defining $b_h=R_h^{\oplus} b$, using \eqref{eq:monotoneop}, implies $b_h\ge b$ and $\cK_h\subset\cK$.}
+\caption{Left: If $b_h=\pi_h b$ is the interpolant of $b$ then generally $\cK_h\nsubset\cK$.  Right: Defining $b_h=R_h^{\oplus} b$, using \eqref{eq:monotoneop}, implies $b_h\ge b$.}
 \label{fig:nonadmissible}
 \end{figure}
 
-For unilateral obstacle problems and $P_1$ or $Q_1$ elements we may force $\cK_h\subset\cK$ by using a monotone restriction operator \cite{BuelerFarrell2024}, defined as follows.  For a node $x_i$ let $N_i$ be the union of elements adjacent to $x_i$.  Define $R_h^{\oplus}b\in\cX_h$ by
+For unilateral obstacle problems and $P_1$ or $Q_1$ elements we may force $b_h \ge b$ by using a monotone restriction operator \cite{BuelerFarrell2024}, defined as follows.  For a node $x_i$ let $N_i$ be the union of elements adjacent to $x_i$.  Define $R_h^{\oplus}b\in\cX_h$ by
 \begin{equation}
 (R_h^{\oplus}b)(x_i) = \sup_{x \in N_i} b(x). \label{eq:monotoneop}
 \end{equation}
-If $b_h=R_h^{\oplus} b$ then $b_h(x)\ge b(x)$ for all $x\in \Omega$ (Figure \ref{fig:nonadmissible}; right), thus $\cK_h\subset \cK$.
+If $b_h=R_h^{\oplus} b$ then $b_h(x)\ge b(x)$ for all $x\in \Omega$ (Figure \ref{fig:nonadmissible}; right).
+
+However, generally $b_h\ne b$ along $\partial\Omega$, so elements of $\cK_h$ may not satisfy the Dirichlet condition used in defining $\cK$; this blocks $\cK_h\subset \cK$.  Modifying \eqref{eq:monotoneop} by setting $b_h(x_i)=b(x_i)$ at boundary nodes $x_i\in\partial\Omega$ gives $b_h=b$ on $\partial\Omega$ if $b|_{\partial\Omega}$ is also piecewise-linear on the boundary mesh.  But now $b_h\ge b$ may fail in elements which meet $\partial\Omega$, though it holds if, for example, $b$ is affine on each such element.  In any case, $\cK_h\subset\cK$ follows if we find a $b_h\in\cX_h$ which satisfies $b_h\ge b$ in $\Omega$ and $b_h=b$ on $\partial\Omega$.
 
 The appearance of a consistency error $\delta_h = f(u_h)-f_h(u_h)$ in bound \eqref{eq:abstractestimate}, evaluated at $u_h\in \cK_h$, suggests Strang's first lemma \cite[Theorem 4.1.1]{Ciarlet2002}, but here in a nonlinear case.  In the glacier application this term will be related to the maximum error made in approximating the (Stokes) ice velocity; see Theorem \ref{thm:glacierapp}.
 
@@ -629,7 +631,7 @@ Practical models for glaciers, based on unstructured meshes in the 2D map-plane,
 \label{fig:fe:domain}
 \end{figure}
 
-We will assume that the original bed elevation $b$ is well-behaved, $b\in C^1(\bar\Omega)$.  (In practice the data $b$ is a high-resolution map derived from ice-penetrating radar \cite{Morlighemetal2017}, often over a much finer mesh than $\cT_h$.)  For the discrete bed $b_h\in\cX_h$ we suppose $b_h=b$ along $\partial\Omega$.  By application of monotone restriction, $b_h = R_h^{\oplus} b$ \eqref{eq:monotoneop}, or otherwise, we achieve $b_h \ge b$; this eliminates a bound term when Theorem \ref{thm:abstractestimate} is applied below.  Following \eqref{eq:be:admissible}, we define $\cK_h=\{\sigma_h \in \cX_h\,:\,\sigma_h|_{\partial\Omega}=b_h|_{\partial\Omega} \text{ and } \sigma_h\ge b_h\}$, so that $\cK_h\subset\cK \subset \cX$ where $\cX = W^{1,4}(\Omega)$.
+We will assume that the original bed elevation $b$ is well-behaved, $b\in C^1(\bar\Omega)$.  (In practice the data $b$ is a high-resolution map derived from ice-penetrating radar \cite{Morlighemetal2017}, often over a much finer mesh than $\cT_h$.)  For the discrete bed $b_h\in\cX_h$ we suppose $b_h=b$ along $\partial\Omega$.  We also suppose $b_h\ge b$, for instance by a boundary-modified monotone restriction (Section \ref{sec:abstractestimate}); this eliminates a bound term when Theorem \ref{thm:abstractestimate} is applied below.  Following \eqref{eq:be:admissible}, we define $\cK_h=\{\sigma_h \in \cX_h\,:\,\sigma_h|_{\partial\Omega}=b_h|_{\partial\Omega} \text{ and } \sigma_h\ge b_h\}$, so that $\cK_h\subset\cK \subset \cX$ where $\cX = W^{1,4}(\Omega)$.
 
 From these geometrical and discrete-space choices, recall the regularized VI problem \eqref{eq:regularizedvi}, with $F^\eps_{\Delta t}$ defined by \eqref{eq:regularizedPhi} and \eqref{eq:regularizedF}.  Approximate evaluation of $F^\eps_{\Delta t}(s_h)$ requires the numerical solution of the power-law Stokes problem \eqref{eq:glenstokes:weak} over a meshed 3D domain $\Lambda(b_h,s_h)$ (see \eqref{eq:domainfroms}), the lower and upper surfaces of which are given by admissible FE functions $b_h\in\cX_h$ and $s_h \in \cK_h$, respectively.  Solvability of this Stokes problem using inf-sup stable elements is addressed by \cite{Belenkietal2012,JouvetRappaz2011}.  The numerical velocity from solving \eqref{eq:glenstokes:weak} over $\Lambda(b_h,s_h)$ is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  (Note that $\bu_h$ is \emph{not} the exact solution of that Stokes problem.)  We make no assumptions on the solution process for \eqref{eq:glenstokes:weak}, except that it must generate $\bu_h|_{s_h}$.
 
