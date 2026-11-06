@@ -526,7 +526,7 @@ f(u)[v-u] \ge \ell[v-u] \quad \text{for all } v\in \cK. \label{eq:vi}
 \end{equation}
 Problem \eqref{eq:regularizedvi} is in this form, while the best known example for \eqref{eq:vi} is the obstacle problem for the Laplacian operator; see \cite{Ciarlet2002,Evans2010,KinderlehrerStampacchia1980} for theory and FE analysis.
 
-If $f:\cK \to \cX'$ is monotone and coercive (Definition \ref{def:monotonecoercive}), and continuous on finite-dimensional subspaces, then problem \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}, and if $f$ is strictly monotone then the solution is unique.  If $f$ is $\qq$-coercive then it is coercive and strictly monotone, and if $f$ is Lipschitz on bounded subsets (Definition \ref{def:lipschitz}) then it is continuous.  Recall that $f(u)-\ell \in \cX'$ is generally nonzero if $u$ solves \eqref{eq:vi}, but $f(u)-\ell=0$ if $u$ is in the interior of $\cK$.  Under sufficient regularity assumptions, an NCP strong form follows from \eqref{eq:vi}.
+If $f:\cK \to \cX'$ is monotone and coercive (Definition \ref{def:monotonecoercive}), and continuous on finite-dimensional subspaces, then problem \eqref{eq:vi} has a solution \cite[Corollary III.1.8]{KinderlehrerStampacchia1980}, and if $f$ is strictly monotone then the solution is unique.  If $f$ is $\qq$-coercive then it is coercive and strictly monotone, and if $f$ is Lipschitz on bounded subsets (Definition \ref{def:lipschitz}) then it is continuous.  Recall that $f(u)-\ell \in \cX'$ is generally nonzero if $u$ solves \eqref{eq:vi}.  Under sufficient regularity assumptions, an NCP strong form follows from \eqref{eq:vi}.
 
 Now suppose $\cX_h \subset \cX$ is a finite-dimensional subspace, an FE space of continuous, piecewise-polynomial functions defined on a mesh.  Let $\cK_h\subset \cX_h$ be a closed and convex subset, and suppose $f_h:\cK_h\to\cX'$ is an approximation of $f$.  Generally $\cK_h \nsubset \cK$---we will \emph{not} assume initially that FE states are continuum admissible---and generally $f_h\ne f$ because of quadrature and other approximations.  In fact, in standard FE Stokes-type glacier simulations both $\cK_h \nsubset \cK$ and $f_h\ne f$ apply for practical reasons, though in Section \ref{sec:application} we arrange that $\cK_h\subset\cK$ by construction of the meshed bed elevation.
 
@@ -577,7 +577,7 @@ For the first term note that $(f(u)-\ell)[v-u_h] = (f(u)-\ell)[v-u] + (f(u)-\ell
 
 In a unilateral obstacle problem over scalar functions $\cX=W^{1,\rr}(\Omega)$, we may rewrite portions of bound \eqref{eq:abstractestimate} using integration.  In this case the residual $f(u)-\ell\in \cX'$ is a positive measure $d\mu_u$ \cite[Theorem II.6.9]{KinderlehrerStampacchia1980} which is supported in the active set $A_u=\{x\in\Omega\,:\,u(x)=b(x)\}$.  Then $(f(u) - \ell)[w] = \int_{A_u} w\,d\mu_u$ for $w\in \cX$.
 
-If $\cK_h \subset \cK$ then the first term in \eqref{eq:abstractestimate} is nonpositive; substitute $v=u_h$ into \eqref{eq:vi} to get $(f(u)-\ell)[u-u_h] \le 0$.
+If $\cK_h \subset \cK$ then the first term in \eqref{eq:abstractestimate} is nonpositive and it can be replaced by zero; substitute $v=u_h$ into \eqref{eq:vi} to get $(f(u)-\ell)[u-u_h] \le 0$.
 
 However, when $\cK_h \not\subset \cK$ the first term can be positive.  This can happen even in an obstacle problem with an arbitrarily-smooth obstacle.  For $\cK$ defined by \eqref{eq:be:admissible}, suppose $b_h=\pi_h b$ is the FE interpolant of $b$, and define $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge b_h \text{ and } v_h|_{\partial\Omega}=b_h|_{\partial\Omega}\}$.  While $b_h(x_j)=b(x_j)$ for the interpolation nodes $x_j$, generally $b_h(x) \ge b(x)$ will not hold for all $x\in\Omega$ (Figure \ref{fig:nonadmissible}; compare \cite[Figure 5.1.3]{Ciarlet2002}); nodal admissibility does not imply admissibility.  Now if $b>b_h$ in the active set $A_u$ then generally $u>u_h$ also, and thus $(f(u)-\ell)[u-u_h] = \int_{A_u} (u-u_h)\,d\mu_u >0$.
 
@@ -593,7 +593,7 @@ For unilateral obstacle problems and $P_1$ or $Q_1$ elements we may force $\cK_h
 \begin{equation}
 (R_h^{\oplus}b)(x_i) = \sup_{x \in N_i} b(x). \label{eq:monotoneop}
 \end{equation}
-If $b_h=R_h^{\oplus} b$ then $b_h(x)\ge b(x)$ for all $x\in \Omega$ (Figure \ref{fig:nonadmissible}; right), thus $\cK_h\subset \cK$ and the ``\,$\inf_{v\in\cK}$'' term can be removed from the bound.
+If $b_h=R_h^{\oplus} b$ then $b_h(x)\ge b(x)$ for all $x\in \Omega$ (Figure \ref{fig:nonadmissible}; right), thus $\cK_h\subset \cK$.
 
 The appearance of a consistency error $\delta_h = f(u_h)-f_h(u_h)$ in bound \eqref{eq:abstractestimate}, evaluated at $u_h\in \cK_h$, suggests Strang's first lemma \cite[Theorem 4.1.1]{Ciarlet2002}, but here in a nonlinear case.  In the glacier application this term will be related to the maximum error made in approximating the (Stokes) ice velocity; see Theorem \ref{thm:glacierapp}.
 
@@ -605,7 +605,7 @@ The original \emph{a priori} VI bound by Falk \cite{Falk1974} computes residual 
 \end{equation}
 \end{corollary}
 
-Consider the case where $u$ is in the interior of $\cK$, thus $f(u)-\ell=0$.  If also $\cK_h\subset \cK$ and $f=f_h$ then bounds \eqref{eq:abstractestimate} and \eqref{eq:Bnorm} reduce to their final terms.  Thus we get Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002}, but in a Banach space and for a $q$-coercive nonlinear operator.  For glaciers the interior condition occurs when the entire domain $\Omega$ is covered by ice.
+For an obstacle problem, consider the case where the active set for $u$ is all of $\Omega$, thus $f(u)-\ell=0$.  If also $\cK_h\subset \cK$ and $f=f_h$ then bounds \eqref{eq:abstractestimate} and \eqref{eq:Bnorm} reduce to their final terms.  Thus we get Cea's lemma \cite[Theorem 2.4.1]{Ciarlet2002}, but in a Banach space and for a $q$-coercive nonlinear operator.  For glaciers this situation occurs when the entire domain $\Omega$ is covered by ice.
 
 In summary, Theorem \ref{thm:abstractestimate} generalizes Falk's bound, Strang's lemma, and Cea's lemma.  It is well-suited for the glacier application in the next section.
 
@@ -785,7 +785,7 @@ From \eqref{eq:glenstokes:weak} and $\bu \in\Vdiv$ it follows that
 Apply \eqref{eq:korns}, the facts that $\pp>0$ and $(\pp-2)/2 \le 0$, and equation \eqref{eq:glen}:
 \begin{align}
 \int_\Lambda |\grad\bu|^\pp &\le C \int_\Lambda |D\bu|^\pp \le C \int_\Lambda \left(|D\bu|^2 + \mu_0\right)^{(\pp-2)/2} \left(D\bu:D\bu + \mu_0\right) \label{eq:stokes:startapriori} \\
-	&= C \left[\mu_0^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \int_\Lambda 2\nu(D\bu) D\bu:D\bu\right]. \notag
+	&\le C \left[\mu_0^{\pp/2} |\Lambda| + (2 \nu_\pp)^{-1} \int_\Lambda 2\nu(D\bu) D\bu:D\bu\right]. \notag
 \end{align}
 By equation \eqref{eq:stokes:substituteu}, Cauchy-Schwarz, H\"older's inequality, and \eqref{eq:poincare} we thus have
 \begin{equation}
