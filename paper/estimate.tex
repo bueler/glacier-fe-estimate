@@ -350,7 +350,7 @@ For this to be well-defined, $s\in\cK\subset\cX$ must be sufficiently-regular.  
 \end{equation}
 \end{lemma}
 
-\begin{proof}  Recall that $dS = |\bn_s|\,dx = \sqrt{1+|\grad s|^2}\,dx$ is the surface area element for $\Gamma_s \subset \partial \Lambda$.  Apply H\"older's inequalities:
+\begin{proof}  We suppose $\rr<\infty$; the case $\rr=\infty$ is simpler because $|\bn_s| \le 1 + \|\grad s\|_{L^\infty}$ is then bounded.  Recall that $dS = |\bn_s|\,dx = \sqrt{1+|\grad s|^2}\,dx$ is the surface area element for $\Gamma_s \subset \partial \Lambda$.  Apply H\"older's inequalities:
 \begin{align}
 \Big|\int_\Omega \bu|_s\cdot \bn_s \, &\omega\,dx\Big| \le \int_\Omega \big|\bu|_s\big| |\bn_s|^{1/\pp} |\bn_s|^{1/\pp'} |\omega|\,dx \label{eq:phibound:zero} \\
     &\le \left(\int_\Omega \big|\bu|_s\big|^\pp |\bn_s|\,dx\right)^{1/\pp} \left(\int_\Omega |\bn_s| |\omega|^{\pp'} \,dx\right)^{1/\pp'} \notag \\
@@ -395,7 +395,7 @@ For $R>0$ recall $B_R = \{v\in \cX\,:\,\|v\|\le R\}$.  We say that a map $f:\cK 
 \end{equation}
 \end{definition}
 
-\begin{lemma} \label{lem:philipschitz}  The map $\Phi$ is Lipschitz on bounded subsets of $\cK$.
+\begin{lemma} \label{lem:philipschitz}  Assume Conjecture \ref{conj:lipschitz}.  The map $\Phi$ is Lipschitz on bounded subsets of $\cK$.
 \end{lemma}
 
 \begin{proof}  Assume without loss of generality that $R\ge \|b\|_\cX$, so $b\in B_R \cap \cK$.  Suppose $\sigma,s\in B_R \cap \cK$.  For any $\omega\in\cX$, in the following we add and subtract $\bu|_s \cdot \bn_\sigma$, and use the triangle inequality $|\bn_\sigma|=\left(1+|\grad \sigma|^2\right)^{1/2} \le 1 + |\grad \sigma|$:
@@ -487,7 +487,7 @@ For $0<\eps \ll 1$ and $\omega \in \cX$, define this convex combination:
 \begin{equation} \label{eq:regularizedPhi}
 \Phi^\eps(s)[\omega] = (1-\eps) \Phi(s)[\omega] + \eps \PhiSIA(s)[\omega].
 \end{equation}
-This regularizes the Stokes surface motion \eqref{eq:definePhi} using a small amount from formula \eqref{eq:phisia}.  If $\Phi$ is Lipschitz on bounded subsets of $\cK$ (Lemma \ref{lem:philipschitz}) then so is $\Phi^\eps$.  It is reasonable to suppose $\Phi^\eps$ is a $4$-coercive operator over $\cK\subset W^{1,4}(\Omega)$ because of properties of the $4$-Laplacian operator \cite[for example]{ChoeLewis1991}; with $\nn=3$ and $\eta_0>0$ the regularization is a multiple of the $4$-Laplacian, which is $4$-coercive over $\cK$ because differences $\sigma-s$ of elements of $\cK$ have zero trace on $\partial\Omega$.
+This regularizes the Stokes surface motion \eqref{eq:definePhi} using a small amount from formula \eqref{eq:phisia}.  If $\Phi$ is Lipschitz on bounded subsets of $\cK$ (Lemma \ref{lem:philipschitz}) then so is $\Phi^\eps$, at least when $\rr\ge\nn+1$, because then $|\grad s|^{\nn-1}\grad s \in L^{\rr/\nn}(\Omega) \subset L^{\rr'}(\Omega)$.  It is reasonable to suppose $\Phi^\eps$ is a $4$-coercive operator over $\cK\subset W^{1,4}(\Omega)$ because of properties of the $4$-Laplacian operator \cite[for example]{ChoeLewis1991}; with $\nn=3$ and $\eta_0>0$ the regularization is a multiple of the $4$-Laplacian, which is $4$-coercive over $\cK$ because differences $\sigma-s$ of elements of $\cK$ have zero trace on $\partial\Omega$.
 
 The numerical experiments in Appendix \ref{app:numerical} use values $\eps=0.01$ and $\eta_0=500$ meters in \eqref{eq:phisia} and \eqref{eq:regularizedPhi}.  The observed effect is that negative values of the regularized coercivity ratios, i.e.~\eqref{eq:ratios} with $\Phi^\eps$ in place of $\Phi$, disappear at high spatial resolution, and the distribution of ratios is bounded away from zero.  However, we are not able to \emph{prove} that $\Phi^\eps$ in \eqref{eq:regularizedPhi} is $4$-coercive.  A proof would seem to depend on novel insights into the glaciological Stokes problem.  Thus the numerical analysis in Section \ref{sec:application} will be based on the following second conjecture.
 
@@ -579,7 +579,7 @@ In a unilateral obstacle problem over scalar functions $\cX=W^{1,\rr}(\Omega)$, 
 
 If $\cK_h \subset \cK$ then the first term in \eqref{eq:abstractestimate} is nonpositive and it can be replaced by zero; substitute $v=u_h$ into \eqref{eq:vi} to get $(f(u)-\ell)[u-u_h] \le 0$.
 
-However, when $\cK_h \not\subset \cK$ the first term can be positive.  This can happen even in an obstacle problem with an arbitrarily-smooth obstacle.  For $\cK$ defined by \eqref{eq:be:admissible}, suppose $b_h=\pi_h b$ is the FE interpolant of $b$, and define $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge b_h \text{ and } v_h|_{\partial\Omega}=b_h|_{\partial\Omega}\}$.  While $b_h(x_j)=b(x_j)$ for the interpolation nodes $x_j$, generally $b_h(x) \ge b(x)$ will not hold for all $x\in\Omega$ (Figure \ref{fig:nonadmissible}; compare \cite[Figure 5.1.3]{Ciarlet2002}); nodal admissibility does not imply admissibility.  Now if $b>b_h$ in the active set $A_u$ then generally $u>u_h$ also, and thus $(f(u)-\ell)[u-u_h] = \int_{A_u} (u-u_h)\,d\mu_u >0$.
+However, when $\cK_h \not\subset \cK$ the first term can be positive.  This can happen even in an obstacle problem with an arbitrarily-smooth obstacle.  For $\cK$ defined by \eqref{eq:be:admissible}, assume that $\Omega$ is polygonal, so that a mesh covers it exactly, and suppose $b_h=\pi_h b$ is the FE interpolant of $b$, and define $\cK_h=\{v_h \in \cX_h\,:\,v_h\ge b_h \text{ and } v_h|_{\partial\Omega}=b_h|_{\partial\Omega}\}$.  While $b_h(x_j)=b(x_j)$ for the interpolation nodes $x_j$, generally $b_h(x) \ge b(x)$ will not hold for all $x\in\Omega$ (Figure \ref{fig:nonadmissible}; compare \cite[Figure 5.1.3]{Ciarlet2002}); nodal admissibility does not imply admissibility.  Now if $b>b_h$ in the active set $A_u$ then generally $u>u_h$ also, and thus $(f(u)-\ell)[u-u_h] = \int_{A_u} (u-u_h)\,d\mu_u >0$.
 
 \begin{figure}[ht]
 \begin{center}
