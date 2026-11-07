@@ -256,7 +256,7 @@ There is $C>0$ depending on $\pp$, $\rhoi |\bg|$, $\nu_\pp$, $\mu_0$, $[H]$, and
 \end{equation}
 \end{lemma}
 
-Our primary purpose is to study NCP \eqref{eq:be:ncp} for glacier geometry, specifically its weak form (next section), and for that we need control on the surface trace $\bu|_s$.  Theorem 5.5.1 in \cite{Evans2010} gives the following Lemma.
+Our primary purpose is to study NCP \eqref{eq:be:ncp} for glacier geometry, specifically its weak form (next section), and for that we need control on the surface trace $\bu|_s$.  Because $\Lambda$ is a bounded Lipschitz domain, the trace theorem \cite{Grisvard1985} gives the following Lemma; compare \cite[Theorem 5.5.1]{Evans2010} for $C^1$ boundaries.
 
 \begin{lemma}[Trace inequality] \label{lem:trace}
 There exists a constant $C$, depending on $\pp$, $[H]$, and $\Lambda$, so that for all $\bv \in \cV$,
@@ -503,7 +503,7 @@ F^\eps_{\Delta t}(s)[\sigma-s] \ge \ell^n[\sigma-s] \quad \text{for all } \sigma
 \end{equation}
 \end{theorem}
 
-\begin{proof}  The Lipschitz and $4$-coercive inequalities follow directly from the Conjectures.  In particular, $F^\eps_{\Delta t}$ is $4$-coercive over $\cK$ with constant at least $\alpha\Delta t>0$, and thus it is also coercive and strictly-monotone (Definition \ref{def:monotonecoercive}).  Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows unique existence for \eqref{eq:regularizedvi}.
+\begin{proof}  The Lipschitz property follows from Lemma \ref{lem:philipschitz} and the remark after \eqref{eq:regularizedPhi}, and $4$-coercivity follows from Conjecture \ref{conj:regcoercive}.  In particular, $F^\eps_{\Delta t}$ is $4$-coercive over $\cK$ with constant at least $\alpha\Delta t>0$, and thus it is also coercive and strictly-monotone (Definition \ref{def:monotonecoercive}).  Corollary III.1.8 of \cite{KinderlehrerStampacchia1980} shows existence for \eqref{eq:regularizedvi}, and strict monotonicity gives uniqueness.
 \end{proof}
 
 Theorem \ref{thm:regularizedwellposed} addresses only the well-posedness of a single time-step, over $[t_{n-1},t_n]$.  Its conclusion is not sufficient to show well-posedness of the time-dependent VI problem corresponding to NCP \eqref{eq:ncp}, nor to show that implicit steps converge in the $\Delta t\to 0$ limit.  However, it is a first mathematical step in these directions.  Time-stepping numerical models for the evolution of glacier geometry, using Stokes dynamics, are already in common use.  Practitioners apparently expect that each time-step problem, implicit or not, is well-posed, and that computed surface elevations will converge to continuum solutions in some well-behaved manner.
@@ -568,7 +568,7 @@ where $\tilde C(\eps) = (\eps \qq)^{-\qq'/\qq} {\qq'}^{-1}$.  Choose $\eps>0$ so
 For the first term note that $(f(u)-\ell)[v-u_h] = (f(u)-\ell)[v-u] + (f(u)-\ell)[u-u_h] \ge (f(u)-\ell)[u-u_h]$ by \eqref{eq:vi}; the VI implies that the infimum over $v\in\cK$ is achieved by $u$.  Take infimum over $\cK_h$ to show \eqref{eq:abstractestimate}.
 \end{proof}
 
-In a unilateral obstacle problem over scalar functions $\cX=W^{1,\rr}(\Omega)$, we may rewrite portions of bound \eqref{eq:abstractestimate} using integration.  In this case the residual $f(u)-\ell\in \cX'$ is a positive measure $d\mu_u$ \cite[Theorem II.6.9]{KinderlehrerStampacchia1980} which is supported in the active set $A_u=\{x\in\Omega\,:\,u(x)=b(x)\}$.  Then $(f(u) - \ell)[w] = \int_{A_u} w\,d\mu_u$ for $w\in \cX$ with zero trace.
+In a unilateral obstacle problem over scalar functions $\cX=W^{1,\rr}(\Omega)$, we may rewrite portions of bound \eqref{eq:abstractestimate} using integration.  In this case the residual $f(u)-\ell\in \cX'$ is represented by a positive Borel measure $\mu_u$ \cite[Theorem 6.22]{LiebLoss1997} which, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980}, is supported in the active set $A_u=\{x\in\Omega\,:\,u(x)=b(x)\}$.  Then $(f(u) - \ell)[w] = \int_{A_u} w\,d\mu_u$ for $w\in \cX$ with zero trace.
 
 If $\cK_h \subset \cK$ then the first term in \eqref{eq:abstractestimate} is nonpositive and it can be replaced by zero; substitute $v=u_h$ into \eqref{eq:vi} to get $(f(u)-\ell)[u-u_h] \le 0$.
 
@@ -682,7 +682,7 @@ The next theorem replaces $\sigma_h$ with an interpolant of the exact solution $
 \end{equation}
 over nodes $x_j \in \cT_h$; thus $\Pi_h$ both interpolates and truncates.  If $\sigma\in \cK$ then $\Pi_h(\sigma) \in \cK_h$ because nodal admissibility implies admissibility under Assumptions \ref{item:pone} and \ref{item:goodbh}.
 
-Because $s$ solves \eqref{eq:regularizedvi}, the residual $F^\eps_{\Delta t}(s)-\ell^n \in \cX'$ is represented by a positive Borel measure $\mu_s$ \cite[Theorem 6.22]{LiebLoss1997}.  By the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in the exact (closed) active set $\Omega_A(s)= \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$, which is the ice-free region at $t_n$.
+Because $s$ solves \eqref{eq:regularizedvi}, as in Section \ref{sec:abstractestimate} the residual $F^\eps_{\Delta t}(s)-\ell^n \in \cX'$ is represented by a positive Borel measure $\mu_s$, supported in the exact (closed) active set $\Omega_A(s)= \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$, which is the ice-free region at $t_n$.
 
 \begin{theorem} \label{thm:glacierapp}  Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Then
 \begin{align}
