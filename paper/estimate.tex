@@ -12,9 +12,6 @@
 \usepackage{tikz}
 \usetikzlibrary{math,positioning}
 
-% Add a serial/Oxford comma by default.
-\newcommand{\creflastconjunction}{, and~}
-
 % Used for creating new theorem and remark environments
 \newsiamremark{remark}{Remark}
 \newsiamthm{stdass}{Standard Assumptions}
@@ -380,13 +377,11 @@ The admissible subset $\cK \subset \cX$ for surface elevations was already defin
 However, for well-posedness of VI \eqref{eq:be:viearly} we must conjecture that a norm of $\bu|_s$ is Lipschitz as a function of $s$.  Proving this would apparently require additional, detailed knowledge about Stokes problem \eqref{eq:glenstokes:weak}.  The dependence of scalar Laplacian-type equations on the domain is addressed in some literature, for example \cite{Daners2003}, but such results for Stokes problems are not known to this author.
 
 \begin{conjecture}[Surface velocity is Lipschitz in the surface elevation] \label{conj:lipschitz}
-There exists $2 < \rr \le \infty$ so that if $R>0$ then there is $C(R)>0$ so that for $\sigma,s\in B_R \cap \cK = \{w \in \cK \,:\, \|w\|_{\cX} \le R\}$ we have
+There exists $2 < \rr \le \infty$ with the following two properties.  \emph{(i)} For every $s\in\cK$, Stokes problem \eqref{eq:glenstokes:weak} over $\Lambda(b,s)$ has a unique solution $(\bu,p)\in\mathcal{M}$, and bound \eqref{eq:surfacetracebound} holds, so the surface velocity $\bu|_s$ is well-defined over $\Omega$ by \eqref{eq:defineus}.  \emph{(ii)} If $R>0$ then there is $C(R)>0$ so that for $\sigma,s\in B_R \cap \cK = \{w \in \cK \,:\, \|w\|_{\cX} \le R\}$ we have
 \begin{equation}
 \big\|\bu|_\sigma - \bu|_s\big\|_{L^{\rr'}} \le C(R) \|\sigma-s\|_{\cX}. \label{eq:ulipschitz}
 \end{equation}
 \end{conjecture}
-
-This Conjecture implies that $\Phi$ is Lipschitz, as follows.
 
 \begin{definition} \label{def:lipschitz}
 For $R>0$ recall $B_R = \{v\in \cX\,:\,\|v\|\le R\}$.  We say that a map $f:\cK \to \cX'$ is \emph{Lipschitz on bounded subsets of $\cK$} if for every $R>0$ there is $C(R)>0$ so that
@@ -395,7 +390,7 @@ For $R>0$ recall $B_R = \{v\in \cX\,:\,\|v\|\le R\}$.  We say that a map $f:\cK 
 \end{equation}
 \end{definition}
 
-\begin{lemma} \label{lem:philipschitz}  Assume Conjecture \ref{conj:lipschitz}.  The map $\Phi$ is Lipschitz on bounded subsets of $\cK$.
+\begin{lemma} \label{lem:philipschitz}  If Conjecture \ref{conj:lipschitz} holds then $\Phi$ is Lipschitz on bounded subsets of $\cK$.
 \end{lemma}
 
 \begin{proof}  Assume without loss of generality that $R\ge \|b\|_\cX$, so $b\in B_R \cap \cK$.  Suppose $\sigma,s\in B_R \cap \cK$.  For any $\omega\in\cX$, in the following we add and subtract $\bu|_s \cdot \bn_\sigma$, and use the triangle inequality $|\bn_\sigma|=\left(1+|\grad \sigma|^2\right)^{1/2} \le 1 + |\grad \sigma|$:
@@ -431,7 +426,7 @@ Assume that $\ell^n$, defined from the data by \eqref{eq:be:source}, is in $\cX'
 \end{equation}
 \end{definition}
 
-By Lemma \ref{lem:phibound}, $\Phi$ and $F_{\Delta t}$ are well-defined, and if Conjecture \ref{conj:lipschitz} holds then they are Lipschitz on bounded subsets.  The reader should confirm that the weak-form \eqref{eq:be:vi} then merely rewrites \eqref{eq:be:viearly}.  This VI gives a precise meaning to strong-form NCP \eqref{eq:be:ncp}.
+By Lemma \ref{lem:phibound} and Conjecture \ref{conj:lipschitz}(i), $\Phi$ and $F_{\Delta t}$ are well-defined, and if Conjecture \ref{conj:lipschitz} holds then they are Lipschitz on bounded subsets.  The reader should confirm that the weak-form \eqref{eq:be:vi} then merely rewrites \eqref{eq:be:viearly}.  This VI gives a precise meaning to strong-form NCP \eqref{eq:be:ncp}.
 
 The boxed definitions and inequalities above, namely \eqref{eq:be:admissible}, \eqref{eq:be:source}, \eqref{eq:defineX}, \eqref{eq:definePhi}, \eqref{eq:be:Fdefine}, and \eqref{eq:be:vi}, form a continuum model for a single time-step of glacier evolution, based on the solution of Stokes problem \eqref{eq:glenstokes:weak} over the domain $\Lambda=\Lambda(b,s)$ defined in \eqref{eq:domainfroms}.  Although Conjecture \ref{conj:lipschitz} is used in the construction of the operator $F_{\Delta t}$, the whole model is precise enough to be mathematically analyzed.
 
