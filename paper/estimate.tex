@@ -646,7 +646,7 @@ The following data are given:
 \begin{enumerate}
 \item A bounded, polygonal domain $\Omega\subset\RR^2$.
 \item A time-dependent SMB function $a\in C([0,T]; L^{4/3}(\Omega))$.
-\item A bed elevation function $b \in C^1(\bar\Omega)$, piecewise-linear along $\partial\Omega$.
+\item A bed elevation function $b \in C^1(\bar\Omega)$.
 \end{enumerate}
 We make these continuum definitions:
 \begin{enumerate}
@@ -680,7 +680,7 @@ The next theorem replaces $\sigma_h$ with an interpolant of the exact solution $
 \begin{equation}
 \Pi_h(\omega)(x_j) = \max \,\{b_h(x_j), \omega(x_j)\}, \label{eq:definePi}
 \end{equation}
-over nodes $x_j \in \cT_h$; thus $\Pi_h$ both interpolates and truncates.  If $\sigma\in \cK$ then $\Pi_h(\sigma) \in \cK_h$ because nodal admissibility implies admissibility under Assumptions \ref{item:pone} and \ref{item:goodbh}.  Also, recall that $\cV=W_0^{1,\pp}(\Lambda(b_h,s_h); \RR^3)$ is the velocity space for Stokes problem \eqref{eq:glenstokes:weak}, the numerical solution of which gives the surface velocity trace $\bu_h|_{s_h}$.
+over nodes $x_j \in \cT_h$; thus $\Pi_h$ both interpolates and truncates.  If $\sigma\in \cK$ then $\Pi_h(\sigma) \in \cK_h$ because nodal admissibility implies admissibility under Assumptions \ref{item:pone} and \ref{item:goodbh}.
 
 Because $s$ solves \eqref{eq:regularizedvi}, the residual $F^\eps_{\Delta t}(s)-\ell^n \in \cX'$ is represented by a positive Borel measure $\mu_s$ \cite[Theorem 6.22]{LiebLoss1997}.  By the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980} this measure is supported in the exact (closed) active set $\Omega_A(s)= \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$, which is the ice-free region at $t_n$.
 
@@ -694,7 +694,7 @@ where
 \begin{equation}
 Z = \left(1 + C_\infty [L]^{-1} \|s_h\|_{\cX}\right)\, \Big\|\bu_h|_{s_h} - \bu|_{s_h}\Big\|_{L^{4/3}(\Omega)},
 \end{equation}
-$C_\infty$ is a Sobolev constant, and $C=C(R_h,\alpha,\Delta t)$ is the constant from Lemma \ref{lem:preglacierapp}.
+$C_\infty$ is a Sobolev constant for $\Omega$, and $C=C(R_h,\alpha,\Delta t)$ is the constant from Lemma \ref{lem:preglacierapp}.
 \end{theorem}
 
 \begin{proof}  For the first term in \eqref{eq:preglacierestimate} we may write $\int_{\Omega_A(s)} (\sigma_h - s) \,d\mu_s$.
@@ -703,10 +703,10 @@ The consistency error $\delta_h$ in the second term resolves to velocity traces 
 \begin{equation}
 \delta_h[r_h] = \left(F^\eps_{\Delta t}(s_h)-F^{\eps,h}_{\Delta t}(s_h)\right)[r_h] = \Delta t (1-\eps) \int_\Omega \left(\bu_h|_{s_h} - \bu|_{s_h}\right) \cdot \bn_{s_h} \,r_h.
 \end{equation}
-We estimate the maximum using H\"older's and Sobolev's inequalities:
+We estimate the dual norm using H\"older's and Sobolev's inequalities:
 \begin{align}
 \big|\delta_h[r_h]\big| &\le \Delta t \int_\Omega \Big|\bu_h|_{s_h} - \bu|_{s_h}\Big| \left(1 + |\grad s_h|\right) |r_h| \\
-  &\le \Delta t \big\|\bu_h|_{s_h} - \bu|_{s_h}\big\|_{L^{4/3}(\Omega)} \left(1 + c_\infty [L]^{-1} \|s_h\|_{\cX}\right) \|r_h\|_{\cX}. \notag
+  &\le \Delta t \big\|\bu_h|_{s_h} - \bu|_{s_h}\big\|_{L^{4/3}(\Omega)} \left(1 + C_\infty [L]^{-1} \|s_h\|_{\cX}\right) \|r_h\|_{\cX}. \notag
 \end{align}
 Defining $\|\delta_h\|_{\ast} = \sup_{0\ne r_h\in\cX_h} \big|\delta_h[r_h]\big| / \|r_h\|_{\cX}$, we have
 \begin{equation}
