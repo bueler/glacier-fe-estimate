@@ -463,7 +463,7 @@ To suggest why coercivity might occur, we can rewrite the surface motion $\Phi(s
 \Phi(s)[\omega] &= -\int_{\Omega} \bu|_s \cdot \bn_s\,\omega\,dx = -\int_{\partial\Lambda(b,s)} \tilde\omega \bu\cdot {\hat\bn}\,dS = - \int_{\Lambda(b,s)} \Div\left(\tilde\omega \bu\right)  \label{eq:fluxformPhi} \\
   &= - \int_{\Lambda(b,s)} \bu\cdot \grad \tilde\omega = -\int_\Omega \bq(s) \cdot \grad \omega, \notag
 \end{align}
-where $\hat\bn$ is the outward unit normal and $dS$ is the area element along $\partial\Lambda(b,s)$.  Now, the natural glaciological belief is that ice flows downhill, which is the informal association $\bq(s) \sim - \grad s$, in which case the last expression in \eqref{eq:fluxformPhi} implies $(\Phi(\sigma) - \Phi(s))[\sigma - s] \sim \int_\Omega |\grad s - \grad \sigma|^2$, which is $2$-coercivity.  Observe that the rheology of ice, i.e.~the nonlinear Glen's law \eqref{eq:glen}, does not enter into this reasoning.
+where $\hat\bn$ is the outward unit normal and $dS$ is the area element along $\partial\Lambda(b,s)$.  Now, the natural glaciological belief is that ice flows downhill, which is the informal association $\bq(s) \sim - \grad s$, in which case the last expression in \eqref{eq:fluxformPhi} implies $(\Phi(\sigma) - \Phi(s))[\sigma - s] \sim \int_\Omega |\grad s - \grad \sigma|^2$, which is $2$-coercivity in the $H^1$ norm.  Observe that the rheology of ice, i.e.~the nonlinear Glen's law \eqref{eq:glen}, does not enter into this reasoning.
 
 \newcommand{\bqSIA}{\bq^{\text{SIA}}}
 \newcommand{\PhiSIA}{\Phi^{\text{SIA}}}
@@ -568,7 +568,7 @@ where $\tilde C(\eps) = (\eps \qq)^{-\qq'/\qq} {\qq'}^{-1}$.  Choose $\eps>0$ so
 For the first term note that $(f(u)-\ell)[v-u_h] = (f(u)-\ell)[v-u] + (f(u)-\ell)[u-u_h] \ge (f(u)-\ell)[u-u_h]$ by \eqref{eq:vi}; the VI implies that the infimum over $v\in\cK$ is achieved by $u$.  Take infimum over $\cK_h$ to show \eqref{eq:abstractestimate}.
 \end{proof}
 
-In a unilateral obstacle problem over scalar functions $\cX=W^{1,\rr}(\Omega)$, we may rewrite portions of bound \eqref{eq:abstractestimate} using integration.  In this case the residual $f(u)-\ell\in \cX'$ is a positive measure $d\mu_u$ \cite[Theorem II.6.9]{KinderlehrerStampacchia1980} which is supported in the active set $A_u=\{x\in\Omega\,:\,u(x)=b(x)\}$.  Then $(f(u) - \ell)[w] = \int_{A_u} w\,d\mu_u$ for $w\in \cX$.
+In a unilateral obstacle problem over scalar functions $\cX=W^{1,\rr}(\Omega)$, we may rewrite portions of bound \eqref{eq:abstractestimate} using integration.  In this case the residual $f(u)-\ell\in \cX'$ is a positive measure $d\mu_u$ \cite[Theorem II.6.9]{KinderlehrerStampacchia1980} which is supported in the active set $A_u=\{x\in\Omega\,:\,u(x)=b(x)\}$.  Then $(f(u) - \ell)[w] = \int_{A_u} w\,d\mu_u$ for $w\in \cX$ with zero trace.
 
 If $\cK_h \subset \cK$ then the first term in \eqref{eq:abstractestimate} is nonpositive and it can be replaced by zero; substitute $v=u_h$ into \eqref{eq:vi} to get $(f(u)-\ell)[u-u_h] \le 0$.
 
