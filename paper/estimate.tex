@@ -614,7 +614,7 @@ In summary, Theorem \ref{thm:abstractestimate} generalizes Falk's bound, Strang'
 
 Now we can apply the above theory to a time-step of an evolving-surface, Stokes-based glacier simulation.  Our approach essentially defines the phrase ``conforming FE method'' for such models.  We will combine the major threads so far: a surface velocity bound for the glaciological Stokes problem on a fixed domain (Section \ref{sec:stokes}), conjectural Lipschitz continuity and $4$-coercivity of the regularized surface-motion operator (Sections \ref{sec:model} and \ref{sec:conjectural}), and an abstract error estimate for FE solutions of unilateral obstacle problems (Section \ref{sec:abstractestimate}).
 
-Practical models for glaciers, based on unstructured meshes in the 2D map-plane, use polygonal domain geometry for the 3D Stokes problem \cite{Brinkerhoff2023,IsaacStadlerGhattas2015,Jouvetetal2008,Lengetal2012}.  For this reason we assume that the discrete bed and surface elevations $b_h,s_h$ are from the continuous $P_1$ FE space $\cX_h$ over a triangulation $\cT_h$ of the domain $\Omega \subset \RR^2$ (Figure \ref{fig:fe:domain}).  The 3D mesh might be extruded vertically from $\cT_h$ as shown in Figure \ref{fig:fe:domain}.
+Practical models for glaciers, based on unstructured meshes in the 2D map-plane, use polygonal domain geometry for the 3D Stokes problem \cite{Brinkerhoff2023,IsaacStadlerGhattas2015,Jouvetetal2008,Lengetal2012}.  For this reason we assume that the discrete bed and surface elevations $b_h,s_h$ are from the continuous $P_1$ FE space $\cX_h$ over a triangulation $\cT_h$ of the domain $\Omega \subset \RR^2$ (Figure \ref{fig:fe:domain}).  Furthermore the 3D mesh might be extruded vertically from $\cT_h$, as shown in Figure \ref{fig:fe:domain}, but we do not specifically assume so.
 
 \begin{figure}[ht]
 \begin{center}
@@ -626,20 +626,19 @@ Practical models for glaciers, based on unstructured meshes in the 2D map-plane,
 
 We will assume that the original bed elevation $b$ is well-behaved, $b\in C^1(\bar\Omega)$.  (In practice the data $b$ is a high-resolution map derived from ice-penetrating radar \cite{Morlighemetal2017}, often over a much finer mesh than $\cT_h$.)  For the discrete bed $b_h\in\cX_h$ we suppose $b_h=b$ along $\partial\Omega$.  We also suppose $b_h\ge b$, for instance by a boundary-modified monotone restriction (Section \ref{sec:abstractestimate}); this eliminates a bound term when Theorem \ref{thm:abstractestimate} is applied below.  Following \eqref{eq:be:admissible}, we define $\cK_h=\{\sigma_h \in \cX_h\,:\,\sigma_h|_{\partial\Omega}=b_h|_{\partial\Omega} \text{ and } \sigma_h\ge b_h\}$, so that $\cK_h\subset\cK \subset \cX$ where $\cX = W^{1,4}(\Omega)$.
 
-From these geometrical and discrete-space choices, recall the regularized VI problem \eqref{eq:regularizedvi}, with $F^\eps_{\Delta t}$ defined by \eqref{eq:regularizedPhi} and \eqref{eq:regularizedF}.  Approximate evaluation of $F^\eps_{\Delta t}(s_h)$ requires the numerical solution of the power-law Stokes problem \eqref{eq:glenstokes:weak} over a meshed 3D domain $\Lambda(b_h,s_h)$ (see \eqref{eq:domainfroms}), the lower and upper surfaces of which are given by admissible FE functions $b_h\in\cX_h$ and $s_h \in \cK_h$, respectively.  Solvability of this Stokes problem using inf-sup stable elements is addressed by \cite{Belenkietal2012,JouvetRappaz2011}.  The numerical velocity from solving \eqref{eq:glenstokes:weak} over $\Lambda(b_h,s_h)$ is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$.  (Note that $\bu_h$ is \emph{not} the exact solution of that Stokes problem.)  We make no assumptions on the solution process for \eqref{eq:glenstokes:weak}, except that it must generate $\bu_h|_{s_h}$.
+Along with these geometrical and discrete-space choices, recall the regularized VI problem \eqref{eq:regularizedvi}, with $F^\eps_{\Delta t}$ defined by \eqref{eq:regularizedPhi} and \eqref{eq:regularizedF}.  Practical evaluation of $F^\eps_{\Delta t}(s_h)$ requires the numerical solution of the power-law Stokes problem \eqref{eq:glenstokes:weak} over a meshed 3D domain $\Lambda(b_h,s_h)$---see definition \eqref{eq:domainfroms}---the lower and upper surfaces of which are given by admissible FE functions $b_h\in\cX_h$ and $s_h \in \cK_h$, respectively.  Solvability of this Stokes problem using inf-sup stable elements is addressed by \cite{Belenkietal2012,JouvetRappaz2011}.  The numerical velocity from solving \eqref{eq:glenstokes:weak} over $\Lambda(b_h,s_h)$ is denoted $\bu_h$, and its surface trace is denoted $\bu_h|_{s_h}$; $\bu_h$ is the numerical, and \emph{not} exact, solution of that Stokes problem.  We make no assumptions on the solution process for \eqref{eq:glenstokes:weak}, except that it must generate $\bu_h|_{s_h}$.
 
-These preliminaries allow us to define the numerical operator and VI problem.  Following \eqref{eq:definePhi}, \eqref{eq:phisia}, \eqref{eq:regularizedPhi}, and \eqref{eq:regularizedF}, with parameters $\Delta t>0$, $0<\eps\ll 1$, $\eta_0>0$, and for $s_h \in \cK_h$ and $\omega_h\in\cX_h$ we define
+These preliminaries allow us to define the numerical operator approximating $F^\eps_{\Delta t}$, and the corresponding VI problem.  Following \eqref{eq:definePhi}, \eqref{eq:phisia}, \eqref{eq:regularizedPhi}, and \eqref{eq:regularizedF}, with parameters $\Delta t>0$, $0<\eps\ll 1$, $\eta_0>0$, and for $s_h \in \cK_h$ and $\omega_h\in\cX_h$ we define
 \begin{align}
 F^{\eps,h}_{\Delta t}(s_h)[\omega_h] &= -\Delta t (1-\eps)\,\int_\Omega \left(\bu_h|_{s_h} \cdot \bn_{s_h}\right) \omega_h  \label{eq:fe:regularizedF} \\
 &\qquad + \Delta t \,\eps\,\Gamma \eta_0^5 \, \int_\Omega |\grad s_h|^2 \grad s_h \cdot \grad \omega_h + \int_\Omega s_h \omega_h. \notag
 \end{align}
-This numerical formula uses the FE function $s_h$ directly, namely in the derivatives $\grad s_h$ and $\bn_{s_h}$, and indirectly, to define the Stokes problem domain for $\bu_h$.  Corresponding to the continuum VI \eqref{eq:regularizedvi}, we seek $s_h\in\cK_h$ solving
+This numerical formula uses the FE function $s_h$ in two ways.  First directly, in the derivatives $\grad s_h$ and $\bn_{s_h}$, and then indirectly to define the Stokes problem domain $\Lambda(b_h,s_h)$, from which $\bu_h$ is found numerically.  Corresponding to VI \eqref{eq:regularizedvi}, with source term $\ell^n$ is defined exactly as in \eqref{eq:be:source}, we seek $s_h\in\cK_h$ solving
 \begin{equation}
 F^{\eps,h}_{\Delta t}(s_h)[\sigma_h-s_h] \ge \ell^n[\sigma_h-s_h] \quad \text{for all } \sigma_h \in \cK_h. \label{eq:fe:regularizedvi}
 \end{equation}
-The source term $\ell^n$ is defined exactly as in \eqref{eq:be:source}.
 
-Collecting everything above, the following standard assumptions regarding the data and function spaces are used when solving \eqref{eq:regularizedvi} by numerical scheme \eqref{eq:fe:regularizedvi}.
+Collecting everything above, the following assumptions regarding the data and function spaces will be used when solving the numerical problem \eqref{eq:fe:regularizedvi}, to approximate the exact solution of the regularized implicit time-step problem \eqref{eq:regularizedvi}.
 
 \begin{stdass}
 The following data are given:
@@ -665,9 +664,9 @@ We assume this FE configuration:
 \end{enumerate}
 \end{stdass}
 
-Consider the application of Theorem \ref{thm:abstractestimate}.  Because $s_h\in\cK_h\subset \cK$ by Assumption \ref{item:goodbh}, the first term in \eqref{eq:abstractestimate} disappears and the technical superset assumption is bypassed.  Application of the Theorem with $\qq=4$ yields the following Lemma.
+Now apply Theorem \ref{thm:abstractestimate}.  Because $s_h\in\cK_h\subset \cK$ by Assumption \ref{item:goodbh}, the first term in \eqref{eq:abstractestimate} is nonpositive, so we replace it by zero, and the technical superset assumption is bypassed.  For $\qq=4$ we have the following result.
 
-\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions, and assume Conjecture \ref{conj:lipschitz} holds for $\rr=4$, and assume Conjecture \ref{conj:regcoercive} holds for parameters $\eps\in(0,1)$, $\eta_0>0$, and $\alpha>0$.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  For $\Delta t>0$ let $s\in\cK$ be the unique surface elevation satisfying the regularized implicit time-step VI problem \eqref{eq:regularizedvi}, and assume that $s_h\in\cK_h$ solves numerical problem \eqref{eq:fe:regularizedvi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $C=C(R_h,\alpha\Delta t)>0$ so that
+\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions, and assume Conjecture \ref{conj:lipschitz} holds for $\rr=4$, and choose parameters $\eps\in(0,1)$, $\eta_0>0$, and $\alpha>0$ so that Conjecture \ref{conj:regcoercive} holds.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  For $\Delta t>0$ let $s\in\cK$ be the unique surface elevation satisfying the implicit time-step VI problem \eqref{eq:regularizedvi}, and assume that $s_h\in\cK_h$ solves the numerical problem \eqref{eq:fe:regularizedvi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $C=C(R_h,\alpha\Delta t)>0$ so that
 \begin{align}
 \frac{\alpha \Delta t}{2} \|s-s_h\|_\cX^4 &\le \inf_{\sigma_h\in\cK_h} \bigg\{\left(F^\eps_{\Delta t}(s)-\ell^n\right)[\sigma_h-s] + \delta_h[s_h-\sigma_h] \label{eq:preglacierestimate} \\
 &\hspace{17mm} + C \|\sigma_h - s\|_{\cX}^{4/3}\bigg\}, \notag
@@ -679,7 +678,7 @@ The next theorem replaces $\sigma_h$ with an interpolant of the exact solution $
 \begin{equation}
 \Pi_h(\omega)(x_j) = \max \,\{b_h(x_j), \omega(x_j)\}, \label{eq:definePi}
 \end{equation}
-over nodes $x_j \in \cT_h$; thus $\Pi_h$ both interpolates and truncates.  If $\sigma\in \cK$ then $\Pi_h(\sigma) \in \cK_h$ because nodal admissibility implies admissibility under Assumption \ref{item:pone}.  Also, recall that $\cV=W_0^{1,\pp}(\Lambda(b_h,s_h); \RR^3)$ is the velocity space for Stokes problem \eqref{eq:glenstokes:weak}, the numerical solution of which gives $\bu_h|_{s_h}$.
+over nodes $x_j \in \cT_h$; thus $\Pi_h$ both interpolates and truncates.  If $\sigma\in \cK$ then $\Pi_h(\sigma) \in \cK_h$ because nodal admissibility implies admissibility under Assumptions \ref{item:pone} and \ref{item:goodbh}.  Also, recall that $\cV=W_0^{1,\pp}(\Lambda(b_h,s_h); \RR^3)$ is the velocity space for Stokes problem \eqref{eq:glenstokes:weak}, the numerical solution of which gives the surface velocity trace $\bu_h|_{s_h}$.
 
 \begin{theorem} \label{thm:glacierapp}  Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Define
 \begin{equation}
