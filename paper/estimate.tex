@@ -694,11 +694,11 @@ over nodes $x_j \in \cT_h$; thus $\Pi_h$ both interpolates and truncates.  If $\
 
 Because $s$ solves \eqref{eq:regularizedvi}, as in Section \ref{sec:abstractestimate} the residual $F^\eps_{\Delta t}(s)-\ell^n \in \cX'$ is represented by a positive Borel measure, supported in the exact (closed) active set $\Omega_A(s)= \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$, which is the ice-free region at $t_n$.  Since $F^\eps_{\Delta t}(s)-\ell^n = \Delta t\,\big((s-s^{n-1})/\Delta t + \Phi^\eps(s) - a^n\big)$, we write this measure as $\Delta t\,\nu_s$, where the positive measure $\nu_s$ represents the regularized, backward-Euler approximation of the residual in \eqref{eq:ncp:residualpos}.
 
-\begin{theorem} \label{thm:glacierapp}  With the notation and assumptions as in Lemma \ref{lem:preglacierapp}, and for $C_\infty$ as the Sobolev constant in the proof below, let
+\begin{theorem} \label{thm:glacierapp}  Make the assumptions in Lemma \ref{lem:preglacierapp}, including that Conjectures \ref{conj:lipschitz} and \ref{conj:regcoercive} hold.  Define this scaled surface-trace error from the numerical Stokes approximation,
 \begin{equation}
-Z = \left(1 + C_\infty [L]^{-1} \|s_h\|_{\cX}\right)\, \Big\|\bu_h|_{s_h} - \bu|_{s_h}\Big\|_{L^{4/3}(\Omega)}.
+Z = \left(1 + C_\infty [L]^{-1} \|s_h\|_{\cX}\right)\, \Big\|\bu_h|_{s_h} - \bu|_{s_h}\Big\|_{L^{4/3}(\Omega)},
 \end{equation}
-Then, with $C=O(\alpha^{-1/3})$ given by \eqref{eq:glacierconstant},
+where $C_\infty$ is a Sobolev constant for $\Omega$ (see proof below).  Then, with $e=s-s_h$ and $C=O(\alpha^{-1/3})$ given by \eqref{eq:glacierconstant},
 \begin{align}
 \frac{\alpha\Delta t}{4} \|e_h\|_\cX^4 + \frac{1}{2} \|e_h\|_{L^2}^2 &\le \, \Delta t \int_{\Omega_A(s)} (\Pi_h(s) - s)\,d\nu_s &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
    &\quad\, + \Delta t\left(\tfrac{3}{4}\alpha^{-1/3} Z^{4/3} + Z \|\Pi_h(s) - s\|_{\cX}\right) &&\text{\textnormal{[term 2]}} \notag \\
