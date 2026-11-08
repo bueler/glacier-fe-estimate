@@ -708,7 +708,7 @@ where $C_\infty$ is a Sobolev constant for $\Omega$ (see proof below).  Then, wi
 
 \begin{proof}  For the first term in \eqref{eq:preglacierestimate} we may write $\Delta t \int_{\Omega_A(s)} (\sigma_h - s) \,d\nu_s$.
 
-The consistency error $\delta_h$ in the second term resolves to velocity traces using the difference of \eqref{eq:regularizedF} and \eqref{eq:fe:regularizedF}.  That is, for any $r_h\in \cX_h$,
+The consistency error $\delta_h$ in the second term resolves to a difference of velocity traces from \eqref{eq:regularizedF} and \eqref{eq:fe:regularizedF}.  That is, for any $r_h\in \cX_h$,
 \begin{equation}
 \delta_h[r_h] = \left(F^\eps_{\Delta t}(s_h)-F^{\eps,h}_{\Delta t}(s_h)\right)[r_h] = \Delta t (1-\eps) \int_\Omega \left(\bu_h|_{s_h} - \bu|_{s_h}\right) \cdot \bn_{s_h} \,r_h.
 \end{equation}
@@ -739,23 +739,29 @@ Move the first part of bound \eqref{eq:fromyoungs} to the left side, and note th
 
 \section{Discussion of the surface elevation error bound} \label{sec:discussion}
 
-FIXME first each term, then scaling with $\Delta t$, then convergence proof
+This section addresses the meaning of Theorem \ref{thm:glacierapp}, first by looking at the three terms in the bound separately, then by how the terms scale with $\Delta t$, then (more speculatively) regarding convergence of coupled FE solvers.
 
-Now we consider the meaning of each term in the bound \eqref{eq:glacierestimate}:
+Regarding the separate meaning of each term on the right in bound \eqref{eq:glacierestimate}:
 
 \medskip
 \begin{itemize}
-\item[term 1:]  This term primarily comes from bed elevation approximation errors within the unknown, exact ice-free area $\Omega_A(s)$.  FIXME unregularized $\mu_s$ has density $b-\ell^n$; see Section \ref{sec:model} and the argument leading to \eqref{eq:be:viearly}; note that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$  If the bed is exactly represented ($b_h=b$) then this term is zero.  In portions of the computed ice-free area $\Omega_A(s_h)$ which are far from the nearest flowing glacier, and where the climate is ablating ($a < 0$), one might simply declare that no ice geometry error is made, by accepting $b_h$ as representing bare land $b$.  However, one cannot neglect term 1 near the unknown, exact glacier margin $\Omega \cap \partial \Omega_A(s)$, the free boundary.  Putting the free boundary in the wrong place on inaccurate bed topography inherently generates an ice surface elevation error.
+\item[term 1:]  This term comes from margin shape and bed elevation approximation errors within the unknown ice-free area, namely in the active set $\Omega_A(s)$ for the exact surface elevation $s$.  These approximation errors are primarily scaled with the magnitude of ablation.
+
+\quad For any element with nodes exclusively in $\Omega_A(s)$ we have $\Pi_h(s)=b_h$, so the term scales with the bed error $b_h-b \ge 0$ there.  Moreover, in the unregularized case, namley $\eps=0$ in VI \eqref{eq:regularizedvi}, the measure $\nu_s$ has density $(b-s^{n-1})/\Delta t - a^n$.  (See Section \ref{sec:model} and the argument leading to \eqref{eq:be:viearly}, and note that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.)  In this case the density $\nu_s$ is pure ablation in the intersection $\Omega_A(s^{n-1})\cap \Omega_A(s)$ of old and new active sets.
+
+\quad Practically speaking, in portions of the \emph{computed} ice-free area $\Omega_A(s_h)$ which are far from the nearest flowing glacier, and where the climate is ablating ($a < 0$), a modeler can declare that no ice geometry error is made, by accepting $b_h$ as representing bare land $b$.  However, one cannot neglect term 1 near the unknown glacier margin $\Omega \cap \partial \Omega_A(s)$, the free boundary.  Indeed, a numerical solver which puts the margin in the wrong place on inaccurate bed topography inherently generates an ice surface elevation error there.
 
 \medskip
-\item[term 2:]  This term quantifies how numerical velocity errors over the domain $\Lambda(s_h)$, from solving Stokes problem \eqref{eq:glenstokes:weak}, affect the numerical surface elevation error.  If \eqref{eq:glenstokes:weak} were solved exactly then this term would be zero.  The second contribution to term 2 scales with the regularization $\eps$ used in \eqref{eq:regularizedF}.
+\item[term 2:]  FIXME This term quantifies how numerical velocity errors over the domain $\Lambda(s_h)$, from solving Stokes problem \eqref{eq:glenstokes:weak}, affect the numerical surface elevation error.  If \eqref{eq:glenstokes:weak} were solved exactly then this term would be zero.  The second contribution to term 2 scales with the regularization $\eps$ used in \eqref{eq:regularizedF}.
 
 \medskip
-\item[term 3:]  An interpolation error term like this arises in the classical Cea's lemma argument for quasi-optimality of FE methods for PDEs \cite{Ciarlet2002}.  Here $\Pi_h(s)$ \eqref{eq:definePi} is the $P_1$ interpolant of $s$, but also nonlinearly truncated into $\cK_h$ to achieve discrete admissibility.
+\item[term 3:]  FIXME An interpolation error term like this arises in the classical Cea's lemma argument for quasi-optimality of FE methods for PDEs \cite{Ciarlet2002}.  Here $\Pi_h(s)$ \eqref{eq:definePi} is the $P_1$ interpolant of $s$, but also nonlinearly truncated into $\cK_h$ to achieve discrete admissibility.
 \end{itemize}
 
 \medskip
-One might try to derive a convergence rate from Theorem \ref{thm:glacierapp}, perhaps starting by applying interpolation theory to term 3.  From \cite[Theorem 3.1.6]{Ciarlet2002}, for example, if $\mu \in [4,+\infty]$ then for $\sigma \in W^{2,\mu}(\Omega)$ we have $\|\pi_h(\sigma) - \sigma\|_{\cX} \le C h \|\sigma\|_{W^{2,\mu}}$.  (Here $\pi_h$ is ordinary interpolation into $\cX_h$, without truncation into $\cK_h$.)  Suppose also that the exact solution $s\in\cK$ satisfies $s\in W^{2,\mu}$ for some $\mu \in [\rr,+\infty]$.  It would follow that term 3 was $O(h^{4/3})$ with a coefficient depending on $\|s\|_{W^{2,\mu}}$, and thus $\|s_h-s\|_\cX = O(h^{1/3})$.  (Theorem 4.3 in \cite{JouvetBueler2012} makes a comparably-strong assumption in an SIA model.)  However, $s\in W^{2,\mu}$ would imply a glacier margin which is tangential to the bed.  For real glaciers the surface gradient generally does not approach the bed gradient at the ice margin; while $s \in \cX = W^{1,4}$ is credible, $s\in W^{2,\mu}$ is not.  Thus, attempting to prove convergence via Theorem \ref{thm:glacierapp}, via direct use of FE interpolation theory, is difficult.
+FIXME paragraph or two on $\Delta t\to 0$ then $\Delta t\to \infty$
+
+FIXME One might try to derive a convergence rate from Theorem \ref{thm:glacierapp}, perhaps starting by applying interpolation theory to term 3.  From \cite[Theorem 3.1.6]{Ciarlet2002}, for example, if $\mu \in [4,+\infty]$ then for $\sigma \in W^{2,\mu}(\Omega)$ we have $\|\pi_h(\sigma) - \sigma\|_{\cX} \le C h \|\sigma\|_{W^{2,\mu}}$.  (Here $\pi_h$ is ordinary interpolation into $\cX_h$, without truncation into $\cK_h$.)  Suppose also that the exact solution $s\in\cK$ satisfies $s\in W^{2,\mu}$ for some $\mu \in [\rr,+\infty]$.  It would follow that term 3 was $O(h^{4/3})$ with a coefficient depending on $\|s\|_{W^{2,\mu}}$, and thus $\|s_h-s\|_\cX = O(h^{1/3})$.  (Theorem 4.3 in \cite{JouvetBueler2012} makes a comparably-strong assumption in an SIA model.)  However, $s\in W^{2,\mu}$ would imply a glacier margin which is tangential to the bed.  For real glaciers the surface gradient generally does not approach the bed gradient at the ice margin; while $s \in \cX = W^{1,4}$ is credible, $s\in W^{2,\mu}$ is not.  Thus, attempting to prove convergence via Theorem \ref{thm:glacierapp}, via direct use of FE interpolation theory, is difficult.
 
 Consideration of term 2 adds further difficulties.  Suppose one assumes solution regularity for the Stokes problem \eqref{eq:glenstokes:weak}, specifically that $\bu\in W^{2,\kappa}(\Lambda(s_h);\RR^3)$ and $p \in W^{1,\kappa'}(\Lambda(s_h))$ for some $\kappa \in [\pp,2]$.  Suppose that a mixed FE method for that problem satisfies Bramble-Hilbert interpolation bounds for the discrete velocity and pressure spaces, respectively, and that the method satisfies a discrete inf-sup condition; for example, see inequalities (4.1), (4.26), (4.27) in \cite{JouvetRappaz2011}.  One then concludes that $\|\bu_h - \bu\|_{\cV} \le C h^{\kappa/2}$, for a constant $C>0$ which depends on the regularity norms of $\bu,p$, the discrete inf-sup constant, \emph{and the domain} $\Lambda(s_h)$.  The last dependence is problematic for convergence of the coupled problem.  For example, the domain $\Lambda(s_h)$ will change under 2D mesh refinement of $\Omega$, which is necessary to reduce terms 1 and 3.  Concretely, one would need to know how the constant in the $O(h^{\kappa/2})$ velocity convergence rate depends on $s_h$.
 
