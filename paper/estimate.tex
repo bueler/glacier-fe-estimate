@@ -667,19 +667,22 @@ We assume this FE configuration:
 \end{enumerate}
 \end{stdass}
 
-Now apply Theorem \ref{thm:abstractestimate}.  Because $s_h\in\cK_h\subset \cK$ by Assumption \ref{item:goodbh}, the first term in \eqref{eq:abstractestimate} is nonpositive, so we replace it by zero, and the technical superset assumption is bypassed.  For $\qq=4$ we have the following result.
+Now we adapt Theorem \ref{thm:abstractestimate}.  Because $s_h\in\cK_h\subset \cK$ by Assumption \ref{item:goodbh}, the first term in \eqref{eq:abstractestimate} is nonpositive, so we replace it by zero, and the technical superset assumption is bypassed.  For $\qq=4$ we have the following result.
 
-\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions, and assume Conjecture \ref{conj:lipschitz} holds for $\rr=4$, and choose parameters $\eps\in(0,1)$, $\eta_0>0$, and $\alpha>0$ so that Conjecture \ref{conj:regcoercive} holds.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  For $\Delta t>0$ let $s\in\cK$ be the unique surface elevation satisfying the implicit time-step VI problem \eqref{eq:regularizedvi}, and assume that $s_h\in\cK_h$ solves the numerical problem \eqref{eq:fe:regularizedvi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$, and let $L_\eps(R)$ denote the Lipschitz constant of $\Phi^\eps$ on $B_R\cap\cK$.  Then, with
+\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions, and assume Conjecture \ref{conj:lipschitz} holds for $\rr=4$, and choose parameters $\eps\in(0,1)$, $\eta_0>0$, and $\alpha>0$ so that Conjecture \ref{conj:regcoercive} holds.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  For $\Delta t>0$ let $s\in\cK$ be the unique surface elevation satisfying the implicit time-step VI problem \eqref{eq:regularizedvi}, and assume that $s_h\in\cK_h$ solves the numerical problem \eqref{eq:fe:regularizedvi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$, and let $L_\eps(R)$ denote the Lipschitz constant of $\Phi^\eps$ on $B_R\cap\cK$.  Then, with $e_h = s_h-s$ and
 \begin{equation}
-C = \tfrac{3}{4} \left(2\alpha\Delta t\right)^{-1/3} \left(\Delta t\, L_\eps(R_h) + |\Omega|^{1/2}\right)^{4/3}, \label{eq:glacierconstant}
+C = \tfrac{3}{4} \left(2\alpha\right)^{-1/3} L_\eps(R_h)^{4/3}, \label{eq:glacierconstant}
 \end{equation}
 we have
 \begin{align}
-\frac{\alpha \Delta t}{2} \|s-s_h\|_\cX^4 &\le \inf_{\sigma_h\in\cK_h} \bigg\{\left(F^\eps_{\Delta t}(s)-\ell^n\right)[\sigma_h-s] + \delta_h[s_h-\sigma_h] \label{eq:preglacierestimate} \\
-&\hspace{17mm} + C \|\sigma_h - s\|_{\cX}^{4/3}\bigg\}, \notag
+\frac{\alpha \Delta t}{2} \|e_h\|_\cX^4 + \frac{1}{2} \|e_h\|_{L^2}^2 &\le \inf_{\sigma_h\in\cK_h} \bigg\{\left(F^\eps_{\Delta t}(s)-\ell^n\right)[\sigma_h-s] + \delta_h[s_h-\sigma_h] \label{eq:preglacierestimate} \\
+&\hspace{17mm} + \Delta t\, C \|\sigma_h - s\|_{\cX}^{4/3} + \frac{1}{2} \|\sigma_h - s\|_{L^2}^2\bigg\}, \notag
 \end{align}
 where $\delta_h = F^\eps_{\Delta t}(s_h)-F^{\eps,h}_{\Delta t}(s_h) \in \cX'$ is a consistency error at $s_h$.
 \end{lemma}
+
+\begin{proof}  Follow the proof of Theorem \ref{thm:abstractestimate}, with $f=F^\eps_{\Delta t}$ and $\qq=4$, but use the coercivity bound $(F^\eps_{\Delta t}(\sigma)-F^\eps_{\Delta t}(s))[\sigma-s] \ge \alpha\Delta t\|\sigma-s\|_\cX^4 + \|\sigma-s\|_{L^2}^2$, and split the Lipschitz term \eqref{eq:abstract:three} as $\Delta t\,(\Phi^\eps(s)-\Phi^\eps(s_h))[s-\sigma_h] + \int_\Omega (s-s_h)(s-\sigma_h)$.  The first part is bounded as in Theorem \ref{thm:abstractestimate}, with $\alpha\Delta t$ and $\Delta t\,L_\eps(R_h)$ in place of $\alpha$ and $L(R_h)$, giving the constant $\Delta t\,C$.  The second part is at most $\frac12\|s-s_h\|_{L^2}^2 + \frac12\|s-\sigma_h\|_{L^2}^2$ by Cauchy-Schwarz and Young's inequality.  Because $\cK_h\subset\cK$, the first term in \eqref{eq:abstractestimate} is nonpositive and is dropped.
+\end{proof}
 
 Note that the consistency error $\delta_h$ compares the outputs of a continuum operator and a numerical operator at $s_h \in \cK_h$.  However, evaluating $F^\eps_{\Delta t}(s_h)$ requires solving the Stokes problem over the domain $\Lambda(b,s_h)$, with the exact bed, while $F^{\eps,h}_{\Delta t}(s_h)$ involves solving over $\Lambda(b_h,s_h)$, as stated above.  It follows that part of the consistency error is in bed approximation, while part is in other Stokes solver inaccuracies.
 
@@ -691,11 +694,11 @@ over nodes $x_j \in \cT_h$; thus $\Pi_h$ both interpolates and truncates.  If $\
 
 Because $s$ solves \eqref{eq:regularizedvi}, as in Section \ref{sec:abstractestimate} the residual $F^\eps_{\Delta t}(s)-\ell^n \in \cX'$ is represented by a positive Borel measure $\mu_s$, supported in the exact (closed) active set $\Omega_A(s)= \left\{x\in\Omega\,:\,s(x)=b(x)\right\}$, which is the ice-free region at $t_n$.
 
-\begin{theorem} \label{thm:glacierapp}  Make the same assumptions as in Lemma \ref{lem:preglacierapp}.  Then
+\begin{theorem} \label{thm:glacierapp}  Make the same assumptions as in Lemma \ref{lem:preglacierapp}, and let $e_h=s_h-s$.  Then
 \begin{align}
-\frac{\alpha\Delta t}{4} \|s_h-s\|_\cX^4 &\le \, \int_{\Omega_A(s)} (\Pi_h(s) - s)\,d\mu_s &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
+\frac{\alpha\Delta t}{4} \|e_h\|_\cX^4 + \frac{1}{2} \|e_h\|_{L^2}^2 &\le \, \int_{\Omega_A(s)} (\Pi_h(s) - s)\,d\mu_s &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
    &\quad\, + \Delta t\left(\tfrac{3}{4}\alpha^{-1/3} Z^{4/3} + Z \|\Pi_h(s) - s\|_{\cX}\right) &&\text{\textnormal{[term 2]}} \notag \\
-   &\quad\, + C \|\Pi_h(s) - s\|_\cX^{4/3}, &&\text{\textnormal{[term 3]}} \notag
+   &\quad\, + \Delta t\, C \|\Pi_h(s) - s\|_\cX^{4/3} + \frac{1}{2} \|\Pi_h(s) - s\|_{L^2}^2, &&\text{\textnormal{[term 3]}} \notag
 \end{align}
 where
 \begin{equation}
