@@ -700,7 +700,7 @@ Z = \left(1 + C_\infty [L]^{-1} \|s_h\|_{\cX}\right)\, \Big\|\bu_h|_{s_h} - \bu|
 \end{equation}
 where $C_\infty$ is a Sobolev constant for $\Omega$ (see proof below).  Then, with $e=s-s_h$ and $C=O(\alpha^{-1/3})$ given by \eqref{eq:glacierconstant},
 \begin{align}
-\frac{\alpha\Delta t}{4} \|e_h\|_\cX^4 + \frac{1}{2} \|e_h\|_{L^2}^2 &\le \, \Delta t \int_{\Omega_A(s)} (\Pi_h(s) - s)\,d\nu_s &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
+\frac{\alpha\Delta t}{4} \|e_h\|_\cX^4 + \frac{1}{2} \|e_h\|_{L^2}^2 &\le \, \Delta t \int_{\Omega_A(s)} (\Pi_h(s) - b)\,d\nu_s &&\text{\textnormal{[term 1]}} \label{eq:glacierestimate} \\
    &\quad\, + \Delta t\left(\tfrac{3}{4}\alpha^{-1/3} Z^{4/3} + Z \|\Pi_h(s) - s\|_{\cX}\right) &&\text{\textnormal{[term 2]}} \notag \\
    &\quad\, + \Delta t\, C \|\Pi_h(s) - s\|_\cX^{4/3} + \frac{1}{2} \|\Pi_h(s) - s\|_{L^2}^2. &&\text{\textnormal{[term 3]}} \notag
 \end{align}
