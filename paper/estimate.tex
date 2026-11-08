@@ -739,23 +739,23 @@ Move the first part of bound \eqref{eq:fromyoungs} to the left side, and note th
 
 \section{Discussion of the surface elevation error bound} \label{sec:discussion}
 
-This section addresses the meaning of Theorem \ref{thm:glacierapp}, first by looking at the three terms in the bound separately, then by how the terms scale with $\Delta t$, then (more speculatively) regarding convergence of coupled FE solvers.
+This section addresses the meaning of Theorem \ref{thm:glacierapp}, first by looking at terms in the bound separately, then by how the terms scale with $\Delta t$ and $\alpha$, and finally regarding the prospect of a convergence argument for coupled FE surface-Stokes solvers.
 
-Regarding the separate meaning of each term on the right in bound \eqref{eq:glacierestimate}:
+Regarding the separate meaning of each term on the right in bound \eqref{eq:glacierestimate}, and momentarily ignoring dependence on $\Delta t$ and $\alpha$, we have these comments:
 
 \medskip
 \begin{itemize}
 \item[term 1:]  This term comes from margin shape and bed elevation approximation errors within the unknown ice-free area, namely in the active set $\Omega_A(s)$ for the exact surface elevation $s$.  These approximation errors are primarily scaled with the magnitude of ablation.
 
-\quad For any element with nodes exclusively in $\Omega_A(s)$ we have $\Pi_h(s)=b_h$, so the term scales with the bed error $b_h-b \ge 0$ there.  Moreover, in the unregularized case, namley $\eps=0$ in VI \eqref{eq:regularizedvi}, the measure $\nu_s$ has density $(b-s^{n-1})/\Delta t - a^n$.  (See Section \ref{sec:model} and the argument leading to \eqref{eq:be:viearly}, and note that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.)  In this case the density $\nu_s$ is pure ablation in the intersection $\Omega_A(s^{n-1})\cap \Omega_A(s)$ of old and new active sets.
+\quad For any element with nodes exclusively in $\Omega_A(s)$ we have $\Pi_h(s)=b_h$, so the term scales with the bed error $b_h-b \ge 0$ there.  Moreover, in the unregularized case, namely $\eps=0$ in VI \eqref{eq:regularizedvi}, the positive measure $\nu_s$ has density $(b-s^{n-1})/\Delta t - a^n \le -a^n$.  (See the argument leading to \eqref{eq:be:viearly}, and note that $\bu|_{s}=\bzero$ and $s=b$ on $\Omega_A(s)$.)  In this case the density of $\nu_s$ is at most $-a^n$, pure ablation, on the active set.
 
-\quad Practically speaking, in portions of the \emph{computed} ice-free area $\Omega_A(s_h)$ which are far from the nearest flowing glacier, and where the climate is ablating ($a < 0$), a modeler can declare that no ice geometry error is made, by accepting $b_h$ as representing bare land $b$.  However, one cannot neglect term 1 near the unknown glacier margin $\Omega \cap \partial \Omega_A(s)$, the free boundary.  Indeed, a numerical solver which puts the margin in the wrong place on inaccurate bed topography inherently generates an ice surface elevation error there.
-
-\medskip
-\item[term 2:]  FIXME This term quantifies how numerical velocity errors over the domain $\Lambda(s_h)$, from solving Stokes problem \eqref{eq:glenstokes:weak}, affect the numerical surface elevation error.  If \eqref{eq:glenstokes:weak} were solved exactly then this term would be zero.  The second contribution to term 2 scales with the regularization $\eps$ used in \eqref{eq:regularizedF}.
+\quad Practically speaking, in portions of the \emph{computed} ice-free area $\Omega_A(s_h)$ which are far from the nearest flowing glacier, and where the climate is ablating ($a < 0$), a modeler can declare that no ice geometry error is made, by accepting $b_h$ as representing bare land $b$.  However, one cannot neglect term 1 near the unknown glacier margin $\Omega \cap \partial \Omega_A(s)$, the free boundary.  If the bed topography $b_h$ is inaccurate in a neighborhood of the exact margin location then an ice surface elevation error is inherent there, however good the numerical solver.
 
 \medskip
-\item[term 3:]  FIXME An interpolation error term like this arises in the classical Cea's lemma argument for quasi-optimality of FE methods for PDEs \cite{Ciarlet2002}.  Here $\Pi_h(s)$ \eqref{eq:definePi} is the $P_1$ interpolant of $s$, but also nonlinearly truncated into $\cK_h$ to achieve discrete admissibility.
+\item[term 2:]  This term quantifies how velocity error from numerically solving the Stokes problem \eqref{eq:glenstokes:weak} over the \emph{numerical} domain $\Lambda(b_h,s_h)$ affects the numerical surface elevation error.  The velocity error is relative to a hypothetical exact solve over $\Lambda(b,s_h)$ using the exact bed $b$, and only the numerical error in the trace along $s_h$ is involved.  If $b_h=b$ and if \eqref{eq:glenstokes:weak} were solved exactly then this term would be zero.  Note that the two expressions in term 2 scale slightly differently in $Z$ (powers $4/3$ versus $1$), but the latter is multiplied by interpolation error in $s$, so it is higher order in that sense.
+
+\medskip
+\item[term 3:]  An interpolation error term like this arises in any classical C\'ea's lemma argument for quasi-optimality of FE methods for PDEs \cite{Ciarlet2002}.  Here $\Pi_h(s)$ is the $P_1$ interpolant of $s$, Definition \eqref{eq:definePi}, \emph{including} (nonlinear) \emph{truncation} into $\cK_h$ for discrete admissibility.  Because the backward-Euler operator $F^\eps_{\Delta t}$ includes the mass term $\int_\Omega s\omega$, Definition \eqref{eq:regularizedF}, there is separate dependence on the $\cX$ and $L^2$ norms.
 \end{itemize}
 
 \medskip
