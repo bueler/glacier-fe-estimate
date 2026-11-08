@@ -529,12 +529,15 @@ f_h(u_h)[v_h-u_h] \ge \ell[v_h-u_h] \quad \text{for all } v_h\in \cK_h. \label{e
 \end{equation}
 We will assume that this problem has a solution $u_h\in\cK_h$.  The following \emph{a priori} estimation theorem extends the well-known result of Falk \cite{Falk1974}; see also Theorem 5.1.1 in \cite{Ciarlet2002}.  We assume that $f$ is $\qq$-coercive and Lipschitz on some superset of $\cK$ which also contains the FE solution $u_h$; this technical assumption permits a clean and general result.  However, we do \emph{not} assume any of the following: $\cK_h \subset \cK$, $f$ is linear, $f_h=f$, $f_h$ is continuous, $f_h$ is $\qq$-coercive, or even that the solution of \eqref{eq:fe:vi} is unique.
 
-\begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  For $\qq>1$, with conjugate exponent $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive, with constant $\alpha>0$, on a set which contains $\cK$ and the numerical solution $u_h$.  Assume $f$ is Lipschitz on bounded subsets of the same set.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then there is a constant $C=C(R_h,\alpha,\qq)>0$, not otherwise depending on $u$ or $u_h$, so that
+\begin{theorem} \label{thm:abstractestimate}  Suppose $u\in\cK$ solves \eqref{eq:vi} and $u_h\in\cK_h$ solves \eqref{eq:fe:vi}.  For $\qq>1$, with conjugate exponent $\qq'=\qq/(\qq-1)$, assume that $f$ is $\qq$-coercive, with constant $\alpha>0$, on a set which contains $\cK$ and the numerical solution $u_h$.  Assume $f$ is Lipschitz on bounded subsets of the same set, and let $L(R)$ denote the Lipschitz constant in \eqref{eq:liponbounded} on $B_R$.  Let $R_h=\max\{\|u\|,\|u_h\|\}$.  Then
 \begin{align}
 \frac{\alpha}{2} \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[u-u_h] \label{eq:abstractestimate} \\
    &\quad\, + \inf_{v_h\in\cK_h} \bigg\{ \left(f(u)-\ell\right)[v_h-u] + \delta_h[u_h-v_h] + C \|v_h - u\|^{\qq'} \bigg\}, \notag
 \end{align}
-where $\delta_h = f(u_h)-f_h(u_h) \in \cX'$ is a consistency error at the discrete solution.
+where $\delta_h = f(u_h)-f_h(u_h) \in \cX'$ is a consistency error at the discrete solution, and
+\begin{equation}
+C = \frac{1}{\qq'} \left(\frac{2}{\qq\,\alpha}\right)^{1/(\qq-1)} L(R_h)^{\qq'}. \label{eq:abstractconstant}
+\end{equation}
 \end{theorem}
 
 \begin{proof}  It follows from $\qq$-coercivity of $f$ that
@@ -550,22 +553,22 @@ Next, for arbitrary $v\in\cK$ and $v_h\in\cK_h$, rewrite \eqref{eq:vi} as $f(u)[
   &= \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u] \notag \\
   &\qquad + \left(f(u)-f(u_h)\right)[u-v_h] + \left(f(u_h)-f_h(u_h)\right)[u_h - v_h]. \notag
 \end{align}
-Since $u,u_h\in B_{R_h}$, by the Lipschitz assumption there is $C(R_h)>0$ so that
+Since $u,u_h\in B_{R_h}$, by the Lipschitz assumption
 \begin{equation}
-\left(f(u)-f(u_h)\right)[u-v_h] \le C(R_h) \|u-u_h\|\|u-v_h\|. \label{eq:abstract:three}
+\left(f(u)-f(u_h)\right)[u-v_h] \le L(R_h) \|u-u_h\|\|u-v_h\|. \label{eq:abstract:three}
 \end{equation}
 Noting $1<\qq<\infty$, use Young's inequality with $\eps>0$ \cite[Appendix B.2]{Evans2010} on \eqref{eq:abstract:three}:
 \begin{align}
 \alpha \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u]  \label{eq:abstract:four} \\
-  &\qquad + C(R_h) \left(\eps\|u-u_h\|^\qq + \tilde C(\eps) \|u-v_h\|^{\qq'}\right) \notag \\
+  &\qquad + L(R_h) \left(\eps\|u-u_h\|^\qq + \tilde C(\eps) \|u-v_h\|^{\qq'}\right) \notag \\
   &\qquad + \left(f(u_h)-f_h(u_h)\right)[u_h - v_h], \notag
 \end{align}
-where $\tilde C(\eps) = (\eps \qq)^{-\qq'/\qq} {\qq'}^{-1}$.  Choose $\eps>0$ so that $C(R_h) \eps \le \alpha/2$, and subtract:
+where $\tilde C(\eps) = (\eps \qq)^{-\qq'/\qq} {\qq'}^{-1}$.  Choose $\eps = \alpha/(2L(R_h))$ and subtract:
 \begin{align}
 \frac{\alpha}{2} \|u-u_h\|^\qq &\le \left(f(u)-\ell\right)[v-u_h] + \left(f(u)-\ell\right)[v_h-u]  \label{eq:abstract:five} \\
-  &\qquad + C(R_h) \tilde C(\eps) \|u-v_h\|^{\qq'} + \left(f(u_h)-f_h(u_h)\right)[u_h - v_h]. \notag
+  &\qquad + L(R_h) \tilde C(\eps) \|u-v_h\|^{\qq'} + \left(f(u_h)-f_h(u_h)\right)[u_h - v_h]. \notag
 \end{align}
-For the first term note that $(f(u)-\ell)[v-u_h] = (f(u)-\ell)[v-u] + (f(u)-\ell)[u-u_h] \ge (f(u)-\ell)[u-u_h]$ by \eqref{eq:vi}; the VI implies that the infimum over $v\in\cK$ is achieved by $u$.  Take infimum over $\cK_h$ to show \eqref{eq:abstractestimate}.
+For the first term note that $(f(u)-\ell)[v-u_h] = (f(u)-\ell)[v-u] + (f(u)-\ell)[u-u_h] \ge (f(u)-\ell)[u-u_h]$ by \eqref{eq:vi}; the VI implies that the infimum over $v\in\cK$ is achieved by $u$.  Take infimum over $\cK_h$ to show \eqref{eq:abstractestimate}, noting that $L(R_h)\tilde C(\alpha/(2L(R_h)))$ equals $C$ in \eqref{eq:abstractconstant} because $1+\qq'/\qq=\qq'$.
 \end{proof}
 
 In a unilateral obstacle problem over scalar functions $\cX=W^{1,\rr}(\Omega)$, we may rewrite portions of bound \eqref{eq:abstractestimate} using integration.  In this case the residual $f(u)-\ell\in \cX'$ is represented by a positive Borel measure $\mu_u$ \cite[Theorem 6.22]{LiebLoss1997} which, by the proof of Theorem II.6.9 in \cite{KinderlehrerStampacchia1980}, is supported in the active set $A_u=\{x\in\Omega\,:\,u(x)=b(x)\}$.  Then $(f(u) - \ell)[w] = \int_{A_u} w\,d\mu_u$ for $w\in \cX$ with zero trace.
@@ -666,7 +669,11 @@ We assume this FE configuration:
 
 Now apply Theorem \ref{thm:abstractestimate}.  Because $s_h\in\cK_h\subset \cK$ by Assumption \ref{item:goodbh}, the first term in \eqref{eq:abstractestimate} is nonpositive, so we replace it by zero, and the technical superset assumption is bypassed.  For $\qq=4$ we have the following result.
 
-\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions, and assume Conjecture \ref{conj:lipschitz} holds for $\rr=4$, and choose parameters $\eps\in(0,1)$, $\eta_0>0$, and $\alpha>0$ so that Conjecture \ref{conj:regcoercive} holds.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  For $\Delta t>0$ let $s\in\cK$ be the unique surface elevation satisfying the implicit time-step VI problem \eqref{eq:regularizedvi}, and assume that $s_h\in\cK_h$ solves the numerical problem \eqref{eq:fe:regularizedvi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$.  Then there is a constant $C=C(R_h,\alpha, \Delta t)>0$ so that
+\begin{lemma} \label{lem:preglacierapp}  Make the Standard Assumptions, and assume Conjecture \ref{conj:lipschitz} holds for $\rr=4$, and choose parameters $\eps\in(0,1)$, $\eta_0>0$, and $\alpha>0$ so that Conjecture \ref{conj:regcoercive} holds.  Suppose that $s^{n-1}\in\cK$ and define $\ell^n \in \cX'$ by \eqref{eq:be:source}.  For $\Delta t>0$ let $s\in\cK$ be the unique surface elevation satisfying the implicit time-step VI problem \eqref{eq:regularizedvi}, and assume that $s_h\in\cK_h$ solves the numerical problem \eqref{eq:fe:regularizedvi}.  Let $R_h=\max\{\|s\|_\cX,\|s_h\|_\cX\}$, and let $L_\eps(R)$ denote the Lipschitz constant of $\Phi^\eps$ on $B_R\cap\cK$.  Then, with
+\begin{equation}
+C = \tfrac{3}{4} \left(2\alpha\Delta t\right)^{-1/3} \left(\Delta t\, L_\eps(R_h) + |\Omega|^{1/2}\right)^{4/3}, \label{eq:glacierconstant}
+\end{equation}
+we have
 \begin{align}
 \frac{\alpha \Delta t}{2} \|s-s_h\|_\cX^4 &\le \inf_{\sigma_h\in\cK_h} \bigg\{\left(F^\eps_{\Delta t}(s)-\ell^n\right)[\sigma_h-s] + \delta_h[s_h-\sigma_h] \label{eq:preglacierestimate} \\
 &\hspace{17mm} + C \|\sigma_h - s\|_{\cX}^{4/3}\bigg\}, \notag
@@ -694,7 +701,7 @@ where
 \begin{equation}
 Z = \left(1 + C_\infty [L]^{-1} \|s_h\|_{\cX}\right)\, \Big\|\bu_h|_{s_h} - \bu|_{s_h}\Big\|_{L^{4/3}(\Omega)},
 \end{equation}
-$C_\infty$ is a Sobolev constant for $\Omega$, and $C=C(R_h,\alpha,\Delta t)$ is the constant from Lemma \ref{lem:preglacierapp}.
+$C_\infty$ is a Sobolev constant for $\Omega$, and $C$ is given by \eqref{eq:glacierconstant}.
 \end{theorem}
 
 \begin{proof}  For the first term in \eqref{eq:preglacierestimate} we may write $\int_{\Omega_A(s)} (\sigma_h - s) \,d\mu_s$.
