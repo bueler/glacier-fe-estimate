@@ -31,15 +31,19 @@ estimate.aux: estimate.tex cropfigures
 estimate.bbl: estimate.aux estimate.bib
 	bibtex estimate
 
-# latexdiff against submitted version; --math-markup=off avoids ulem/\left..\right
-# breakage, and \wSIA was defined in the body of assubmitted.tex
+# latexdiff against submitted version
+# \wSIA was defined in the body of assubmitted.tex
 diff.pdf: assubmitted.tex estimate.tex estimate.bib cropfigures
-	latexdiff --math-markup=off --config="MATHARRREPL=align*" assubmitted.tex estimate.tex > diff.tex
+	latexdiff --config="MATHARRREPL=align*" assubmitted.tex estimate.tex > diff.tex
 	sed -i 's/^\\begin{document}/\\providecommand{\\wSIA}{\\tilde w}\n\\begin{document}/' diff.tex
 	pdflatex diff
 	bibtex diff
 	pdflatex diff
 	pdflatex diff
+
+# in above, version with --math-markup=off avoids ulem/\left..\right breakage but fails to show diffs
+# in equations
+# latexdiff --math-markup=off --config="MATHARRREPL=align*" assubmitted.tex estimate.tex > diff.tex
 
 # generate .zip of source files suitable for submitting to arxiv
 publish.zip: estimate.pdf estimate.bbl
