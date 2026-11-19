@@ -60,7 +60,7 @@ The accompanying colored diff reflects these changes, as well as the rewording I
 {This summary is accurate.}
 
 \reply{The results are interesting and deserve the publication in Computers and Mathematics with Applications.}
-{This recommendation is also appreciated.}
+{This recommendation is indeed appreciated.}
 \end{itemize}
 
 
@@ -74,13 +74,13 @@ The accompanying colored diff reflects these changes, as well as the rewording I
 {This recommendation is appreciated, and the questions/modifications are addressed below.}
 
 \reply{1. In (1.6) $\Gamma_b(t)$ is time-dependent. I assume (hopefully correctly) that this boundary is set on the bedrock elevation, but this one has been parametrised by $z = b(x)$ which is not time-dependent. Is that correct?}
-{x}
+{This boundary notation $\Gamma_b(t)$ does indeed refer to the bedrock elevation, and that topography is assumed not to move vertically ($\partial b/\partial t$).  However, as a \emph{set} $\Gamma_b(t)$ can change in time because the lateral extent of the glacier changes in time.  That is, $\Lambda(t)$ defined in (1.1) has a lower boundary which is always a subset of the graph $z=b(x)$, but the subset is not fixed in time.}
 
 \reply{2. The second parenthesis in (1.7) has typo. The term $s$ should be $s^n$.}
-{x}
+{Corrected.}
 
 \reply{3. Figure 1 shows a sketch of the free boundary problems. Then, eq. (1.6) is set in $\Lambda(t)$, with boundary conditions on $\Gamma_s(t)$ and $\Gamma_b(t)$.  Nevertheless, in Standard Assumptions 6.1, the notation $\partial\Omega$ is utilised, even though this has not been defined previously. It would be more enlightening either detailing a possible $\partial\Omega$ in Figure 1 or defining what $\partial\Omega$ represents in the free-boundary problem.}
-{x}
+{The set $\Omega$ is defined as a fixed planar set on page 2, just before Figure 1.  I have updated the text to state at that point that $\partial\Omega$ is assumed piecewise smooth, but the notation $\Omega$ and $\partial\Omega$ is used consistently throughout the manuscript.  As is normal in obstacle problems, the function space for surface elevations has a fixed boundary condition along $\partial\Omega$.  Note that it is intrinsic to the new ideas in this manuscript that there must be a distinction between the 2D fixed domain on which the surface VI/NCP is solved (namely $\Omega$), and the 3D time-dependent domain on which the Stokes equations are solved (namely $\Lambda(t)$, later denoted $\Lambda(s,b)$ to indicate the indirect way it depends on time).}
 
 \reply{4. Throughout the manuscript the surface evolution is set as a NCP. How does the author justify the transition of boundary conditions on the interface bedrock-surface to the variational
 inequalities over the active/inactive set, and what computational challenges could be observed
