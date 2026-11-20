@@ -465,7 +465,7 @@ To suggest why coercivity might occur, we can rewrite the surface motion $\Phi(s
 \Phi(s)[\omega] &= -\int_{\Omega} \bu|_s \cdot \bn_s\,\omega\,dx = -\int_{\partial\Lambda(b,s)} \tilde\omega \bu\cdot {\hat\bn}\,dS = - \int_{\Lambda(b,s)} \Div\left(\tilde\omega \bu\right)  \label{eq:fluxformPhi} \\
   &= - \int_{\Lambda(b,s)} \bu\cdot \grad \tilde\omega = -\int_\Omega \bq(s) \cdot \grad \omega, \notag
 \end{align}
-where $\hat\bn$ is the outward unit normal and $dS$ is the area element along $\partial\Lambda(b,s)$.  Now, the natural glaciological belief is that ice flows downhill, which is the informal association $\bq(s) \sim - \grad s$, in which case the last expression in \eqref{eq:fluxformPhi} implies $(\Phi(\sigma) - \Phi(s))[\sigma - s] \sim \int_\Omega |\grad s - \grad \sigma|^2$, which is $2$-coercivity in the $H^1$ norm.  Observe that the rheology of ice, i.e.~the nonlinear Glen's law \eqref{eq:glen}, does not enter into this reasoning.
+where $\hat\bn$ is the outward unit normal and $dS$ is the area element along $\partial\Lambda(b,s)$.  Now, the natural glaciological belief is that ice flows downhill, which is the informal association $\bq(s) \sim - \grad s$, in which case the last expression in \eqref{eq:fluxformPhi} implies $(\Phi(\sigma) - \Phi(s))[\sigma - s] \sim \int_\Omega |\grad s - \grad \sigma|^2$, which is $2$-coercivity in the $H^1$ norm.  Observe that the rheology of ice, Glen's law \eqref{eq:glen}, does not enter into this informal reasoning, so it cannot be the full story regarding coercivity.
 
 \newcommand{\bqSIA}{\bq^{\text{SIA}}}
 \newcommand{\PhiSIA}{\Phi^{\text{SIA}}}
