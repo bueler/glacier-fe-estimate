@@ -20,6 +20,7 @@
 
 % macros
 \newcommand{\bq}{\mathbf{q}}
+\newcommand{\bu}{\mathbf{u}}
 \newcommand{\cK}{\mathcal{K}}
 \newcommand{\cX}{\mathcal{X}}
 \newcommand{\grad}{\nabla}
@@ -110,13 +111,20 @@ The paragraph now has final sentence ``Observe that the rheology of ice, Glen's 
 {This is a good question to which I do not have a good answer. \par
 Application of the VI (6.2) to the admissible test function $\sigma_h=b_h$, corresponding to no ice, through Conjecture 4.2, and H\"older and Young's inequalities, permits an argument which shows that $\|s_h-b_h\|_{W^{1,4}} \le C$ where $C$ depends only on the data, namely $s^{n-1}$, $a^n$, $\grad b_h$.  That is, $4$-coercivity Conjecture 4.2 leads to a stability bound on the ice \emph{thickness} $H_h=s_h-b_h$, not directly on the solution $s_h$.  Here $\grad b_h$ enters, in notable contrast to my other results, and to the main point of Figure 2.  (The bound also depends strongly on the $\eps$ value directly used in the regularization.  It also depends on the coercivity constant $\alpha$, but for that I believe depends weakly on $\eps$ for those values making the Conjecture true.) \par
 Regarding this very incomplete idea, it is addressed in work-in-progress follow-on material, and I would strongly prefer not to mix it into the current manuscript. \par
-I have added text, in the term 2 analysis in (revised) subsection 7.1, which points out this issue.  I appreciate the reviewer identifying it.}
+I have added text, in the term 2 analysis in (revised) subsection 7.1, which points out this issue.  I appreciate the reviewer reminding me of it.}
 
 \reply{9. In the identity (6.8), the error of the velocity restricted to $s_h$ impacts directly on the elevation.  How do you go about selecting finite element pairs to ensure the inf-sup condition? Does any stabilisation techniques work?}
-{foo}
+{I do not know what inf-sup condition is being considered. \par
+The element choice for the numerical surface $s_h$, which I am assuming here is $W^{1,4}$-conforming continuous $P_1$, affects the \emph{domain} over which the Stokes problem is solved.  It is therefore not clear to me, in any sense, how the existing theory of mixed elements can be applied. \par
+The separate choice of mixed elements for each fixed-domain Stokes problem, namely to compute $\bu_h,p_h$ over the domain $\Lambda(s_h,b_h)$, is dealt with completely agnostically.  That is, it is assumed that the numerical Stokes solver associates to each $s_h$ a well-defined surface velocity trace $\bu_h|_{s_h}$.  Speaking for myself, in doing numerical simulations I have always used inf-sup stable elements in this role. \par
+During the (long) preparation of this manuscript, reference [48] appeared.  It includes a general framework for bounding the $L^2$ norm of the surface elevation $s_h$, not the $W^{1,4}$ norm as here.  That stability framework is potentially of great importance, but it is not directly usable here.  In fact, for reasons spelled out in [48; subsection 3.1], the $L^2$ stability theory does not provide sufficient $s_h$ regularity so that that numerical function can serve as a valid upper boundary for the Stokes problem.}
 
 \reply{10. The author highlights that if $s\in W^{2,\mu}$ would impose an unrealistic contact angle between the glacier and the bedrock. Given that the regularity is just $s \in W^{1,4}$, what alternative tools (beyond the theory of interpolation in FEM) does the author consider promising to derive an explicit rate of convergence $\mathcal{O}(h^\alpha)$.}
-{foo}
+{This is an excellent question.  I mostly cannot answer. \par
+I will confidently assert, however, that $h$-refinement is appropriate in the vicinity of the glacier margin, because the surface gradient generically undergoes a jump at such locations. \par
+For the theoretical rate of convergence, I know of no relevant work whatsoever regarding the coupled surface-Stokes problem with free boundary. \par
+For the shallow ice approximation of the problem I know of only one reference, namely [33], of which I am a coauthor.  In that case, for Glen power $n=3$ and $q=4$ of course, we showed in the flat bed case that the $8/3$ power of the thickness is approximated by continuous $P_1$ elements at rate $O(h^{1/2})=O(h^{2/q})$.  In that SIA case the Raviart power transformation rewrites (the flat-bed case of) the steady problem as a $4$-Laplacian obstacle problem.  Analysis is possible. \par
+No such theory is available either in the general $b$ case of the SIA problem or in the surface-Stokes problem.  The current manuscript is a (desparate?) attempt to start such a theory from almost nothing.}
 
 \reply{11. As this is the first reported work where a rigorous functional framework for non-shallow Stokes models, what does the author consider as the main theoretical obstacles to extending this single-implicit time-step bound to a global, accumulated error estimate in multi-year simulations?}
 {foo}
