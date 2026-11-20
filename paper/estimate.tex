@@ -422,7 +422,7 @@ At this point we have stated the tools needed to make the continuum free-boundar
 \begin{equation}
 \boxed{F_{\Delta t}(s)[\omega] = \Delta t\,\Phi(s)[\omega] + \int_\Omega s \omega.}  \label{eq:be:Fdefine}
 \end{equation}
-Assume that $\ell^n$, defined from the data by \eqref{eq:be:source}, is in $\cX'$.  We say that the surface elevation $s=s^n \in \cK$ solves the (weak-form) \emph{implicit time-step problem} if
+Assume that $\ell^n$ is defined as an integrable function from the data by \eqref{eq:be:source}, and by slight abuse of notation write $\ell^n[\omega] = \int_\Omega \ell^n \omega$ so that $\ell^n\in \cX'$.  We say that the surface elevation $s=s^n \in \cK$ solves the (weak-form) \emph{implicit time-step problem} if
 \begin{equation}
 \boxed{F_{\Delta t}(s)[\sigma-s] \ge \ell^n[\sigma-s] \quad \text{for all } \sigma \in \cK.} \label{eq:be:vi}
 \end{equation}
@@ -627,7 +627,7 @@ These preliminaries allow us to define the numerical operator approximating $F^\
 F^{\eps,h}_{\Delta t}(s_h)[\omega] &= -\Delta t (1-\eps)\,\int_\Omega \left(\bu_h|_{s_h} \cdot \bn_{s_h}\right) \omega  \label{eq:fe:regularizedF} \\
 &\qquad + \Delta t \,\eps\,\Gamma \eta_0^5 \, \int_\Omega |\grad s_h|^2 \grad s_h \cdot \grad \omega + \int_\Omega s_h \omega. \notag
 \end{align}
-This numerical formula uses the FE function $s_h$ in two ways.  First directly, in the derivatives $\grad s_h$ and $\bn_{s_h}$, and then indirectly to define the Stokes problem domain $\Lambda(b_h,s_h)$, from which $\bu_h$ is found numerically.  Corresponding to VI \eqref{eq:regularizedvi}, with source term $\ell^n$ defined exactly as in \eqref{eq:be:source}, we seek $s_h\in\cK_h$ solving
+This numerical formula uses the FE function $s_h$ in two ways.  First directly, in the derivatives $\grad s_h$ and $\bn_{s_h}$, and then indirectly to define the Stokes problem domain $\Lambda(b_h,s_h)$, from which $\bu_h$ is found numerically.  Corresponding to VI \eqref{eq:regularizedvi}, with source term $\ell^n$ defined as in \eqref{eq:be:source}, we seek $s_h\in\cK_h$ solving
 \begin{equation}
 F^{\eps,h}_{\Delta t}(s_h)[\sigma_h-s_h] \ge \ell^n[\sigma_h-s_h] \quad \text{for all } \sigma_h \in \cK_h. \label{eq:fe:regularizedvi}
 \end{equation}
