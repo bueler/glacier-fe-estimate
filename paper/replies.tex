@@ -23,6 +23,7 @@
 \newcommand{\cK}{\mathcal{K}}
 \newcommand{\cX}{\mathcal{X}}
 \newcommand{\grad}{\nabla}
+\newcommand{\eps}{\epsilon}
 
 \newcommand{\reply}[2]{%
 \medskip
@@ -96,13 +97,20 @@ I could go on.  I this is hope enough to indicate that I take the question serio
 {This is really a quadrature question.  The simplest quadrature approximates the data integral either explicitly as $\int_{t_{n-1}}^{t_n} a(t,x)\,dt \approx a(t_{n-1},x) \Delta t$ or implicitly as $\approx a(t_n,x)\Delta t$.  The latter is suggested by the reviewer.  Generally $a$ does vary rapidly in time, but the glacier responds relatively slowly to that variation.  Thus for mass conservation reasons, as hinted by the reviewer's question here, one would want to use higher quadrature resolution.  This cheap pointwise operation improves the numerical result.  In presenting the work I prefer to leave the integral in place, ready for any quadrature scheme to be chosen at implementation time.}
 
 \reply{6. When you define the admissible set $\cK$, you assume that the elevation forms a closed cone with $b \in C(\overline{\Omega})$.  How could it affect the existence of the solution if the real rock bed has discontinuities or unbounded gradients?}
-{foo}
+{There are both practical-geographical and purely-mathematical answers to this good question.  Note that the admissible set $\cK$ is defined by (3.2) as a subset of a Sobolev/Banach space of elevation functions, those $\ge b$. \par
+For the former geographical answer, the actual earth surface can be arbitrarily steep, and indeed it can overhang, and yet we persist in using maps of elevation ``functions'' for essentially all modeling purposes related to glaciers, as though this is a well-defined quantity.  If we take the general shape of bed topography fully seriously in this regard then a full 3D treatment of an arbitrarily-overhanging 3D ice domain is required.  Yet \emph{no Stokes or other glacier models take this approach}; everyone assumes that surface and bed elevation \emph{functions} are meaningful concepts.  The current manuscript adopts this function-based view, because otherwise there will be no chance of improving existing models via new numerical analysis of the essential set-up used in those models. \par
+Regarding the mathematical answer, if one has a sequence in the admissible set $\cK$, which converges to a limit in the Sobolev/Banach space $\cX$ then, as long as the bed elevation is a locally-integrable measurable function, that limit is also in $\cK$.  That is, $\cK$ is a closed subset of $\cX$.  Closedness is quite independent of the actual smoothness of $b$, as long as $b$ is a function at all.}
 
 \reply{7. The argument of coercivity is based on the relation $\bq \sim -\grad s$. How much does the non-Newtonian rheology affect this near-coercivity property in areas with significant strain rates?}
-{foo}
+{Before responding, note that his ``argument of coercivity'', made in the paragraph surrounding equation (4.4), is already flagged as informal, but that (4.4) itself is correct in general, in any case. \par
+This good reviewer question has motivated me to rewrite the relevant paragraph to make it more clear that the rheology does enter into the informal argument for $2$-coercivity, i.e.~based on (4.4) and the downhill heuristic relation $\bq \sim -\grad s$.  Conjecture 4.2 is that $4$-coercivity is expected, based on the usual $n=3$ choice and guidance (and then regularization) coming from the shallow ice approximation. \par
+The paragraph now has final sentence ``Observe that the rheology of ice, Glen's law (1.5), does not enter into this informal reasoning, so it cannot be the full story regarding coercivity.''}
 
 \reply{8. The bound in the Theorem 6.3, the term $\|s_h\|_{\cX}$ appears in the right-hand side as part of $G(\|s_h\|_{\cX})$. How can it be analytically guaranteed the stability $\|s_h\|_{\cX} \le C$ to ensure that this constant does not blow up when $h\to 0$?}
-{foo}
+{This is a good question to which I do not have a good answer. \par
+Application of the VI (6.2) to the admissible test function $\sigma_h=b_h$, corresponding to no ice, through Conjecture 4.2, and H\"older and Young's inequalities, permits an argument which shows that $\|s_h-b_h\|_{W^{1,4}} \le C$ where $C$ depends only on the data, namely $s^{n-1}$, $a^n$, $\grad b_h$.  That is, $4$-coercivity Conjecture 4.2 leads to a stability bound on the ice \emph{thickness} $H_h=s_h-b_h$, not directly on the solution $s_h$.  Here $\grad b_h$ enters, in notable contrast to my other results, and to the main point of Figure 2.  (The bound also depends strongly on the $\eps$ value directly used in the regularization.  It also depends on the coercivity constant $\alpha$, but for that I believe depends weakly on $\eps$ for those values making the Conjecture true.) \par
+Regarding this very incomplete idea, it is addressed in work-in-progress follow-on material, and I would strongly prefer not to mix it into the current manuscript. \par
+I have added text, in the term 2 analysis in (revised) subsection 7.1, which points out this issue.  I appreciate the reviewer identifying it.}
 
 \reply{9. In the identity (6.8), the error of the velocity restricted to $s_h$ impacts directly on the elevation.  How do you go about selecting finite element pairs to ensure the inf-sup condition? Does any stabilisation techniques work?}
 {foo}
@@ -113,10 +121,5 @@ I could go on.  I this is hope enough to indicate that I take the question serio
 \reply{11. As this is the first reported work where a rigorous functional framework for non-shallow Stokes models, what does the author consider as the main theoretical obstacles to extending this single-implicit time-step bound to a global, accumulated error estimate in multi-year simulations?}
 {foo}
 \end{itemize}
-
-
-\subsection*{Author's corrections}
-
-FIXME
 
 \end{document}
