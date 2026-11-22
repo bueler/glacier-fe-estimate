@@ -138,7 +138,9 @@ For the shallow ice approximation of the problem I know of only one reference, n
 No such theory is available either in the general $b$ case of the SIA problem or in the surface-Stokes problem.  The current manuscript is an attempt to start such a theory from almost nothing.}
 
 \reply{11. As this is the first reported work where a rigorous functional framework for non-shallow Stokes models, what does the author consider as the main theoretical obstacles to extending this single-implicit time-step bound to a global, accumulated error estimate in multi-year simulations?}
-{foo}
+{The revised Discussion section, specifically subsection 7.3, attempts to sketch such obstacles to an eventual convergence argument.  (I share the hope implicit in this reviewer's question.) \par
+Perhaps the smaller obstacle is the lack of a stability result for the implicit time-step map with respect to the previous surface $s^{n-1}$, which subsection 7.3 identifies as necessary for controlling error accumulation; this might be quickly clarified by further research.  Under Conjecture 4.2 the continuum time-step map is non-expansive in $L^2$, by a standard argument, so an obstacle to an accumulated bound is the corresponding property for the discrete operator $F^{\eps,h}_{\Delta t}$, which is the same issue as in my reply to question 8. \par
+The larger obstacle is my incomplete and conjectural understanding of the spectrum of the surface-motion operator.  (Here ``spectrum'' should be interpreted broadly, both as coercivity and smoothing properties of the nonlinear operator, and as spectrum of the linearization around a state.)  The operator does significant smoothing in the Stokes model, but a smoothing analysis cannot be based on a differential-operator formula, since no such formula exists.  The numerical experiments in Appendix C are barely scratching the surface regarding spectral measurement for this operator.}
 \end{itemize}
 
 \end{document}
